@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/contact_person/add/2_add_contact.dart';
 import 'package:hris_app_prototype/src/component/personal/contact_person/update/2_update_contact.dart';
 import 'package:hris_app_prototype/src/model/contact_person/delete/delete_contact_model.dart';
@@ -50,6 +51,8 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
@@ -223,6 +226,8 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Row(
@@ -249,13 +254,14 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
               content: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
                 return SizedBox(
-                  height: 500,
-                  width: 450,
+                  height: 520,
+                  width: 500,
                   child: Column(
                     children: [
                       Expanded(
                         child: AddContactPerson(
                           personId: widget.personId,
+                          addButton: true,
                         ),
                       ),
                     ],
@@ -272,7 +278,7 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: Colors.red[100],
+            color: titleUpdateColors,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -282,9 +288,13 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
                   _isContactExpanded = !_isContactExpanded;
                 });
               },
-              leading: const Icon(Icons.contact_phone_outlined),
+              leading: const Icon(
+                Icons.contact_phone_outlined,
+                color: Colors.black54,
+              ),
               title: const Text(
-                  'บันทึกข้อมูลบุคคลที่สามารถติดต่อได้ (Contact Person Information TH/EN)'),
+                  'บันทึกข้อมูลบุคคลที่สามารถติดต่อได้ (Contact Person Information TH/EN)',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
               trailing: ExpandIcon(
                 isExpanded: _isContactExpanded,
                 expandedColor: Colors.black,

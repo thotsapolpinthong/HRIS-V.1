@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 PersonCreateModel personCreateModelFromJson(String str) =>
     PersonCreateModel.fromJson(json.decode(str));
 
@@ -7,6 +9,7 @@ String personCreateModelToJson(PersonCreateModel data) =>
     json.encode(data.toJson());
 
 class PersonCreateModel {
+  ValueNotifier<bool> isDirty = ValueNotifier<bool>(false);
   String personId;
   String titleNameId;
   String firstNameTh;

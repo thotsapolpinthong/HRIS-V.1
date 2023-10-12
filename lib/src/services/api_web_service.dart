@@ -152,7 +152,7 @@ class ApiService {
     }
   }
 
-  static Future addPersonalData(PersonCreateModel updateperson) async {
+  static Future addPersonalData(PersonCreateModel? updateperson) async {
     bool addpersondata = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -163,7 +163,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(updateperson.toJson()),
+      body: jsonEncode(updateperson!.toJson()),
     );
     if (response.statusCode == 200) {
       PersonByIdModel data = personByIdModelFromJson(response.body);
@@ -177,7 +177,7 @@ class ApiService {
     }
   }
 
-  static Future addAddressByTypeAndId(Createaddressmodel createaddress) async {
+  static Future addAddressByTypeAndId(Createaddressmodel? createaddress) async {
     bool addpermanent = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -187,7 +187,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(createaddress.toJson()),
+      body: jsonEncode(createaddress!.toJson()),
     );
     if (response.statusCode == 200) {
       AddressbypersonModel data = addressbypersonModelFromJson(response.body);
@@ -553,7 +553,7 @@ class ApiService {
   }
 
 //add
-  static Future addIdCardbyId(AddNewIdcardModel addIdcardModel) async {
+  static Future addIdCardbyId(AddNewIdcardModel? addIdcardModel) async {
     bool addIdcard = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -563,7 +563,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(addIdcardModel.toJson()),
+      body: jsonEncode(addIdcardModel!.toJson()),
     );
     if (response.statusCode == 200) {
       GetIdCardModel data = getIdCardModelFromJson(response.body);
@@ -577,7 +577,7 @@ class ApiService {
     }
   }
 
-  static Future addPassportbyId(CreatePassportModel addPassportModel) async {
+  static Future addPassportbyId(CreatePassportModel? addPassportModel) async {
     bool addPassport = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -587,7 +587,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(addPassportModel.toJson()),
+      body: jsonEncode(addPassportModel!.toJson()),
     );
     if (response.statusCode == 200) {
       Getpassport data = getpassportFromJson(response.body);
@@ -735,7 +735,7 @@ class ApiService {
   }
 
 //created
-  static Future addEducationbyId(CreateeducationModel createEducation) async {
+  static Future addEducationbyId(CreateeducationModel? createEducation) async {
     bool create = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -745,7 +745,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(createEducation.toJson()),
+      body: jsonEncode(createEducation!.toJson()),
     );
     if (response.statusCode == 200) {
       GetEducationModel data = getEducationModelFromJson(response.body);
@@ -859,7 +859,7 @@ class ApiService {
   }
 
 //created
-  static Future createFamilyById(CreateFamilyModel createFamilyModel) async {
+  static Future createFamilyById(CreateFamilyModel? createFamilyModel) async {
     bool create = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -869,7 +869,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(createFamilyModel.toJson()),
+      body: jsonEncode(createFamilyModel!.toJson()),
     );
     if (response.statusCode == 200) {
       FamilyMemberDataModel data = familyMemberDataModelFromJson(response.body);
@@ -946,7 +946,8 @@ class ApiService {
   }
 
 //created
-  static Future createContactById(CreateContactModel createContactModel) async {
+  static Future createContactById(
+      CreateContactModel? createContactModel) async {
     bool create = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -956,7 +957,7 @@ class ApiService {
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(createContactModel.toJson()),
+      body: jsonEncode(createContactModel!.toJson()),
     );
     if (response.statusCode == 200) {
       GetDataContact data = getDataContactFromJson(response.body);

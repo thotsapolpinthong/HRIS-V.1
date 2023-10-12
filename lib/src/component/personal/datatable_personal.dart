@@ -19,7 +19,7 @@ class DataTablePerson extends StatefulWidget {
 
 class _DataTablePersonState extends State<DataTablePerson> {
   PersonData? _personData;
-  List<PersonDatum> personData = [];
+  List<PersonDatum>? personData;
   bool isloading = true;
   int? sortColumnIndex;
   int rowIndex = 10;
@@ -38,30 +38,62 @@ class _DataTablePersonState extends State<DataTablePerson> {
   var pageNumber = 1;
   var pageSize = 100;
   void fetchUser() async {
-    //context.read<PersonalBloc>().add(FetchDataList());
-    _personData = await ApiService.fetchAllPersonalData();
+    //  isloading = true;
+    context.read<PersonalBloc>().add(FetchDataList());
+    // _personData = await ApiService.fetchAllPersonalData();
     if (_personData != null) {
       personData = _personData!.personData.toList();
       filterData = personData;
       setState(() {
-        isloading = false;
+        // isloading = false;
       });
     }
   }
 
+  onSortSearchColumn(int columnIndex, bool ascending) {
+    if (sortColumnIndex == 3) {
+      if (sort) {
+        personData!.sort((a, b) => a.personId.compareTo(b.personId));
+      } else {
+        personData!.sort((a, b) => b.personId.compareTo(a.personId));
+      }
+    }
+    if (sortColumnIndex == 5) {
+      if (sort) {
+        personData!.sort((a, b) => a.fisrtNameTh.compareTo(b.fisrtNameTh));
+      } else {
+        personData!.sort((a, b) => b.fisrtNameTh.compareTo(a.fisrtNameTh));
+      }
+    }
+    if (sortColumnIndex == 7) {
+      if (sort) {
+        personData!.sort((a, b) => a.firstNameEn.compareTo(b.firstNameEn));
+      } else {
+        personData!.sort((a, b) => b.firstNameEn.compareTo(a.firstNameEn));
+      }
+    }
+  }
+
   onSortColumn(int columnIndex, bool ascending) {
-    if (sortColumnIndex == 1) {
+    if (sortColumnIndex == 3) {
       if (sort) {
         filterData!.sort((a, b) => a.personId.compareTo(b.personId));
       } else {
         filterData!.sort((a, b) => b.personId.compareTo(a.personId));
       }
     }
-    if (sortColumnIndex == 3) {
+    if (sortColumnIndex == 5) {
       if (sort) {
         filterData!.sort((a, b) => a.fisrtNameTh.compareTo(b.fisrtNameTh));
       } else {
         filterData!.sort((a, b) => b.fisrtNameTh.compareTo(a.fisrtNameTh));
+      }
+    }
+    if (sortColumnIndex == 7) {
+      if (sort) {
+        filterData!.sort((a, b) => a.firstNameEn.compareTo(b.firstNameEn));
+      } else {
+        filterData!.sort((a, b) => b.firstNameEn.compareTo(a.firstNameEn));
       }
     }
   }
@@ -141,6 +173,10 @@ class _DataTablePersonState extends State<DataTablePerson> {
   Widget build(BuildContext context) {
     return BlocBuilder<PersonalBloc, PersonalState>(
       builder: (context, state) {
+        if (state.onSearchData == false) {
+          personData = state.personData;
+          filterData = state.personData;
+        } else {}
         return Scaffold(
           body: SingleChildScrollView(
             child: Column(
@@ -148,7 +184,7 @@ class _DataTablePersonState extends State<DataTablePerson> {
                 Align(
                   alignment: Alignment.center,
                   child: Expanded(
-                    child: isloading == true
+                    child: state.isDataloading == true
                         ? SizedBox(
                             height: 600,
                             child: Center(
@@ -182,41 +218,55 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                                   child: TextFormField(
                                                     controller: nameEn,
                                                     onChanged: (value) {
-                                                      setState(() {
-                                                        personData = filterData!
-                                                            .where((element) {
-                                                          final nameId = element
-                                                              .personId
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameEn = element
-                                                              .firstNameEn
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameTh = element
-                                                              .fisrtNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final lastnameTh = element
-                                                              .lastNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final lastNameEn = element
-                                                              .lastNameEn
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          return nameId ||
-                                                              nameEn ||
-                                                              nameTh ||
-                                                              lastnameTh ||
-                                                              lastNameEn;
-                                                        }).toList();
-                                                      });
+                                                      if (value == '') {
+                                                        context
+                                                            .read<
+                                                                PersonalBloc>()
+                                                            .add(
+                                                                DissSearchEvent());
+                                                      } else {
+                                                        setState(() {
+                                                          context
+                                                              .read<
+                                                                  PersonalBloc>()
+                                                              .add(
+                                                                  SearchEvent());
+                                                          personData =
+                                                              filterData!.where(
+                                                                  (element) {
+                                                            final nameId = element
+                                                                .personId
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            final nameEn = element
+                                                                .firstNameEn
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            final nameTh = element
+                                                                .fisrtNameTh
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            final lastnameTh = element
+                                                                .lastNameTh
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            final lastNameEn = element
+                                                                .lastNameEn
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            return nameId ||
+                                                                nameEn ||
+                                                                nameTh ||
+                                                                lastnameTh ||
+                                                                lastNameEn;
+                                                          }).toList();
+                                                        });
+                                                      }
                                                     },
                                                     decoration: InputDecoration(
                                                         contentPadding:
@@ -260,9 +310,16 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                       onSort: (columnIndex, ascending) {
                                         setState(() {
                                           sort = !sort;
-                                          sortColumnIndex = 1;
+                                          sortColumnIndex = 3;
+
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
                                         });
-                                        onSortColumn(columnIndex, ascending);
                                       }),
 
                                   const DataColumn(
@@ -274,19 +331,41 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                       onSort: (columnIndex, ascending) {
                                         setState(() {
                                           sort = !sort;
-                                          sortColumnIndex = 3;
+                                          sortColumnIndex = 5;
+
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
                                         });
-                                        onSortColumn(columnIndex, ascending);
                                       }),
                                   const DataColumn(
                                       label: Text('นามสกุล(TH)',
                                           style: TextStyle(fontSize: 16))),
+                                  DataColumn(
+                                      label: const Text('Name(EN)',
+                                          style: TextStyle(fontSize: 16)),
+                                      onSort: (columnIndex, ascending) {
+                                        setState(() {
+                                          sort = !sort;
+                                          sortColumnIndex = 7;
+
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
+                                        });
+                                      }),
                                   const DataColumn(
-                                      label: Text('Name(EN)',
-                                          style: TextStyle(fontSize: 16))),
-                                  const DataColumn(
-                                      label: Text('Lastname(EN)',
-                                          style: TextStyle(fontSize: 16))),
+                                    label: Text('Lastname(EN)',
+                                        style: TextStyle(fontSize: 16)),
+                                  ),
                                   // const DataColumn(
                                   //     label: Text('ประเภท',
                                   //         style: TextStyle(fontSize: 16))),
@@ -315,7 +394,7 @@ class _DataTablePersonState extends State<DataTablePerson> {
 
 class PersonDataTableSource extends DataTableSource {
   final BuildContext context;
-  final List<PersonDatum> data;
+  final List<PersonDatum>? data;
   final Function fetchFunction;
   final Function deletePerson;
 
@@ -324,7 +403,7 @@ class PersonDataTableSource extends DataTableSource {
   TextEditingController comment = TextEditingController();
   @override
   DataRow getRow(int index) {
-    final person = data[index];
+    final person = data![index];
     return DataRow(cells: [
       const DataCell(Text('')),
       const DataCell(Icon(Icons.person)),
@@ -412,7 +491,7 @@ class PersonDataTableSource extends DataTableSource {
   }
 
   @override
-  int get rowCount => data.length;
+  int get rowCount => data!.length;
 
   @override
   bool get isRowCountApproximate => false;

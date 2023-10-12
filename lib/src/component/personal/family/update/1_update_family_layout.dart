@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/family/add/2_add_family.dart';
 import 'package:hris_app_prototype/src/component/personal/family/update/2_update_family.dart';
 import 'package:hris_app_prototype/src/model/education/delete/delete_education_model.dart';
@@ -51,6 +52,8 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Row(
@@ -224,6 +227,8 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Row(
@@ -250,13 +255,14 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
               content: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
                 return SizedBox(
-                  height: 480,
+                  height: 440,
                   width: 500,
                   child: Column(
                     children: [
                       Expanded(
                         child: AddFamilymember(
                           personId: widget.personId,
+                          addButton: true,
                         ),
                       ),
                     ],
@@ -273,7 +279,7 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: Colors.deepOrange[100],
+            color: titleUpdateColors,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -283,9 +289,13 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
                   _isFamilyExpanded = !_isFamilyExpanded;
                 });
               },
-              leading: const Icon(Icons.family_restroom_rounded),
+              leading: const Icon(
+                Icons.family_restroom_rounded,
+                color: Colors.black54,
+              ),
               title: const Text(
-                  'บันทึกข้อมูลครอบครัว (Family Member Information TH/EN)'),
+                  'บันทึกข้อมูลครอบครัว (Family Member Information TH/EN)',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
               trailing: ExpandIcon(
                 isExpanded: _isFamilyExpanded,
                 expandedColor: Colors.black,

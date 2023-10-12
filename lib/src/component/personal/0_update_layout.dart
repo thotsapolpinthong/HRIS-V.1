@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/address/update/update_address_layout.dart';
 import 'package:hris_app_prototype/src/component/personal/cardinfo/1_update_cardinfo_layout.dart';
 import 'package:hris_app_prototype/src/component/personal/contact_person/update/1_update_contact_layout.dart';
@@ -34,8 +35,12 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  elevation: 4,
+                  color: mygreycolors,
                   child: Padding(
-                    padding: const EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: const Text(
                       'แก้ไขข้อมูลส่วนบุคคล (Edit Personal).',
                       style:
@@ -74,7 +79,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 10,
-                          color: Colors.blue[50],
+                          color: Colors.grey[200],
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: UpdatePersonbyId(
@@ -92,7 +97,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Card(
-                          color: const Color.fromARGB(255, 226, 250, 233),
+                          color: subtitleUpdateColors,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 6,
@@ -107,7 +112,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                           ),
                         ).animate().fadeIn(delay: 500.ms),
                         Card(
-                          color: Colors.cyan[50],
+                          color: subtitleUpdateColors,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 6,
@@ -122,7 +127,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                           ),
                         ).animate().fade(delay: 600.ms),
                         Card(
-                          color: Colors.deepPurple[50],
+                          color: subtitleUpdateColors,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 6,
@@ -135,7 +140,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                           ),
                         ).animate().fade(delay: 700.ms),
                         Card(
-                          color: Colors.deepOrange[50],
+                          color: subtitleUpdateColors,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 6,
@@ -148,7 +153,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                           ),
                         ).animate().fade(delay: 800.ms),
                         Card(
-                          color: Colors.red[50],
+                          color: subtitleUpdateColors,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 10,

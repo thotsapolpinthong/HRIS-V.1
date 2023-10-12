@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/family_member/add/create_family_model.dart';
 import 'package:hris_app_prototype/src/model/family_member/dropdown/family_type_model.dart';
 import 'package:hris_app_prototype/src/model/family_member/dropdown/vital_status_model.dart';
@@ -10,10 +12,9 @@ import 'package:validatorless/validatorless.dart';
 
 class AddFamilymember extends StatefulWidget {
   final String personId;
-  const AddFamilymember({
-    super.key,
-    required this.personId,
-  });
+  final bool addButton;
+  const AddFamilymember(
+      {super.key, required this.personId, required this.addButton});
 
   @override
   State<AddFamilymember> createState() => _AddFamilymemberState();
@@ -63,9 +64,41 @@ class _AddFamilymemberState extends State<AddFamilymember> {
     if (_picker != null) {
       setState(() {
         dateOfBirth.text = _picker.toString().split(" ")[0];
+        onNewValue();
+        onValidate();
       });
     }
   }
+
+  void onValidate() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        CreateFamilyModel updateFamilyModel = CreateFamilyModel(
+          personId: widget.personId,
+          familyMemberTypeId: familymember.toString(),
+          titleNameId: titlename.toString(),
+          firstName: firstname.text,
+          midName: midname.text,
+          lastName: lastname.text,
+          dateOfBirth: dateOfBirth.text,
+          vitalStatusId: vitalStatus.toString(),
+        );
+
+        context
+            .read<PersonalBloc>()
+            .add(CreatedFamilyModelEvent(createFamilyModel: updateFamilyModel));
+      });
+      context.read<PersonalBloc>().add(IsValidateProfileEvent());
+      context.read<PersonalBloc>().add(FamilyValidateEvent());
+      context.read<PersonalBloc>().add(ContinueEvent());
+    } else {
+      context.read<PersonalBloc>().add(IsNotValidateProfileEvent());
+      context.read<PersonalBloc>().add(FamilyValidateEvent());
+      context.read<PersonalBloc>().add(DissContinueEvent());
+    }
+  }
+
+  void onNewValue() {}
 
   onadd() async {
     CreateFamilyModel updateFamilyModel = CreateFamilyModel(
@@ -203,6 +236,8 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                               setState(() {
                                                 familymember =
                                                     newValue.toString();
+                                                onNewValue();
+                                                onValidate();
                                                 if (familymember == '1') {
                                                   titlename = '1';
                                                 } else if (familymember ==
@@ -256,6 +291,8 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                               setState(() {
                                                 vitalStatus =
                                                     newValue.toString();
+                                                onNewValue();
+                                                onValidate();
                                               });
                                             },
                                           ),
@@ -304,6 +341,8 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                             onChanged: (newValue) {
                                               setState(() {
                                                 titlename = newValue.toString();
+                                                onNewValue();
+                                                onValidate();
                                               });
                                             },
                                           ),
@@ -367,6 +406,10 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                                   RegExp(r'[a-zA-Zก-๙]')),
                                             ],
                                             controller: firstname,
+                                            onChanged: (value) {
+                                              onNewValue();
+                                              onValidate();
+                                            },
                                             decoration: const InputDecoration(
                                                 labelText: 'Firstname : ชื่อ',
                                                 labelStyle: TextStyle(
@@ -401,6 +444,10 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                                   RegExp(r'[a-zA-Zก-๙]')),
                                             ],
                                             controller: lastname,
+                                            onChanged: (value) {
+                                              onNewValue();
+                                              onValidate();
+                                            },
                                             decoration: const InputDecoration(
                                                 labelText: 'Lastname : นามสกุล',
                                                 labelStyle: TextStyle(
@@ -431,6 +478,9 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                             RegExp(r'[a-zA-Zก-๙]')),
                                       ],
                                       controller: midname,
+                                      onChanged: (value) {
+                                        onNewValue();
+                                      },
                                       decoration: const InputDecoration(
                                           hintText: '(ถ้ามี)',
                                           labelText:
@@ -452,33 +502,34 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                           ),
                         ],
                       )),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.greenAccent, // Background color
-                          // Text Color (Foreground color)
+                  if (widget.addButton == true)
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.greenAccent, // Background color
+                            // Text Color (Foreground color)
+                          ),
+                          child: Text('Add',
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                              )),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // การตรวจสอบผ่านแล้ว
+                              // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
+                              onadd();
+                            } else {
+                              // การตรวจสอบไม่ผ่าน
+                              // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
+                            }
+                          },
                         ),
-                        child: Text('Add',
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                            )),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // การตรวจสอบผ่านแล้ว
-                            // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
-                            onadd();
-                          } else {
-                            // การตรวจสอบไม่ผ่าน
-                            // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
-                          }
-                        },
                       ),
                     ),
-                  ),
                 ],
               ),
             ),

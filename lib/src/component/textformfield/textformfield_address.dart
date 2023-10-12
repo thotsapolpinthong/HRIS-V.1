@@ -125,13 +125,11 @@ class MyTextFormfieldNumber extends StatelessWidget {
       padding: const EdgeInsets.all(2.0),
       child: TextFormField(
         autovalidateMode: AutovalidateMode.always,
-        validator: Validatorless.multiple([
-          Validatorless.number('Only number.'),
-          Validatorless.required('กรุณากรอกข้อมูล')
-        ]),
+        validator:
+            Validatorless.multiple([Validatorless.required('กรุณากรอกข้อมูล')]),
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(
-              r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
+              r'[0-9/]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
         ],
         controller: controller,
         decoration: InputDecoration(

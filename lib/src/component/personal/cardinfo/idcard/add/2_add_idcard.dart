@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/district_model.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/province.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/add/create_idcard_model.dart';
@@ -11,9 +13,11 @@ import 'package:validatorless/validatorless.dart';
 
 class AddIdCard extends StatefulWidget {
   final String personId;
+  final bool addButton;
   const AddIdCard({
     super.key,
     required this.personId,
+    required this.addButton,
   });
 
   @override
@@ -57,6 +61,31 @@ class _AddIdCardState extends State<AddIdCard> {
     });
   }
 
+  void onValidate() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        AddNewIdcardModel addIdcardModel = AddNewIdcardModel(
+          cardId: idcard.text,
+          personId: widget.personId,
+          issuedDate: issueDate.text,
+          expiredDate: expDate.text,
+          issuedAtDistrictId: districtId.toString(),
+          issuedAtProvinceId: provinceId.toString(),
+        );
+        context
+            .read<PersonalBloc>()
+            .add(CreatedIdCardEvent(newIdcardModel: addIdcardModel));
+      });
+      context.read<PersonalBloc>().add(IsValidateProfileEvent());
+      context.read<PersonalBloc>().add(CardValidateEvent());
+      context.read<PersonalBloc>().add(ContinueEvent());
+    } else {
+      context.read<PersonalBloc>().add(IsNotValidateProfileEvent());
+      context.read<PersonalBloc>().add(CardValidateEvent());
+      context.read<PersonalBloc>().add(DissContinueEvent());
+    }
+  }
+
   //เช็คความถูกต้องรหัสบัตรประชาชน
   bool checkID(String id) {
     if (id.substring(0, 1) == '0') return false;
@@ -81,6 +110,7 @@ class _AddIdCardState extends State<AddIdCard> {
         issueDate.text = _picker.toString().split(" ")[0];
         disableExp = true;
         expDate.text = "";
+        onValidate();
       });
     }
   }
@@ -97,6 +127,7 @@ class _AddIdCardState extends State<AddIdCard> {
     if (_picker != null) {
       setState(() {
         expDate.text = _picker.toString().split(" ")[0];
+        onValidate();
       });
     }
   }
@@ -196,7 +227,8 @@ class _AddIdCardState extends State<AddIdCard> {
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 56),
+                          if (widget.addButton == false)
+                            const SizedBox(height: 56),
                           Card(
                             elevation: 2,
                             child: Padding(
@@ -215,7 +247,11 @@ class _AddIdCardState extends State<AddIdCard> {
                                   if (!checkID(value)) {
                                     return 'รหัสประชาชนไม่ถูกต้อง';
                                   }
-                                  return null; // รหัสถูกต้อง
+                                  return null;
+                                  // รหัสถูกต้อง
+                                },
+                                onChanged: (value) {
+                                  onValidate();
                                 },
                                 controller: idcard,
                                 decoration: const InputDecoration(
@@ -344,9 +380,13 @@ class _AddIdCardState extends State<AddIdCard> {
                                           provinceId = newValue.toString();
                                           districtId = null;
                                           fetchdDataDistricts();
+
+                                          onValidate();
                                         } else {
                                           provinceId = newValue.toString();
                                           fetchdDataDistricts();
+
+                                          onValidate();
                                         }
                                       });
                                     },
@@ -387,6 +427,8 @@ class _AddIdCardState extends State<AddIdCard> {
                                       onChanged: (newValue) {
                                         setState(() {
                                           districtId = newValue.toString();
+
+                                          onValidate();
                                         });
                                       },
                                     ),
@@ -397,26 +439,27 @@ class _AddIdCardState extends State<AddIdCard> {
                           ),
                         ],
                       )),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.greenAccent,
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  onadd();
-                                } else {}
-                              },
-                              child: const Text(
-                                "Add",
-                                style: TextStyle(color: Colors.black87),
-                              )),
-                        )),
-                      )
+                      if (widget.addButton == true)
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.greenAccent,
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    onadd();
+                                  } else {}
+                                },
+                                child: const Text(
+                                  "Add",
+                                  style: TextStyle(color: Colors.black87),
+                                )),
+                          )),
+                        )
                     ],
                   ),
                 ),

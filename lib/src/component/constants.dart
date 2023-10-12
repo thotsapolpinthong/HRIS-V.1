@@ -10,6 +10,9 @@ var colorstone1fontblack1 = const Color.fromRGBO(254, 217, 183, 1);
 var colorstone1fontblack2 = const Color.fromRGBO(253, 252, 220, 1);
 var colorstone1fontwhite3 = const Color.fromRGBO(240, 113, 103, 1);
 
+var titleUpdateColors = Colors.grey[200];
+var subtitleUpdateColors = Colors.grey[100];
+
 var mygreycolors = Colors.grey[200];
 var myAppBar = AppBar(
   backgroundColor: Colors.grey[300],

@@ -539,8 +539,11 @@ class _UpdatePersonbyIdState extends State<UpdatePersonbyId> {
                               items: bloodgroupList.map((e) {
                                 return DropdownMenuItem<String>(
                                   value: e.bloodId,
-                                  child: Text(
-                                      '${e.bloodGroupNameEn} : ${e.bloodGroupNameTh}'),
+                                  child: SizedBox(
+                                    width: 60,
+                                    child: Text(
+                                        '${e.bloodGroupNameEn} : ${e.bloodGroupNameTh}'),
+                                  ),
                                 );
                               }).toList(),
                               onChanged: (newValue) {

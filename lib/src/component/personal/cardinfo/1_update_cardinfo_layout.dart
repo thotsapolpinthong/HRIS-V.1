@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/cardinfo/idcard/add/2_add_idcard.dart';
 import 'package:hris_app_prototype/src/component/personal/cardinfo/idcard/update/2_update_idcard.dart';
 import 'package:hris_app_prototype/src/component/personal/cardinfo/passport/add/2_add_passport.dart';
@@ -62,10 +63,10 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 55,
           child: Card(
-            color: Colors.cyan[100],
+            color: titleUpdateColors,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -75,9 +76,11 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
                   _isCardInfoExpanded = !_isCardInfoExpanded;
                 });
               },
-              leading: const Icon(Icons.credit_card_rounded),
+              leading:
+                  const Icon(Icons.credit_card_rounded, color: Colors.black54),
               title: const Text(
-                  'บันทึกข้อมูลบัตรประจำตัว (Card Information TH/ENG)'),
+                  'บันทึกข้อมูลบัตรประจำตัว (Card Information TH/ENG)',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
               trailing: ExpandIcon(
                 isExpanded: _isCardInfoExpanded,
                 expandedColor: Colors.black,
@@ -154,32 +157,28 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color:
-                                                            Colors.yellow[800],
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            showDialogEditIdCard();
-                                                          });
-                                                        },
-                                                        icon: Icon(Icons.edit)),
-                                                  ),
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color: Colors.red,
-                                                        onPressed: () {
-                                                          showdialogDeleteId(
-                                                              data!.id);
-                                                        },
-                                                        icon: const Icon(
-                                                          Icons
-                                                              .arrow_outward_rounded,
-                                                          size: 28,
-                                                        )),
-                                                  ),
+                                                  IconButton(
+                                                      splashRadius: 30,
+                                                      color: Colors.yellow[800],
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          showDialogEditIdCard();
+                                                        });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit)),
+                                                  IconButton(
+                                                      splashRadius: 30,
+                                                      color: Colors.red,
+                                                      onPressed: () {
+                                                        showdialogDeleteId(
+                                                            data!.id);
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons
+                                                            .arrow_outward_rounded,
+                                                        size: 28,
+                                                      )),
                                                 ]),
                                           ),
                                         ),
@@ -242,32 +241,27 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color:
-                                                            Colors.yellow[800],
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            showDialogEditPassport();
-                                                          });
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.edit)),
-                                                  ),
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color: Colors.red,
-                                                        onPressed: () {
-                                                          showdialogDeletePassport(
-                                                              data!.id);
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons
-                                                                .arrow_outward_rounded,
-                                                            size: 28)),
-                                                  ),
+                                                  IconButton(
+                                                      splashRadius: 30,
+                                                      color: Colors.yellow[800],
+                                                      onPressed: () {
+                                                        setState(() {
+                                                          showDialogEditPassport();
+                                                        });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit)),
+                                                  IconButton(
+                                                      splashRadius: 30,
+                                                      color: Colors.red,
+                                                      onPressed: () {
+                                                        showdialogDeletePassport(
+                                                            data!.id);
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons
+                                                              .arrow_outward_rounded,
+                                                          size: 28)),
                                                 ]),
                                           ),
                                         ),
@@ -301,19 +295,33 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              icon: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Icon(
-                  Icons.cancel,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('แก้ไขข้อมมูลบัตรปชช. (Edit ID Card.)'),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          fetchCardinfomation();
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  setState(() {
-                    fetchCardinfomation();
-                  });
-                  Navigator.pop(context);
-                },
               ),
-              content: Container(
+              content: SizedBox(
+                width: 420,
                 height: 360,
                 child: Column(
                   children: [
@@ -339,19 +347,33 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              icon: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Icon(
-                  Icons.cancel,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('แก้ไขข้อมมูลพาสปอร์ต. (Edit Passport.)'),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          fetchCardinfomation();
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  setState(() {
-                    fetchCardinfomation();
-                  });
-                  Navigator.pop(context);
-                },
               ),
-              content: Container(
+              content: SizedBox(
+                width: 420,
                 height: 360,
                 child: Column(
                   children: [
@@ -634,26 +656,40 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              icon: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Icon(
-                  Icons.cancel,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('เพิ่มข้อมูลบัตรประชาชน (Create ID Card.)'),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          fetchCardinfomation();
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  setState(() {
-                    fetchCardinfomation();
-                  });
-                  Navigator.pop(context);
-                },
               ),
-              content: Container(
-                width: 300,
-                height: 460,
+              content: SizedBox(
+                width: 500,
+                height: 350,
                 child: Column(
                   children: [
                     Expanded(
                       child: AddIdCard(
                         personId: widget.personId,
+                        addButton: true,
                       ),
                     ),
                   ],
@@ -667,25 +703,40 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-              icon: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                child: const Icon(
-                  Icons.cancel,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('เพิ่มข้อมูลพาสปอร์ต (Create Passport.)'),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          fetchCardinfomation();
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
                 ),
-                onPressed: () {
-                  setState(() {
-                    fetchCardinfomation();
-                  });
-                  Navigator.pop(context);
-                },
               ),
-              content: Container(
-                height: 400,
+              content: SizedBox(
+                width: 500,
+                height: 420,
                 child: Column(
                   children: [
                     Expanded(
                       child: AddPassport(
                         personId: widget.personId,
+                        addButton: true,
                       ),
                     ),
                   ],

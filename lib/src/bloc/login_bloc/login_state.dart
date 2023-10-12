@@ -6,7 +6,7 @@ class LoginState extends Equatable {
   final int pageNumber;
   const LoginState({
     this.pageNumber = 1,
-    this.isAutlhened = false,
+    this.isAutlhened = true,
     this.error = "null",
   });
 

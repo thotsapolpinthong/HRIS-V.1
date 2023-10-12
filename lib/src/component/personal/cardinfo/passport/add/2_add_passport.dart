@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/add/createpassport_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/update/getpassport_model.dart';
@@ -8,10 +10,9 @@ import 'package:validatorless/validatorless.dart';
 
 class AddPassport extends StatefulWidget {
   final String personId;
-  const AddPassport({
-    super.key,
-    required this.personId,
-  });
+  final bool addButton;
+  const AddPassport(
+      {super.key, required this.personId, required this.addButton});
 
   @override
   State<AddPassport> createState() => _AddPassportState();
@@ -52,6 +53,8 @@ class _AddPassportState extends State<AddPassport> {
     if (_picker != null) {
       setState(() {
         expireDateVisa.text = _picker.toString().split(" ")[0];
+        onNewValue();
+        onValidate();
       });
     }
   }
@@ -66,9 +69,37 @@ class _AddPassportState extends State<AddPassport> {
     if (_picker != null) {
       setState(() {
         expiredDatePassport.text = _picker.toString().split(" ")[0];
+        onNewValue();
+        onValidate();
       });
     }
   }
+
+  void onValidate() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        CreatePassportModel addpassportModel = CreatePassportModel(
+          passportId: passportId.text,
+          personId: widget.personId,
+          issuedAtCountry: countryId.toString(),
+          expiredDatePassport: expiredDatePassport.text,
+          expireDateVisa: expireDateVisa.text,
+        );
+        context
+            .read<PersonalBloc>()
+            .add(CreatedPassportEvent(passportModel: addpassportModel));
+      });
+      context.read<PersonalBloc>().add(IsValidateProfileEvent());
+      context.read<PersonalBloc>().add(CardValidateEvent());
+      context.read<PersonalBloc>().add(ContinueEvent());
+    } else {
+      context.read<PersonalBloc>().add(IsNotValidateProfileEvent());
+      context.read<PersonalBloc>().add(CardValidateEvent());
+      context.read<PersonalBloc>().add(DissContinueEvent());
+    }
+  }
+
+  void onNewValue() {}
 
   onadd() async {
     CreatePassportModel addpassportModel = CreatePassportModel(
@@ -164,7 +195,8 @@ class _AddPassportState extends State<AddPassport> {
                           child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 56),
+                          if (widget.addButton == false)
+                            const SizedBox(height: 56),
                           Card(
                             elevation: 1,
                             child: TextFormField(
@@ -175,6 +207,10 @@ class _AddPassportState extends State<AddPassport> {
                                 Validatorless.min(9, 'กรอกให้ครบ 9 หลัก')
                               ]),
                               controller: passportId,
+                              onChanged: (newValue) {
+                                onNewValue();
+                                onValidate();
+                              },
                               decoration: const InputDecoration(
                                   labelText:
                                       'Passport Number : เลขที่หนังสือเดินทาง',
@@ -275,6 +311,8 @@ class _AddPassportState extends State<AddPassport> {
                                 onChanged: (newValue) {
                                   setState(() {
                                     countryId = newValue.toString();
+                                    onNewValue();
+                                    onValidate();
                                   });
                                 },
                               ),
@@ -282,26 +320,27 @@ class _AddPassportState extends State<AddPassport> {
                           ),
                         ],
                       )),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Expanded(
-                            child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.greenAccent,
-                              ),
-                              onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  onadd();
-                                } else {}
-                              },
-                              child: const Text(
-                                "Add",
-                                style: TextStyle(color: Colors.black87),
-                              )),
-                        )),
-                      )
+                      if (widget.addButton == true)
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Expanded(
+                              child: Padding(
+                            padding: const EdgeInsets.all(3.0),
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.greenAccent,
+                                ),
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    onadd();
+                                  } else {}
+                                },
+                                child: const Text(
+                                  "Add",
+                                  style: TextStyle(color: Colors.black87),
+                                )),
+                          )),
+                        )
                     ],
                   ),
                 ),

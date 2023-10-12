@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/0_add_person_layout.dart';
 import 'package:hris_app_prototype/src/component/personal/datatable_personal.dart';
@@ -45,56 +47,6 @@ class _PersonalPageState extends State<PersonalPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: Row(
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: [
-      //     ElevatedButton(
-      //       child: const Icon(Icons.swap_horizontal_circle_rounded),
-      //       onPressed: () {
-      //         setState(() {
-      //            isExpandedList = !isExpandedList;
-      //           isExpandedTable = !isExpandedTable;
-      //         });
-      //       },
-      //     ),
-      //     const SizedBox(
-      //       width: 5,
-      //     ),
-      //     ElevatedButton(
-      //       child: const Icon(Icons.refresh),
-      //       onPressed: () {
-      //         context.read<PersonalBloc>().add(FetchDataList());
-      //         Navigator.pushReplacement(
-      //             context,
-      //             MaterialPageRoute(
-      //                 builder: (BuildContext context) => super.widget));
-      //       },
-      //     ),
-      //     const SizedBox(
-      //       width: 5,
-      //     ),
-      //     ElevatedButton(
-      //       child: const Icon(Icons.navigate_before_rounded),
-      //       onPressed: () {
-      //         context.read<PersonalBloc>().add(BackPage());
-      //       },
-      //     ),
-      //     const SizedBox(
-      //       width: 5,
-      //     ),
-      //     BlocBuilder<PersonalBloc, PersonalState>(
-      //       builder: (context, state) {
-      //         return ElevatedButton(
-      //           child: const Icon(Icons.navigate_next_rounded),
-      //           onPressed: () {
-      //             context.read<PersonalBloc>().add(NextPage());
-      //           },
-      //         );
-      //       },
-      //     ),
-      //   ],
-      // ),
       backgroundColor: myDefaultBackground,
       body: SafeArea(
           child: Padding(
@@ -120,22 +72,29 @@ class _PersonalPageState extends State<PersonalPage> {
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
                                 elevation: 4,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        primary: Colors.white,
-                                        onPrimary: Colors.blue,
-                                        padding: const EdgeInsets.all(4)),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Icon(
-                                      Icons.arrow_back_ios_new_rounded,
-                                      color: Colors.black,
-                                      size: 20,
-                                    )),
+                                child: BlocBuilder<PersonalBloc, PersonalState>(
+                                  builder: (context, state) {
+                                    return ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.blue,
+                                            backgroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
+                                            padding: const EdgeInsets.all(4)),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          context
+                                              .read<PersonalBloc>()
+                                              .add(StateClearEvent());
+                                        },
+                                        child: const Icon(
+                                          Icons.arrow_back_ios_new_rounded,
+                                          color: Colors.black,
+                                          size: 20,
+                                        ));
+                                  },
+                                ),
                               )
                                   .animate()
                                   .slideX(duration: 350.milliseconds)
@@ -254,105 +213,6 @@ class _PersonalPageState extends State<PersonalPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            // Expanded(
-                            //     flex: 1,
-                            //     child: Container(
-                            //       color: Colors.amber,
-                            //       child: Card(
-                            //         elevation: 8,
-                            //         color: mysecondaryBackground,
-                            //         child: Row(
-                            //           crossAxisAlignment: CrossAxisAlignment.start,
-                            //           children: [
-                            //             Expanded(
-                            //               child: Padding(
-                            //                 padding: const EdgeInsets.all(8.0),
-                            //                 child: Column(
-                            //                   children: [
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder(
-                            //                             borderSide: BorderSide(
-                            //                               color: Colors.blue,
-                            //                             ),
-                            //                           )),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder()),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder()),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder()),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder()),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                   ],
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //             Expanded(
-                            //               child: Padding(
-                            //                 padding: const EdgeInsets.all(8.0),
-                            //                 child: Column(
-                            //                   children: [
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder()),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                     TextFormField(
-                            //                       decoration: InputDecoration(
-                            //                           filled: true,
-                            //                           fillColor: myDefaultBackground,
-                            //                           border:
-                            //                               const OutlineInputBorder()),
-                            //                     ),
-                            //                     const SizedBox(height: 8),
-                            //                   ],
-                            //                 ),
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ),
-                            //     )),
-                            // if (isExpandedList)
-                            //   Expanded(
-                            //       flex: 3,
-                            //       child: Container(
-                            //         //  color: Colors.black,
-                            //         child: const ListPersonbyId(),
-                            //       )),
                             if (isExpandedTable)
                               const Expanded(flex: 3, child: DataTablePerson()),
                           ],

@@ -124,9 +124,9 @@ class _ListPersonbyIdState extends State<ListPersonbyId> {
                               child: CircularProgressIndicator(),
                             )
                           : ListView.builder(
-                              itemCount: state.personData?.personData.length,
+                              itemCount: state.personData?.length,
                               itemBuilder: (context, index) {
-                                var data = state.personData?.personData[index];
+                                var data = state.personData?[index];
                                 final personid = data?.personId;
                                 final nameTH = data?.fisrtNameTh;
                                 final lastnameTH = data?.lastNameTh;

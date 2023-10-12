@@ -72,6 +72,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/loading.json
+    - assets/fail.json
+    - assets/success.json
+    - assets/successful.json
     - assets/education.png
     - assets/idcard.png
     - assets/passport.png

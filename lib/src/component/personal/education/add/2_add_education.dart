@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart';
 import 'package:hris_app_prototype/src/model/education/add/create_education_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/education_level_model.dart';
@@ -8,15 +10,15 @@ import 'package:hris_app_prototype/src/model/education/dropdown/education_qualif
 import 'package:hris_app_prototype/src/model/education/dropdown/institute_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/major_madel.dart';
 import 'package:hris_app_prototype/src/services/api_web_service.dart';
+
 import 'package:intl/intl.dart';
 import 'package:validatorless/validatorless.dart';
 
 class AddEducation extends StatefulWidget {
   final String personId;
-  const AddEducation({
-    super.key,
-    required this.personId,
-  });
+  final bool addButton;
+  const AddEducation(
+      {super.key, required this.personId, required this.addButton});
 
   @override
   State<AddEducation> createState() => _AddEducationState();
@@ -75,6 +77,8 @@ class _AddEducationState extends State<AddEducation> {
         admissionDate.text = _picker.toString().split(" ")[0];
         disableExp = true;
         graduatedDate.text = "";
+        onNewValue();
+        onValidate();
       });
     }
   }
@@ -91,9 +95,42 @@ class _AddEducationState extends State<AddEducation> {
     if (_picker != null) {
       setState(() {
         graduatedDate.text = _picker.toString().split(" ")[0];
+        onNewValue();
+        onValidate();
       });
     }
   }
+
+  void onValidate() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        CreateeducationModel addEducation = CreateeducationModel(
+          educationLevelId: educationlevel.toString(),
+          personId: widget.personId,
+          educationQualificationId: qualification.toString(),
+          institueId: institute.toString(),
+          countryId: countryId.toString(),
+          admissionDate: admissionDate.text,
+          graduatedDate: graduatedDate.text,
+          gpa: gpa.text,
+          majorId: major.toString(),
+        );
+
+        context
+            .read<PersonalBloc>()
+            .add(CreatedEducationEvent(creatededucationModel: addEducation));
+      });
+      context.read<PersonalBloc>().add(IsValidateProfileEvent());
+      context.read<PersonalBloc>().add(EducationValidateEvent());
+      context.read<PersonalBloc>().add(ContinueEvent());
+    } else {
+      context.read<PersonalBloc>().add(IsNotValidateProfileEvent());
+      context.read<PersonalBloc>().add(EducationValidateEvent());
+      context.read<PersonalBloc>().add(DissContinueEvent());
+    }
+  }
+
+  void onNewValue() {}
 
   onadd() async {
     CreateeducationModel addEducation = CreateeducationModel(
@@ -217,7 +254,7 @@ class _AddEducationState extends State<AddEducation> {
                                             value:
                                                 e.educationLevelId.toString(),
                                             child: SizedBox(
-                                                width: 300,
+                                                width: 280,
                                                 child:
                                                     Text(e.educationLevelTh)),
                                           );
@@ -226,6 +263,8 @@ class _AddEducationState extends State<AddEducation> {
                                           setState(() {
                                             educationlevel =
                                                 newValue.toString();
+                                            onNewValue();
+                                            onValidate();
                                           });
                                         },
                                       ),
@@ -259,6 +298,8 @@ class _AddEducationState extends State<AddEducation> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             countryId = newValue.toString();
+                                            onNewValue();
+                                            onValidate();
                                           });
                                         },
                                       ),
@@ -294,6 +335,8 @@ class _AddEducationState extends State<AddEducation> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             qualification = newValue.toString();
+                                            onNewValue();
+                                            onValidate();
                                           });
                                         },
                                       ),
@@ -321,13 +364,15 @@ class _AddEducationState extends State<AddEducation> {
                                           return DropdownMenuItem<String>(
                                             value: e.instituteId.toString(),
                                             child: SizedBox(
-                                                width: 300,
+                                                width: 280,
                                                 child: Text(e.instituteNameTh)),
                                           );
                                         }).toList(),
                                         onChanged: (newValue) {
                                           setState(() {
                                             institute = newValue.toString();
+                                            onNewValue();
+                                            onValidate();
                                           });
                                         },
                                       ),
@@ -369,6 +414,8 @@ class _AddEducationState extends State<AddEducation> {
                                         onChanged: (newValue) {
                                           setState(() {
                                             major = newValue.toString();
+                                            onNewValue();
+                                            onValidate();
                                           });
                                         },
                                       ),
@@ -455,6 +502,10 @@ class _AddEducationState extends State<AddEducation> {
                                               r'^\d+\.?\d{0,2}$')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
                                         ],
                                         controller: gpa,
+                                        onChanged: (value) {
+                                          onNewValue();
+                                          onValidate();
+                                        },
                                         decoration: const InputDecoration(
                                             hintText: 'กรอกเฉพาะตัวเลข',
                                             labelText: 'GPA : เกรดเฉลี่ย',
@@ -476,33 +527,34 @@ class _AddEducationState extends State<AddEducation> {
                           ],
                         ),
                       )),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.greenAccent, // Background color
-                          // Text Color (Foreground color)
+                  if (widget.addButton == true)
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                Colors.greenAccent, // Background color
+                            // Text Color (Foreground color)
+                          ),
+                          child: Text('Add',
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                              )),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // การตรวจสอบผ่านแล้ว
+                              // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
+                              onadd();
+                            } else {
+                              // การตรวจสอบไม่ผ่าน
+                              // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
+                            }
+                          },
                         ),
-                        child: Text('Add',
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                            )),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            // การตรวจสอบผ่านแล้ว
-                            // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
-                            onadd();
-                          } else {
-                            // การตรวจสอบไม่ผ่าน
-                            // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
-                          }
-                        },
                       ),
                     ),
-                  ),
                 ],
               ),
             ),

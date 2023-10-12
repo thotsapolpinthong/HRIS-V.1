@@ -153,11 +153,7 @@ class _UpdateAddressByTypeState extends State<UpdateAddressByType> {
               ],
             ),
           ),
-          btnOkOnPress: () {
-            setState(() {
-              fetchAddressDataById();
-            });
-          },
+          btnOkOnPress: () {},
         ).show();
       } else {
         AwesomeDialog(
@@ -234,25 +230,29 @@ class _UpdateAddressByTypeState extends State<UpdateAddressByType> {
                                           hintText: 'บ้านเลขที่',
                                         )),
                                         Expanded(
-                                            child: MyTextFormfieldAddress(
+                                            child:
+                                                MyTextFormfieldAddressunvalidator(
                                           controller: moo,
                                           labelText: 'Moo.',
                                           hintText: 'หมู่',
                                         )),
                                         Expanded(
-                                            child: MyTextFormfieldAddress(
+                                            child:
+                                                MyTextFormfieldAddressunvalidator(
                                           controller: housingProject,
                                           labelText: 'Housing Project.',
                                           hintText: 'หมู่บ้าน / อาคาร',
                                         )),
                                         Expanded(
-                                            child: MyTextFormfieldAddress(
+                                            child:
+                                                MyTextFormfieldAddressunvalidator(
                                           controller: street,
                                           labelText: 'Street.',
                                           hintText: 'ถนน',
                                         )),
                                         Expanded(
-                                            child: MyTextFormfieldAddress(
+                                            child:
+                                                MyTextFormfieldAddressunvalidator(
                                           controller: soi,
                                           labelText: 'Alley.',
                                           hintText: 'ซอย',
@@ -291,7 +291,10 @@ class _UpdateAddressByTypeState extends State<UpdateAddressByType> {
                                               items: countryList.map((e) {
                                                 return DropdownMenuItem<String>(
                                                   value: e.countryId.toString(),
-                                                  child: Text(e.countryNameTh),
+                                                  child: SizedBox(
+                                                      width: 140,
+                                                      child: Text(
+                                                          e.countryNameTh)),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -329,7 +332,10 @@ class _UpdateAddressByTypeState extends State<UpdateAddressByType> {
                                                 return DropdownMenuItem<String>(
                                                   value:
                                                       e.provinceId.toString(),
-                                                  child: Text(e.provinceNameTh),
+                                                  child: SizedBox(
+                                                      width: 140,
+                                                      child: Text(
+                                                          e.provinceNameTh)),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -377,7 +383,10 @@ class _UpdateAddressByTypeState extends State<UpdateAddressByType> {
                                                 return DropdownMenuItem<String>(
                                                   value:
                                                       e.districtId.toString(),
-                                                  child: Text(e.districtNameTh),
+                                                  child: SizedBox(
+                                                      width: 140,
+                                                      child: Text(
+                                                          e.districtNameTh)),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -423,8 +432,10 @@ class _UpdateAddressByTypeState extends State<UpdateAddressByType> {
                                                 return DropdownMenuItem<String>(
                                                   value: e.subDistrictId
                                                       .toString(),
-                                                  child:
-                                                      Text(e.subDistrictNameTh),
+                                                  child: SizedBox(
+                                                      width: 140,
+                                                      child: Text(
+                                                          e.subDistrictNameTh)),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {

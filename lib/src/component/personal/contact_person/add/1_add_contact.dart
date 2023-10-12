@@ -39,6 +39,7 @@ class _AddContactLayoutState extends State<AddContactLayout> {
                                   Expanded(
                                     child: AddContactPerson(
                                       personId: widget.personId,
+                                      addButton: false,
                                     ),
                                   ),
                                 ],

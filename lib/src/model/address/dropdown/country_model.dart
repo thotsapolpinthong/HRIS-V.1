@@ -35,23 +35,19 @@ class CountryDataModel {
 class CountryDatum {
   String countryId;
   String countryNameTh;
-  String countryNameEn;
 
   CountryDatum({
     required this.countryId,
     required this.countryNameTh,
-    required this.countryNameEn,
   });
 
   factory CountryDatum.fromJson(Map<String, dynamic> json) => CountryDatum(
         countryId: json["countryId"],
         countryNameTh: json["countryNameTh"],
-        countryNameEn: json["countryNameEn"],
       );
 
   Map<String, dynamic> toJson() => {
         "countryId": countryId,
         "countryNameTh": countryNameTh,
-        "countryNameEn": countryNameEn,
       };
 }

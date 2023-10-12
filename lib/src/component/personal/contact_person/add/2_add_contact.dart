@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/contact_person/add/create_contact_model.dart';
 import 'package:hris_app_prototype/src/model/person/dropdown/title.dart';
 import 'package:hris_app_prototype/src/services/api_web_service.dart';
@@ -8,9 +10,11 @@ import 'package:validatorless/validatorless.dart';
 
 class AddContactPerson extends StatefulWidget {
   final String personId;
+  final bool addButton;
   const AddContactPerson({
     super.key,
     required this.personId,
+    required this.addButton,
   });
 
   @override
@@ -45,6 +49,38 @@ class _AddContactPersonState extends State<AddContactPerson> {
       titlenameList = title.titleNameData;
     });
   }
+
+  void onValidate() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        CreateContactModel createContactModel = CreateContactModel(
+          personId: widget.personId,
+          relation: relation.text,
+          titleId: titlename.toString(),
+          firstName: firstname.text,
+          midName: midname.text,
+          lastName: lastname.text,
+          occupation: occupation.text,
+          companyName: companyName.text,
+          positionName: positionName.text,
+          homePhone: '',
+          mobilePhone: mobilePhone.text,
+        );
+
+        context.read<PersonalBloc>().add(
+            CreatedContactModelEvent(createContactModel: createContactModel));
+      });
+      context.read<PersonalBloc>().add(IsValidateProfileEvent());
+      context.read<PersonalBloc>().add(ContactValidateEvent());
+      context.read<PersonalBloc>().add(ContinueEvent());
+    } else {
+      context.read<PersonalBloc>().add(IsNotValidateProfileEvent());
+      context.read<PersonalBloc>().add(ContactValidateEvent());
+      context.read<PersonalBloc>().add(DissContinueEvent());
+    }
+  }
+
+  void onNewValue() {}
 
   onadd() async {
     CreateContactModel createContactModel = CreateContactModel(
@@ -162,6 +198,10 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                                 RegExp(r'[a-zA-Zก-๙]')),
                                           ],
                                           controller: relation,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                            onValidate();
+                                          },
                                           decoration: const InputDecoration(
                                               labelText:
                                                   'Relation : ความสัมพันธ์',
@@ -214,6 +254,8 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                           onChanged: (newValue) {
                                             setState(() {
                                               titlename = newValue.toString();
+                                              onNewValue();
+                                              onValidate();
                                             });
                                           },
                                         ),
@@ -242,6 +284,10 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                                 RegExp(r'[a-zA-Zก-๙]')),
                                           ],
                                           controller: firstname,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                            onValidate();
+                                          },
                                           decoration: const InputDecoration(
                                               labelText: 'Firstname : ชื่อ',
                                               labelStyle: TextStyle(
@@ -274,6 +320,10 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                                 RegExp(r'[a-zA-Zก-๙]')),
                                           ],
                                           controller: lastname,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                            onValidate();
+                                          },
                                           decoration: const InputDecoration(
                                               labelText: 'Lastname : นามสกุล',
                                               labelStyle: TextStyle(
@@ -308,6 +358,9 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                                 RegExp(r'[a-zA-Zก-๙]')),
                                           ],
                                           controller: midname,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                          },
                                           decoration: const InputDecoration(
                                               hintText: '(ถ้ามี)',
                                               labelText: 'Midname : ชื่อกลาง',
@@ -335,6 +388,10 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                           validator: Validatorless.required(
                                               'กรุณากรอกข้อมูล'),
                                           controller: occupation,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                            onValidate();
+                                          },
                                           decoration: const InputDecoration(
                                               labelText: 'Occupation : อาชีพ',
                                               labelStyle: TextStyle(
@@ -364,6 +421,9 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                           autovalidateMode:
                                               AutovalidateMode.always,
                                           controller: companyName,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                          },
                                           decoration: const InputDecoration(
                                               hintText: '(ถ้ามี)',
                                               labelText: 'Company : ชื่อบริษัท',
@@ -389,6 +449,9 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                           autovalidateMode:
                                               AutovalidateMode.always,
                                           controller: midname,
+                                          onChanged: (value) {
+                                            onNewValue();
+                                          },
                                           decoration: const InputDecoration(
                                               hintText: '(ถ้ามี)',
                                               labelText: 'Position : ตำแหน่ง',
@@ -411,6 +474,10 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                 child: TextFormField(
                                   autovalidateMode: AutovalidateMode.always,
                                   controller: mobilePhone,
+                                  onChanged: (value) {
+                                    onNewValue();
+                                    onValidate();
+                                  },
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
                                     FilteringTextInputFormatter.allow(RegExp(
@@ -439,33 +506,34 @@ class _AddContactPersonState extends State<AddContactPerson> {
                             ],
                           ),
                         )),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                Colors.greenAccent, // Background color
-                            // Text Color (Foreground color)
+                    if (widget.addButton == true)
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Colors.greenAccent, // Background color
+                              // Text Color (Foreground color)
+                            ),
+                            child: Text('Add',
+                                style: TextStyle(
+                                  color: Colors.grey[800],
+                                )),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                // การตรวจสอบผ่านแล้ว
+                                // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
+                                onadd();
+                              } else {
+                                // การตรวจสอบไม่ผ่าน
+                                // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
+                              }
+                            },
                           ),
-                          child: Text('Add',
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                              )),
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // การตรวจสอบผ่านแล้ว
-                              // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
-                              onadd();
-                            } else {
-                              // การตรวจสอบไม่ผ่าน
-                              // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
-                            }
-                          },
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),

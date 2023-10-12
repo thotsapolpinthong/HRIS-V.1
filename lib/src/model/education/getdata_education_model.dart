@@ -89,24 +89,20 @@ class EducationDatum {
 class Country {
   String countryId;
   String countryNameTh;
-  String countryNameEn;
 
   Country({
     required this.countryId,
     required this.countryNameTh,
-    required this.countryNameEn,
   });
 
   factory Country.fromJson(Map<String, dynamic> json) => Country(
         countryId: json["countryId"],
         countryNameTh: json["countryNameTh"],
-        countryNameEn: json["countryNameEn"],
       );
 
   Map<String, dynamic> toJson() => {
         "countryId": countryId,
         "countryNameTh": countryNameTh,
-        "countryNameEn": countryNameEn,
       };
 }
 

@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/education/add/2_add_education.dart';
 import 'package:hris_app_prototype/src/component/personal/education/update/2_update_education.dart';
 import 'package:hris_app_prototype/src/model/education/delete/delete_education_model.dart';
@@ -51,6 +52,8 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Row(
@@ -76,7 +79,7 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
                 ),
               ),
               content: SizedBox(
-                height: 500,
+                height: 360,
                 child: Column(
                   children: [
                     Expanded(
@@ -225,6 +228,8 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
               title: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 14),
                 child: Row(
@@ -252,12 +257,13 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
               content: StatefulBuilder(
                   builder: (BuildContext context, StateSetter setState) {
                 return SizedBox(
-                  height: 500,
+                  height: 440,
                   child: Column(
                     children: [
                       Expanded(
                         child: AddEducation(
                           personId: widget.personId,
+                          addButton: true,
                         ),
                       ),
                     ],
@@ -274,7 +280,7 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: Colors.deepPurple[100],
+            color: titleUpdateColors,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -284,9 +290,10 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
                   _isEducationExpanded = !_isEducationExpanded;
                 });
               },
-              leading: const Icon(Icons.school_outlined),
+              leading: const Icon(Icons.school_outlined, color: Colors.black54),
               title: const Text(
-                  'บันทึกประวัติการศึกษา (Education Information  TH/ENG)'),
+                  'บันทึกประวัติการศึกษา (Education Information  TH/ENG)',
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
               trailing: ExpandIcon(
                 isExpanded: _isEducationExpanded,
                 expandedColor: Colors.black,

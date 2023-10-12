@@ -17,21 +17,6 @@ class _AddCardInfoLayoutState extends State<AddCardInfoLayout> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // SizedBox(
-        //   height: 55,
-        //   child: Card(
-        //     color: Colors.greenAccent,
-        //     shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(12.0)),
-        //     elevation: 4,
-        //     child: const ListTile(
-        //       leading: Icon(Icons.credit_card_rounded),
-        //       title: Text(
-        //         'บันทึกข้อมูลบัตรประจำตัว (Card Information TH/ENG)',
-        //       ),
-        //     ),
-        //   ),
-        // ),
         SizedBox(
           height: 485,
           child: Padding(
@@ -43,13 +28,16 @@ class _AddCardInfoLayoutState extends State<AddCardInfoLayout> {
                   child: Container(),
                 ),
                 Expanded(
-                  flex: 11,
+                  flex: 14,
                   child: Column(
                     children: [
                       Stack(
                         children: [
                           Expanded(
-                            child: AddIdCard(personId: widget.personId),
+                            child: AddIdCard(
+                              personId: widget.personId,
+                              addButton: false,
+                            ),
                           ),
                           Expanded(
                             child: Card(
@@ -74,20 +62,27 @@ class _AddCardInfoLayoutState extends State<AddCardInfoLayout> {
                   flex: 1,
                   child: Container(),
                 ),
-                // const VerticalDivider(
-                //   thickness: 2,
-                //   indent: 40,
-                //   endIndent: 40,
-                //   width: 2,
-                // ),
+                const VerticalDivider(
+                  thickness: 2,
+                  indent: 40,
+                  endIndent: 40,
+                  width: 2,
+                ),
                 Expanded(
-                  flex: 11,
+                  flex: 1,
+                  child: Container(),
+                ),
+                Expanded(
+                  flex: 14,
                   child: Column(
                     children: [
                       Stack(
                         children: [
                           Expanded(
-                            child: AddPassport(personId: widget.personId),
+                            child: AddPassport(
+                              personId: widget.personId,
+                              addButton: false,
+                            ),
                           ),
                           const Expanded(
                             child: Card(

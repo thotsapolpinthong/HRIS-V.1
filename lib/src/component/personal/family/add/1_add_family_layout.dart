@@ -37,6 +37,7 @@ class _AddFamilyLayoutState extends State<AddFamilyLayout> {
                               Expanded(
                                 child: AddFamilymember(
                                   personId: widget.personId,
+                                  addButton: false,
                                 ),
                               ),
                             ],

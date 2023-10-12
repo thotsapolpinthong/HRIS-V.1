@@ -4,6 +4,7 @@ import 'package:hris_app_prototype/src/component/personal/education/add/2_add_ed
 
 class AddEducationLayout extends StatefulWidget {
   final String personId;
+
   const AddEducationLayout({super.key, required this.personId});
 
   @override
@@ -31,12 +32,15 @@ class _AddEducationLayoutState extends State<AddEducationLayout> {
                         height: 482,
                         child: Column(
                           children: [
-                            const SizedBox(height: 40),
+                            const SizedBox(height: 45),
                             Expanded(
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(horizontal: 4),
-                                child: AddEducation(personId: widget.personId),
+                                child: AddEducation(
+                                  personId: widget.personId,
+                                  addButton: false,
+                                ),
                               ),
                             ),
                           ],

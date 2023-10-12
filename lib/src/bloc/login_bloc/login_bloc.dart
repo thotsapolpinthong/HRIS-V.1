@@ -15,6 +15,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEvent>((event, emit) {});
 
     on<LoginEventLogin>((event, emit) async {
+      emit(state.copyWith(isAutlhened: false));
       final LoginModel? data =
           await ApiService.postApiLogin(event.username, event.password);
       if (data!.status == true) {

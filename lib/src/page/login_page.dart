@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                                   backgroundColor: MaterialStatePropertyAll(
                                 Color.fromRGBO(69, 93, 219, 1),
                               )),
-                              child: isloading == true
+                              child: state.isAutlhened == false
                                   ? const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
