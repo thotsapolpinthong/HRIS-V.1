@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hris_app_prototype/main.dart';
 import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/routes/routes.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 part 'login_event.dart';

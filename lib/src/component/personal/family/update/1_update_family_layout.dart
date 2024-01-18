@@ -6,7 +6,7 @@ import 'package:hris_app_prototype/src/component/personal/family/add/2_add_famil
 import 'package:hris_app_prototype/src/component/personal/family/update/2_update_family.dart';
 import 'package:hris_app_prototype/src/model/education/delete/delete_education_model.dart';
 import 'package:hris_app_prototype/src/model/family_member/get_family_by_id_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -33,7 +33,7 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
     super.initState();
   }
 
-  void fetchData() async {
+  fetchData() async {
     familydata = await ApiService.getFamilyById(widget.personId);
 
     setState(() {
@@ -279,7 +279,7 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: titleUpdateColors,
+            color: mythemecolor,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -291,14 +291,17 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
               },
               leading: const Icon(
                 Icons.family_restroom_rounded,
-                color: Colors.black54,
+                color: Colors.white,
               ),
               title: const Text(
                   'บันทึกข้อมูลครอบครัว (Family Member Information TH/EN)',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                      color: Colors.white)),
               trailing: ExpandIcon(
                 isExpanded: _isFamilyExpanded,
-                expandedColor: Colors.black,
+                color: Colors.white,
                 onPressed: (bool isExpanded) {
                   setState(() {
                     _isFamilyExpanded = !isExpanded;
@@ -321,118 +324,122 @@ class _UpdateFamilybypersonbypersonState extends State<UpdateFamilybyperson> {
                 children: [
                   Expanded(
                     flex: 9,
-                    child: FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: itemCount,
-                              itemBuilder: (context, index) {
-                                var data = familydata?.familyMemberData[index];
-                                final familymembername = data
-                                    ?.familyMemberTypeData.familyMemberTypeName;
-                                final titlename =
-                                    data?.titleNameData.titleNameTh;
-                                final name = data?.firstName;
-                                final lastname = data?.lastName;
-                                final midname = data?.midName == 'ไม่ระบุข้อมูล'
-                                    ? ''
-                                    : data?.midName;
-                                final vital =
-                                    data?.vitalStatusData.vitalStatusName;
-                                String durationString = '${data?.age}';
-                                List<String> parts = durationString.split(' ');
-                                int years = int.tryParse(parts[0]) ?? 0;
+                    child: FutureBuilder(
+                        future: fetchData(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: itemCount,
+                                  itemBuilder: (context, index) {
+                                    var data =
+                                        familydata?.familyMemberData[index];
+                                    final familymembername = data
+                                        ?.familyMemberTypeData
+                                        .familyMemberTypeName;
+                                    final titlename =
+                                        data?.titleNameData.titleNameTh;
+                                    final name = data?.firstName;
+                                    final lastname = data?.lastName;
+                                    final midname =
+                                        data?.midName == 'ไม่ระบุข้อมูล'
+                                            ? ''
+                                            : data?.midName;
+                                    final vital =
+                                        data?.vitalStatusData.vitalStatusName;
+                                    String durationString = '${data?.age}';
+                                    List<String> parts =
+                                        durationString.split(' ');
+                                    int years = int.tryParse(parts[0]) ?? 0;
 
-                                return datanull == true
-                                    ? const Center(
-                                        child: SizedBox(
-                                            height: 200,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text('ไม่พบข้อมูลครอบครัว'),
-                                              ],
-                                            )),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        child: ListTile(
-                                          onTap: () {},
-                                          leading: const Icon(Icons.person),
-                                          title: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              const Text('ความสัมพันธ์ : '),
-                                              Text(
-                                                '$familymembername',
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          subtitle: Text(
-                                              '$titlename $name $midname $lastname   |   อายุ : $years ปี   |   ปัจจุบัน : $vital'),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                    return datanull == true
+                                        ? const Center(
+                                            child: SizedBox(
+                                                height: 200,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text('ไม่พบข้อมูลครอบครัว'),
+                                                  ],
+                                                )),
+                                          )
+                                        : Card(
+                                            elevation: 4,
+                                            child: ListTile(
+                                              onTap: () {},
+                                              leading: const Icon(Icons.person),
+                                              title: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
                                                 children: [
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color:
-                                                            Colors.yellow[800],
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            showDialogEditFamily(
-                                                                data);
-                                                          });
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.edit)),
+                                                  const Text('ความสัมพันธ์ : '),
+                                                  Text(
+                                                    '$familymembername',
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color: Colors.red,
-                                                        onPressed: () {
-                                                          // showdialogDelete(data!
-                                                          //     .educaationId);
-                                                        },
-                                                        icon: const Icon(Icons
-                                                            .delete_rounded)),
-                                                  ),
-                                                ]),
-                                          ),
-                                        ),
-                                      );
-                              },
-                            );
-                    }),
+                                                ],
+                                              ),
+                                              subtitle: Text(
+                                                  '$titlename $name $midname $lastname   |   อายุ : $years ปี   |   ปัจจุบัน : $vital'),
+                                              trailing: SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        child: IconButton(
+                                                            splashRadius: 30,
+                                                            color: Colors
+                                                                .yellow[800],
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                showDialogEditFamily(
+                                                                    data);
+                                                              });
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons.edit)),
+                                                      ),
+                                                      Container(
+                                                        child: IconButton(
+                                                            splashRadius: 30,
+                                                            color: Colors.red,
+                                                            onPressed: () {
+                                                              // showdialogDelete(data!
+                                                              //     .educaationId);
+                                                            },
+                                                            icon: const Icon(Icons
+                                                                .delete_rounded)),
+                                                      ),
+                                                    ]),
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                );
+                        }),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    showDialogAddFamily();
-                                  },
-                                  child: const Icon(Icons.add, size: 20)),
-                            ],
-                          )),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                showDialogAddFamily();
+                              },
+                              child: const Icon(Icons.add, size: 20)),
+                        ],
+                      ),
                     ),
                   )
                 ],

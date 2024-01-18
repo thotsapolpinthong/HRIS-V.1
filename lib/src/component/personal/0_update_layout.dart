@@ -23,7 +23,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: mygreycolors,
         ),
         width: MediaQuery.of(context).size.width - 40,
         height: MediaQuery.of(context).size.height - 20,
@@ -38,7 +38,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   elevation: 4,
-                  color: mygreycolors,
+                  color: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: const Text(
@@ -79,7 +79,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12.0)),
                           elevation: 10,
-                          color: Colors.grey[200],
+                          color: Colors.white,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: UpdatePersonbyId(

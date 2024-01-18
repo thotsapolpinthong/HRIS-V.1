@@ -6,7 +6,7 @@ import 'package:hris_app_prototype/src/component/personal/contact_person/add/2_a
 import 'package:hris_app_prototype/src/component/personal/contact_person/update/2_update_contact.dart';
 import 'package:hris_app_prototype/src/model/contact_person/delete/delete_contact_model.dart';
 import 'package:hris_app_prototype/src/model/contact_person/getdata_contact_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -32,7 +32,7 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
     super.initState();
   }
 
-  void fetchData() async {
+  fetchData() async {
     contactdata = await ApiService.getContactById(widget.personId);
 
     setState(() {
@@ -278,7 +278,7 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: titleUpdateColors,
+            color: mythemecolor,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -289,15 +289,18 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
                 });
               },
               leading: const Icon(
-                Icons.contact_phone_outlined,
-                color: Colors.black54,
+                Icons.contact_phone_rounded,
+                color: Colors.white,
               ),
               title: const Text(
                   'บันทึกข้อมูลบุคคลที่สามารถติดต่อได้ (Contact Person Information TH/EN)',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                      color: Colors.white)),
               trailing: ExpandIcon(
                 isExpanded: _isContactExpanded,
-                expandedColor: Colors.black,
+                color: Colors.white,
                 onPressed: (bool isExpanded) {
                   setState(() {
                     _isContactExpanded = !isExpanded;
@@ -320,123 +323,125 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
                 children: [
                   Expanded(
                     flex: 9,
-                    child: FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: itemCount,
-                              itemBuilder: (context, index) {
-                                var data =
-                                    contactdata?.contactPersonInfoData[index];
-                                final title = data?.titleName.titleNameTh;
-                                final relationship = data?.relation;
-                                final firstname = data?.firstName;
-                                final lastname = data?.lastName;
-                                final occupation = data?.occupation;
-                                final companyname =
-                                    data?.companyName == 'ไม่พบข้อมูล'
-                                        ? '  - '
-                                        : data?.companyName;
-                                final positionname =
-                                    data?.positionName == 'ไม่พบข้อมูล'
-                                        ? '  - '
-                                        : data?.positionName;
-                                final tel = data?.mobilePhone;
-                                final midname = data?.midName == 'ไม่พบข้อมูล'
-                                    ? ''
-                                    : data?.midName;
+                    child: FutureBuilder(
+                        future: fetchData(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: itemCount,
+                                  itemBuilder: (context, index) {
+                                    var data = contactdata
+                                        ?.contactPersonInfoData[index];
+                                    final title = data?.titleName.titleNameTh;
+                                    final relationship = data?.relation;
+                                    final firstname = data?.firstName;
+                                    final lastname = data?.lastName;
+                                    final occupation = data?.occupation;
+                                    final companyname =
+                                        data?.companyName == 'ไม่พบข้อมูล'
+                                            ? '  - '
+                                            : data?.companyName;
+                                    final positionname =
+                                        data?.positionName == 'ไม่พบข้อมูล'
+                                            ? '  - '
+                                            : data?.positionName;
+                                    final tel = data?.mobilePhone;
+                                    final midname =
+                                        data?.midName == 'ไม่พบข้อมูล'
+                                            ? ''
+                                            : data?.midName;
 
-                                return datanull == true
-                                    ? const Center(
-                                        child: SizedBox(
-                                            height: 200,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text('ไม่พบข้อมูลผู้ติดต่อ'),
-                                              ],
-                                            )),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        child: ListTile(
-                                          onTap: () {},
-                                          leading: const Icon(Icons
-                                              .quick_contacts_dialer_rounded),
-                                          title: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.end,
-                                            children: [
-                                              const Text('ความสัมพันธ์ : '),
-                                              Text(
-                                                '$relationship',
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          subtitle: Text(
-                                              '$title $firstname $midname $lastname   |   อาชีพ : $occupation   |   ชื่อ บริษัท : $companyname   |   ตำแหน่ง : $positionname   |   เบอร์โทรติดต่อ : $tel'),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
+                                    return datanull == true
+                                        ? const Center(
+                                            child: SizedBox(
+                                                height: 200,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                        'ไม่พบข้อมูลผู้ติดต่อ'),
+                                                  ],
+                                                )),
+                                          )
+                                        : Card(
+                                            elevation: 4,
+                                            child: ListTile(
+                                              onTap: () {},
+                                              leading: const Icon(Icons
+                                                  .quick_contacts_dialer_rounded),
+                                              title: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
                                                 children: [
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color:
-                                                            Colors.yellow[800],
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            showDialogEditContact(
-                                                                data);
-                                                          });
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.edit)),
+                                                  const Text('ความสัมพันธ์ : '),
+                                                  Text(
+                                                    '$relationship',
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color: Colors.red,
-                                                        onPressed: () {
-                                                          showdialogDelete(data!
-                                                              .contactPersonInfoId);
-                                                        },
-                                                        icon: const Icon(Icons
-                                                            .delete_rounded)),
-                                                  ),
-                                                ]),
-                                          ),
-                                        ),
-                                      );
-                              },
-                            );
-                    }),
+                                                ],
+                                              ),
+                                              subtitle: Text(
+                                                  '$title $firstname $midname $lastname   |   อาชีพ : $occupation   |   ชื่อ บริษัท : $companyname   |   ตำแหน่ง : $positionname   |   เบอร์โทรติดต่อ : $tel'),
+                                              trailing: SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        child: IconButton(
+                                                            splashRadius: 30,
+                                                            color: Colors
+                                                                .yellow[800],
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                showDialogEditContact(
+                                                                    data);
+                                                              });
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons.edit)),
+                                                      ),
+                                                      Container(
+                                                        child: IconButton(
+                                                            splashRadius: 30,
+                                                            color: Colors.red,
+                                                            onPressed: () {
+                                                              showdialogDelete(data!
+                                                                  .contactPersonInfoId);
+                                                            },
+                                                            icon: const Icon(Icons
+                                                                .delete_rounded)),
+                                                      ),
+                                                    ]),
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                );
+                        }),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    showDialogAddContact();
-                                  },
-                                  child: const Icon(Icons.add, size: 20)),
-                            ],
-                          )),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                showDialogAddContact();
+                              },
+                              child: const Icon(Icons.add, size: 20)),
+                        ],
+                      ),
                     ),
                   )
                 ],

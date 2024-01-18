@@ -9,7 +9,7 @@ import 'package:hris_app_prototype/src/model/education/dropdown/education_level_
 import 'package:hris_app_prototype/src/model/education/dropdown/education_qualification_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/institute_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/major_madel.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 
 import 'package:intl/intl.dart';
 import 'package:validatorless/validatorless.dart';
@@ -426,8 +426,7 @@ class _AddEducationState extends State<AddEducation> {
                                         child: TextFormField(
                                           autovalidateMode:
                                               AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'กรุณากรอกข้อมูล'),
+                                          validator: null,
                                           controller: admissionDate,
                                           decoration: const InputDecoration(
                                             labelText:
@@ -458,8 +457,7 @@ class _AddEducationState extends State<AddEducation> {
                                         child: TextFormField(
                                           autovalidateMode:
                                               AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'กรุณากรอกข้อมูล'),
+                                          validator: null,
                                           controller: graduatedDate,
                                           decoration: const InputDecoration(
                                             labelText:
@@ -487,15 +485,14 @@ class _AddEducationState extends State<AddEducation> {
                                     ),
                                     Card(
                                       child: TextFormField(
-                                        autovalidateMode:
-                                            AutovalidateMode.always,
-                                        validator: Validatorless.multiple([
-                                          Validatorless.required(
-                                              'กรุณากรอกข้อมูล'),
-                                          Validatorless.regex(
-                                              RegExp(r'^[0-4](\.\d{1,2})?$'),
-                                              'x.xx')
-                                        ]),
+                                        validator: null,
+                                        //  Validatorless.multiple([
+                                        //   Validatorless.required(
+                                        //       'กรุณากรอกข้อมูล'),
+                                        //   Validatorless.regex(
+                                        //       RegExp(r'^[0-4](\.\d{1,2})?$'),
+                                        //       'x.xx')
+                                        // ]),
                                         keyboardType: TextInputType.number,
                                         inputFormatters: [
                                           FilteringTextInputFormatter.allow(RegExp(
@@ -503,7 +500,7 @@ class _AddEducationState extends State<AddEducation> {
                                         ],
                                         controller: gpa,
                                         onChanged: (value) {
-                                          onNewValue();
+                                          // onNewValue();
                                           onValidate();
                                         },
                                         decoration: const InputDecoration(

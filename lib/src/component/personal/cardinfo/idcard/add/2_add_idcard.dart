@@ -7,7 +7,7 @@ import 'package:hris_app_prototype/src/model/address/dropdown/district_model.dar
 import 'package:hris_app_prototype/src/model/address/dropdown/province.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/add/create_idcard_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/update/getidentifycard_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:intl/intl.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -319,7 +319,7 @@ class _AddIdCardState extends State<AddIdCard> {
                                           'กรุณากรอกข้อมูล'),
                                       decoration: const InputDecoration(
                                         labelText:
-                                            'Expired Date : วันหมดอายุบัคร',
+                                            'Expired Date : วันหมดอายุบัตร',
                                         labelStyle:
                                             TextStyle(color: Colors.black),
                                         filled: true,
@@ -421,7 +421,9 @@ class _AddIdCardState extends State<AddIdCard> {
                                       items: districtList.map((e) {
                                         return DropdownMenuItem<String>(
                                           value: e.districtId.toString(),
-                                          child: Text(e.districtNameTh),
+                                          child: SizedBox(
+                                              width: 100,
+                                              child: Text(e.districtNameTh)),
                                         );
                                       }).toList(),
                                       onChanged: (newValue) {
@@ -442,8 +444,7 @@ class _AddIdCardState extends State<AddIdCard> {
                       if (widget.addButton == true)
                         Align(
                           alignment: Alignment.bottomRight,
-                          child: Expanded(
-                              child: Padding(
+                          child: Padding(
                             padding: const EdgeInsets.all(3.0),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -458,7 +459,7 @@ class _AddIdCardState extends State<AddIdCard> {
                                   "Add",
                                   style: TextStyle(color: Colors.black87),
                                 )),
-                          )),
+                          ),
                         )
                     ],
                   ),

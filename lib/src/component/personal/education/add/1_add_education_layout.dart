@@ -14,67 +14,60 @@ class AddEducationLayout extends StatefulWidget {
 class _AddEducationLayoutState extends State<AddEducationLayout> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 500,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                Expanded(flex: 1, child: Container()),
-                Expanded(
-                  flex: 4,
-                  child: Stack(
-                    children: [
-                      Expanded(
-                          child: SizedBox(
-                        height: 482,
-                        child: Column(
-                          children: [
-                            const SizedBox(height: 45),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: AddEducation(
-                                  personId: widget.personId,
-                                  addButton: false,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )),
-                      const Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          child: Card(
-                            color: Colors.greenAccent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(8))),
-                            child: SizedBox(
-                              height: 50,
-                              child: Center(
-                                child: Text(
-                                  'เพิ่มประวัติการศึกษา (Education Information.)',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
-                            ),
-                          ),
+    return SizedBox(
+      height: 500,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          children: [
+            Expanded(flex: 1, child: Container()),
+            Expanded(
+              flex: 4,
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 482,
+                    child: Column(
+                  children: [
+                    const SizedBox(height: 40),
+                    Expanded(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 4),
+                        child: AddEducation(
+                          personId: widget.personId,
+                          addButton: false,
                         ),
                       ),
-                    ],
+                    ),
+                  ],
+                    ),
                   ),
-                ),
-                Expanded(flex: 1, child: Container()),
-              ],
+                  const Padding(
+                     padding: EdgeInsets.symmetric(horizontal: 3),
+                     child: Card(
+                       color: Colors.greenAccent,
+                       shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.vertical(
+                               top: Radius.circular(8))),
+                       child: SizedBox(
+                         height: 50,
+                         child: Center(
+                           child: Text(
+                             'เพิ่มประวัติการศึกษา (Education Information.)',
+                             style: TextStyle(fontSize: 16),
+                           ),
+                         ),
+                       ),
+                     ),
+                   ),
+                ],
+              ),
             ),
-          ),
+            Expanded(flex: 1, child: Container()),
+          ],
         ),
-      ],
+      ),
     ).animate().fade(duration: 300.ms);
   }
 }

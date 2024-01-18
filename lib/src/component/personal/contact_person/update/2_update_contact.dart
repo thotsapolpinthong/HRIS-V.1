@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hris_app_prototype/src/model/contact_person/getdata_contact_model.dart';
 import 'package:hris_app_prototype/src/model/contact_person/update/update_contact_model.dart';
 import 'package:hris_app_prototype/src/model/person/dropdown/title.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 

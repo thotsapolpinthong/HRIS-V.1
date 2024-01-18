@@ -7,7 +7,7 @@ import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart
 import 'package:hris_app_prototype/src/model/address/dropdown/district_model.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/province.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/subdistrict_Model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:validatorless/validatorless.dart';
 
 class AddAddressByType extends StatefulWidget {

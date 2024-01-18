@@ -15,102 +15,82 @@ class _AddCardInfoLayoutState extends State<AddCardInfoLayout> {
   bool isloading = true;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 485,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
-                Expanded(
-                  flex: 14,
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          Expanded(
-                            child: AddIdCard(
-                              personId: widget.personId,
-                              addButton: false,
-                            ),
-                          ),
-                          Expanded(
-                            child: Card(
-                                color: Colors.blue[100],
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(8))),
-                                child: const SizedBox(
-                                  height: 50,
-                                  child: Center(
-                                      child: Text(
-                                          'Identification Card : บัตรประจำตัวประชาชน',
-                                          style: TextStyle(fontSize: 16))),
-                                )),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
-                const VerticalDivider(
-                  thickness: 2,
-                  indent: 40,
-                  endIndent: 40,
-                  width: 2,
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
-                Expanded(
-                  flex: 14,
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          Expanded(
-                            child: AddPassport(
-                              personId: widget.personId,
-                              addButton: false,
-                            ),
-                          ),
-                          const Expanded(
-                            child: Card(
-                                color: Color.fromARGB(255, 240, 210, 214),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(8))),
-                                child: SizedBox(
-                                  height: 50,
-                                  child: Center(
-                                      child: Text('Passport : หนังสือเดินทาง',
-                                          style: TextStyle(fontSize: 16))),
-                                )),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
-              ],
+    return SizedBox(
+      height: 485,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Row(crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 1,
+              child: Container(),
             ),
-          ),
-        ).animate().fade(duration: 300.ms),
-      ],
-    );
+            Expanded(
+              flex: 14,
+              child: Stack(
+                children: [
+                  AddIdCard(
+                    personId: widget.personId,
+                    addButton: false,
+                  ),
+                  Card(
+                      color: Colors.blue[100],
+                      shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(8))),
+                      child: const SizedBox(
+                        height: 50,
+                        child: Center(
+                            child: Text(
+                                'Identification Card : บัตรประจำตัวประชาชน',
+                                style: TextStyle(fontSize: 16))),
+                      )),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+            const VerticalDivider(
+              thickness: 2,
+              indent: 40,
+              endIndent: 40,
+              width: 2,
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+            Expanded(
+              flex: 14,
+              child: Stack(
+                children: [
+                  AddPassport(
+                    personId: widget.personId,
+                    addButton: false,
+                  ),
+                  const Card(
+                       color: Color.fromARGB(255, 240, 210, 214),
+                       shape: RoundedRectangleBorder(
+                           borderRadius: BorderRadius.vertical(
+                               top: Radius.circular(8))),
+                       child: SizedBox(
+                         height: 50,
+                         child: Center(
+                             child: Text('Passport : หนังสือเดินทาง',
+                                 style: TextStyle(fontSize: 16))),
+                       )),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(),
+            ),
+          ],
+        ),
+      ),
+    ).animate().fade(duration: 300.ms);
   }
 }

@@ -8,6 +8,8 @@ abstract class PersonalEvent extends Equatable {
 
 class FetchDataList extends PersonalEvent {}
 
+class FetchDataNotInEmployeeList extends PersonalEvent {}
+
 class CreatedPersonalEvent extends PersonalEvent {}
 
 class StateClearEvent extends PersonalEvent {}

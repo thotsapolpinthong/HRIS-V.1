@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/update/editpassport_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/update/getpassport_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:intl/intl.dart';

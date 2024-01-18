@@ -8,7 +8,7 @@ import 'package:hris_app_prototype/src/model/education/dropdown/institute_model.
 import 'package:hris_app_prototype/src/model/education/dropdown/major_madel.dart';
 import 'package:hris_app_prototype/src/model/education/getdata_education_model.dart';
 import 'package:hris_app_prototype/src/model/education/update/update_education_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';

@@ -7,7 +7,7 @@ import 'package:hris_app_prototype/src/model/family_member/add/create_family_mod
 import 'package:hris_app_prototype/src/model/family_member/dropdown/family_type_model.dart';
 import 'package:hris_app_prototype/src/model/family_member/dropdown/vital_status_model.dart';
 import 'package:hris_app_prototype/src/model/person/dropdown/title.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:validatorless/validatorless.dart';
 
 class AddFamilymember extends StatefulWidget {

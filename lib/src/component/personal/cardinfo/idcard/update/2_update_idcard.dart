@@ -4,7 +4,7 @@ import 'package:hris_app_prototype/src/model/address/dropdown/district_model.dar
 import 'package:hris_app_prototype/src/model/address/dropdown/province.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/update/getidentifycard_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/update/updateidcard_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 import 'package:intl/intl.dart';

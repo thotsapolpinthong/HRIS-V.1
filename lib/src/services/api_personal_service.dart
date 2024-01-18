@@ -97,6 +97,24 @@ class ApiService {
     return null;
   }
 
+  static Future<PersonData?> fetchPersonalNotInEmployeeData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse("$baseUrl/GetPersonNotInEmployee"),
+      headers: {
+        "Authorization": "Bearer $sharedToken",
+      },
+    );
+    if (response.statusCode == 200) {
+      PersonData data = personDataFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      }
+    }
+    return null;
+  }
+
   static Future<PersonByIdModel?> fetchPersonById(String personId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;

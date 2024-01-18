@@ -13,7 +13,7 @@ import 'package:hris_app_prototype/src/model/person/dropdown/religion.model.dart
 import 'package:hris_app_prototype/src/model/person/dropdown/title.dart';
 import 'package:hris_app_prototype/src/model/person/personbyId_model.dart';
 import 'package:hris_app_prototype/src/model/person/update_person_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
@@ -690,7 +690,6 @@ class _UpdatePersonbyIdState extends State<UpdatePersonbyId> {
                           controller: email,
                           validator: Validatorless.multiple([
                             Validatorless.email('admin@example.com'),
-                            Validatorless.required("กรุณากรอกข้อมูล")
                           ]),
                           decoration: const InputDecoration(
                               hintText: 'E-mail',

@@ -13,60 +13,53 @@ class AddFamilyLayout extends StatefulWidget {
 class _AddFamilyLayoutState extends State<AddFamilyLayout> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 490,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                Expanded(flex: 2, child: Container()),
-                Expanded(
-                  flex: 4,
-                  child: Stack(
+    return SizedBox(
+      height: 490,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          children: [
+            Expanded(flex: 2, child: Container()),
+            Expanded(
+              flex: 4,
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 482,
+                    child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Column(
                     children: [
+                      const SizedBox(height: 40),
                       Expanded(
-                          child: SizedBox(
-                        height: 482,
-                        child: Padding(
-                          padding: const EdgeInsets.all(1.0),
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 40),
-                              Expanded(
-                                child: AddFamilymember(
-                                  personId: widget.personId,
-                                  addButton: false,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: AddFamilymember(
+                          personId: widget.personId,
+                          addButton: false,
                         ),
-                      )),
-                      const Expanded(
-                        child: Card(
-                            color: Colors.greenAccent,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(8))),
-                            child: SizedBox(
-                              height: 50,
-                              child: Center(
-                                  child: Text(
-                                      'เพิ่มข้อมูลครอบครัว (Family Member Information)',
-                                      style: TextStyle(fontSize: 16))),
-                            )),
                       ),
                     ],
                   ),
-                ),
-                Expanded(flex: 2, child: Container()),
-              ],
+                    ),
+                  ),
+                 const Card(
+                      color: Colors.greenAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(8))),
+                      child: SizedBox(
+                        height: 50,
+                        child: Center(
+                            child: Text(
+                                'เพิ่มข้อมูลครอบครัว (Family Member Information)',
+                                style: TextStyle(fontSize: 16))),
+                      )),
+                ],
+              ),
             ),
-          ),
-        ).animate().fade(duration: 300.ms),
-      ],
-    );
+            Expanded(flex: 2, child: Container()),
+          ],
+        ),
+      ),
+    ).animate().fade(duration: 300.ms);
   }
 }

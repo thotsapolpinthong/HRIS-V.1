@@ -13,64 +13,57 @@ class AddContactLayout extends StatefulWidget {
 class _AddContactLayoutState extends State<AddContactLayout> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 565,
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              children: [
-                Expanded(flex: 2, child: Container()),
-                Expanded(
-                  flex: 4,
-                  child: Column(
+    return SizedBox(
+      height: 520,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          children: [
+            Expanded(flex: 2, child: Container()),
+            Expanded(
+              flex: 4,
+              child: Column(
+                children: [
+                  Stack(
                     children: [
-                      Stack(
+                      SizedBox(
+                        height: 510,
+                        child: Padding(
+                      padding: const EdgeInsets.all(1.0),
+                      child: Column(
                         children: [
+                          const SizedBox(height: 40),
                           Expanded(
-                              child: SizedBox(
-                            height: 557,
-                            child: Padding(
-                              padding: const EdgeInsets.all(1.0),
-                              child: Column(
-                                children: [
-                                  const SizedBox(height: 40),
-                                  Expanded(
-                                    child: AddContactPerson(
-                                      personId: widget.personId,
-                                      addButton: false,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            child: AddContactPerson(
+                              personId: widget.personId,
+                              addButton: false,
                             ),
-                          )),
-                          const Expanded(
-                            child: Card(
-                                color: Colors.greenAccent,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(8))),
-                                child: SizedBox(
-                                  height: 50,
-                                  child: Center(
-                                      child: Text(
-                                          'เพิ่มข้อมูลบุคคลที่สามารถติดต่อได้ (Contact Person Information)',
-                                          style: TextStyle(fontSize: 16))),
-                                )),
                           ),
                         ],
                       ),
+                        ),
+                      ),
+                     const Card(
+                          color: Colors.greenAccent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(8))),
+                          child: SizedBox(
+                            height: 50,
+                            child: Center(
+                                child: Text(
+                                    'เพิ่มข้อมูลบุคคลที่สามารถติดต่อได้ (Contact Person Information)',
+                                    style: TextStyle(fontSize: 16))),
+                          )),
                     ],
                   ),
-                ),
-                Expanded(flex: 2, child: Container()),
-              ],
+                ],
+              ),
             ),
-          ),
-        ).animate().fade(duration: 300.ms),
-      ],
-    );
+            Expanded(flex: 2, child: Container()),
+          ],
+        ),
+      ),
+    ).animate().fade(duration: 300.ms);
   }
 }

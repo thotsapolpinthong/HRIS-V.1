@@ -5,7 +5,7 @@ import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/component/personal/0_update_layout.dart';
 import 'package:hris_app_prototype/src/model/person/allperson_model.dart';
 import 'package:hris_app_prototype/src/model/person/deleteperson_madel.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -30,7 +30,7 @@ class _DataTablePersonState extends State<DataTablePerson2> {
 
   var pageNumber = 1;
   var pageSize = 100;
-  void fetchUser() async {
+  fetchUser() async {
     //context.read<PersonalBloc>().add(FetchDataList());
     _personData = await ApiService.fetchAllPersonalData();
     setState(() {
@@ -50,51 +50,57 @@ class _DataTablePersonState extends State<DataTablePerson2> {
                 flex: 9,
                 child: BlocBuilder<PersonalBloc, PersonalState>(
                   builder: (context, state) {
-                    return FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: SingleChildScrollView(
-                                  child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Card(
-                                  color: Colors.grey[100],
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.0)),
-                                  elevation: 4,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 40, vertical: 12),
-                                    child: DataTable(
-                                      decoration: BoxDecoration(),
-                                      horizontalMargin: 1,
-                                      columns: const [
-                                        DataColumn(
-                                            label: Icon(Icons.person_rounded)),
-                                        DataColumn(label: Text('รหัสประจำตัว')),
-                                        DataColumn(label: Text('แผนก')),
-                                        DataColumn(label: Text('ชื่อ(TH)')),
-                                        DataColumn(label: Text('นามสกุล(TH)')),
-                                        DataColumn(label: Text('Name(EN)')),
-                                        DataColumn(label: Text('Lastname(EN)')),
-                                        DataColumn(label: Text('ประเภท')),
-                                        DataColumn(label: Text('สถานะ')),
-                                        DataColumn(label: Text('ตำแแหน่ง')),
-                                        DataColumn(
-                                            label: Text('  Edit/Remove')),
-                                      ],
-                                      rows: getRows(personData),
+                    return FutureBuilder(
+                        future: fetchUser(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: SingleChildScrollView(
+                                      child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Card(
+                                      color: Colors.grey[100],
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12.0)),
+                                      elevation: 4,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 12),
+                                        child: DataTable(
+                                          decoration: BoxDecoration(),
+                                          horizontalMargin: 1,
+                                          columns: const [
+                                            DataColumn(
+                                                label:
+                                                    Icon(Icons.person_rounded)),
+                                            DataColumn(
+                                                label: Text('รหัสประจำตัว')),
+                                            DataColumn(label: Text('แผนก')),
+                                            DataColumn(label: Text('ชื่อ(TH)')),
+                                            DataColumn(
+                                                label: Text('นามสกุล(TH)')),
+                                            DataColumn(label: Text('Name(EN)')),
+                                            DataColumn(
+                                                label: Text('Lastname(EN)')),
+                                            DataColumn(label: Text('ประเภท')),
+                                            DataColumn(label: Text('สถานะ')),
+                                            DataColumn(label: Text('ตำแแหน่ง')),
+                                            DataColumn(
+                                                label: Text('  Edit/Remove')),
+                                          ],
+                                          rows: getRows(personData),
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )),
-                            );
-                    });
+                                  )),
+                                );
+                        });
                   },
                 ),
               ),

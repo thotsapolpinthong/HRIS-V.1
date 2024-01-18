@@ -8,7 +8,7 @@ import 'package:hris_app_prototype/src/model/education/add/create_education_mode
 import 'package:hris_app_prototype/src/model/family_member/add/create_family_model.dart';
 import 'package:hris_app_prototype/src/model/person/allperson_model.dart';
 import 'package:hris_app_prototype/src/model/person/createperson_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 
 part 'personal_event.dart';
 part 'personal_state.dart';
@@ -20,6 +20,13 @@ class PersonalBloc extends Bloc<PersonalEvent, PersonalState> {
     on<FetchDataList>((event, emit) async {
       emit(state.copyWith(isDataloading: true));
       PersonData? _personData = await ApiService.fetchAllPersonalData();
+      emit(state.copyWith(
+          personData: _personData!.personData, isDataloading: false));
+    });
+    on<FetchDataNotInEmployeeList>((event, emit) async {
+      emit(state.copyWith(isDataloading: true));
+      PersonData? _personData =
+          await ApiService.fetchPersonalNotInEmployeeData();
       emit(state.copyWith(
           personData: _personData!.personData, isDataloading: false));
     });

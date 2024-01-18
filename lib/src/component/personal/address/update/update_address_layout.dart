@@ -7,7 +7,7 @@ import 'package:hris_app_prototype/src/component/personal/address/update/4_form_
 import 'package:hris_app_prototype/src/model/address/addressbyperson_model.dart';
 import 'package:hris_app_prototype/src/model/address/delete/delete_address_model.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/addresstype_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -42,7 +42,7 @@ class _UpdateAddressbypersonState extends State<UpdateAddressbyperson> {
     super.initState();
   }
 
-  void fetchAddress() async {
+  fetchAddress() async {
     _personAddressData =
         await ApiService.getAddressByPersonById(widget.personId);
     if (_personAddressData != null) {
@@ -80,7 +80,7 @@ class _UpdateAddressbypersonState extends State<UpdateAddressbyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: titleUpdateColors,
+            color: mythemecolor,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -91,16 +91,20 @@ class _UpdateAddressbypersonState extends State<UpdateAddressbyperson> {
                 });
               },
               leading: const Icon(
-                Icons.maps_home_work_outlined,
-                color: Colors.black54,
+                Icons.maps_home_work_rounded,
+                color: Colors.white,
               ),
               title: const Text(
                 'ข้อมูลที่อยู่ ( Address TH/ENG)',
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17),
+                style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 17,
+                    color: Colors.white),
               ),
               trailing: ExpandIcon(
                 isExpanded: _isAddressExpanded,
-                expandedColor: Colors.black,
+                color: Colors.white,
+                // expandedColor: Colors.white,
                 onPressed: (bool isExpanded) {
                   setState(() {
                     _isAddressExpanded = !isExpanded;
@@ -123,123 +127,126 @@ class _UpdateAddressbypersonState extends State<UpdateAddressbyperson> {
                 children: [
                   Expanded(
                     flex: 9,
-                    child: FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: itemCount,
-                              itemBuilder: (context, index) {
-                                var data =
-                                    _personAddressData?.addressData[index];
-                                _addresstypeId =
-                                    data?.addressTypeData.addressTypeId;
-                                final addresstypeName =
-                                    data?.addressTypeData.addressTypeName;
-                                final homenumber = data?.homeNumber;
-                                final moo = data?.moo;
-                                final housingProject = data?.housingProject;
-                                final street = data?.street;
-                                final soi = data?.soi;
-                                final subDistrict =
-                                    data?.subDistrictData.subDistrictNameTh;
-                                final district =
-                                    data?.districtData.districtNameTh;
-                                final province =
-                                    data?.provinceData.provinceNameTh;
-                                final postcode = data?.postCode;
-                                final homePhoneNumber = data?.homePhoneNumber;
-                                final addressid = data?.addressId;
+                    child: FutureBuilder(
+                        future: fetchAddress(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: itemCount,
+                                  itemBuilder: (context, index) {
+                                    var data =
+                                        _personAddressData?.addressData[index];
+                                    _addresstypeId =
+                                        data?.addressTypeData.addressTypeId;
+                                    final addresstypeName =
+                                        data?.addressTypeData.addressTypeName;
+                                    final homenumber = data?.homeNumber;
+                                    final moo = data?.moo;
+                                    final housingProject = data?.housingProject;
+                                    final street = data?.street;
+                                    final soi = data?.soi;
+                                    final subDistrict =
+                                        data?.subDistrictData.subDistrictNameTh;
+                                    final district =
+                                        data?.districtData.districtNameTh;
+                                    final province =
+                                        data?.provinceData.provinceNameTh;
+                                    final postcode = data?.postCode;
+                                    final homePhoneNumber =
+                                        data?.homePhoneNumber;
+                                    final addressid = data?.addressId;
 
-                                return datanull == true
-                                    ? const Center(
-                                        child: SizedBox(
-                                            height: 200,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text('ไม่พบข้อมูลผู้ติดต่อ'),
-                                              ],
-                                            )),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        child: ListTile(
-                                          leading: const Icon(
-                                              Icons.home_work_rounded),
-                                          title: Text('$addresstypeName'),
-                                          subtitle: Text(
-                                              'บ้านเลขที่ $homenumber ม. $moo หมู่บ้าน/อาคาร $housingProject ถ. $street ซ. $soi ต. $subDistrict อ. $district จ. $province  ไปรษณีย์ $postcode เบอร์โทร $homePhoneNumber'),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                      splashRadius: 30,
-                                                      color: Colors.yellow[800],
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _addresstypeName =
-                                                              addresstypeName;
-                                                          _data = data;
-                                                          showDialogEditAddress();
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.edit)),
-                                                  IconButton(
-                                                      splashRadius: 30,
-                                                      color: Colors.red,
-                                                      onPressed: () {
-                                                        showdialogDelete(
-                                                            addressid);
-                                                      },
-                                                      icon: const Icon(Icons
-                                                          .delete_rounded)),
-                                                ]),
-                                          ),
-                                        ),
-                                      );
-                              },
-                            );
-                    }),
+                                    return datanull == true
+                                        ? const Center(
+                                            child: SizedBox(
+                                                height: 200,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                        'ไม่พบข้อมูลผู้ติดต่อ'),
+                                                  ],
+                                                )),
+                                          )
+                                        : Card(
+                                            elevation: 4,
+                                            child: ListTile(
+                                              leading: const Icon(
+                                                  Icons.home_work_rounded),
+                                              title: Text('$addresstypeName'),
+                                              subtitle: Text(
+                                                  'บ้านเลขที่ $homenumber ม. $moo หมู่บ้าน/อาคาร $housingProject ถ. $street ซ. $soi ต. $subDistrict อ. $district จ. $province  ไปรษณีย์ $postcode เบอร์โทร $homePhoneNumber'),
+                                              trailing: SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      IconButton(
+                                                          splashRadius: 30,
+                                                          color: Colors
+                                                              .yellow[800],
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _addresstypeName =
+                                                                  addresstypeName;
+                                                              _data = data;
+                                                              showDialogEditAddress();
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.edit)),
+                                                      IconButton(
+                                                          splashRadius: 30,
+                                                          color: Colors.red,
+                                                          onPressed: () {
+                                                            showdialogDelete(
+                                                                addressid);
+                                                          },
+                                                          icon: const Icon(Icons
+                                                              .delete_rounded)),
+                                                    ]),
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                );
+                        }),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // ElevatedButton(
-                              //     onPressed: () {
-                              //       setState(() {
-                              //         fetchAddress();
-                              //       });
-                              //     },
-                              //     child: Icon(Icons.refresh_rounded)),
-                              // const SizedBox(width: 5),
-                              ElevatedButton(
-                                  onPressed: disable
-                                      ? null
-                                      : () {
-                                          showDialogAddAddress();
-                                          // if (disable != null) {
-                                          //   return showDialogAddAddress();
-                                          // } else {
-                                          //   return;
-                                          // }
-                                        },
-                                  child: const Icon(Icons.add, size: 20)),
-                            ],
-                          )),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // ElevatedButton(
+                          //     onPressed: () {
+                          //       setState(() {
+                          //         fetchAddress();
+                          //       });
+                          //     },
+                          //     child: Icon(Icons.refresh_rounded)),
+                          // const SizedBox(width: 5),
+                          ElevatedButton(
+                              onPressed: disable
+                                  ? null
+                                  : () {
+                                      showDialogAddAddress();
+                                      // if (disable != null) {
+                                      //   return showDialogAddAddress();
+                                      // } else {
+                                      //   return;
+                                      // }
+                                    },
+                              child: const Icon(Icons.add, size: 20)),
+                        ],
+                      ),
                     ),
                   )
                 ],

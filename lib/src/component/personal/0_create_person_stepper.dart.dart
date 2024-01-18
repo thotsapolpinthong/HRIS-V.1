@@ -26,41 +26,38 @@ class _MyWidgetState extends State<MyWidget> {
           state: currentStep > 0 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 0,
           title: const Text('Profile'),
-          content: Expanded(child: Addpersonal(personId: widget.personId)),
+          content: Addpersonal(personId: widget.personId),
         ),
         Step(
           state: currentStep > 1 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 1,
           title: const Text('Address'),
-          content: Expanded(
-              flex: 4, child: AddAddressbyperson(personId: widget.personId)),
+          content: AddAddressbyperson(personId: widget.personId),
         ),
         Step(
           state: currentStep > 2 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 2,
           title: const Text('Card Infomation'),
-          content: Expanded(
-              flex: 2, child: AddCardInfoLayout(personId: widget.personId)),
+          content: AddCardInfoLayout(personId: widget.personId),
         ),
         Step(
           state: currentStep > 3 ? StepState.complete : StepState.indexed,
           isActive: currentStep >= 3,
           title: const Text('Education'),
-          content:
-              Expanded(child: AddEducationLayout(personId: widget.personId)),
+          content: AddEducationLayout(personId: widget.personId),
         ),
         Step(
             state: currentStep > 4 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 4,
             title: const Text('Family'),
-            content:
-                Expanded(child: AddFamilyLayout(personId: widget.personId))),
+            content: AddFamilyLayout(personId: widget.personId)
+            ),
         Step(
             state: currentStep > 5 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 5,
             title: const Text('Contact'),
-            content:
-                Expanded(child: AddContactLayout(personId: widget.personId))),
+            content: AddContactLayout(personId: widget.personId)
+            ),
       ];
 
   @override
@@ -89,6 +86,7 @@ class _MyWidgetState extends State<MyWidget> {
           )
         ],
       ),
+      backgroundColor: Colors.grey[50],
       body: isCompleted
           ? BlocBuilder<PersonalBloc, PersonalState>(
               builder: (context, state) {
@@ -297,177 +295,172 @@ class _MyWidgetState extends State<MyWidget> {
             )
           : Center(
               child: SizedBox(
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                      colorScheme:
-                          const ColorScheme.light(primary: Colors.deepPurple)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: BlocBuilder<PersonalBloc, PersonalState>(
-                      builder: (context, state) {
-                        return Stepper(
-                          elevation: 0,
-                          type: StepperType.horizontal,
-                          steps: getSteps(),
-                          currentStep: currentStep,
-                          onStepTapped: (step) {
-                            // setState(() {
-                            //   currentStep = step;
-                            // });
-                          },
-                          onStepContinue: () {
-                            final isLastStep =
-                                currentStep == getSteps().length - 1;
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: BlocBuilder<PersonalBloc, PersonalState>(
+                    builder: (context, state) {
+                      return Stepper(
+                        elevation: 0,
+                        type: StepperType.horizontal,
+                        steps: getSteps(),
+                        currentStep: currentStep,
+                        onStepTapped: (step) {
+                          setState(() {
+                            currentStep = step;
+                          });
+                        },
+                        onStepContinue: () {
+                          final isLastStep =
+                              currentStep == getSteps().length - 1;
 
-                            if (isLastStep) {
-                              setState(() => isCompleted = true);
+                          if (isLastStep) {
+                            setState(() => isCompleted = true);
+                            context
+                                .read<PersonalBloc>()
+                                .add(CreatedPersonalEvent());
+                            if (state.contactValidateState == true) {
                               context
                                   .read<PersonalBloc>()
-                                  .add(CreatedPersonalEvent());
-                              if (state.contactValidateState == true) {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(ContinueEvent());
-                              } else {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(DissContinueEvent());
-                              }
+                                  .add(ContinueEvent());
+                            } else {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(DissContinueEvent());
                             }
-                            if (currentStep == 0) {
-                              setState(() => currentStep += 1);
-                              if (state.addressValidateState == true) {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(ContinueEvent());
-                              } else {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(DissContinueEvent());
-                              }
-                            } else if (currentStep == 1) {
-                              setState(() => currentStep += 1);
-                              if (state.cardValidateState == true) {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(ContinueEvent());
-                              } else {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(DissContinueEvent());
-                              }
-                            } else if (currentStep == 2) {
-                              setState(() => currentStep += 1);
-                              if (state.educationValidateState == true) {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(ContinueEvent());
-                              } else {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(DissContinueEvent());
-                              }
-                            } else if (currentStep == 3) {
-                              setState(() => currentStep += 1);
-                              if (state.familyValidateState == true) {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(ContinueEvent());
-                              } else {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(DissContinueEvent());
-                              }
-                            } else if (currentStep == 4) {
-                              setState(() => currentStep += 1);
-                              if (state.contactValidateState == true) {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(ContinueEvent());
-                              } else {
-                                context
-                                    .read<PersonalBloc>()
-                                    .add(DissContinueEvent());
-                              }
-                            } else {}
-                          },
-                          onStepCancel: currentStep == 0
-                              ? null
-                              : () {
-                                  if (currentStep == 1) {
-                                    setState(() => currentStep -= 1);
-                                    if (state.profileValidateState == true) {
-                                      context
-                                          .read<PersonalBloc>()
-                                          .add(ContinueEvent());
-                                    }
-                                  } else if (currentStep == 2) {
-                                    setState(() => currentStep -= 1);
-                                    if (state.addressValidateState == true) {
-                                      context
-                                          .read<PersonalBloc>()
-                                          .add(ContinueEvent());
-                                    }
-                                  } else if (currentStep == 3) {
-                                    setState(() => currentStep -= 1);
-                                    if (state.cardValidateState == true) {
-                                      context
-                                          .read<PersonalBloc>()
-                                          .add(ContinueEvent());
-                                    }
-                                  } else if (currentStep == 4) {
-                                    setState(() => currentStep -= 1);
-                                    if (state.educationValidateState == true) {
-                                      context
-                                          .read<PersonalBloc>()
-                                          .add(ContinueEvent());
-                                    }
-                                  } else if (currentStep == 5) {
-                                    setState(() => currentStep -= 1);
-                                    if (state.familyValidateState == true) {
-                                      context
-                                          .read<PersonalBloc>()
-                                          .add(ContinueEvent());
-                                    }
-                                  } else {}
-                                },
-                          controlsBuilder: (context, details) {
-                            final isLastStep =
-                                currentStep == getSteps().length - 1;
-                            return Container(
-                              margin: const EdgeInsets.only(top: 30),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Expanded(flex: 4, child: Container()),
-                                  if (currentStep != 0)
-                                    Expanded(
-                                      flex: 1,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.grey),
-                                        onPressed: details.onStepCancel,
-                                        child: const Text('Back'),
-                                      ),
+                          }
+                          if (currentStep == 0) {
+                            setState(() => currentStep += 1);
+                            if (state.addressValidateState == true) {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(ContinueEvent());
+                            } else {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(DissContinueEvent());
+                            }
+                          } else if (currentStep == 1) {
+                            setState(() => currentStep += 1);
+                            if (state.cardValidateState == true) {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(ContinueEvent());
+                            } else {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(DissContinueEvent());
+                            }
+                          } else if (currentStep == 2) {
+                            setState(() => currentStep += 1);
+                            if (state.educationValidateState == true) {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(ContinueEvent());
+                            } else {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(DissContinueEvent());
+                            }
+                          } else if (currentStep == 3) {
+                            setState(() => currentStep += 1);
+                            if (state.familyValidateState == true) {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(ContinueEvent());
+                            } else {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(DissContinueEvent());
+                            }
+                          } else if (currentStep == 4) {
+                            setState(() => currentStep += 1);
+                            if (state.contactValidateState == true) {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(ContinueEvent());
+                            } else {
+                              context
+                                  .read<PersonalBloc>()
+                                  .add(DissContinueEvent());
+                            }
+                          } else {}
+                        },
+                        onStepCancel: currentStep == 0
+                            ? null
+                            : () {
+                                if (currentStep == 1) {
+                                  setState(() => currentStep -= 1);
+                                  if (state.profileValidateState == true) {
+                                    context
+                                        .read<PersonalBloc>()
+                                        .add(ContinueEvent());
+                                  }
+                                } else if (currentStep == 2) {
+                                  setState(() => currentStep -= 1);
+                                  if (state.addressValidateState == true) {
+                                    context
+                                        .read<PersonalBloc>()
+                                        .add(ContinueEvent());
+                                  }
+                                } else if (currentStep == 3) {
+                                  setState(() => currentStep -= 1);
+                                  if (state.cardValidateState == true) {
+                                    context
+                                        .read<PersonalBloc>()
+                                        .add(ContinueEvent());
+                                  }
+                                } else if (currentStep == 4) {
+                                  setState(() => currentStep -= 1);
+                                  if (state.educationValidateState == true) {
+                                    context
+                                        .read<PersonalBloc>()
+                                        .add(ContinueEvent());
+                                  }
+                                } else if (currentStep == 5) {
+                                  setState(() => currentStep -= 1);
+                                  if (state.familyValidateState == true) {
+                                    context
+                                        .read<PersonalBloc>()
+                                        .add(ContinueEvent());
+                                  }
+                                } else {}
+                              },
+                        controlsBuilder: (context, details) {
+                          final isLastStep =
+                              currentStep == getSteps().length - 1;
+                          return Container(
+                            margin: const EdgeInsets.only(top: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Expanded(flex: 4, child: Container()),
+                                if (currentStep != 0)
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.grey),
+                                      onPressed: details.onStepCancel,
+                                      child: const Text('Back'),
                                     ),
-                                  const SizedBox(width: 12),
-                                  if (state.onContinue == true)
-                                    Expanded(
-                                      flex: 1,
-                                      child: ElevatedButton(
-                                        onPressed: details.onStepContinue,
-                                        child: Text(isLastStep
-                                            ? 'CONFIRM'
-                                            : 'Continue'),
-                                      ),
+                                  ),
+                                const SizedBox(width: 12),
+                                if (state.onContinue == true)
+                                  Expanded(
+                                    flex: 1,
+                                    child: ElevatedButton(
+                                      onPressed: details.onStepContinue,
+                                      child: Text(isLastStep
+                                          ? 'CONFIRM'
+                                          : 'Continue'),
                                     ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
+                                  ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
               ),

@@ -56,7 +56,7 @@ class _AddAddressbypersonState extends State<AddAddressbyperson> {
               AddPermanentAddress(
                 personId: widget.personId.toString(),
               ).animate().fade(duration: 300.ms),
-            Container(
+            SizedBox(
               height: 55,
               child: Card(
                 color: Colors.greenAccent,

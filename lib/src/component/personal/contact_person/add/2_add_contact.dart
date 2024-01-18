@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/contact_person/add/create_contact_model.dart';
 import 'package:hris_app_prototype/src/model/person/dropdown/title.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:validatorless/validatorless.dart';
 
 class AddContactPerson extends StatefulWidget {
@@ -383,10 +383,7 @@ class _AddContactPersonState extends State<AddContactPerson> {
                                           const EdgeInsets.fromLTRB(2, 4, 0, 4),
                                       child: Card(
                                         child: TextFormField(
-                                          autovalidateMode:
-                                              AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'กรุณากรอกข้อมูล'),
+                                          validator: null,
                                           controller: occupation,
                                           onChanged: (value) {
                                             onNewValue();

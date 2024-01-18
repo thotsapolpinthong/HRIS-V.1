@@ -9,7 +9,7 @@ import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart
 import 'package:hris_app_prototype/src/model/address/dropdown/district_model.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/province.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/subdistrict_Model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:validatorless/validatorless.dart';
 
 class StepperAddAddressByType extends StatefulWidget {
@@ -225,483 +225,413 @@ class _StepperAddAddressByTypeState extends State<StepperAddAddressByType> {
         padding: const EdgeInsets.all(2),
         child: SizedBox(
           height: 312,
-          child: Column(
-            children: [
-              Expanded(
-                flex: 2,
-                child: Card(
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.0)),
-                  color: Colors.grey[100],
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Column(
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            color: Colors.grey[100],
+            child: Column(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: TextFormField(
-                                          autovalidateMode:
-                                              AutovalidateMode.always,
-                                          validator: Validatorless.multiple([
-                                            Validatorless.required(
-                                                'กรุณากรอกข้อมูล')
-                                          ]),
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter.allow(
-                                                RegExp(
-                                                    r'[0-9/]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
-                                          ],
-                                          controller: homeNumber,
-                                          onChanged: (newValue) {
-                                            onNewvalue();
-                                          },
-                                          decoration: const InputDecoration(
-                                              hintText: 'บ้านเลขที่*',
-                                              hintStyle:
-                                                  TextStyle(color: Colors.red),
-                                              labelText: 'Home Number.',
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black87),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white)),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Colors.white),
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: TextFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    validator: Validatorless.multiple([
+                                      Validatorless.required('กรุณากรอกข้อมูล')
+                                    ]),
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(RegExp(
+                                          r'[0-9/]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
+                                    ],
+                                    controller: homeNumber,
+                                    onChanged: (newValue) {
+                                      onNewvalue();
+                                    },
+                                    decoration: const InputDecoration(
+                                        hintText: 'บ้านเลขที่*',
+                                        hintStyle: TextStyle(color: Colors.red),
+                                        labelText: 'Home Number.',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black87),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: TextFormField(
-                                              controller: moo,
-                                              onChanged: (newValue) {
-                                                onNewvalue();
-                                              },
-                                              decoration: const InputDecoration(
-                                                  hintText: 'หมู่',
-                                                  labelText: 'Moo.',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black87),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.white)),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.white),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white),
-                                            ))),
-                                    Expanded(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: TextFormField(
-                                              controller: housingProject,
-                                              onChanged: (newValue) {
-                                                onNewvalue();
-                                              },
-                                              decoration: const InputDecoration(
-                                                  hintText: 'หมู่บ้าน / อาคาร',
-                                                  labelText: 'Housing Project.',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black87),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.white)),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.white),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white),
-                                            ))),
-                                    Expanded(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: TextFormField(
-                                              controller: street,
-                                              onChanged: (newValue) {
-                                                onNewvalue();
-                                              },
-                                              decoration: const InputDecoration(
-                                                  hintText: 'ถนน',
-                                                  labelText: 'Street.',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black87),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.white)),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.white),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white),
-                                            ))),
-                                    Expanded(
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: TextFormField(
-                                              controller: soi,
-                                              onChanged: (newValue) {
-                                                onNewvalue();
-                                              },
-                                              decoration: const InputDecoration(
-                                                  hintText: 'ซอย',
-                                                  labelText: 'Alley.',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black87),
-                                                  border: OutlineInputBorder(
-                                                      borderSide: BorderSide(
-                                                          color: Colors.white)),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.white),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white),
-                                            ))),
-                                  ],
+                                        filled: true,
+                                        fillColor: Colors.white),
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 3),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: DropdownButtonFormField(
-                                          autovalidateMode:
-                                              AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'เลือกข้อมูล'),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          decoration: const InputDecoration(
-                                              labelText: 'Çountry.',
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black87),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white)),
-                                              enabledBorder: OutlineInputBorder(
+                              Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: TextFormField(
+                                        controller: moo,
+                                        onChanged: (newValue) {
+                                          onNewvalue();
+                                        },
+                                        decoration: const InputDecoration(
+                                            hintText: 'หมู่',
+                                            labelText: 'Moo.',
+                                            labelStyle: TextStyle(
+                                                color: Colors.black87),
+                                            border: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                    color: Colors.white),
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white),
-                                          hint: const Text("Country.*",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                          value: countryId,
-                                          items: countryList.map((e) {
-                                            return DropdownMenuItem<String>(
-                                              value: e.countryId.toString(),
-                                              child: Text(e.countryNameTh),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            countryId = newValue.toString();
-                                            setState(() {
-                                              fetchdDataProvince();
-                                              onNewvalue();
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: DropdownButtonFormField(
-                                          autovalidateMode:
-                                              AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'เลือกข้อมูล'),
-                                          decoration: const InputDecoration(
-                                              labelText: 'Province.',
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black87),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white)),
-                                              enabledBorder: OutlineInputBorder(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ))),
+                              Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: TextFormField(
+                                        controller: housingProject,
+                                        onChanged: (newValue) {
+                                          onNewvalue();
+                                        },
+                                        decoration: const InputDecoration(
+                                            hintText: 'หมู่บ้าน / อาคาร',
+                                            labelText: 'Housing Project.',
+                                            labelStyle: TextStyle(
+                                                color: Colors.black87),
+                                            border: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                    color: Colors.white),
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          hint: const Text("Province.*",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                          value: provinceId,
-                                          items: provinceList.map((e) {
-                                            return DropdownMenuItem<String>(
-                                              value: e.provinceId.toString(),
-                                              child: Text(e.provinceNameTh),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              if (districtId != null ||
-                                                  subDistrictId != null) {
-                                                provinceId =
-                                                    newValue.toString();
-                                                districtId = null;
-                                                subDistrictId = null;
-                                                fetchdDataDistricts();
-                                                onNewvalue();
-                                              } else {
-                                                provinceId =
-                                                    newValue.toString();
-                                                fetchdDataDistricts();
-                                                onNewvalue();
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: DropdownButtonFormField(
-                                          autovalidateMode:
-                                              AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'เลือกข้อมูล'),
-                                          decoration: const InputDecoration(
-                                              labelText: 'District.',
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black87),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white)),
-                                              enabledBorder: OutlineInputBorder(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ))),
+                              Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: TextFormField(
+                                        controller: street,
+                                        onChanged: (newValue) {
+                                          onNewvalue();
+                                        },
+                                        decoration: const InputDecoration(
+                                            hintText: 'ถนน',
+                                            labelText: 'Street.',
+                                            labelStyle: TextStyle(
+                                                color: Colors.black87),
+                                            border: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                    color: Colors.white),
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          hint: const Text("District.*",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                          value: districtId,
-                                          items: districtList.map((e) {
-                                            return DropdownMenuItem<String>(
-                                              value: e.districtId.toString(),
-                                              child: Text(e.districtNameTh),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              if (subDistrictId != null) {
-                                                districtId =
-                                                    newValue.toString();
-                                                subDistrictId = null;
-                                                fetchdDataSubdistricts();
-                                                onNewvalue();
-                                              } else {
-                                                districtId =
-                                                    newValue.toString();
-                                                fetchdDataSubdistricts();
-                                                onNewvalue();
-                                              }
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(2.0),
-                                        child: DropdownButtonFormField(
-                                          autovalidateMode:
-                                              AutovalidateMode.always,
-                                          validator: Validatorless.required(
-                                              'เลือกข้อมูล'),
-                                          decoration: const InputDecoration(
-                                              labelText: 'Sub-district.',
-                                              labelStyle: TextStyle(
-                                                  color: Colors.black87),
-                                              border: OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white)),
-                                              enabledBorder: OutlineInputBorder(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ))),
+                              Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: TextFormField(
+                                        controller: soi,
+                                        onChanged: (newValue) {
+                                          onNewvalue();
+                                        },
+                                        decoration: const InputDecoration(
+                                            hintText: 'ซอย',
+                                            labelText: 'Alley.',
+                                            labelStyle: TextStyle(
+                                                color: Colors.black87),
+                                            border: OutlineInputBorder(
                                                 borderSide: BorderSide(
-                                                    color: Colors.white),
-                                              ),
-                                              filled: true,
-                                              fillColor: Colors.white),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          hint: const Text("Sub-district.*",
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                          value: subDistrictId,
-                                          items: subDistrictList.map((e) {
-                                            return DropdownMenuItem<String>(
-                                              value: e.subDistrictId.toString(),
-                                              child: Text(e.subDistrictNameTh),
-                                            );
-                                          }).toList(),
-                                          onChanged: (newValue) {
-                                            setState(() {
-                                              subDistrictId =
-                                                  newValue.toString();
-                                              onNewvalue();
-                                            });
-                                          },
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ))),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 3),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: DropdownButtonFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    validator:
+                                        Validatorless.required('เลือกข้อมูล'),
+                                    borderRadius: BorderRadius.circular(8),
+                                    decoration: const InputDecoration(
+                                        labelText: 'Çountry.',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black87),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
                                         ),
-                                      ),
-                                    ),
-                                  ],
+                                        filled: true,
+                                        fillColor: Colors.white),
+                                    hint: const Text("Country.*",
+                                        style: TextStyle(color: Colors.red)),
+                                    value: countryId,
+                                    items: countryList.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        value: e.countryId.toString(),
+                                        child: Text(e.countryNameTh),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      countryId = newValue.toString();
+                                      setState(() {
+                                        fetchdDataProvince();
+                                        onNewvalue();
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 3),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: TextFormField(
-                                            autovalidateMode:
-                                                AutovalidateMode.always,
-                                            validator: Validatorless.multiple([
-                                              Validatorless.number(
-                                                  'Only number.'),
-                                              Validatorless.required(
-                                                  'กรุณากรอกข้อมูล')
-                                            ]),
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter.allow(
-                                                  RegExp(
-                                                      r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
-                                            ],
-                                            controller: postCode,
-                                            onChanged: (newValue) {
-                                              onNewvalue();
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText: 'รหัสไปรษณีย์*',
-                                                hintStyle: TextStyle(
-                                                    color: Colors.red),
-                                                labelText: 'Postcode.',
-                                                labelStyle: TextStyle(
-                                                    color: Colors.black87),
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.white)),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white),
-                                          ),
-                                        )),
-                                    Expanded(
-                                        flex: 2,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: TextFormField(
-                                            controller: homePhoneNumber,
-                                            onChanged: (newValue) {
-                                              onNewvalue();
-                                            },
-                                            decoration: const InputDecoration(
-                                                hintText: 'เบอร์โทรศัพท์บ้าน',
-                                                labelText: 'Home Phone Number.',
-                                                labelStyle: TextStyle(
-                                                    color: Colors.black87),
-                                                border: OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.white)),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.white),
-                                                ),
-                                                filled: true,
-                                                fillColor: Colors.white),
-                                          ),
-                                        )),
-                                  ],
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: DropdownButtonFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    validator:
+                                        Validatorless.required('เลือกข้อมูล'),
+                                    decoration: const InputDecoration(
+                                        labelText: 'Province.',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black87),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white),
+                                    borderRadius: BorderRadius.circular(8),
+                                    hint: const Text("Province.*",
+                                        style: TextStyle(color: Colors.red)),
+                                    value: provinceId,
+                                    items: provinceList.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        value: e.provinceId.toString(),
+                                        child: Text(e.provinceNameTh),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        if (districtId != null ||
+                                            subDistrictId != null) {
+                                          provinceId = newValue.toString();
+                                          districtId = null;
+                                          subDistrictId = null;
+                                          fetchdDataDistricts();
+                                          onNewvalue();
+                                        } else {
+                                          provinceId = newValue.toString();
+                                          fetchdDataDistricts();
+                                          onNewvalue();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: DropdownButtonFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    validator:
+                                        Validatorless.required('เลือกข้อมูล'),
+                                    decoration: const InputDecoration(
+                                        labelText: 'District.',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black87),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white),
+                                    borderRadius: BorderRadius.circular(8),
+                                    hint: const Text("District.*",
+                                        style: TextStyle(color: Colors.red)),
+                                    value: districtId,
+                                    items: districtList.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        value: e.districtId.toString(),
+                                        child: Text(e.districtNameTh),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        if (subDistrictId != null) {
+                                          districtId = newValue.toString();
+                                          subDistrictId = null;
+                                          fetchdDataSubdistricts();
+                                          onNewvalue();
+                                        } else {
+                                          districtId = newValue.toString();
+                                          fetchdDataSubdistricts();
+                                          onNewvalue();
+                                        }
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: DropdownButtonFormField(
+                                    autovalidateMode: AutovalidateMode.always,
+                                    validator:
+                                        Validatorless.required('เลือกข้อมูล'),
+                                    decoration: const InputDecoration(
+                                        labelText: 'Sub-district.',
+                                        labelStyle:
+                                            TextStyle(color: Colors.black87),
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Colors.white)),
+                                        enabledBorder: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white),
+                                        ),
+                                        filled: true,
+                                        fillColor: Colors.white),
+                                    borderRadius: BorderRadius.circular(8),
+                                    hint: const Text("Sub-district.*",
+                                        style: TextStyle(color: Colors.red)),
+                                    value: subDistrictId,
+                                    items: subDistrictList.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        value: e.subDistrictId.toString(),
+                                        child: Text(e.subDistrictNameTh),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        subDistrictId = newValue.toString();
+                                        onNewvalue();
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ),
-                      // Align(
-                      //   alignment: Alignment.bottomRight,
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.end,
-                      //     children: [
-                      //       Padding(
-                      //         padding: const EdgeInsets.all(8.0),
-                      //         child: ElevatedButton(
-                      //           style: ElevatedButton.styleFrom(
-                      //             backgroundColor: Colors.greenAccent,
-                      //           ),
-                      //           child: Text('Save',
-                      //               style: TextStyle(
-                      //                 color: Colors.grey[800],
-                      //               )),
-                      //           onPressed: () {
-                      //             if (_formKey.currentState!.validate()) {
-                      //               // การตรวจสอบผ่านแล้ว
-                      //               // ทำสิ่งที่คุณต้องการเมื่อข้อมูลถูกกรอกถูกต้อง
-                      //               onSave();
-                      //             } else {
-                      //               // การตรวจสอบไม่ผ่าน
-                      //               // ทำสิ่งที่คุณต้องการเมื่อข้อมูลไม่ถูกต้อง
-                      //             }
-                      //           },
-                      //         ),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // )
-                    ],
+                        const SizedBox(height: 3),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                  flex: 1,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: TextFormField(
+                                      autovalidateMode: AutovalidateMode.always,
+                                      validator: Validatorless.multiple([
+                                        Validatorless.number('Only number.'),
+                                        Validatorless.required(
+                                            'กรุณากรอกข้อมูล')
+                                      ]),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(
+                                            r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
+                                      ],
+                                      controller: postCode,
+                                      onChanged: (newValue) {
+                                        onNewvalue();
+                                      },
+                                      decoration: const InputDecoration(
+                                          hintText: 'รหัสไปรษณีย์*',
+                                          hintStyle:
+                                              TextStyle(color: Colors.red),
+                                          labelText: 'Postcode.',
+                                          labelStyle:
+                                              TextStyle(color: Colors.black87),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.white),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white),
+                                    ),
+                                  )),
+                              Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: TextFormField(
+                                      controller: homePhoneNumber,
+                                      onChanged: (newValue) {
+                                        onNewvalue();
+                                      },
+                                      decoration: const InputDecoration(
+                                          hintText: 'เบอร์โทรศัพท์บ้าน',
+                                          labelText: 'Home Phone Number.',
+                                          labelStyle:
+                                              TextStyle(color: Colors.black87),
+                                          border: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.white)),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide:
+                                                BorderSide(color: Colors.white),
+                                          ),
+                                          filled: true,
+                                          fillColor: Colors.white),
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

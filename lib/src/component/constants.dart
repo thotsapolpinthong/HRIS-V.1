@@ -1,4 +1,9 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:lottie/lottie.dart';
+import 'package:validatorless/validatorless.dart';
 
 var myDefaultBackground = Colors.grey[350];
 
@@ -17,6 +22,204 @@ var mygreycolors = Colors.grey[200];
 var myAppBar = AppBar(
   backgroundColor: Colors.grey[300],
 );
+var mythemecolor = const Color.fromARGB(255, 9, 47, 105);
+var mytextcolors = Colors.grey[350];
+
+var myLoadingScreen = SizedBox(
+    height: 600,
+    child: Center(
+        child: Lottie.asset('assets/loading.json',
+            width: 500, height: 250, frameRate: FrameRate(60))));
+
+//floatingButtons
+class MyFloatingButton extends StatefulWidget {
+  final void Function()? onPressed;
+  final Widget? icon;
+  const MyFloatingButton({
+    Key? key,
+    this.onPressed,
+    this.icon,
+  }) : super(key: key);
+
+  @override
+  State<MyFloatingButton> createState() => _MyFloatingButtonState();
+}
+
+class _MyFloatingButtonState extends State<MyFloatingButton> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+        onEnter: (detail) {
+          setState(() {
+            isHovered = true;
+          });
+        },
+        onExit: (detail) {
+          setState(() {
+            isHovered = false;
+          });
+        },
+        child: SizedBox(
+          width: isHovered ? 55 : 50,
+          height: isHovered ? 55 : 50,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.all(1),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12))),
+              onPressed: widget.onPressed,
+              child: widget.icon),
+        ).animate().shake());
+  }
+}
+
+// icon delete row table
+class RowDeleteBox extends StatelessWidget {
+  final void Function()? onPressed;
+  const RowDeleteBox({super.key, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 40,
+      height: 38,
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red[700],
+              padding: const EdgeInsets.all(1)),
+          onPressed: onPressed,
+          child: const Icon(Icons.delete_rounded)),
+    );
+  }
+}
+
+class MySaveButtons extends StatelessWidget {
+  final String text;
+  final void Function()? onPressed;
+  const MySaveButtons({
+    Key? key,
+    required this.text,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.greenAccent,
+              ),
+              onPressed: onPressed,
+              child: Text(
+                text,
+                style: const TextStyle(color: Colors.black87),
+              ))),
+    );
+  }
+}
+
+// title dialog ชื่อ กับ x
+class TitleDialog extends StatelessWidget {
+  final String title;
+  final void Function()? onPressed;
+  const TitleDialog({
+    Key? key,
+    required this.title,
+    this.onPressed,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: onPressed,
+            child: const Text(
+              'X',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MyDeleteBox extends StatelessWidget {
+  final void Function()? onPressedCancel;
+  final TextEditingController? controller;
+  final void Function()? onPressedOk;
+  const MyDeleteBox(
+      {super.key,
+      required this.onPressedCancel,
+      required this.controller,
+      required this.onPressedOk});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+        backgroundColor: mygreycolors,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+        icon: IconButton(
+            color: Colors.red[600],
+            icon: const Icon(
+              Icons.cancel,
+            ),
+            onPressed: onPressedCancel),
+        content: SizedBox(
+          width: 320,
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
+              Expanded(
+                flex: 12,
+                child: Center(
+                  child: Card(
+                    elevation: 2,
+                    child: TextFormField(
+                      validator: Validatorless.required('กรอกข้อความ'),
+                      controller: controller,
+                      minLines: 1,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black),
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black)),
+                          filled: true,
+                          fillColor: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                        onPressed: onPressedOk, child: const Text("OK"))
+                  ],
+                ),
+              )
+            ],
+          ),
+        ));
+  }
+}
 
 var myDrawer = SizedBox(
   width: 280,

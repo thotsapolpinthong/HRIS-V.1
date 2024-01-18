@@ -6,7 +6,7 @@ import 'package:hris_app_prototype/src/component/personal/education/add/2_add_ed
 import 'package:hris_app_prototype/src/component/personal/education/update/2_update_education.dart';
 import 'package:hris_app_prototype/src/model/education/delete/delete_education_model.dart';
 import 'package:hris_app_prototype/src/model/education/getdata_education_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -33,7 +33,7 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
     super.initState();
   }
 
-  void fetchData() async {
+  fetchData() async {
     educationData = await ApiService.getEducationById(widget.personId);
 
     setState(() {
@@ -280,7 +280,7 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
         SizedBox(
           height: 55,
           child: Card(
-            color: titleUpdateColors,
+            color: mythemecolor,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -290,13 +290,16 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
                   _isEducationExpanded = !_isEducationExpanded;
                 });
               },
-              leading: const Icon(Icons.school_outlined, color: Colors.black54),
+              leading: const Icon(Icons.school_rounded, color: Colors.white),
               title: const Text(
                   'บันทึกประวัติการศึกษา (Education Information  TH/ENG)',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                      color: Colors.white)),
               trailing: ExpandIcon(
                 isExpanded: _isEducationExpanded,
-                expandedColor: Colors.black,
+                color: Colors.white,
                 onPressed: (bool isExpanded) {
                   setState(() {
                     _isEducationExpanded = !isExpanded;
@@ -319,104 +322,105 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
                 children: [
                   Expanded(
                     flex: 9,
-                    child: FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: itemCount,
-                              itemBuilder: (context, index) {
-                                var data = educationData?.educationData[index];
-                                final educationLevel =
-                                    data?.educationLevel.educationLevelTh;
-                                final educationQualification = data
-                                    ?.educationQualification
-                                    .educationQualificaionTh;
-                                final institue =
-                                    data?.institute.instituteNameTh;
-                                final country = data?.country.countryNameTh;
-                                final gpa = data?.gpa;
-                                final major = data?.major.majorTh;
+                    child: FutureBuilder(
+                        future: fetchData(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: itemCount,
+                                  itemBuilder: (context, index) {
+                                    var data =
+                                        educationData?.educationData[index];
+                                    final educationLevel =
+                                        data?.educationLevel.educationLevelTh;
+                                    final educationQualification = data
+                                        ?.educationQualification
+                                        .educationQualificaionTh;
+                                    final institue =
+                                        data?.institute.instituteNameTh;
+                                    final country = data?.country.countryNameTh;
+                                    final gpa = data?.gpa;
+                                    final major = data?.major.majorTh;
 
-                                return datanull == true
-                                    ? const Center(
-                                        child: SizedBox(
-                                            height: 200,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text('ไม่พบข้อมูลการศึกษา'),
-                                              ],
-                                            )),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        child: ListTile(
-                                          onTap: () {},
-                                          leading:
-                                              const Icon(Icons.school_rounded),
-                                          title: Text(
-                                              'ระดับการศึกษา : $educationLevel  วุฒิการศึกษา : $educationQualification '),
-                                          subtitle: Text(
-                                              'ประเทศที่สำเร็จการศึกษา : $country | สถาบัน : $institue | วิชาเอก : $major | เกรดเฉลี่ย : $gpa'),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color:
-                                                            Colors.yellow[800],
-                                                        onPressed: () {
-                                                          setState(() {
-                                                            showDialogEditEducation(
-                                                                data);
-                                                          });
-                                                        },
-                                                        icon: const Icon(
-                                                            Icons.edit)),
-                                                  ),
-                                                  Container(
-                                                    child: IconButton(
-                                                        splashRadius: 30,
-                                                        color: Colors.red,
-                                                        onPressed: () {
-                                                          showdialogDelete(data!
-                                                              .educaationId);
-                                                        },
-                                                        icon: const Icon(Icons
-                                                            .delete_rounded)),
-                                                  ),
-                                                ]),
-                                          ),
-                                        ),
-                                      );
-                              },
-                            );
-                    }),
+                                    return datanull == true
+                                        ? const Center(
+                                            child: SizedBox(
+                                                height: 200,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Text('ไม่พบข้อมูลการศึกษา'),
+                                                  ],
+                                                )),
+                                          )
+                                        : Card(
+                                            elevation: 4,
+                                            child: ListTile(
+                                              onTap: () {},
+                                              leading: const Icon(
+                                                  Icons.school_rounded),
+                                              title: Text(
+                                                  'ระดับการศึกษา : $educationLevel  วุฒิการศึกษา : $educationQualification '),
+                                              subtitle: Text(
+                                                  'ประเทศที่สำเร็จการศึกษา : $country | สถาบัน : $institue | วิชาเอก : $major | เกรดเฉลี่ย : $gpa'),
+                                              trailing: SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Container(
+                                                        child: IconButton(
+                                                            splashRadius: 30,
+                                                            color: Colors
+                                                                .yellow[800],
+                                                            onPressed: () {
+                                                              setState(() {
+                                                                showDialogEditEducation(
+                                                                    data);
+                                                              });
+                                                            },
+                                                            icon: const Icon(
+                                                                Icons.edit)),
+                                                      ),
+                                                      Container(
+                                                        child: IconButton(
+                                                            splashRadius: 30,
+                                                            color: Colors.red,
+                                                            onPressed: () {
+                                                              showdialogDelete(data!
+                                                                  .educaationId);
+                                                            },
+                                                            icon: const Icon(Icons
+                                                                .delete_rounded)),
+                                                      ),
+                                                    ]),
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                );
+                        }),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                       alignment: Alignment.centerRight,
-                      child: Expanded(
-                          flex: 1,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                  onPressed: () {
-                                    showDialogAddAddress();
-                                  },
-                                  child: const Icon(Icons.add, size: 20)),
-                            ],
-                          )),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                              onPressed: () {
+                                showDialogAddAddress();
+                              },
+                              child: const Icon(Icons.add, size: 20)),
+                        ],
+                      ),
                     ),
                   )
                 ],

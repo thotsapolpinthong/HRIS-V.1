@@ -5,7 +5,7 @@ import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/add/createpassport_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/update/getpassport_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:validatorless/validatorless.dart';
 
 class AddPassport extends StatefulWidget {
@@ -323,8 +323,7 @@ class _AddPassportState extends State<AddPassport> {
                       if (widget.addButton == true)
                         Align(
                           alignment: Alignment.bottomRight,
-                          child: Expanded(
-                              child: Padding(
+                          child: Padding(
                             padding: const EdgeInsets.all(3.0),
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -339,7 +338,7 @@ class _AddPassportState extends State<AddPassport> {
                                   "Add",
                                   style: TextStyle(color: Colors.black87),
                                 )),
-                          )),
+                          ),
                         )
                     ],
                   ),

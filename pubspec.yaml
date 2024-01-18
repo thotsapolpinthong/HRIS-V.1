@@ -43,9 +43,14 @@ dependencies:
   data_table_2: ^2.5.8
   syncfusion_flutter_charts: ^23.1.36
   lottie: ^2.6.0
+  graphview: ^1.2.0
+  flutter_fancy_tree_view: ^1.4.1
+  table_calendar: ^3.0.9
+  calendar_date_picker2: ^0.5.3
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.6
+  gap: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +83,7 @@ flutter:
     - assets/education.png
     - assets/idcard.png
     - assets/passport.png
+    - assets/stec2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

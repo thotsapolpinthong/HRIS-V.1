@@ -6,7 +6,7 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/personal/0_update_layout.dart';
 import 'package:hris_app_prototype/src/model/person/allperson_model.dart';
 import 'package:hris_app_prototype/src/model/person/deleteperson_madel.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -30,7 +30,7 @@ class _ListPersonbyIdState extends State<ListPersonbyId> {
 
   var pageNumber = 1;
   var pageSize = 100;
-  void fetchUser() async {
+  fetchUser() async {
     context.read<PersonalBloc>().add(FetchDataList());
     // _personData = await ApiService.fetchAllPersonalData(
     //   pageNumber.toString(),
@@ -117,231 +117,232 @@ class _ListPersonbyIdState extends State<ListPersonbyId> {
                 flex: 9,
                 child: BlocBuilder<PersonalBloc, PersonalState>(
                   builder: (context, state) {
-                    return FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: state.personData?.length,
-                              itemBuilder: (context, index) {
-                                var data = state.personData?[index];
-                                final personid = data?.personId;
-                                final nameTH = data?.fisrtNameTh;
-                                final lastnameTH = data?.lastNameTh;
-                                final nameEn = data?.firstNameEn;
-                                final lastnamEN = data?.lastNameEn;
-                                //แผนก
-                                //ประเภทพนง.
-                                //สถานะการทำงาน
-                                //ตำแหน่ง
-                                return Card(
-                                  elevation: 6,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: ListTile(
-                                      leading: const Icon(Icons.person),
-                                      title: Text(
-                                          "   $personid        แผนก     $nameTH  $lastnameTH   $nameEn   $lastnamEN"),
-                                      trailing: SizedBox(
-                                        width: 150,
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            IconButton(
-                                              splashRadius: 20,
-                                              hoverColor: Colors.blue[100],
-                                              color: Colors.black87,
-                                              icon: const Icon(
-                                                  Icons.list_alt_rounded),
-                                              onPressed: () {
-                                                showDialog(
-                                                    barrierDismissible: false,
-                                                    context: context,
-                                                    builder:
-                                                        (BuildContext context) {
-                                                      return AlertDialog(
-                                                        icon: IconButton(
-                                                          color:
-                                                              Colors.red[600],
-                                                          icon: const Icon(
-                                                            Icons.cancel,
-                                                          ),
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                        ),
-                                                        content: Stack(
-                                                          children: [
-                                                            Container(
-                                                                child: Card(
-                                                              color:
-                                                                  myDefaultBackground,
-                                                              elevation: 8,
-                                                              child: SizedBox(
-                                                                width: 1080,
-                                                                height: 600,
-                                                                child: ListView(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
+                    return FutureBuilder(
+                        future: fetchUser(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: state.personData?.length,
+                                  itemBuilder: (context, index) {
+                                    var data = state.personData?[index];
+                                    final personid = data?.personId;
+                                    final nameTH = data?.fisrtNameTh;
+                                    final lastnameTH = data?.lastNameTh;
+                                    final nameEn = data?.firstNameEn;
+                                    final lastnamEN = data?.lastNameEn;
+                                    //แผนก
+                                    //ประเภทพนง.
+                                    //สถานะการทำงาน
+                                    //ตำแหน่ง
+                                    return Card(
+                                      elevation: 6,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: ListTile(
+                                          leading: const Icon(Icons.person),
+                                          title: Text(
+                                              "   $personid        แผนก     $nameTH  $lastnameTH   $nameEn   $lastnamEN"),
+                                          trailing: SizedBox(
+                                            width: 150,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  splashRadius: 20,
+                                                  hoverColor: Colors.blue[100],
+                                                  color: Colors.black87,
+                                                  icon: const Icon(
+                                                      Icons.list_alt_rounded),
+                                                  onPressed: () {
+                                                    showDialog(
+                                                        barrierDismissible:
+                                                            false,
+                                                        context: context,
+                                                        builder: (BuildContext
+                                                            context) {
+                                                          return AlertDialog(
+                                                            icon: IconButton(
+                                                              color: Colors
+                                                                  .red[600],
+                                                              icon: const Icon(
+                                                                Icons.cancel,
+                                                              ),
+                                                              onPressed: () {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              },
+                                                            ),
+                                                            content: Stack(
+                                                              children: [
+                                                                Container(
+                                                                    child: Card(
+                                                                  color:
+                                                                      myDefaultBackground,
+                                                                  elevation: 8,
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: 1080,
+                                                                    height: 600,
+                                                                    child:
+                                                                        ListView(
+                                                                      padding:
+                                                                          EdgeInsets.all(
                                                                               8),
-                                                                  children: [
-                                                                    Row(
                                                                       children: [
-                                                                        Expanded(
-                                                                          child:
-                                                                              Card(
-                                                                            color:
-                                                                                Colors.amberAccent[100],
-                                                                            elevation:
-                                                                                8,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
-                                                                              child: Column(
-                                                                                children: [
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                ],
+                                                                        Row(
+                                                                          children: [
+                                                                            Expanded(
+                                                                              child: Card(
+                                                                                color: Colors.amberAccent[100],
+                                                                                elevation: 8,
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(8.0),
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
                                                                               ),
                                                                             ),
-                                                                          ),
+                                                                            Expanded(
+                                                                              child: Card(
+                                                                                color: Colors.blue[50],
+                                                                                elevation: 8,
+                                                                                child: Padding(
+                                                                                  padding: const EdgeInsets.all(8.0),
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                      TextFormField(),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          ],
                                                                         ),
-                                                                        Expanded(
+                                                                        Card(
+                                                                          elevation:
+                                                                              8,
                                                                           child:
-                                                                              Card(
-                                                                            color:
-                                                                                Colors.blue[50],
-                                                                            elevation:
-                                                                                8,
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(8.0),
-                                                                              child: Column(
-                                                                                children: [
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                  TextFormField(),
-                                                                                ],
-                                                                              ),
-                                                                            ),
+                                                                              Column(
+                                                                            children: [
+                                                                              TextFormField(),
+                                                                              TextFormField(),
+                                                                              TextFormField(),
+                                                                              TextFormField(),
+                                                                              TextFormField(),
+                                                                              TextFormField(),
+                                                                            ],
                                                                           ),
                                                                         ),
                                                                       ],
                                                                     ),
-                                                                    Card(
-                                                                      elevation:
-                                                                          8,
-                                                                      child:
-                                                                          Column(
-                                                                        children: [
-                                                                          TextFormField(),
-                                                                          TextFormField(),
-                                                                          TextFormField(),
-                                                                          TextFormField(),
-                                                                          TextFormField(),
-                                                                          TextFormField(),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            )),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    });
-                                              },
-                                            ),
-                                            Card(
-                                              elevation: 4,
-                                              child: IconButton(
-                                                  splashRadius: 25,
-                                                  hoverColor:
-                                                      Colors.yellow[100],
-                                                  color: Colors.yellow[800],
-                                                  icon: const Icon(Icons.edit),
-                                                  onPressed: () {
-                                                    showGeneralDialog(
-                                                        context: context,
-                                                        barrierDismissible:
-                                                            false,
-                                                        barrierLabel:
-                                                            MaterialLocalizations
-                                                                    .of(context)
-                                                                .modalBarrierDismissLabel,
-                                                        barrierColor:
-                                                            Colors.black45,
-                                                        transitionDuration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    200),
-                                                        pageBuilder: (BuildContext
-                                                                buildContext,
-                                                            Animation animation,
-                                                            Animation
-                                                                secondaryAnimation) {
-                                                          return MyUpdateLayout(
-                                                              personId: personid
-                                                                  .toString());
+                                                                  ),
+                                                                )),
+                                                              ],
+                                                            ),
+                                                          );
                                                         });
-                                                  }),
+                                                  },
+                                                ),
+                                                Card(
+                                                  elevation: 4,
+                                                  child: IconButton(
+                                                      splashRadius: 25,
+                                                      hoverColor:
+                                                          Colors.yellow[100],
+                                                      color: Colors.yellow[800],
+                                                      icon: const Icon(
+                                                          Icons.edit),
+                                                      onPressed: () {
+                                                        showGeneralDialog(
+                                                            context: context,
+                                                            barrierDismissible:
+                                                                false,
+                                                            barrierLabel:
+                                                                MaterialLocalizations.of(
+                                                                        context)
+                                                                    .modalBarrierDismissLabel,
+                                                            barrierColor:
+                                                                Colors.black45,
+                                                            transitionDuration:
+                                                                const Duration(
+                                                                    milliseconds:
+                                                                        200),
+                                                            pageBuilder: (BuildContext
+                                                                    buildContext,
+                                                                Animation
+                                                                    animation,
+                                                                Animation
+                                                                    secondaryAnimation) {
+                                                              return MyUpdateLayout(
+                                                                  personId: personid
+                                                                      .toString());
+                                                            });
+                                                      }),
+                                                ),
+                                                Card(
+                                                  elevation: 4,
+                                                  child: IconButton(
+                                                      splashRadius: 30,
+                                                      hoverColor:
+                                                          Colors.red[100],
+                                                      color: Colors.red,
+                                                      icon: Container(
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                        child: const Icon(
+                                                            Icons.delete),
+                                                      ),
+                                                      onPressed: () {
+                                                        showdialogDeletePerson(
+                                                            personid
+                                                                .toString());
+                                                      }),
+                                                ),
+                                              ],
                                             ),
-                                            Card(
-                                              elevation: 4,
-                                              child: IconButton(
-                                                  splashRadius: 30,
-                                                  hoverColor: Colors.red[100],
-                                                  color: Colors.red,
-                                                  icon: Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8)),
-                                                    child: const Icon(
-                                                        Icons.delete),
-                                                  ),
-                                                  onPressed: () {
-                                                    showdialogDeletePerson(
-                                                        personid.toString());
-                                                  }),
-                                            ),
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                );
-                              });
-                    });
+                                    );
+                                  });
+                        });
                   },
                 ),
               ),

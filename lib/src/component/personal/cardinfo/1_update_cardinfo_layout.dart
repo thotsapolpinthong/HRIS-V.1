@@ -9,7 +9,7 @@ import 'package:hris_app_prototype/src/component/personal/cardinfo/passport/upda
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/delete/delidcard_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/update/getidentifycard_model.dart';
 import 'package:hris_app_prototype/src/model/cardinfomation/passport/update/getpassport_model.dart';
-import 'package:hris_app_prototype/src/services/api_web_service.dart';
+import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -37,7 +37,7 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
     super.initState();
   }
 
-  void fetchCardinfomation() async {
+  fetchCardinfomation() async {
     idcardData = await ApiService.fetchIDcardData(widget.personId);
 
     passportData = await ApiService.fetchPassportData(widget.personId);
@@ -66,7 +66,7 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
         SizedBox(
           height: 55,
           child: Card(
-            color: titleUpdateColors,
+            color: mythemecolor,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
             elevation: 2,
@@ -77,13 +77,16 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
                 });
               },
               leading:
-                  const Icon(Icons.credit_card_rounded, color: Colors.black54),
+                  const Icon(Icons.credit_card_rounded, color: Colors.white),
               title: const Text(
                   'บันทึกข้อมูลบัตรประจำตัว (Card Information TH/ENG)',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 17,
+                      color: Colors.white)),
               trailing: ExpandIcon(
                 isExpanded: _isCardInfoExpanded,
-                expandedColor: Colors.black,
+                color: Colors.white,
                 onPressed: (bool isExpanded) {
                   setState(() {
                     _isCardInfoExpanded = !isExpanded;
@@ -110,82 +113,85 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
                   ),
                   Expanded(
                     flex: 4,
-                    child: FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: 1,
-                              itemBuilder: (context, index) {
-                                var data = idcardData?.personalCardData;
-                                final cardId = data?.cardId;
-                                final issuedDate = data?.issuedDate;
-                                final expiredDate = data?.expiredDate;
-                                final issueddistrict =
-                                    data?.issuedAtDistrict.districtNameTh;
-                                final issuedprovince =
-                                    data?.issuedAtProvince.provinceNameTh;
+                    child: FutureBuilder(
+                        future: fetchCardinfomation(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: 1,
+                                  itemBuilder: (context, index) {
+                                    var data = idcardData?.personalCardData;
+                                    final cardId = data?.cardId;
+                                    final issuedDate = data?.issuedDate;
+                                    final expiredDate = data?.expiredDate;
+                                    final issueddistrict =
+                                        data?.issuedAtDistrict.districtNameTh;
+                                    final issuedprovince =
+                                        data?.issuedAtProvince.provinceNameTh;
 
-                                return isidentifycard == false
-                                    ? Center(
-                                        child: Column(
-                                          children: [
-                                            const Text('ไม่พบข้อมูล'),
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  showDialogAddidcard();
-                                                },
-                                                child: const Icon(Icons.add,
-                                                    size: 18)),
-                                          ],
-                                        ),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        child: ListTile(
-                                          leading: const Icon(
-                                              Icons.assignment_ind_rounded),
-                                          title:
-                                              Text('เลขที่บัตรประชาชน $cardId'),
-                                          subtitle: Text(
-                                              'วันที่ออกบัตร : $issuedDate | วันหมดอายุ : $expiredDate | ออกให้ ณ อำเภอ/เขต : $issueddistrict | ออกให้ ณ จังหวัด : $issuedprovince'),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                      splashRadius: 30,
-                                                      color: Colors.yellow[800],
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          showDialogEditIdCard();
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.edit)),
-                                                  IconButton(
-                                                      splashRadius: 30,
-                                                      color: Colors.red,
-                                                      onPressed: () {
-                                                        showdialogDeleteId(
-                                                            data!.id);
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons
-                                                            .arrow_outward_rounded,
-                                                        size: 28,
-                                                      )),
-                                                ]),
-                                          ),
-                                        ),
-                                      );
-                              },
-                            );
-                    }),
+                                    return isidentifycard == false
+                                        ? Center(
+                                            child: Column(
+                                              children: [
+                                                const Text('ไม่พบข้อมูล'),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      showDialogAddidcard();
+                                                    },
+                                                    child: const Icon(Icons.add,
+                                                        size: 18)),
+                                              ],
+                                            ),
+                                          )
+                                        : Card(
+                                            elevation: 4,
+                                            child: ListTile(
+                                              leading: const Icon(
+                                                  Icons.assignment_ind_rounded),
+                                              title: Text(
+                                                  'เลขที่บัตรประชาชน $cardId'),
+                                              subtitle: Text(
+                                                  'วันที่ออกบัตร : $issuedDate | วันหมดอายุ : $expiredDate | ออกให้ ณ อำเภอ/เขต : $issueddistrict | ออกให้ ณ จังหวัด : $issuedprovince'),
+                                              trailing: SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      IconButton(
+                                                          splashRadius: 30,
+                                                          color: Colors
+                                                              .yellow[800],
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              showDialogEditIdCard();
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.edit)),
+                                                      IconButton(
+                                                          splashRadius: 30,
+                                                          color: Colors.red,
+                                                          onPressed: () {
+                                                            showdialogDeleteId(
+                                                                data!.id);
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .arrow_outward_rounded,
+                                                            size: 28,
+                                                          )),
+                                                    ]),
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                );
+                        }),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
@@ -193,82 +199,86 @@ class _CardInfoLayoutState extends State<CardInfoLayout> {
                   ),
                   Expanded(
                     flex: 4,
-                    child: FutureBuilder(builder:
-                        (BuildContext context, AsyncSnapshot snapshot) {
-                      return isloading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : ListView.builder(
-                              itemCount: 1,
-                              itemBuilder: (context, index) {
-                                var data = passportData?.passportData;
-                                final passportId = data?.passportId;
-                                final issueedCountry =
-                                    data?.issuedAtCountry.countryNameTh;
-                                final exppassport = data?.expiredDatePassport;
-                                final expvisa = data?.expireDateVisa;
+                    child: FutureBuilder(
+                        future: fetchCardinfomation(),
+                        builder:
+                            (BuildContext context, AsyncSnapshot snapshot) {
+                          return isloading == true
+                              ? const Center(
+                                  child: CircularProgressIndicator(),
+                                )
+                              : ListView.builder(
+                                  itemCount: 1,
+                                  itemBuilder: (context, index) {
+                                    var data = passportData?.passportData;
+                                    final passportId = data?.passportId;
+                                    final issueedCountry =
+                                        data?.issuedAtCountry.countryNameTh;
+                                    final exppassport =
+                                        data?.expiredDatePassport;
+                                    final expvisa = data?.expireDateVisa;
 
-                                return ispassportdata == false
-                                    ? Center(
-                                        child: Column(
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.all(4.0),
-                                              child: Text('ไม่พบข้อมูล'),
+                                    return ispassportdata == false
+                                        ? Center(
+                                            child: Column(
+                                              children: [
+                                                const Padding(
+                                                  padding: EdgeInsets.all(4.0),
+                                                  child: Text('ไม่พบข้อมูล'),
+                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      showDialogAddPassport();
+                                                    },
+                                                    child: const Icon(Icons.add,
+                                                        size: 18)),
+                                              ],
                                             ),
-                                            ElevatedButton(
-                                                onPressed: () {
-                                                  showDialogAddPassport();
-                                                },
-                                                child: const Icon(Icons.add,
-                                                    size: 18)),
-                                          ],
-                                        ),
-                                      )
-                                    : Card(
-                                        elevation: 4,
-                                        child: ListTile(
-                                          leading: const Icon(
-                                              Icons.menu_book_rounded),
-                                          title: Text(
-                                              'เลขที่หนังสือเดินทาง $passportId'),
-                                          subtitle: Text(
-                                              'วันหมดอายุพาสปอร์ต : $exppassport | วันหมดอายุวีซ่า : $expvisa | ออกให้ ณ ประเทศ : $issueedCountry'),
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  IconButton(
-                                                      splashRadius: 30,
-                                                      color: Colors.yellow[800],
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          showDialogEditPassport();
-                                                        });
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.edit)),
-                                                  IconButton(
-                                                      splashRadius: 30,
-                                                      color: Colors.red,
-                                                      onPressed: () {
-                                                        showdialogDeletePassport(
-                                                            data!.id);
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons
-                                                              .arrow_outward_rounded,
-                                                          size: 28)),
-                                                ]),
-                                          ),
-                                        ),
-                                      );
-                              },
-                            );
-                    }),
+                                          )
+                                        : Card(
+                                            elevation: 4,
+                                            child: ListTile(
+                                              leading: const Icon(
+                                                  Icons.menu_book_rounded),
+                                              title: Text(
+                                                  'เลขที่หนังสือเดินทาง $passportId'),
+                                              subtitle: Text(
+                                                  'วันหมดอายุพาสปอร์ต : $exppassport | วันหมดอายุวีซ่า : $expvisa | ออกให้ ณ ประเทศ : $issueedCountry'),
+                                              trailing: SizedBox(
+                                                width: 100,
+                                                child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      IconButton(
+                                                          splashRadius: 30,
+                                                          color: Colors
+                                                              .yellow[800],
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              showDialogEditPassport();
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.edit)),
+                                                      IconButton(
+                                                          splashRadius: 30,
+                                                          color: Colors.red,
+                                                          onPressed: () {
+                                                            showdialogDeletePassport(
+                                                                data!.id);
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons
+                                                                  .arrow_outward_rounded,
+                                                              size: 28)),
+                                                    ]),
+                                              ),
+                                            ),
+                                          );
+                                  },
+                                );
+                        }),
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
