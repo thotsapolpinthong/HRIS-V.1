@@ -3,22 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/employee/menu/ot/create_ot.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/create_manual_workdate.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/ot/menu_ot.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 
-class EmployeeOtMenu extends StatefulWidget {
+class ManualWorkdateMenu extends StatefulWidget {
   final EmployeeDatum employeeData;
-  const EmployeeOtMenu({
+  const ManualWorkdateMenu({
     Key? key,
     required this.employeeData,
   }) : super(key: key);
 
   @override
-  State<EmployeeOtMenu> createState() => _EmployeeOtMenuState();
+  State<ManualWorkdateMenu> createState() => _ManualWorkdateMenuState();
 }
 
-class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
+class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
   TextEditingController startDate = TextEditingController();
   TextEditingController endDate = TextEditingController();
   List<PayrollLot> lotList = [
@@ -44,6 +45,27 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
         endDate: "2024-04-25"),
   ];
   String lotId = "1";
+  showDialogCreate() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (context, setState) => AlertDialog(
+                    backgroundColor: mygreycolors,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    title: TitleDialog(
+                      title: "บันทึกข้อมูลเวลาเข้า - ออกงาน",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    content: SizedBox(
+                        width: 460, height: 300, child: CreateManualWorkdate()),
+                  ));
+        });
+  }
 
   @override
   void initState() {
@@ -56,28 +78,6 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
       });
     }
     super.initState();
-  }
-
-  showDialogCreateOt() {
-    showDialog(
-        barrierDismissible: false,
-        context: context,
-        builder: (BuildContext context) {
-          return StatefulBuilder(
-              builder: (context, setState) => AlertDialog(
-                    backgroundColor: mygreycolors,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    title: TitleDialog(
-                      title: "บันทึกข้อมูลการทำงานล่วงเวลา",
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    content:
-                        SizedBox(width: 460, height: 400, child: CreateOt()),
-                  ));
-        });
   }
 
   @override
@@ -96,7 +96,7 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
                 FloatingActionButtonLocation.endDocked,
             floatingActionButton: MyFloatingButton(
               onPressed: () {
-                showDialogCreateOt();
+                showDialogCreate();
               },
               icon: const Icon(CupertinoIcons.plus),
             ).animate().shake(),
@@ -110,7 +110,7 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
                     height: 50,
                     child: Row(children: [
                       const Expanded(
-                          child: Text("ตารางแสดงข้อมูลการทำงานล่วงเวลา",
+                          child: Text("Manual Work date",
                               style: TextStyle(
                                   fontSize: 20, fontWeight: FontWeight.w800))),
                       Expanded(
@@ -177,15 +177,10 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
 
                   //  columnSpacing: 30,
                   columns: const [
-                    DataColumn(label: Text("OT Date")),
-                    DataColumn(label: Text("OT-normal (hr.)")),
-                    DataColumn(label: Text("Holiday (hr.)")),
-                    DataColumn(label: Text("OT-Holiday (hr.)")),
-                    DataColumn(label: Text("OT-แบบเหมา (hr.)")),
-                    DataColumn(label: Text("Payroll Lot")),
-                    DataColumn(label: Text("Request Type")),
-                    DataColumn(label: Text("Remark")),
-                    DataColumn(label: Text("Delete")),
+                    DataColumn(label: Text("Date")),
+                    DataColumn(label: Text("Type")),
+                    DataColumn(label: Text("Time")),
+                    DataColumn(label: Text("ModifiedBy")),
                   ],
                   source: DataTableRowSource()),
             ),
@@ -198,58 +193,37 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
 
 class DataTableRowSource extends DataTableSource {
   DataTableRowSource();
-  List<OtDataTime> leaveList = [
-    OtDataTime(
-        otDate: "2024-01-01",
-        otNormal: 3.00,
-        holiday: 0,
-        otHoliday: 0,
-        otCharter: 0,
-        payrollLot: "01/2024",
-        requestType: "OT-หลังเลิกงาน",
-        remark: "Create by HRM"),
-    OtDataTime(
-        otDate: "2024-01-02",
-        otNormal: 4.00,
-        holiday: 0,
-        otHoliday: 0,
-        otCharter: 0,
-        payrollLot: "01/2024",
-        requestType: "OT-หลังเลิกงาน",
-        remark: "Create by HRM"),
-    OtDataTime(
-        otDate: "2024-01-03",
-        otNormal: 3.00,
-        holiday: 0,
-        otHoliday: 0,
-        otCharter: 0,
-        payrollLot: "01/2024",
-        requestType: "OT-หลังเลิกงาน",
-        remark: "Create by HRM"),
-    OtDataTime(
-        otDate: "2024-01-04",
-        otNormal: 2.50,
-        holiday: 0,
-        otHoliday: 0,
-        otCharter: 0,
-        payrollLot: "01/2024",
-        requestType: "OT-หลังเลิกงาน",
-        remark: "Create by HRM"),
+  List<WorkDataTime> leaveList = [
+    WorkDataTime(
+        workDate: "2023-12-26",
+        type: "A01",
+        time: "08:00:00",
+        modifiedBy: "เวลากับรหัสพนักงาน"),
+    WorkDataTime(
+        workDate: "2023-12-27",
+        type: "A02",
+        time: "17:00:00",
+        modifiedBy: "เวลากับรหัสพนักงาน"),
+    WorkDataTime(
+        workDate: "2023-12-28",
+        type: "A01",
+        time: "08:00:00",
+        modifiedBy: "เวลากับรหัสพนักงาน"),
+    WorkDataTime(
+        workDate: "2024-01-02",
+        type: "A02",
+        time: "17:00:00",
+        modifiedBy: "เวลากับรหัสพนักงาน"),
   ];
 
   @override
   DataRow? getRow(int index) {
     final data = leaveList[index];
     return DataRow(cells: [
-      DataCell(Text(data.otDate)),
-      DataCell(Text(data.otNormal.toString())),
-      DataCell(Text(data.holiday.toString())),
-      DataCell(Text(data.otHoliday.toString())),
-      DataCell(Text(data.otCharter.toString())),
-      DataCell(Text(data.payrollLot)),
-      DataCell(Text(data.requestType)),
-      DataCell(Text(data.remark)),
-      DataCell(RowDeleteBox(onPressed: () {})),
+      DataCell(Text(data.workDate)),
+      DataCell(Text(data.type)),
+      DataCell(Text(data.time)),
+      DataCell(Text(data.modifiedBy)),
     ]);
   }
 
@@ -263,36 +237,15 @@ class DataTableRowSource extends DataTableSource {
   int get selectedRowCount => 0;
 }
 
-class OtDataTime {
-  final String otDate;
-  final double otNormal;
-  final double holiday;
-  final double otHoliday;
-  final double otCharter;
-  final String payrollLot;
-  final String requestType;
-  final String remark;
-  OtDataTime({
-    required this.otDate,
-    required this.otNormal,
-    required this.holiday,
-    required this.otHoliday,
-    required this.otCharter,
-    required this.payrollLot,
-    required this.requestType,
-    required this.remark,
-  });
-}
-
-class PayrollLot {
-  final String lotId;
-  final String lotName;
-  final String startDate;
-  final String endDate;
-  PayrollLot({
-    required this.lotId,
-    required this.lotName,
-    required this.startDate,
-    required this.endDate,
+class WorkDataTime {
+  final String workDate;
+  final String type;
+  final String time;
+  final String modifiedBy;
+  WorkDataTime({
+    required this.workDate,
+    required this.type,
+    required this.time,
+    required this.modifiedBy,
   });
 }

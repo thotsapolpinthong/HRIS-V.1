@@ -53,6 +53,8 @@ class _CreateLeaveState extends State<CreateLeave> {
           }
           return textStyle;
         },
+        selectableDayPredicate: (day) =>
+            day.weekday == DateTime.sunday ? false : true,
       ),
       dialogSize: const Size(500, 400),
       value: dates,

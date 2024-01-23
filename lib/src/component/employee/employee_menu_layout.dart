@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/end/menu_end.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/menu_leave.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/menu_manual_workdate.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/ot/menu_ot.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/transfer/menu_transfer.dart';
 import 'package:hris_app_prototype/src/component/homepage/SlideBar.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 
@@ -202,9 +205,13 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
             if (pageNumber == 0)
               Expanded(flex: 4, child: Text("$pageNumber"))
             else if (pageNumber == 1)
-              Expanded(flex: 4, child: Text("$pageNumber"))
+              Expanded(
+                  flex: 4,
+                  child: TransferMenu(employeeData: widget.employeeData))
             else if (pageNumber == 2)
-              Expanded(flex: 4, child: Text("$pageNumber"))
+              Expanded(
+                  flex: 4,
+                  child: EndofEmploymentMenu(employeeData: widget.employeeData))
             else if (pageNumber == 3)
               Expanded(
                   flex: 4,
@@ -214,7 +221,9 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                   flex: 4,
                   child: EmployeeLeaveMenu(employeeData: widget.employeeData))
             else if (pageNumber == 5)
-              Expanded(flex: 4, child: Text("$pageNumber"))
+              Expanded(
+                  flex: 4,
+                  child: ManualWorkdateMenu(employeeData: widget.employeeData))
             else
               Expanded(flex: 4, child: Text("$pageNumber")),
             // Expanded(

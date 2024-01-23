@@ -51,6 +51,10 @@ class MyApp extends StatelessWidget {
         timeAttendanceBloc,
       ],
       child: MaterialApp(
+        supportedLocales: const [
+          Locale('en', 'us'),
+          Locale('en', 'gb'),
+        ],
         title: 'HRIS Demo',
         theme: ThemeData(
           scaffoldBackgroundColor: mygreycolors,

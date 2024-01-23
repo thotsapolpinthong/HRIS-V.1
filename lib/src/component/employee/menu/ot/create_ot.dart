@@ -56,6 +56,7 @@ class _CreateOtState extends State<CreateOt> {
 
   Future<void> selectvalidFromDate() async {
     DateTime? picker = await showDatePicker(
+      // selectableDayPredicate: (DateTime val) => val.weekday == 7 ? false : true,
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1950),
