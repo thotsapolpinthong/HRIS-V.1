@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/create_leave.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/ot/menu_ot.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/services/api_employee_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EmployeeLeaveMenu extends StatefulWidget {
   final EmployeeDatum employeeData;
@@ -16,7 +20,6 @@ class EmployeeLeaveMenu extends StatefulWidget {
 
 class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
   TextEditingController yearLeaved = TextEditingController();
-  TextEditingController startDate = TextEditingController();
   TextEditingController toDate = TextEditingController();
 
   String selectYear = "1";
@@ -31,6 +34,31 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
   int personalLeave = 0;
   int sickLeave = 0;
 
+  TextEditingController startDate = TextEditingController();
+  TextEditingController endDate = TextEditingController();
+  List<PayrollLot> lotList = [
+    PayrollLot(
+        lotId: "1",
+        lotName: "01/2024",
+        startDate: "2023-12-26",
+        endDate: "2024-01-25"),
+    PayrollLot(
+        lotId: "2",
+        lotName: "02/2024",
+        startDate: "2024-01-26",
+        endDate: "2024-02-25"),
+    PayrollLot(
+        lotId: "3",
+        lotName: "03/2024",
+        startDate: "2024-02-26",
+        endDate: "2024-03-25"),
+    PayrollLot(
+        lotId: "4",
+        lotName: "04/2024",
+        startDate: "2024-03-26",
+        endDate: "2024-04-25"),
+  ];
+  String lotId = "1";
   showDialogCreateLeave() {
     showDialog(
         barrierDismissible: false,
@@ -48,9 +76,25 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                       },
                     ),
                     content: const SizedBox(
-                        width: 460, height: 300, child: CreateLeave()),
+                        width: 460, height: 360, child: CreateLeave()),
                   ));
         });
+  }
+
+  Future fetchQuota() async {
+    // String employeeId = "";
+    // SharedPreferences preferences = await SharedPreferences.getInstance();
+    // employeeId = preferences.getString("employeeId")!;
+    LeaveQuotaByEmployeeModel? data =
+        await ApiEmployeeService.getLeaveQuotaById(
+            widget.employeeData.employeeId);
+    data;
+  }
+
+  @override
+  void initState() {
+    fetchQuota();
+    super.initState();
   }
 
   @override
@@ -81,49 +125,82 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                     width: double.infinity,
                     height: double.infinity,
                     child: Row(children: [
-                      const Expanded(
-                          child: Text("ตารางแสดงข้อมูลการลา",
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w800))),
-                      // Expanded(
-                      //     child: DropdownOrg(
-                      //         labeltext: 'ประจำปี (ค.ศ.)',
-                      //         value: selectYear,
-                      //         items: yearsList.map((e) {
-                      //           return DropdownMenuItem<String>(
-                      //             value: e.yearsId.toString(),
-                      //             child: Container(
-                      //                 constraints:
-                      //                     const BoxConstraints(maxWidth: 260),
-                      //                 child: Text(e.yearsName)),
-                      //           );
-                      //         }).toList(),
-                      //         onChanged: (newValue) {},
-                      //         validator: null)),
                       Expanded(
-                        flex: 2,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: SizedBox(
+                                width: 122,
+                                child: DropdownOrg(
+                                    labeltext: 'Lot Number',
+                                    value: lotId,
+                                    items: lotList.map((e) {
+                                      return DropdownMenuItem<String>(
+                                        value: e.lotId.toString(),
+                                        child: Container(
+                                            width: 58,
+                                            constraints: const BoxConstraints(
+                                                maxWidth: 100, minWidth: 70),
+                                            child: Text(e.lotName)),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      lotId = newValue.toString();
+                                      Iterable<PayrollLot> result =
+                                          lotList.where((element) =>
+                                              element.lotId == newValue);
+                                      if (result.isNotEmpty) {
+                                        startDate.text =
+                                            result.first.startDate.toString();
+                                        endDate.text =
+                                            result.first.endDate.toString();
+                                      }
+                                    },
+                                    validator: null),
+                              ),
+                            ),
+                            Expanded(
+                              child: TextFormFieldGlobal(
+                                  controller: startDate,
+                                  labelText: "วันที่เริ่มต้น",
+                                  hintText: '',
+                                  enabled: false,
+                                  validatorless: null),
+                            ),
+                            Expanded(
+                              child: TextFormFieldGlobal(
+                                  controller: endDate,
+                                  labelText: "วันที่สิ้นสุด",
+                                  hintText: '',
+                                  enabled: false,
+                                  validatorless: null),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             const Text("Leave day quota : ",
                                 style: TextStyle(
                                     fontSize: 18, fontWeight: FontWeight.w800)),
-                            Expanded(
-                              child: DropdownOrg(
-                                  labeltext: 'ประจำปี (ค.ศ.)',
-                                  value: selectYear,
-                                  items: yearsList.map((e) {
-                                    return DropdownMenuItem<String>(
-                                      value: e.yearsId.toString(),
-                                      child: Container(
-                                          constraints: const BoxConstraints(
-                                              maxWidth: 260),
-                                          child: Text(e.yearsName)),
-                                    );
-                                  }).toList(),
-                                  onChanged: (newValue) {},
-                                  validator: null),
-                            ),
+                            // Expanded(
+                            //   child: DropdownOrg(
+                            //       labeltext: 'ประจำปี (ค.ศ.)',
+                            //       value: selectYear,
+                            //       items: yearsList.map((e) {
+                            //         return DropdownMenuItem<String>(
+                            //           value: e.yearsId.toString(),
+                            //           child: Container(
+                            //               constraints: const BoxConstraints(
+                            //                   maxWidth: 260),
+                            //               child: Text(e.yearsName)),
+                            //         );
+                            //       }).toList(),
+                            //       onChanged: (newValue) {},
+                            //       validator: null),
+                            // ),
                             Card(
                               elevation: 3,
                               color: Colors.greenAccent,

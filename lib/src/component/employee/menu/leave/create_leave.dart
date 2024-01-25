@@ -30,6 +30,10 @@ class _CreateLeaveState extends State<CreateLeave> {
     DropdownLeaveType(leaveTypeId: "L004", leaveTypeNameTh: "ลาคลอด"),
   ];
 
+  TimeOfDay? selectedStartTime;
+  TextEditingController startTime = TextEditingController();
+  TextEditingController endTime = TextEditingController();
+
   Future<void> selectDateFromDate() async {
     var picker = await showCalendarDatePicker2Dialog(
       context: context,
@@ -137,58 +141,113 @@ class _CreateLeaveState extends State<CreateLeave> {
     ).show();
   }
 
+  Future<void> selectTime(bool from) async {
+    TimeOfDay? selectedTime24Hour = await showTimePicker(
+      context: context,
+      initialTime: const TimeOfDay(hour: 0, minute: 0),
+      initialEntryMode: TimePickerEntryMode.input,
+      builder: (BuildContext context, Widget? child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+          child: child!,
+        );
+      },
+    );
+    if (selectedTime24Hour != null) {
+      setState(() {
+        selectedStartTime = selectedTime24Hour;
+        if (from == true) {
+          startTime.text = selectedStartTime!.format(context).toString();
+        } else {
+          endTime.text = selectedStartTime!.format(context).toString();
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: DropdownOrg(
-                        labeltext: 'ประเภทการลา',
-                        value: selectLeaveType,
-                        items: leaveTypeList.map((e) {
-                          return DropdownMenuItem<String>(
-                            value: e.leaveTypeId.toString(),
-                            child: Container(
-                                constraints:
-                                    const BoxConstraints(maxWidth: 260),
-                                child: Text(e.leaveTypeNameTh)),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {},
-                        validator: Validatorless.required("กรุณากรอกข้อมูล")),
-                  ),
-                  Expanded(
-                      child: TextFormFieldDatepickGlobal(
-                    controller: leaveDate,
-                    labelText: "วันที่ต้องการลา ",
-                    validatorless: null,
-                    ontap: () {
-                      selectDateFromDate();
-                    },
-                  ))
-                ],
-              ),
-              const Gap(5),
-              TextFormFieldGlobal(
-                  controller: dateCount,
-                  labelText: "จำนวนวัน",
-                  hintText: '',
-                  enabled: leaveDateList.length > 1 ? false : true,
-                  validatorless: Validatorless.number('กรอกเฉพาะตัวเลข')),
-              const Gap(5),
-              TextFormFieldGlobal(
-                  controller: noted,
-                  labelText: "Noted",
-                  hintText: '',
-                  enabled: true,
-                  validatorless: null),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: DropdownOrg(
+                          labeltext: 'ประเภทการลา',
+                          value: selectLeaveType,
+                          items: leaveTypeList.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.leaveTypeId.toString(),
+                              child: Container(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 260),
+                                  child: Text(e.leaveTypeNameTh)),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {},
+                          validator: Validatorless.required("กรุณากรอกข้อมูล")),
+                    ),
+                    Expanded(
+                        child: TextFormFieldDatepickGlobal(
+                      controller: leaveDate,
+                      labelText: "วันที่ต้องการลา ",
+                      validatorless: null,
+                      ontap: () {
+                        selectDateFromDate();
+                      },
+                    ))
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextFormFieldTimepickGlobal(
+                        controller: startTime,
+                        labelText: "ระยะเวลาเริ่มลา (Start Time).",
+                        validatorless:
+                            Validatorless.required("กรุณากรอกข้อมูล"),
+                        ontap: () {
+                          selectTime(true);
+                        },
+                        enabled: leaveDateList.length > 1 ? false : true,
+                      ),
+                    ),
+                    Expanded(
+                      child: TextFormFieldTimepickGlobal(
+                        controller: endTime,
+                        labelText: "ระยะเวลาสิ้นสุด (End Time).",
+                        validatorless:
+                            Validatorless.required("กรุณากรอกข้อมูล"),
+                        ontap: () {
+                          selectTime(false);
+                        },
+                        enabled: leaveDateList.length > 1 ? false : true,
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(5),
+                TextFormFieldGlobal(
+                    controller: dateCount,
+                    labelText: "จำนวนวัน",
+                    hintText: '',
+                    enabled: leaveDateList.length > 1 ? false : true,
+                    validatorless: Validatorless.number('กรอกเฉพาะตัวเลข')),
+                const Gap(5),
+                TextFormFieldGlobal(
+                    controller: noted,
+                    labelText: "Noted",
+                    hintText: '',
+                    enabled: true,
+                    validatorless: null),
+              ],
+            ),
           ),
         ),
         Align(

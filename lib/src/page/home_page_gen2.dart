@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
+import 'package:hris_app_prototype/src/page/employee_self_sevice/employee_self_service_layout.dart';
 import 'package:hris_app_prototype/src/page/organization/organization_layout.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
@@ -89,6 +90,21 @@ class _MyHomepageState extends State<MyHomepage> {
                         child: const DatatableEmployee(
                           isSelected: false,
                         ),
+                      ),
+                    )),
+              if (state.pageNumber == 3)
+                Expanded(
+                    flex: state.expandMenu == false ? 19 : 5,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: BoxDecoration(
+                            color: mygreycolors,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(40))),
+                        child: const EmployeeSelfServiceLayout(),
                       ),
                     )),
               if (state.pageNumber == 6)

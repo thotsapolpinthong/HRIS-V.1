@@ -152,136 +152,144 @@ class _ShiftDataTableState extends State<ShiftDataTable> {
                   child: SingleChildScrollView(
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
-                      child: PaginatedDataTable(
-                        columnSpacing: 70,
-                        showFirstLastButtons: true,
-                        rowsPerPage: rowIndex,
-                        availableRowsPerPage: const [5, 10, 20],
-                        sortColumnIndex: sortColumnIndex,
-                        sortAscending: sort,
-                        onRowsPerPageChanged: (value) {
-                          setState(() {
-                            rowIndex = value!;
-                          });
-                        },
-                        header: SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                  flex: 2, child: Text('Shift setting table.')),
-                              Expanded(
-                                  flex: 1,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.search_rounded),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: TextFormField(
-                                            controller: search,
-                                            onChanged: (value) {
-                                              if (value == '') {
-                                                context
-                                                    .read<TimeattendanceBloc>()
-                                                    .add(DissSearchEvent());
-                                              } else {
-                                                setState(() {
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: PaginatedDataTable(
+                          columnSpacing: 70,
+                          showFirstLastButtons: true,
+                          rowsPerPage: rowIndex,
+                          availableRowsPerPage: const [5, 10, 20],
+                          sortColumnIndex: sortColumnIndex,
+                          sortAscending: sort,
+                          onRowsPerPageChanged: (value) {
+                            setState(() {
+                              rowIndex = value!;
+                            });
+                          },
+                          header: SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                    flex: 2,
+                                    child: Text('Shift setting table.')),
+                                Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.search_rounded),
+                                        Expanded(
+                                          flex: 2,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: TextFormField(
+                                              controller: search,
+                                              onChanged: (value) {
+                                                if (value == '') {
                                                   context
                                                       .read<
                                                           TimeattendanceBloc>()
-                                                      .add(SearchEvent());
-                                                  mainData = filterData!
-                                                      .where((element) {
-                                                    final nameId = element
-                                                        .shiftName
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final type = element
-                                                        .startTime
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final nameTH = element
-                                                        .endTime
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
+                                                      .add(DissSearchEvent());
+                                                } else {
+                                                  setState(() {
+                                                    context
+                                                        .read<
+                                                            TimeattendanceBloc>()
+                                                        .add(SearchEvent());
+                                                    mainData = filterData!
+                                                        .where((element) {
+                                                      final nameId = element
+                                                          .shiftName
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
+                                                      final type = element
+                                                          .startTime
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
+                                                      final nameTH = element
+                                                          .endTime
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
 
-                                                    return nameId ||
-                                                        type ||
-                                                        nameTH;
-                                                  }).toList();
-                                                });
-                                              }
-                                            },
-                                            decoration: InputDecoration(
-                                                contentPadding:
-                                                    const EdgeInsets.all(10.0),
-                                                hintText: 'Search (EN/TH)',
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8))),
+                                                      return nameId ||
+                                                          type ||
+                                                          nameTH;
+                                                    }).toList();
+                                                  });
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets.all(
+                                                          10.0),
+                                                  hintText: 'Search (EN/TH)',
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8))),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  )),
-                            ],
+                                      ],
+                                    )),
+                              ],
+                            ),
                           ),
+                          columns: [
+                            DataColumn(
+                                label: const Text('Shift Name'),
+                                onSort: (columnIndex, ascending) {
+                                  setState(() {
+                                    sort = !sort;
+                                    sortColumnIndex = 0;
+                                    if (state.onSearchData == true) {
+                                      onSortSearchColumn(
+                                          columnIndex, ascending);
+                                    } else {
+                                      onSortColumn(columnIndex, ascending);
+                                    }
+                                  });
+                                }),
+                            DataColumn(
+                                label: const Text('Time'),
+                                onSort: (columnIndex, ascending) {
+                                  setState(() {
+                                    sort = !sort;
+                                    sortColumnIndex = 1;
+                                    if (state.onSearchData == true) {
+                                      onSortSearchColumn(
+                                          columnIndex, ascending);
+                                    } else {
+                                      onSortColumn(columnIndex, ascending);
+                                    }
+                                  });
+                                }),
+                            // DataColumn(
+                            //     numeric: true,
+                            //     label: const Text('End Time'),
+                            //     onSort: (columnIndex, ascending) {
+                            //       setState(() {
+                            //         sort = !sort;
+                            //         sortColumnIndex = 2;
+                            //         if (state.onSearchData == true) {
+                            //           onSortSearchColumn(columnIndex, ascending);
+                            //         } else {
+                            //           onSortColumn(columnIndex, ascending);
+                            //         }
+                            //       });
+                            //     }),
+                            const DataColumn(label: Text('ValidFrom')),
+                            const DataColumn(label: Text('EndFrom')),
+                            const DataColumn(label: Text('Status')),
+                            const DataColumn(label: Text('Select')),
+                          ],
+                          source: PersonDataTableSource(
+                              mainData, context, deleteData),
                         ),
-                        columns: [
-                          DataColumn(
-                              label: const Text('Shift Name'),
-                              onSort: (columnIndex, ascending) {
-                                setState(() {
-                                  sort = !sort;
-                                  sortColumnIndex = 0;
-                                  if (state.onSearchData == true) {
-                                    onSortSearchColumn(columnIndex, ascending);
-                                  } else {
-                                    onSortColumn(columnIndex, ascending);
-                                  }
-                                });
-                              }),
-                          DataColumn(
-                              label: const Text('Time'),
-                              onSort: (columnIndex, ascending) {
-                                setState(() {
-                                  sort = !sort;
-                                  sortColumnIndex = 1;
-                                  if (state.onSearchData == true) {
-                                    onSortSearchColumn(columnIndex, ascending);
-                                  } else {
-                                    onSortColumn(columnIndex, ascending);
-                                  }
-                                });
-                              }),
-                          // DataColumn(
-                          //     numeric: true,
-                          //     label: const Text('End Time'),
-                          //     onSort: (columnIndex, ascending) {
-                          //       setState(() {
-                          //         sort = !sort;
-                          //         sortColumnIndex = 2;
-                          //         if (state.onSearchData == true) {
-                          //           onSortSearchColumn(columnIndex, ascending);
-                          //         } else {
-                          //           onSortColumn(columnIndex, ascending);
-                          //         }
-                          //       });
-                          //     }),
-                          const DataColumn(label: Text('ValidFrom')),
-                          const DataColumn(label: Text('EndFrom')),
-                          const DataColumn(label: Text('Status')),
-                          const DataColumn(label: Text('Select')),
-                        ],
-                        source: PersonDataTableSource(
-                            mainData, context, deleteData),
                       ),
                     ),
                   ),

@@ -6,6 +6,7 @@ import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_shift_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
@@ -114,5 +115,30 @@ class ApiEmployeeService {
           getPositionorganizationDropdownFromJson(response.body);
       return data.positionOrganizationData;
     } else {}
+  }
+
+  //MENU
+  // Leave Menu
+  //get leaveQuota by ID
+  static Future<LeaveQuotaByEmployeeModel?> getLeaveQuotaById(
+      String employeeId) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/Hr/GetLeaveQuotaByEmployeeId?EmployeeId=$employeeId"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      LeaveQuotaByEmployeeModel? data =
+          leaveQuotaByEmployeeModelFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 }
