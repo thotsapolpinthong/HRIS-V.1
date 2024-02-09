@@ -1,6 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_amount_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_data_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 
 part 'employee_event.dart';
@@ -24,5 +28,18 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         (event, emit) => emit(state.copyWith(onSearchData: true)));
     on<DissSearchEmpEvent>(
         (event, emit) => emit(state.copyWith(onSearchData: false)));
+
+    on<FetchDataLeaveEmployeeEvent>((event, emit) async {
+      emit(state.copyWith(isleaveLoading: true));
+      emit(state.copyWith(
+          leaveDataEmployee:
+              await ApiEmployeeSelfService.getLeaveRequestByEmployeeId(
+                  event.employeeId),
+          quotaData:
+              await ApiEmployeeService.getLeaveQuotaById(event.employeeId),
+          leaveAmount: await ApiEmployeeSelfService.getLeaveAmountByEmployeeId(
+              event.employeeId),
+          isleaveLoading: false));
+    });
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/employee_self_service/menu_menager.dart';
 import 'package:hris_app_prototype/src/component/employee_self_service/menu_user.dart';
+import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
+import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EmployeeSelfServiceLayout extends StatefulWidget {
@@ -14,11 +17,13 @@ class EmployeeSelfServiceLayout extends StatefulWidget {
 
 class _EmployeeSelfServiceLayoutState extends State<EmployeeSelfServiceLayout> {
   int isExpandedPage = 0;
+  EmployeeIdModel? employeeData;
 
   fetchData() async {
     String employeeId = "";
     SharedPreferences preferences = await SharedPreferences.getInstance();
     employeeId = preferences.getString("employeeId")!;
+    employeeData = await ApiEmployeeService.fetchDataEmployeeId(employeeId);
   }
 
   @override
@@ -139,9 +144,12 @@ class _EmployeeSelfServiceLayoutState extends State<EmployeeSelfServiceLayout> {
             if (isExpandedPage == 0)
               Expanded(flex: 19, child: Container())
             else if (isExpandedPage == 1)
-              const Expanded(flex: 19, child: UserMenuService())
+              Expanded(
+                  flex: 19, child: UserMenuService(employeeData: employeeData))
             else
-              Expanded(flex: 19, child: Container())
+              Expanded(
+                  flex: 19,
+                  child: ManagerMenuService(employeeData: employeeData))
           ],
         )),
       ),

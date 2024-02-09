@@ -1,37 +1,38 @@
 import 'dart:convert';
 
-GetEmployeeByIdModel getEmployeeByIdModelFromJson(String str) =>
-    GetEmployeeByIdModel.fromJson(json.decode(str));
+EmployeeIdModel employeeIdModelFromJson(String str) =>
+    EmployeeIdModel.fromJson(json.decode(str));
 
-String getEmployeeByIdModelToJson(GetEmployeeByIdModel data) =>
+String employeeIdModelToJson(EmployeeIdModel data) =>
     json.encode(data.toJson());
 
-class GetEmployeeByIdModel {
-  EmployeeData employeeData;
+class EmployeeIdModel {
+  List<EmployeeDatum> employeeData;
   String message;
   bool status;
 
-  GetEmployeeByIdModel({
+  EmployeeIdModel({
     required this.employeeData,
     required this.message,
     required this.status,
   });
 
-  factory GetEmployeeByIdModel.fromJson(Map<String, dynamic> json) =>
-      GetEmployeeByIdModel(
-        employeeData: EmployeeData.fromJson(json["employeeData"]),
+  factory EmployeeIdModel.fromJson(Map<String, dynamic> json) =>
+      EmployeeIdModel(
+        employeeData: List<EmployeeDatum>.from(
+            json["employeeData"].map((x) => EmployeeDatum.fromJson(x))),
         message: json["message"],
         status: json["status"],
       );
 
   Map<String, dynamic> toJson() => {
-        "employeeData": employeeData.toJson(),
+        "employeeData": List<dynamic>.from(employeeData.map((x) => x.toJson())),
         "message": message,
         "status": status,
       };
 }
 
-class EmployeeData {
+class EmployeeDatum {
   String employeeId;
   PersonData personData;
   String fingerScanId;
@@ -42,10 +43,10 @@ class EmployeeData {
   DepartmentData departmentData;
   StaffStatusData staffStatusData;
   StaffTypeData staffTypeData;
-  EmployeeDataPositionData positionData;
+  EmployeeDatumPositionData positionData;
   ShiftData shiftData;
 
-  EmployeeData({
+  EmployeeDatum({
     required this.employeeId,
     required this.personData,
     required this.fingerScanId,
@@ -60,7 +61,7 @@ class EmployeeData {
     required this.shiftData,
   });
 
-  factory EmployeeData.fromJson(Map<String, dynamic> json) => EmployeeData(
+  factory EmployeeDatum.fromJson(Map<String, dynamic> json) => EmployeeDatum(
         employeeId: json["employeeId"],
         personData: PersonData.fromJson(json["personData"]),
         fingerScanId: json["fingerScanId"],
@@ -71,7 +72,7 @@ class EmployeeData {
         departmentData: DepartmentData.fromJson(json["departmentData"]),
         staffStatusData: StaffStatusData.fromJson(json["staffStatusData"]),
         staffTypeData: StaffTypeData.fromJson(json["staffTypeData"]),
-        positionData: EmployeeDataPositionData.fromJson(json["positionData"]),
+        positionData: EmployeeDatumPositionData.fromJson(json["positionData"]),
         shiftData: ShiftData.fromJson(json["shiftData"]),
       );
 
@@ -383,46 +384,52 @@ class TitleName {
       };
 }
 
-class EmployeeDataPositionData {
+class EmployeeDatumPositionData {
   String positionOrganizationId;
   ParentPositionBusinessNodeIdPositionData positionData;
   OrganizationData organizationData;
   JobTitleData jobTitleData;
   PositionTypeData positionTypeData;
+  String status;
   ParentPositionNodeId parentPositionBusinessNodeId;
   ParentPositionNodeId parentPositionNodeId;
+  EmployeeData employeeData;
   String validFromDate;
   String endDate;
-  String? startDate;
+  String startingSalary;
 
-  EmployeeDataPositionData({
+  EmployeeDatumPositionData({
     required this.positionOrganizationId,
     required this.positionData,
     required this.organizationData,
     required this.jobTitleData,
     required this.positionTypeData,
+    required this.status,
     required this.parentPositionBusinessNodeId,
     required this.parentPositionNodeId,
+    required this.employeeData,
     required this.validFromDate,
     required this.endDate,
-    required this.startDate,
+    required this.startingSalary,
   });
 
-  factory EmployeeDataPositionData.fromJson(Map<String, dynamic> json) =>
-      EmployeeDataPositionData(
+  factory EmployeeDatumPositionData.fromJson(Map<String, dynamic> json) =>
+      EmployeeDatumPositionData(
         positionOrganizationId: json["positionOrganizationId"],
         positionData: ParentPositionBusinessNodeIdPositionData.fromJson(
             json["positionData"]),
         organizationData: OrganizationData.fromJson(json["organizationData"]),
         jobTitleData: JobTitleData.fromJson(json["jobTitleData"]),
         positionTypeData: PositionTypeData.fromJson(json["positionTypeData"]),
+        status: json["status"],
         parentPositionBusinessNodeId:
             ParentPositionNodeId.fromJson(json["parentPositionBusinessNodeId"]),
         parentPositionNodeId:
             ParentPositionNodeId.fromJson(json["parentPositionNodeId"]),
+        employeeData: EmployeeData.fromJson(json["employeeData"]),
         validFromDate: json["validFromDate"],
         endDate: json["endDate"],
-        startDate: json["startDate"],
+        startingSalary: json["startingSalary"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -431,11 +438,45 @@ class EmployeeDataPositionData {
         "organizationData": organizationData.toJson(),
         "jobTitleData": jobTitleData.toJson(),
         "positionTypeData": positionTypeData.toJson(),
+        "status": status,
         "parentPositionBusinessNodeId": parentPositionBusinessNodeId.toJson(),
         "parentPositionNodeId": parentPositionNodeId.toJson(),
+        "employeeData": employeeData.toJson(),
         "validFromDate": validFromDate,
         "endDate": endDate,
-        "startDate": startDate,
+        "startingSalary": startingSalary,
+      };
+}
+
+class EmployeeData {
+  String employeeId;
+  String employeeFirstNameTh;
+  String employeeLastNameTh;
+  String employeeFirstNameEn;
+  String employeeLastNameEn;
+
+  EmployeeData({
+    required this.employeeId,
+    required this.employeeFirstNameTh,
+    required this.employeeLastNameTh,
+    required this.employeeFirstNameEn,
+    required this.employeeLastNameEn,
+  });
+
+  factory EmployeeData.fromJson(Map<String, dynamic> json) => EmployeeData(
+        employeeId: json["employeeId"],
+        employeeFirstNameTh: json["employeeFirstNameTh"],
+        employeeLastNameTh: json["employeeLastNameTh"],
+        employeeFirstNameEn: json["employeeFirstNameEn"],
+        employeeLastNameEn: json["employeeLastNameEn"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "employeeId": employeeId,
+        "employeeFirstNameTh": employeeFirstNameTh,
+        "employeeLastNameTh": employeeLastNameTh,
+        "employeeFirstNameEn": employeeFirstNameEn,
+        "employeeLastNameEn": employeeLastNameEn,
       };
 }
 
@@ -630,6 +671,7 @@ class ShiftData {
   String endTime;
   String validFrom;
   String endDate;
+  String shiftStatus;
 
   ShiftData({
     required this.shiftId,
@@ -638,6 +680,7 @@ class ShiftData {
     required this.endTime,
     required this.validFrom,
     required this.endDate,
+    required this.shiftStatus,
   });
 
   factory ShiftData.fromJson(Map<String, dynamic> json) => ShiftData(
@@ -647,6 +690,7 @@ class ShiftData {
         endTime: json["endTime"],
         validFrom: json["validFrom"],
         endDate: json["endDate"],
+        shiftStatus: json["shiftStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -656,6 +700,7 @@ class ShiftData {
         "endTime": endTime,
         "validFrom": validFrom,
         "endDate": endDate,
+        "shiftStatus": shiftStatus,
       };
 }
 

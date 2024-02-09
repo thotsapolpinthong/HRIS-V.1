@@ -395,7 +395,8 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                   columns: [
                                     if (widget.employee == false)
                                       const DataColumn(
-                                          label: Icon(Icons.photo_camera_front_sharp)),
+                                          label: Icon(
+                                              Icons.photo_camera_front_sharp)),
                                     DataColumn(
                                         label: const Text(
                                           'รหัสประจำตัว',
@@ -507,7 +508,13 @@ class PersonDataTableSource extends DataTableSource {
     final person = data![index];
     return DataRow(cells: [
       if (employee == false)
-         DataCell(CircleAvatar(child: Icon(Icons.person,color: mygreycolors,),backgroundColor: mythemecolor,)),
+        DataCell(CircleAvatar(
+          backgroundColor: mythemecolor,
+          child: Icon(
+            Icons.person,
+            color: mygreycolors,
+          ),
+        )),
       DataCell(Text(person.personId)),
       DataCell(Text(
           '${person.titleName.titleNameEn} / ${person.titleName.titleNameTh}')),
@@ -563,30 +570,30 @@ class PersonDataTableSource extends DataTableSource {
       if (employee == false)
         DataCell(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showEditDialog(person.personId);
-              },
-              child: const Icon(Icons.edit)),
-        ),
-        const Gap(5),
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showdialogDeletePerson(person.personId);
-              },
-              child: const Icon(Icons.delete_rounded)),
-        ),
+            width: 40,
+            height: 38,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amber[700],
+                    padding: const EdgeInsets.all(1)),
+                onPressed: () {
+                  showEditDialog(person.personId);
+                },
+                child: const Icon(Icons.edit)),
+          ),
+          const Gap(5),
+          SizedBox(
+            width: 40,
+            height: 38,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red[700],
+                    padding: const EdgeInsets.all(1)),
+                onPressed: () {
+                  showdialogDeletePerson(person.personId);
+                },
+                child: const Icon(Icons.delete_rounded)),
+          ),
           // Card(
           //     elevation: 4,
           //     child: IconButton(

@@ -6,7 +6,10 @@ import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_shift_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/create_leave_by_hr_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_employee_approve_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_request_by_id_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
@@ -38,6 +41,25 @@ class ApiEmployeeService {
     return null;
   }
 
+  // getEmployeebyId
+  static Future<EmployeeIdModel?> fetchDataEmployeeId(String employeeId) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse("$baseUrl/GetEmployeeById?employeeId=$employeeId"),
+      headers: {
+        "Authorization": "Bearer $sharedToken",
+      },
+    );
+    if (response.statusCode == 200) {
+      EmployeeIdModel data = employeeIdModelFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      }
+    }
+    return null;
+  }
+
   //Create
   static Future createEmployee(CreateEmployeeModel? createModel) async {
     bool create = false;
@@ -52,7 +74,7 @@ class ApiEmployeeService {
       body: jsonEncode(createModel!.toJson()),
     );
     if (response.statusCode == 200) {
-      GetEmployeeByIdModel data = getEmployeeByIdModelFromJson(response.body);
+      EmployeeIdModel data = employeeIdModelFromJson(response.body);
       if (data.status == true) {
         return create = true;
       } else {
@@ -139,6 +161,46 @@ class ApiEmployeeService {
       }
     } else {
       return null;
+    }
+  }
+
+  static getEmployeeApprove(
+      String parentPositionOrganizationBusinessNode) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/Hr/GetApproverByPositionBusinessNode?parentPositionOrganizationBusinessNode=$parentPositionOrganizationBusinessNode"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      EmployeeApproveModel data = employeeApproveModelFromJson(response.body);
+      return data;
+    } else {}
+  }
+
+  static Future createLeaveRquestByHr(LeaveRequestHrModel? createModel) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.post(
+      Uri.parse("$baseUrl/NewLeaveRequestManaul"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(createModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      GetLeaveRequestByIdModel data =
+          getLeaveRequestByIdModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
     }
   }
 }
