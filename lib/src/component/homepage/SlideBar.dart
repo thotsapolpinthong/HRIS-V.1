@@ -209,26 +209,26 @@ class _SlideBarState extends State<SlideBar> {
                             .animate()
                             .fadeIn(delay: 900.ms)
                             .slideY(begin: 1, duration: 200.ms),
-                        // DrawerTitle(
-                        //         color: state.pageNumber == 6
-                        //             ? mygreycolors
-                        //             : mythemecolor,
-                        //         icon: Icons.calendar_month_rounded,
-                        //         iconcolor: state.pageNumber == 6
-                        //             ? Colors.black87
-                        //             : mytextcolors,
-                        //         title: "TIME ATTENDANCE",
-                        //         textColor: state.pageNumber == 6
-                        //             ? Colors.black87
-                        //             : mytextcolors,
-                        //         onTap: () {
-                        //           context
-                        //               .read<HomepageBloc>()
-                        //               .add(TimePageEvent());
-                        //         })
-                        //     .animate()
-                        //     .fadeIn(delay: 1000.ms)
-                        //     .slideY(begin: 1, duration: 200.ms),
+                        DrawerTitle(
+                                color: state.pageNumber == 6
+                                    ? mygreycolors
+                                    : mythemecolor,
+                                icon: Icons.time_to_leave_sharp,
+                                iconcolor: state.pageNumber == 6
+                                    ? Colors.black87
+                                    : mytextcolors,
+                                title: "Off-Side Working",
+                                textColor: state.pageNumber == 6
+                                    ? Colors.black87
+                                    : mytextcolors,
+                                onTap: () {
+                                  context
+                                      .read<HomepageBloc>()
+                                      .add(TimePageEvent());
+                                })
+                            .animate()
+                            .fadeIn(delay: 1000.ms)
+                            .slideY(begin: 1, duration: 200.ms),
                         const DrawerTitleListTA()
                             .animate()
                             .fadeIn(delay: 1000.ms)

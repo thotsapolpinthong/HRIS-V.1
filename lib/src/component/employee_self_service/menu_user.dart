@@ -1,14 +1,21 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee_self_service/user_leave_menu.dart';
-import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/component/employee_self_service/user_manual_workdate_menu.dart';
+import 'package:hris_app_prototype/src/component/employee_self_service/user_ot_menu.dart';
+import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/model/self_service/ot/ot_time_count_model.dart';
+import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
+import 'package:lottie/lottie.dart';
 
 class UserMenuService extends StatefulWidget {
-  final EmployeeIdModel? employeeData;
+  final EmployeeDatum? employeeData;
 
   const UserMenuService({
     Key? key,
@@ -21,23 +28,26 @@ class UserMenuService extends StatefulWidget {
 
 class _UserMenuServiceState extends State<UserMenuService> {
   bool isLoading = false;
+  //leave
   LeaveQuotaByEmployeeModel? quotaData;
   double vacationLeave = 0;
   double bussinessLeave = 0;
   double sickLeave = 0;
 
+//ot
+  OtTimeCountModel? otTimeCountData;
+  double holiday = 0;
+  double otNormal = 0;
+  double otHoliday = 0;
+  double otSpecial = 0;
+
   fetchData() async {
     quotaData = await ApiEmployeeService.getLeaveQuotaById(
-        widget.employeeData!.employeeData[0].employeeId);
+        widget.employeeData!.employeeId);
+    otTimeCountData = await ApiEmployeeSelfService.getOtTimeCount(
+        widget.employeeData!.employeeId);
     if (quotaData != null) {
       for (var element in quotaData!.leaveSetupData) {
-        // if (element.leaveTypeData.leaveTypeId == "L001") {
-        //   double amount = double.parse(element.leaveAmount);
-        //   vacationLeave += amount;
-        // } else if (element.leaveTypeData.leaveTypeId == "L002") {
-        //   bussinessLeave = double.parse(element.leaveAmount);
-        // } else {}
-
         switch (element.leaveTypeData.leaveTypeId) {
           case "L001":
             double amount = double.parse(element.leaveAmount);
@@ -53,13 +63,16 @@ class _UserMenuServiceState extends State<UserMenuService> {
             break;
         }
       }
-      setState(() {
-        vacationLeave;
-        bussinessLeave;
-        quotaData;
-        isLoading = false;
-      });
     } else {}
+    if (otTimeCountData != null) {
+      holiday = otTimeCountData!.overTimeCountData.holidayTotalAmount;
+      otNormal = otTimeCountData!.overTimeCountData.otNormalTotalAmount;
+      otHoliday = otTimeCountData!.overTimeCountData.otHolidayTotalAmount;
+      otSpecial = otTimeCountData!.overTimeCountData.otSpecialTotalAmount;
+    } else {}
+    setState(() {
+      isLoading = false;
+    });
   }
 
   showDialoge() {
@@ -87,6 +100,12 @@ class _UserMenuServiceState extends State<UserMenuService> {
   void initState() {
     fetchData();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    isLoading = true;
+    super.dispose();
   }
 
   @override
@@ -233,34 +252,177 @@ class _UserMenuServiceState extends State<UserMenuService> {
                       ),
                     ),
                   ),
-                  Hero(
-                    tag: "ot",
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                      child: InkWell(
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const OTManage())),
-                        child: const SizedBox(
-                          width: 340,
-                          height: 540,
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  title: Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
-                                  subtitle: Text("OT"),
+                  Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)),
+                    child: InkWell(
+                      onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => OTManage(
+                                employeeData: widget.employeeData,
+                                otTimeCountData: otTimeCountData,
+                              ))),
+                      child: SizedBox(
+                        width: 340,
+                        height: 540,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                              const ListTile(
+                                title: Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
+                                subtitle: Text("OT"),
+                              ),
+                              const Text(
+                                "OT : รายเดือน",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                              const Gap(8),
+                              Expanded(
+                                  child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                color: mygreycolors,
+                                child: Center(
+                                  child: ListTile(
+                                    leading: const Icon(
+                                      Icons.weekend_rounded,
+                                      size: 34,
+                                    ),
+                                    title: const Text("Holiday"),
+                                    subtitle: const Text("ทำงานวันหยุด"),
+                                    trailing: SizedBox(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            holiday.toStringAsFixed(2),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: holiday == 0
+                                                    ? Colors.black54
+                                                    : Colors.greenAccent[700]),
+                                          ),
+                                          const Text(
+                                            "ชั่วโมง",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                Expanded(child: Text("test")),
-                                // Align(
-                                //     alignment: Alignment.bottomRight,
-                                //     child: ElevatedButton(
-                                //         onPressed: () {}, child: Text("ขอใบลาออนไลน์")))
-                              ],
-                            ),
+                              )),
+                              Expanded(
+                                  child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                color: mygreycolors,
+                                child: Center(
+                                  child: ListTile(
+                                    leading: const Icon(
+                                      Icons.work_outline_rounded,
+                                      size: 34,
+                                    ),
+                                    title: const Text("OT-normal"),
+                                    subtitle: const Text("โอทีวันทำงาน"),
+                                    trailing: SizedBox(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            otNormal.toStringAsFixed(2),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: otNormal == 0
+                                                    ? Colors.black54
+                                                    : Colors.greenAccent[700]),
+                                          ),
+                                          const Text(
+                                            "ชั่วโมง",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                color: mygreycolors,
+                                child: Center(
+                                  child: ListTile(
+                                    leading: const Icon(
+                                      Icons.work_history_rounded,
+                                      size: 34,
+                                    ),
+                                    title: const Text("OT-holiday"),
+                                    subtitle: const Text("โอทีในวันหยุด"),
+                                    trailing: SizedBox(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            otHoliday.toStringAsFixed(2),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: otHoliday == 0
+                                                    ? Colors.black54
+                                                    : Colors.greenAccent[700]),
+                                          ),
+                                          const Text(
+                                            "ชั่วโมง",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                              Expanded(
+                                  child: Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                color: mygreycolors,
+                                child: Center(
+                                  child: ListTile(
+                                    leading: const Icon(
+                                      Icons.workspace_premium_rounded,
+                                      size: 34,
+                                    ),
+                                    title: const Text("OT-special"),
+                                    subtitle: const Text("โอทีแบบเหมา"),
+                                    trailing: SizedBox(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            otSpecial.toStringAsFixed(2),
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: otSpecial == 0
+                                                    ? Colors.black54
+                                                    : Colors.greenAccent[700]),
+                                          ),
+                                          const Text(
+                                            "ชั่วโมง",
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                              // Align(
+                              //     alignment: Alignment.bottomRight,
+                              //     child: ElevatedButton(
+                              //         onPressed: () {}, child: Text("ขอใบลาออนไลน์")))
+                            ],
                           ),
                         ),
                       ),
@@ -273,10 +435,12 @@ class _UserMenuServiceState extends State<UserMenuService> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14)),
                       child: InkWell(
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => const TimeStampManage())),
-                        child: const SizedBox(
+                        onTap: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => ManualWorkDateManage(
+                                      employeeData: widget.employeeData,
+                                    ))),
+                        child: SizedBox(
                           width: 340,
                           height: 540,
                           child: Padding(
@@ -285,13 +449,13 @@ class _UserMenuServiceState extends State<UserMenuService> {
                               children: [
                                 ListTile(
                                   title: Text("ข้อมูลบันทึกเวลาเข้า ออกงาน"),
-                                  subtitle: Text("Time Stamp"),
+                                  subtitle: Text("Manual work date"),
                                 ),
-                                Expanded(child: Text("test")),
-                                // Align(
-                                //     alignment: Alignment.bottomRight,
-                                //     child: ElevatedButton(
-                                //         onPressed: () {}, child: Text("ขอใบลาออนไลน์")))
+                                Expanded(
+                                  child: Lottie.asset(
+                                      'assets/manualworkdate.json',
+                                      frameRate: FrameRate(59)),
+                                ),
                               ],
                             ),
                           ),
@@ -303,65 +467,5 @@ class _UserMenuServiceState extends State<UserMenuService> {
               ),
             ),
     ));
-  }
-}
-
-class OTManage extends StatefulWidget {
-  const OTManage({super.key});
-
-  @override
-  State<OTManage> createState() => _OTManageState();
-}
-
-class _OTManageState extends State<OTManage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
-      ),
-      body: Hero(
-          tag: "ot",
-          child: Column(
-            children: [
-              Container(
-                color: Colors.amber,
-              ),
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("pop"))
-            ],
-          )),
-    );
-  }
-}
-
-class TimeStampManage extends StatefulWidget {
-  const TimeStampManage({super.key});
-
-  @override
-  State<TimeStampManage> createState() => _TimeStampManageState();
-}
-
-class _TimeStampManageState extends State<TimeStampManage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("ข้อมูลบันทึกเวลาเข้า ออกงาน"),
-      ),
-      body: Hero(
-          tag: "time",
-          child: Column(
-            children: [
-              Container(
-                color: Colors.amber,
-              ),
-              ElevatedButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("pop"))
-            ],
-          )),
-    );
   }
 }

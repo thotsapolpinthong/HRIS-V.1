@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:ui';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,10 +11,10 @@ import 'package:hris_app_prototype/src/bloc/employee_bloc/employee_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/create_leave.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_amount_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_approve_and_reject_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_data_employee_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_amount_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_approve_and_reject_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_data_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_quota_employee_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -98,7 +100,7 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                         top: 200,
                         right: 150,
                         child: AlertDialog(
-                          backgroundColor: mygreycolors,
+                          backgroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           content: const SizedBox(
@@ -182,6 +184,17 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
   }
 
   @override
+  void deactivate() {
+    context.read<EmployeeBloc>().add(ClearStateLeaveEvent());
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 12, 12, 12),
@@ -224,7 +237,11 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                               height: double.infinity,
                               child: Row(children: [
                                 const Expanded(
-                                    flex: 1, child: Text("บันทึกการลา")),
+                                    flex: 1,
+                                    child: Text("ตารางแสดงข้อมูลการลา",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w800))),
                                 Expanded(
                                   flex: 3,
                                   child: Row(

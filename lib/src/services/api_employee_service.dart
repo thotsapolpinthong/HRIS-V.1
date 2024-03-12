@@ -6,10 +6,13 @@ import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_shift_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/create_leave_by_hr_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_employee_approve_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_quota_employee_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_request_by_id_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/create_leave_by_hr_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_employee_approve_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_quota_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_request_by_id_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/manual_workdate_menu/manual_workdate_type_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/ot_menu_model/dropdown_ot_request_type_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/ot_menu_model/dropdown_ot_type_model.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
@@ -42,7 +45,7 @@ class ApiEmployeeService {
   }
 
   // getEmployeebyId
-  static Future<EmployeeIdModel?> fetchDataEmployeeId(String employeeId) async {
+  static Future<EmployeeDatum?> fetchDataEmployeeId(String employeeId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
     var response = await http.get(
@@ -52,9 +55,10 @@ class ApiEmployeeService {
       },
     );
     if (response.statusCode == 200) {
-      EmployeeIdModel data = employeeIdModelFromJson(response.body);
+      GetEmployeeAllDataModel data =
+          getEmployeeAllDataModelFromJson(response.body);
       if (data.status == true) {
-        return data;
+        return data.employeeData[0];
       }
     }
     return null;
@@ -164,6 +168,7 @@ class ApiEmployeeService {
     }
   }
 
+//approve
   static getEmployeeApprove(
       String parentPositionOrganizationBusinessNode) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -179,6 +184,7 @@ class ApiEmployeeService {
     } else {}
   }
 
+//create leave request
   static Future createLeaveRquestByHr(LeaveRequestHrModel? createModel) async {
     bool create = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -202,5 +208,73 @@ class ApiEmployeeService {
     } else {
       return create;
     }
+  }
+
+  //OT Menu
+  //get ot request
+  // static Future<GetOvertimeRequestModel?> getOtRequestById(
+  //     String employeeId) async {
+  //   SharedPreferences preferences = await SharedPreferences.getInstance();
+  //   sharedToken = preferences.getString("token")!;
+  //   final response = await http.get(
+  //     Uri.parse(
+  //         "http://192.168.0.205/StecApi/Hr/GetOverTimeRequestByEmployeeId?employeeId=$employeeId"),
+  //     headers: {"Authorization": "Bearer $sharedToken"},
+  //   );
+  //   if (response.statusCode == 200) {
+  //     GetOvertimeRequestModel? data =
+  //         getOvertimeRequestModelFromJson(response.body);
+  //     if (data.status == true) {
+  //       return data;
+  //     } else {
+  //       return null;
+  //     }
+  //   } else {
+  //     return null;
+  //   }
+  // }
+
+//dropdown ot type
+  static getOtTypeDropdown() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse("$baseUrl/GetOverTimeTypeAll"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      OverTimeTypeModel data = overTimeTypeModelFromJson(response.body);
+      return data;
+    } else {}
+  }
+
+  //dropdown ot request type
+  static getOtRequestTypeDropdown() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse("$baseUrl/GetOverTimeRequestTypeAll"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      OverTimeRequestTypeModel data =
+          overTimeRequestTypeModelFromJson(response.body);
+      return data;
+    } else {}
+  }
+
+  //dropdown manualworkdate type
+  static getManualWorkdateTypeDropdown() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse("$baseUrl/GetManualWorkDateTypeAll"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      ManualWorkDateTypeModel data =
+          manualWorkDateTypeModelFromJson(response.body);
+      return data;
+    } else {}
   }
 }

@@ -113,16 +113,17 @@ class _MyHomepageState extends State<MyHomepage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height,
-                        decoration: BoxDecoration(
-                            color: mygreycolors,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(40))),
-                        child: const TimeAttendancePageLayout(
-                          dashboard: false,
-                        ),
-                      ),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height,
+                          decoration: BoxDecoration(
+                              color: mygreycolors,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(40))),
+                          child: Container()
+                          // const TimeAttendancePageLayout(
+                          //   dashboard: false,
+                          // ),
+                          ),
                     )),
               if (state.pageNumber == 61)
                 Expanded(

@@ -8,8 +8,8 @@ import 'package:hris_app_prototype/src/bloc/employee_bloc/employee_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/create_leave_by_hr_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_employee_approve_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/create_leave_by_hr_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_employee_approve_model.dart';
 
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:intl/intl.dart';

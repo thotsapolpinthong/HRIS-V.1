@@ -18,3 +18,14 @@ class FetchDataLeaveEmployeeEvent extends EmployeeEvent {
     required this.employeeId,
   });
 }
+
+class FetchDataOtEmployeeEvent extends EmployeeEvent {
+  final String employeeId;
+  FetchDataOtEmployeeEvent({
+    required this.employeeId,
+  });
+}
+
+class ClearStateOtEvent extends EmployeeEvent {}
+
+class ClearStateLeaveEvent extends EmployeeEvent {}

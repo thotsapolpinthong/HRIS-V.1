@@ -510,3 +510,45 @@ class TextFormFieldTimepickGlobal extends StatelessWidget {
     );
   }
 }
+
+class TextFormFieldTimepickerOt extends StatelessWidget {
+  final TextEditingController controller;
+  final String? labelText;
+  final String? Function(String?)? validatorless;
+  final Function()? ontap;
+  final bool? enabled;
+  final Widget? suffixIcon;
+  const TextFormFieldTimepickerOt({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    required this.validatorless,
+    required this.ontap,
+    required this.enabled,
+    this.suffixIcon,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: TextFormField(
+          controller: controller,
+          autovalidateMode: AutovalidateMode.always,
+          validator: validatorless,
+          decoration: InputDecoration(
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Colors.black),
+            filled: true,
+            fillColor: Colors.white,
+            suffixIcon: suffixIcon,
+            border: const OutlineInputBorder(),
+            enabledBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.black54),
+            ),
+          ),
+          enabled: enabled,
+          readOnly: true,
+          onTap: ontap),
+    );
+  }
+}

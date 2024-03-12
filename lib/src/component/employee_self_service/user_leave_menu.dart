@@ -7,9 +7,9 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/create_leave.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
-import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_amount_model.dart';
-import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model.dart/leave_data_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_amount_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_data_employee_model.dart';
 import 'package:hris_app_prototype/src/model/self_service/leave/create_leave_request_online.dart';
 import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 
@@ -17,7 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:validatorless/validatorless.dart';
 
 class LeaveManage extends StatefulWidget {
-  final EmployeeIdModel? employeeData;
+  final EmployeeDatum? employeeData;
   final double vacationLeave;
   final double bussinessLeave;
   final double sickLeave;
@@ -131,14 +131,14 @@ class _LeaveManageState extends State<LeaveManage> {
   createLeave() async {
     LeaveQuotaOnlineByEmployeeModel createLeaveModel =
         LeaveQuotaOnlineByEmployeeModel(
-            employeeId: widget.employeeData!.employeeData[0].employeeId,
+            employeeId: widget.employeeData!.employeeId,
             leaveTypeId: selectLeaveType!,
             leaveDate: leaveDateList,
             startTime:
                 startTime.text == "" ? startTime.text : "${startTime.text}:00",
             endTime: endTime.text == "" ? endTime.text : "${endTime.text}:00",
             leaveDescription: noted.text,
-            createBy: widget.employeeData!.employeeData[0].employeeId);
+            createBy: widget.employeeData!.employeeId);
     bool success =
         await ApiEmployeeSelfService.createLeaveRequestOnline(createLeaveModel);
     alertDialog(success);
@@ -222,7 +222,7 @@ class _LeaveManageState extends State<LeaveManage> {
   fetchData() async {
     leaveDataEmployee =
         await ApiEmployeeSelfService.getLeaveRequestByEmployeeId(
-            widget.employeeData!.employeeData[0].employeeId);
+            widget.employeeData!.employeeId);
     setState(() {
       leaveDataEmployee;
     });
@@ -230,7 +230,7 @@ class _LeaveManageState extends State<LeaveManage> {
 
   fetchAmount() async {
     leaveAmount = await ApiEmployeeSelfService.getLeaveAmountByEmployeeId(
-        widget.employeeData!.employeeData[0].employeeId);
+        widget.employeeData!.employeeId);
     if (leaveAmount != null) {
       for (var element in leaveAmount!.leaveRequestData) {
         switch (element.leaveTypeData.leaveTypeId) {
@@ -276,421 +276,402 @@ class _LeaveManageState extends State<LeaveManage> {
   }
 
   @override
+  void deactivate() {
+    leaveDataEmployee;
+    super.deactivate();
+  }
+
+  @override
+  void dispose() {
+    leaveDataEmployee;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("บันทึกข้อมูลการลา"),
       ),
-      body: Hero(
-          tag: "leave",
-          child: Row(
-            children: [
-              Expanded(
-                flex: 3,
-                // left child
-                child: Column(
+      body: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            // left child
+            child: Column(
+              children: [
+                const Gap(20),
+                Row(
                   children: [
-                    const Gap(20),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: Colors.white,
-                          child: ListTile(
-                            minLeadingWidth: 25,
-                            leading: const Icon(Icons.airplane_ticket_outlined),
-                            title: const Text("ลาพักผ่อนประจำปี"),
-                            subtitle: Text(
-                                "ใช้ไป $vacationLeaveRequest วัน คงเหลือ $vacationLeave วัน"),
-                            trailing: Icon(
-                              vacationLeave >= 1
-                                  ? Icons.check_box_rounded
-                                  : Icons.indeterminate_check_box_rounded,
-                              color: vacationLeave >= 1
-                                  ? Colors.greenAccent
-                                  : Colors.amber,
-                            ),
-                          ),
-                        )),
-                        Expanded(
-                            child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: Colors.white,
-                          child: ListTile(
-                            minLeadingWidth: 25,
-                            leading: const Icon(Icons.card_travel_rounded),
-                            title: const Text("ลากิจ"),
-                            subtitle: Text(
-                                "ใช้ไป $bussinessLeaveRequest วัน คงเหลือ $bussinessLeave วัน"),
-                            trailing: Icon(
-                              bussinessLeave >= 1
-                                  ? Icons.check_box_rounded
-                                  : Icons.indeterminate_check_box_rounded,
-                              color: bussinessLeave >= 1
-                                  ? Colors.greenAccent
-                                  : Colors.amber,
-                            ),
-                          ),
-                        )),
-                        Expanded(
-                            child: Card(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          color: Colors.white,
-                          child: ListTile(
-                            minLeadingWidth: 25,
-                            leading: const Icon(Icons.sick_outlined),
-                            title: const Text("ลาป่วย"),
-                            subtitle: Text(
-                                "ใช้ไป $sickLeaveRequest วัน คงเหลือ $sickLeave วัน"),
-                            trailing: Icon(
-                              sickLeave >= 1
-                                  ? Icons.check_box_rounded
-                                  : Icons.indeterminate_check_box_rounded,
-                              color: sickLeave >= 1
-                                  ? Colors.greenAccent
-                                  : Colors.amber,
-                            ),
-                          ),
-                        )),
-                      ],
-                    ),
-                    const Gap(20),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Text(
-                        "Leave Request :",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
                     Expanded(
-                        child: requestLoading == true
-                            ? myLoadingScreen
-                            : ListView.builder(
-                                itemCount: leaveDataEmployee == null
-                                    ? 1
-                                    : leaveDataEmployee
-                                        ?.leaveRequestData.length,
-                                itemBuilder: (context, index) {
-                                  return Card(
-                                    elevation: 2,
-                                    child: SizedBox(
-                                      height: 70,
-                                      child: Center(
-                                        child: ListTile(
-                                          leading: leaveDataEmployee == null
-                                              ? null
-                                              : Text(
-                                                  "${leaveDataEmployee?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}",
-                                                  style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                          title: leaveDataEmployee == null
-                                              ? const Center(
-                                                  child: Text(
-                                                  "ไม่มีใบคำร้อง",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ))
-                                              : Row(
-                                                  children: [
-                                                    Text(
-                                                        "จำนวน ${leaveDataEmployee?.leaveRequestData[index].leaveAmount} วัน"),
-                                                  ],
-                                                ),
-                                          subtitle: leaveDataEmployee == null
-                                              ? null
-                                              : Text(
-                                                  "วันที่ ${leaveDataEmployee?.leaveRequestData[index].leaveDate}"),
-                                          trailing: leaveDataEmployee == null
-                                              ? null
-                                              : Container(
-                                                  decoration: BoxDecoration(
-                                                      color: leaveDataEmployee
+                        child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.white,
+                      child: ListTile(
+                        minLeadingWidth: 25,
+                        leading: const Icon(Icons.airplane_ticket_outlined),
+                        title: const Text("ลาพักผ่อนประจำปี"),
+                        subtitle: Text(
+                            "ใช้ไป $vacationLeaveRequest วัน คงเหลือ $vacationLeave วัน"),
+                        trailing: Icon(
+                          vacationLeave >= 1
+                              ? Icons.check_box_rounded
+                              : Icons.indeterminate_check_box_rounded,
+                          color: vacationLeave >= 1
+                              ? Colors.greenAccent
+                              : Colors.amber,
+                        ),
+                      ),
+                    )),
+                    Expanded(
+                        child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.white,
+                      child: ListTile(
+                        minLeadingWidth: 25,
+                        leading: const Icon(Icons.card_travel_rounded),
+                        title: const Text("ลากิจ"),
+                        subtitle: Text(
+                            "ใช้ไป $bussinessLeaveRequest วัน คงเหลือ $bussinessLeave วัน"),
+                        trailing: Icon(
+                          bussinessLeave >= 1
+                              ? Icons.check_box_rounded
+                              : Icons.indeterminate_check_box_rounded,
+                          color: bussinessLeave >= 1
+                              ? Colors.greenAccent
+                              : Colors.amber,
+                        ),
+                      ),
+                    )),
+                    Expanded(
+                        child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      color: Colors.white,
+                      child: ListTile(
+                        minLeadingWidth: 25,
+                        leading: const Icon(Icons.sick_outlined),
+                        title: const Text("ลาป่วย"),
+                        subtitle: Text(
+                            "ใช้ไป $sickLeaveRequest วัน คงเหลือ $sickLeave วัน"),
+                        trailing: Icon(
+                          sickLeave >= 1
+                              ? Icons.check_box_rounded
+                              : Icons.indeterminate_check_box_rounded,
+                          color: sickLeave >= 1
+                              ? Colors.greenAccent
+                              : Colors.amber,
+                        ),
+                      ),
+                    )),
+                  ],
+                ),
+                const Gap(20),
+                const Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Text(
+                    "Leave Request :",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Expanded(
+                    child: requestLoading == true
+                        ? myLoadingScreen
+                        : ListView.builder(
+                            itemCount: leaveDataEmployee == null
+                                ? 1
+                                : leaveDataEmployee?.leaveRequestData.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                elevation: 2,
+                                child: SizedBox(
+                                  height: 70,
+                                  child: Center(
+                                    child: ListTile(
+                                      leading: leaveDataEmployee == null
+                                          ? null
+                                          : Text(
+                                              "${leaveDataEmployee?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}",
+                                              style: const TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.bold),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                      title: leaveDataEmployee == null
+                                          ? const Center(
+                                              child: Text(
+                                              "ไม่มีใบคำร้อง",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ))
+                                          : Row(
+                                              children: [
+                                                Text(
+                                                    "จำนวน ${leaveDataEmployee?.leaveRequestData[index].leaveAmount} วัน"),
+                                              ],
+                                            ),
+                                      subtitle: leaveDataEmployee == null
+                                          ? null
+                                          : Text(
+                                              "วันที่ ${leaveDataEmployee?.leaveRequestData[index].leaveDate}"),
+                                      trailing: leaveDataEmployee == null
+                                          ? null
+                                          : Container(
+                                              decoration: BoxDecoration(
+                                                  color: leaveDataEmployee
+                                                              ?.leaveRequestData[
+                                                                  index]
+                                                              .status ==
+                                                          "request"
+                                                      ? Colors.amberAccent[100]
+                                                      : leaveDataEmployee
                                                                   ?.leaveRequestData[
                                                                       index]
                                                                   .status ==
-                                                              "request"
-                                                          ? Colors
-                                                              .amberAccent[100]
-                                                          : leaveDataEmployee
-                                                                      ?.leaveRequestData[
-                                                                          index]
-                                                                      .status ==
-                                                                  "approve"
-                                                              ? Colors
-                                                                  .greenAccent
-                                                              : Colors.redAccent[
-                                                                  100],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              14)),
-                                                  width: 100,
-                                                  height: 30,
-                                                  child: Center(
-                                                      child: Text(
-                                                          "${leaveDataEmployee?.leaveRequestData[index].status}",
-                                                          style: TextStyle(
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic,
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: Colors
-                                                                  .grey[800]))),
-                                                ),
-                                        ),
-                                      ),
+                                                              "approve"
+                                                          ? Colors.greenAccent
+                                                          : Colors
+                                                              .redAccent[100],
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          14)),
+                                              width: 100,
+                                              height: 30,
+                                              child: Center(
+                                                  child: Text(
+                                                      "${leaveDataEmployee?.leaveRequestData[index].status}",
+                                                      style: TextStyle(
+                                                          fontStyle:
+                                                              FontStyle.italic,
+                                                          fontSize: 18,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors
+                                                              .grey[800]))),
+                                            ),
                                     ),
+                                  ),
+                                ),
+                              );
+                            })),
+              ],
+            ),
+          ),
+          // VerticalDivider(
+          //   color: mythemecolor,
+          //   // indent: 40,
+          //   // endIndent: 40,
+          //   thickness: 4,
+          // ),
+          Expanded(
+            flex: 2,
+            // right child
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              child: Column(
+                children: [
+                  const Gap(20),
+                  const Text(
+                    "ใบลา",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const Text("Request for leave."),
+                  Expanded(
+                      child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 60, vertical: 30),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Gap(20),
+                            const Text(" เลือกประเภทการลา",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            const Gap(5),
+                            DropdownOrg(
+                                labeltext: '',
+                                value: selectLeaveType,
+                                items: leaveTypeList.map((e) {
+                                  return DropdownMenuItem<String>(
+                                    value: e.leaveTypeId.toString(),
+                                    child: Container(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 260),
+                                        child: Text(e.leaveTypeNameTh)),
                                   );
-                                })),
-                  ],
-                ),
-              ),
-              // VerticalDivider(
-              //   color: mythemecolor,
-              //   // indent: 40,
-              //   // endIndent: 40,
-              //   thickness: 4,
-              // ),
-              Expanded(
-                flex: 2,
-                // right child
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Column(
-                    children: [
-                      const Gap(20),
-                      const Text(
-                        "ใบลา",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const Text("Request for leave."),
-                      Expanded(
-                          child: SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 60, vertical: 30),
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    selectLeaveType = newValue.toString();
+                                  });
+                                },
+                                validator: null),
+                            const Gap(10),
+                            const Text(" ระบุวันที่ (สามารถเลือกหลายวันได้)",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            const Gap(5),
+                            TextFormFieldDatepickGlobal(
+                              controller: leaveDate,
+                              labelText: "",
+                              validatorless: null,
+                              ontap: () {
+                                selectDateFromDate();
+                              },
+                            ),
+                            const Gap(10),
+                            const Text(" ระบุเวลา",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            const Gap(5),
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Gap(20),
-                                const Text(" เลือกประเภทการลา",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                const Gap(5),
-                                DropdownOrg(
-                                    labeltext: '',
-                                    value: selectLeaveType,
-                                    items: leaveTypeList.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        value: e.leaveTypeId.toString(),
-                                        child: Container(
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 260),
-                                            child: Text(e.leaveTypeNameTh)),
-                                      );
-                                    }).toList(),
-                                    onChanged: (newValue) {
-                                      setState(() {
-                                        selectLeaveType = newValue.toString();
-                                      });
+                                Expanded(
+                                  child: TextFormFieldTimepickGlobal(
+                                    controller: startTime,
+                                    labelText: "ระยะเวลาเริ่มลา (Start Time).",
+                                    validatorless: null,
+                                    ontap: () {
+                                      selectTime(true);
                                     },
-                                    validator: null),
-                                const Gap(10),
-                                const Text(
-                                    " ระบุวันที่ (สามารถเลือกหลายวันได้)",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                const Gap(5),
-                                TextFormFieldDatepickGlobal(
-                                  controller: leaveDate,
-                                  labelText: "",
-                                  validatorless: null,
-                                  ontap: () {
-                                    selectDateFromDate();
-                                  },
+                                    enabled:
+                                        leaveDateList.length > 1 ? false : true,
+                                  ),
                                 ),
-                                const Gap(10),
-                                const Text(" ระบุเวลา",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                const Gap(5),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: TextFormFieldTimepickGlobal(
-                                        controller: startTime,
-                                        labelText:
-                                            "ระยะเวลาเริ่มลา (Start Time).",
-                                        validatorless: null,
-                                        ontap: () {
-                                          selectTime(true);
-                                        },
-                                        enabled: leaveDateList.length > 1
-                                            ? false
-                                            : true,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: TextFormFieldTimepickGlobal(
-                                        controller: endTime,
-                                        labelText:
-                                            "ระยะเวลาสิ้นสุด (End Time).",
-                                        validatorless: null,
-                                        ontap: () {
-                                          selectTime(false);
-                                        },
-                                        enabled: leaveDateList.length > 1
-                                            ? false
-                                            : true,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // const Gap(5),
-                                // TextFormFieldGlobal(
-                                //     controller: dateCount,
-                                //     labelText: "จำนวนวัน",
-                                //     hintText: '',
-                                //     enabled:
-                                //         leaveDateList.length > 1 ? false : true,
-                                //     validatorless: Validatorless.number(
-                                //         'กรอกเฉพาะตัวเลข')),
-                                const Gap(10),
-                                const Text(" ลาเพื่อ (Reasons for leaving.)",
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                                TextFormFieldGlobal(
-                                    controller: noted,
-                                    labelText: "",
-                                    hintText: 'บันทึกข้อความ',
-                                    enabled: true,
-                                    validatorless:
-                                        Validatorless.required("โปรดระบุ")),
-                                const Gap(10),
-                                const Text(
-                                  "หมายเหตุ*\n- โปรดกรอกข้อมูลให้ครบถ้วน\n- หากต้องการลาหลายวันควรเป็นวันที่ติดกัน(ระยะเวลาการลา จะคิดเป็นเต็มวัน)\n- หากต้องการลาไม่เกินหนึ่งวันหรือลาหนึ่งวัน ต้องระบุระยะเวลาการลา\n- หากลา 1 วัน ให้ใส่ระยะเวลาเป็นจำนวน 9 ชั่วโมง ตัวอย่างเช่น '8:00-17:00'\n- หากโปรแกรมมีการเตือนว่าใช้สิทธิลาเกิน แล้วยังทำรายการต่อ จะถือว่าเป็นการยินยอมให้หักเงิน",
-                                  style: TextStyle(color: Colors.black54),
+                                Expanded(
+                                  child: TextFormFieldTimepickGlobal(
+                                    controller: endTime,
+                                    labelText: "ระยะเวลาสิ้นสุด (End Time).",
+                                    validatorless: null,
+                                    ontap: () {
+                                      selectTime(false);
+                                    },
+                                    enabled:
+                                        leaveDateList.length > 1 ? false : true,
+                                  ),
                                 ),
                               ],
                             ),
-                          ),
-                        ),
-                      )),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                  onPressed:
-                                      selectLeaveType != "L003" ? null : () {},
-                                  child: const SizedBox(
-                                    width: 80,
-                                    height: 40,
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.upload_file_rounded,
-                                          size: 24,
-                                        ),
-                                        Gap(5),
-                                        Text("Upload"),
-                                      ],
-                                    ),
-                                  )),
-                              const Gap(10),
-                              ElevatedButton(
-                                  onPressed: selectLeaveType != null &&
-                                          leaveDate.text != ""
-                                      ? () {
-                                          if (_formKey.currentState!
-                                              .validate()) {
-                                            if (selectLeaveType == "L001") {
-                                              double tempLeave = vacationLeave;
-                                              tempLeave -= dateCount;
-                                              tempLeave;
-                                              alertDialogInfo(
-                                                  dateCount,
-                                                  tempLeave < 0
-                                                      ? tempLeave
-                                                      : 0);
-                                            } else if (selectLeaveType ==
-                                                "L002") {
-                                              double tempLeave = bussinessLeave;
-                                              tempLeave -= dateCount;
-                                              tempLeave;
-                                              alertDialogInfo(
-                                                  dateCount,
-                                                  tempLeave < 0
-                                                      ? tempLeave
-                                                      : 0);
-                                            } else if (selectLeaveType ==
-                                                "L003") {
-                                              double tempLeave = sickLeave;
-                                              tempLeave -= dateCount;
-                                              tempLeave;
-                                              alertDialogInfo(
-                                                  dateCount,
-                                                  tempLeave < 0
-                                                      ? tempLeave
-                                                      : 0);
-                                            } else if (selectLeaveType ==
-                                                "L004") {
-                                            } else {}
-                                          } else {}
-
-                                          //  alertDialogInfo();
-                                        }
-                                      : null,
-                                  child: SizedBox(
-                                    width: 70,
-                                    height: 40,
-                                    child: Row(
-                                      children: [
-                                        const Text("Send"),
-                                        const Gap(5),
-                                        Transform.rotate(
-                                            alignment: Alignment.topCenter,
-                                            angle: 37,
-                                            child: const Icon(
-                                              Icons.send_rounded,
-                                            ))
-                                      ],
-                                    ),
-                                  )),
-                            ],
-                          ),
+                            // const Gap(5),
+                            // TextFormFieldGlobal(
+                            //     controller: dateCount,
+                            //     labelText: "จำนวนวัน",
+                            //     hintText: '',
+                            //     enabled:
+                            //         leaveDateList.length > 1 ? false : true,
+                            //     validatorless: Validatorless.number(
+                            //         'กรอกเฉพาะตัวเลข')),
+                            const Gap(10),
+                            const Text(" ลาเพื่อ (Reasons for leaving.)",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            TextFormFieldGlobal(
+                                controller: noted,
+                                labelText: "",
+                                hintText: 'บันทึกข้อความ',
+                                enabled: true,
+                                validatorless:
+                                    Validatorless.required("โปรดระบุ")),
+                            const Gap(10),
+                            const Text(
+                              "หมายเหตุ*\n- โปรดกรอกข้อมูลให้ครบถ้วน\n- หากต้องการลาหลายวันควรเป็นวันที่ติดกัน(ระยะเวลาการลา จะคิดเป็นเต็มวัน)\n- หากต้องการลาไม่เกินหนึ่งวันหรือลาหนึ่งวัน ต้องระบุระยะเวลาการลา\n- หากลา 1 วัน ให้ใส่ระยะเวลาเป็นจำนวน 9 ชั่วโมง ตัวอย่างเช่น '8:00-17:00'\n- หากโปรแกรมมีการเตือนว่าใช้สิทธิลาเกิน แล้วยังทำรายการต่อ จะถือว่าเป็นการยินยอมให้หักเงิน",
+                              style: TextStyle(color: Colors.black54),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
+                  )),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton(
+                              onPressed:
+                                  selectLeaveType != "L003" ? null : () {},
+                              child: const SizedBox(
+                                width: 80,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.upload_file_rounded,
+                                      size: 24,
+                                    ),
+                                    Gap(5),
+                                    Text("Upload"),
+                                  ],
+                                ),
+                              )),
+                          const Gap(10),
+                          ElevatedButton(
+                              onPressed: selectLeaveType != null &&
+                                      leaveDate.text != ""
+                                  ? () {
+                                      if (_formKey.currentState!.validate()) {
+                                        if (selectLeaveType == "L001") {
+                                          double tempLeave = vacationLeave;
+                                          tempLeave -= dateCount;
+                                          tempLeave;
+                                          alertDialogInfo(dateCount,
+                                              tempLeave < 0 ? tempLeave : 0);
+                                        } else if (selectLeaveType == "L002") {
+                                          double tempLeave = bussinessLeave;
+                                          tempLeave -= dateCount;
+                                          tempLeave;
+                                          alertDialogInfo(dateCount,
+                                              tempLeave < 0 ? tempLeave : 0);
+                                        } else if (selectLeaveType == "L003") {
+                                          double tempLeave = sickLeave;
+                                          tempLeave -= dateCount;
+                                          tempLeave;
+                                          alertDialogInfo(dateCount,
+                                              tempLeave < 0 ? tempLeave : 0);
+                                        } else if (selectLeaveType == "L004") {
+                                        } else {}
+                                      } else {}
+
+                                      //  alertDialogInfo();
+                                    }
+                                  : null,
+                              child: SizedBox(
+                                width: 70,
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    const Text("Send"),
+                                    const Gap(5),
+                                    Transform.rotate(
+                                        alignment: Alignment.topCenter,
+                                        angle: 37,
+                                        child: const Icon(
+                                          Icons.send_rounded,
+                                        ))
+                                  ],
+                                ),
+                              )),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          )),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

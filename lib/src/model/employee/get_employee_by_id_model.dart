@@ -7,7 +7,7 @@ String employeeIdModelToJson(EmployeeIdModel data) =>
     json.encode(data.toJson());
 
 class EmployeeIdModel {
-  List<EmployeeDatum> employeeData;
+  List<EmployeeDatumm> employeeData;
   String message;
   bool status;
 
@@ -19,8 +19,8 @@ class EmployeeIdModel {
 
   factory EmployeeIdModel.fromJson(Map<String, dynamic> json) =>
       EmployeeIdModel(
-        employeeData: List<EmployeeDatum>.from(
-            json["employeeData"].map((x) => EmployeeDatum.fromJson(x))),
+        employeeData: List<EmployeeDatumm>.from(
+            json["employeeData"].map((x) => EmployeeDatumm.fromJson(x))),
         message: json["message"],
         status: json["status"],
       );
@@ -32,7 +32,7 @@ class EmployeeIdModel {
       };
 }
 
-class EmployeeDatum {
+class EmployeeDatumm {
   String employeeId;
   PersonData personData;
   String fingerScanId;
@@ -46,7 +46,7 @@ class EmployeeDatum {
   EmployeeDatumPositionData positionData;
   ShiftData shiftData;
 
-  EmployeeDatum({
+  EmployeeDatumm({
     required this.employeeId,
     required this.personData,
     required this.fingerScanId,
@@ -61,7 +61,7 @@ class EmployeeDatum {
     required this.shiftData,
   });
 
-  factory EmployeeDatum.fromJson(Map<String, dynamic> json) => EmployeeDatum(
+  factory EmployeeDatumm.fromJson(Map<String, dynamic> json) => EmployeeDatumm(
         employeeId: json["employeeId"],
         personData: PersonData.fromJson(json["personData"]),
         fingerScanId: json["fingerScanId"],

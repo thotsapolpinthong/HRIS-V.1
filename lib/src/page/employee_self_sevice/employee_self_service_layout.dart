@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee_self_service/menu_menager.dart';
 import 'package:hris_app_prototype/src/component/employee_self_service/menu_user.dart';
-import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
+import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,7 +17,7 @@ class EmployeeSelfServiceLayout extends StatefulWidget {
 
 class _EmployeeSelfServiceLayoutState extends State<EmployeeSelfServiceLayout> {
   int isExpandedPage = 0;
-  EmployeeIdModel? employeeData;
+  EmployeeDatum? employeeData;
 
   fetchData() async {
     String employeeId = "";
@@ -26,10 +26,83 @@ class _EmployeeSelfServiceLayoutState extends State<EmployeeSelfServiceLayout> {
     employeeData = await ApiEmployeeService.fetchDataEmployeeId(employeeId);
   }
 
+  showDialogNews() {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (context, setState) => AlertDialog(
+                    backgroundColor: mygreycolors,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    title: TitleDialog(
+                      title: "ข่าวประชาสัมพันธ์",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    content:
+                        SizedBox(width: 1000, height: 800, child: Container()),
+                  ));
+        });
+    showGeneralDialog(
+        context: context,
+        barrierDismissible: false,
+        barrierLabel:
+            MaterialLocalizations.of(context).modalBarrierDismissLabel,
+        barrierColor: Colors.black45,
+        transitionDuration: const Duration(milliseconds: 200),
+        pageBuilder: (BuildContext buildContext, Animation animation,
+            Animation secondaryAnimation) {
+          return Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Colors.white,
+              ),
+              width: 1000, // MediaQuery.of(context).size.width - 140,
+              height: 800, //MediaQuery.of(context).size.height - 120,
+              padding: const EdgeInsets.all(20),
+              child: Container(
+                  child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text("Close"))));
+        });
+  }
+
   @override
   void initState() {
     fetchData();
     super.initState();
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    //   showGeneralDialog(
+    //       context: context,
+    //       barrierDismissible: true,
+    //       barrierLabel:
+    //           MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    //       barrierColor: Colors.black45,
+    //       transitionDuration: const Duration(milliseconds: 200),
+    //       pageBuilder: (BuildContext buildContext, Animation animation,
+    //           Animation secondaryAnimation) {
+    //         return Padding(
+    //           padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 25),
+    //           child: Container(
+    //               decoration: BoxDecoration(
+    //                 borderRadius: BorderRadius.circular(40),
+    //                 color: mygreycolors,
+    //               ),
+    //               padding: const EdgeInsets.all(20),
+    //               child: Center(
+    //                   child: ElevatedButton(
+    //                       onPressed: () {
+    //                         Navigator.pop(context);
+    //                       },
+    //                       child: Text("Close")))),
+    //         );
+    //       });
+    // });
   }
 
   @override

@@ -10,6 +10,9 @@ class EmployeeState extends Equatable {
   final bool isleaveLoading;
   final LeaveRequestAmountModel? leaveAmount;
   final LeaveQuotaByEmployeeModel? quotaData;
+// ot menu Employee
+  final OtRequestModel? otRequestData;
+  final bool isOtLoading;
 
   const EmployeeState({
     this.employeeAllDataModel,
@@ -19,6 +22,8 @@ class EmployeeState extends Equatable {
     this.isleaveLoading = true,
     this.leaveAmount,
     this.quotaData,
+    this.otRequestData,
+    this.isOtLoading = true,
   });
 
   EmployeeState copyWith({
@@ -29,15 +34,19 @@ class EmployeeState extends Equatable {
     bool? isleaveLoading,
     LeaveRequestAmountModel? leaveAmount,
     LeaveQuotaByEmployeeModel? quotaData,
+    OtRequestModel? otRequestData,
+    bool? isOtLoading,
   }) {
     return EmployeeState(
       employeeAllDataModel: employeeAllDataModel ?? this.employeeAllDataModel,
       isDataLoading: isDataLoading ?? this.isDataLoading,
       onSearchData: onSearchData ?? this.onSearchData,
-      leaveDataEmployee: leaveDataEmployee ?? this.leaveDataEmployee,
+      leaveDataEmployee: leaveDataEmployee,
       isleaveLoading: isleaveLoading ?? this.isleaveLoading,
       leaveAmount: leaveAmount ?? this.leaveAmount,
       quotaData: quotaData ?? this.quotaData,
+      otRequestData: otRequestData,
+      isOtLoading: isOtLoading ?? this.isOtLoading,
     );
   }
 
@@ -49,6 +58,8 @@ class EmployeeState extends Equatable {
         leaveDataEmployee,
         isleaveLoading,
         leaveAmount,
-        quotaData
+        quotaData,
+        otRequestData,
+        isOtLoading
       ];
 }

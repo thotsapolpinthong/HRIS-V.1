@@ -9,6 +9,7 @@ import 'package:hris_app_prototype/src/bloc/organization_bloc/organization_bloc/
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_bloc/positions_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/position_org_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/selfservice_bloc/selfservice_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/routes/routes.dart';
@@ -37,6 +38,8 @@ class MyApp extends StatelessWidget {
     final employeeBloc = BlocProvider(create: (context) => EmployeeBloc());
     final timeAttendanceBloc =
         BlocProvider(create: (context) => TimeattendanceBloc());
+    final selfServiceBloc =
+        BlocProvider(create: (context) => SelfServiceBloc());
 
     return MultiBlocProvider(
       providers: [
@@ -49,6 +52,7 @@ class MyApp extends StatelessWidget {
         employeeBloc,
         positionOrgBloc,
         timeAttendanceBloc,
+        selfServiceBloc,
       ],
       child: MaterialApp(
         supportedLocales: const [
