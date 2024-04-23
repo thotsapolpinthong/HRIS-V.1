@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/main.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/organization_bloc/bloc/organization_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/department/get_departmen_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/create_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/org_type_dd_model.dart';
@@ -37,7 +37,7 @@ class _EditOrganizationState extends State<EditOrganization> {
   bool status = true;
   bool disableExp = false;
 
-  List<OrganizationData>? parentOrgList;
+  List<OrganizationDataam>? parentOrgList;
   String? parentOrg;
 
   List<OrganizationTypeDatum> orgTypeList = [];
@@ -227,14 +227,14 @@ class _EditOrganizationState extends State<EditOrganization> {
       btnOkOnPress: () {
         setState(() {
           context.read<OrganizationBloc>().add(FetchDataTableOrgEvent());
-          if (widget.ongraph == true) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      const MyHomepage()), // รีเรนเดอร์หน้าใหม่ที่คุณต้องการแสดง
-            );
-          }
+          // if (widget.ongraph == true) {
+          //   Navigator.pushReplacement(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>
+          //             const MyHomepage()), // รีเรนเดอร์หน้าใหม่ที่คุณต้องการแสดง
+          //   );
+          // }
         });
       },
     ).show();
@@ -316,7 +316,7 @@ class _EditOrganizationState extends State<EditOrganization> {
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: Column(children: [
-                              DropdownOrg(
+                              DropdownGlobal(
                                 labeltext: 'Department',
                                 value: department,
                                 validator:
@@ -336,7 +336,7 @@ class _EditOrganizationState extends State<EditOrganization> {
                                   });
                                 },
                               ),
-                              DropdownOrg(
+                              DropdownGlobal(
                                 labeltext: 'อยู่ภายใต้',
                                 value: parentOrg,
                                 validator:
@@ -356,7 +356,7 @@ class _EditOrganizationState extends State<EditOrganization> {
                                   });
                                 },
                               ),
-                              DropdownOrg(
+                              DropdownGlobal(
                                 labeltext: 'ประเภท',
                                 value: orgType,
                                 validator:

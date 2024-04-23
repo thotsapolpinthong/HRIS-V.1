@@ -2,7 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_bloc/positions_bloc.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/position/created_position_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position/getpositionall_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position/update_position_model.dart';

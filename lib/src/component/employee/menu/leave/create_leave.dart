@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/employee_bloc/employee_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/create_leave_by_hr_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_employee_approve_model.dart';
@@ -241,7 +241,7 @@ class _CreateLeaveState extends State<CreateLeave> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: DropdownOrg(
+                        child: DropdownGlobal(
                             labeltext: 'ประเภทการลา',
                             value: selectLeaveType,
                             items: leaveTypeList.map((e) {
@@ -307,7 +307,7 @@ class _CreateLeaveState extends State<CreateLeave> {
                       enabled: true,
                       validatorless: Validatorless.required("โปรดระบุ")),
                   const Gap(5),
-                  DropdownOrg(
+                  DropdownGlobal(
                       labeltext: 'Approve By',
                       value: approveId,
                       items: approveList.map((e) {

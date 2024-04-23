@@ -59,6 +59,7 @@ class _MyPositionsLayoutState extends State<MyPositionsLayout> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: SizedBox(
         height: 50,
         width: 50,
@@ -72,7 +73,7 @@ class _MyPositionsLayoutState extends State<MyPositionsLayout> {
             },
             child: const Icon(Icons.add, size: 30)),
       ).animate().shake(),
-      body: const Center(child: PositionDataTable()),
+      body: const PositionDataTable(),
     ));
   }
 }

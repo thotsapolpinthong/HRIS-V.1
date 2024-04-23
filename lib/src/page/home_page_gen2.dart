@@ -7,9 +7,10 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
 import 'package:hris_app_prototype/src/component/homepage/SlideBar.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
-import 'package:hris_app_prototype/src/page/personal.dart/personal_page.dart';
+import 'package:hris_app_prototype/src/page/personal/personal_page.dart';
 import 'package:hris_app_prototype/src/page/timeattendance/shift_layout.dart';
 import 'package:hris_app_prototype/src/page/timeattendance/time_attendance_layout.dart';
+import 'package:hris_app_prototype/src/page/trip/off-side_layout.dart';
 
 class MyHomepage extends StatefulWidget {
   const MyHomepage({super.key});
@@ -89,6 +90,7 @@ class _MyHomepageState extends State<MyHomepage> {
                                 const BorderRadius.all(Radius.circular(40))),
                         child: const DatatableEmployee(
                           isSelected: false,
+                          isSelectedOne: false,
                         ),
                       ),
                     )),
@@ -113,17 +115,17 @@ class _MyHomepageState extends State<MyHomepage> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height,
-                          decoration: BoxDecoration(
-                              color: mygreycolors,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(40))),
-                          child: Container()
-                          // const TimeAttendancePageLayout(
-                          //   dashboard: false,
-                          // ),
-                          ),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: BoxDecoration(
+                            color: mygreycolors,
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(40))),
+                        child: const OffSideLayout(),
+                        // const TimeAttendancePageLayout(
+                        //   dashboard: false,
+                        // ),
+                      ),
                     )),
               if (state.pageNumber == 61)
                 Expanded(
@@ -154,7 +156,7 @@ class _MyHomepageState extends State<MyHomepage> {
                             color: mygreycolors,
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(40))),
-                        child: ShiftLayout(),
+                        child: const ShiftLayout(),
                       ),
                     )),
             ],

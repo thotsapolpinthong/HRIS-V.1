@@ -7,6 +7,7 @@ import 'package:hris_app_prototype/src/component/personal/education/update/1_upd
 import 'package:hris_app_prototype/src/component/personal/family/update/1_update_family_layout.dart';
 import 'package:hris_app_prototype/src/component/personal/person/update/update_by_personid.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:hris_app_prototype/src/component/personal/work_history/work_history_layout.dart';
 
 class MyUpdateLayout extends StatefulWidget {
   final String personId;
@@ -165,6 +166,19 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
                             ],
                           ),
                         ).animate().fade(delay: 900.ms),
+                        Card(
+                          color: subtitleUpdateColors,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0)),
+                          elevation: 10,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: WorkHistoryLayout(
+                                      personId: widget.personId)),
+                            ],
+                          ),
+                        ).animate().fade(delay: 1000.ms),
                       ],
                     ),
                   ),

@@ -86,7 +86,8 @@ class _AddpersonalState extends State<Addpersonal> {
 
       raceList.sort((a, b) => a.raceTh.compareTo(b.raceTh));
       religionList.sort((a, b) => a.religionTh.compareTo(b.religionTh));
-      nationalityList.sort((a, b) => a.nationalityEn.compareTo(b.nationalityEn));
+      nationalityList
+          .sort((a, b) => a.nationalityEn.compareTo(b.nationalityEn));
     });
   }
 
@@ -277,8 +278,7 @@ class _AddpersonalState extends State<Addpersonal> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                ElevatedButton(
-                    onPressed: () {}, child: const Text('Upload'))
+                ElevatedButton(onPressed: () {}, child: const Text('Upload'))
               ],
             ),
           ),
@@ -291,8 +291,8 @@ class _AddpersonalState extends State<Addpersonal> {
                   child: Card(
                       color: Colors.grey[200],
                       shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(8))),
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(8))),
                       child: const SizedBox(
                         height: 32,
                         width: 140,
@@ -311,333 +311,332 @@ class _AddpersonalState extends State<Addpersonal> {
                       padding: const EdgeInsets.all(12.0),
                       child: SizedBox(
                         height: 410,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    elevation: 2,
-                                    child: TextField(
-                                      controller: personId,
-                                      enabled: false,
-                                      decoration: const InputDecoration(
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          labelText:
-                                              "PersonID : รหัสประจำตัว",
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          border: OutlineInputBorder(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Card(
+                                      elevation: 2,
+                                      child: TextField(
+                                        controller: personId,
+                                        enabled: false,
+                                        decoration: const InputDecoration(
+                                            filled: true,
+                                            fillColor: Colors.white,
+                                            labelText:
+                                                "PersonID : รหัสประจำตัว",
+                                            enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.white))),
-                                      readOnly: true,
+                                                  color: Colors.black26),
+                                            ),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white))),
+                                        readOnly: true,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Card(
-                                    child: SizedBox(
-                                      height: 53,
-                                      child: DropdownButtonFormField(
-                                        autovalidateMode:
-                                            AutovalidateMode.always,
-                                        validator: (newValue) {
-                                          if (newValue == '0') {
-                                            return 'โปรดเลือกข้อมูล';
-                                          }
-                                          return null; // ไม่มีข้อผิดพลาด
-                                        },
-                                        focusColor: Colors.white,
-                                        hint: const Text("TitleName*",
-                                            style: TextStyle(
-                                                color: Colors.red)),
-                                        value: titles,
-                                        items: titleList.map((e) {
-                                          return DropdownMenuItem<String>(
-                                            value: e.titleNameId,
-                                            child: Text(
-                                                '${e.titleNameEn} : ${e.titleNameTh}'),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            titles = newValue.toString();
-                                            // onnewvalue();
-                                            onValidate();
-                                            if (titles == '1') {
-                                              genders = '1';
-                                            } else if (titles == '2' ||
-                                                titles == '3') {
-                                              genders = '2';
-                                            } else {
-                                              genders = '0';
+                                  Expanded(
+                                    child: Card(
+                                      child: SizedBox(
+                                        height: 53,
+                                        child: DropdownButtonFormField(
+                                          autovalidateMode:
+                                              AutovalidateMode.always,
+                                          validator: (newValue) {
+                                            if (newValue == '0') {
+                                              return 'โปรดเลือกข้อมูล';
                                             }
-                                          });
-                                        },
-                                        dropdownColor: Colors.white,
-                                        decoration: const InputDecoration(
-                                          fillColor: Colors.white,
-                                          filled: true,
-                                          labelText: "Titlename : คำนำหน้า",
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
+                                            return null; // ไม่มีข้อผิดพลาด
+                                          },
+                                          focusColor: Colors.white,
+                                          hint: const Text("TitleName*",
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                          value: titles,
+                                          items: titleList.map((e) {
+                                            return DropdownMenuItem<String>(
+                                              value: e.titleNameId,
+                                              child: Text(
+                                                  '${e.titleNameEn} : ${e.titleNameTh}'),
+                                            );
+                                          }).toList(),
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              titles = newValue.toString();
+                                              // onnewvalue();
+                                              onValidate();
+                                              if (titles == '1') {
+                                                genders = '1';
+                                              } else if (titles == '2' ||
+                                                  titles == '3') {
+                                                genders = '2';
+                                              } else {
+                                                genders = '0';
+                                              }
+                                            });
+                                          },
+                                          dropdownColor: Colors.white,
+                                          decoration: const InputDecoration(
+                                            fillColor: Colors.white,
+                                            filled: true,
+                                            labelText: "Titlename : คำนำหน้า",
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black26),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    child: TextFormField(
-                                      onChanged: (newValue) {
-                                        // onnewvalue();
-                                        onValidate();
-                                      },
-                                      autovalidateMode:
-                                          AutovalidateMode.always,
-                                      keyboardType: TextInputType.text,
-                                      validator: RequiredValidator(
-                                          errorText: 'กรุณากรอกข้อมูล'),
-                                      controller: firstNameTh,
-                                      decoration: const InputDecoration(
-                                          labelText: 'ชื่อ (TH)',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.white)),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Card(
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.always,
-                                      keyboardType: TextInputType.text,
-                                      validator: RequiredValidator(
-                                          errorText: 'กรุณากรอกข้อมูล'),
-                                      controller: lastNameTh,
-                                      onChanged: (newValue) {
-                                        // onnewvalue();
-                                        onValidate();
-                                      },
-                                      decoration: const InputDecoration(
-                                          labelText: 'นามสกุล (TH)',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.white)),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.always,
-                                      keyboardType: TextInputType.text,
-                                      validator: RequiredValidator(
-                                          errorText: 'กรุณากรอกข้อมูล'),
-                                      controller: firstNameEn,
-                                      onChanged: (newValue) {
-                                        //  onnewvalue();
-                                        onValidate();
-                                      },
-                                      decoration: const InputDecoration(
-                                          labelText: 'Firstname (EN)',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.white)),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Card(
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.always,
-                                      keyboardType: TextInputType.text,
-                                      validator: RequiredValidator(
-                                          errorText: 'กรุณากรอกข้อมูล'),
-                                      controller: lastNameEn,
-                                      onChanged: (newValue) {
-                                        // onnewvalue();
-                                        onValidate();
-                                      },
-                                      decoration: const InputDecoration(
-                                          labelText: 'Lastname (EN)',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.white)),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Card(
-                              child: TextFormField(
-                                autovalidateMode: AutovalidateMode.always,
-                                validator: RequiredValidator(
-                                    errorText: 'กรุณากรอกข้อมูล'),
-                                controller: dateOfBirth,
-                                onChanged: (newValue) {
-                                  //  onnewvalue();
-                                },
-                                decoration: const InputDecoration(
-                                  labelText: 'Date of birth',
-                                  labelStyle:
-                                      TextStyle(color: Colors.black),
-                                  filled: true,
-                                  fillColor: Colors.white,
-                                  suffixIcon: Icon(
-                                    Icons.calendar_today,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black26),
-                                  ),
-                                ),
-                                readOnly: true,
-                                onTap: () {
-                                  _selectDate();
-                                },
+                                ],
                               ),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Card(
-                                    elevation: 1,
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.always,
-                                      keyboardType: TextInputType.number,
-                                      validator: Validatorless.multiple([
-                                        Validatorless.min(
-                                            3, 'กรอกข้อมูลให้ถูกต้อง'),
-                                        Validatorless.max(
-                                            3, 'กรอกข้อมูลให้ถูกต้อง'),
-                                        Validatorless.required(
-                                            'กรุณากรอกข้อมูล')
-                                      ]),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                                r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
-                                      ],
-                                      controller: height,
-                                      onChanged: (newValue) {
-                                        //  onnewvalue();
-                                        onValidate();
-                                      },
-                                      decoration: const InputDecoration(
-                                          labelText: 'ส่วนสูง (cm.)',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Card(
+                                      child: TextFormField(
+                                        onChanged: (newValue) {
+                                          // onnewvalue();
+                                          onValidate();
+                                        },
+                                        autovalidateMode:
+                                            AutovalidateMode.always,
+                                        keyboardType: TextInputType.text,
+                                        validator: RequiredValidator(
+                                            errorText: 'กรุณากรอกข้อมูล'),
+                                        controller: firstNameTh,
+                                        decoration: const InputDecoration(
+                                            labelText: 'ชื่อ (TH)',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.white)),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white),
+                                                  color: Colors.black26),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Card(
-                                    child: TextFormField(
-                                      autovalidateMode:
-                                          AutovalidateMode.always,
-                                      validator: Validatorless.multiple([
-                                        Validatorless.min(
-                                            2, 'กรอกข้อมูลให้ถูกต้อง'),
-                                        Validatorless.max(
-                                            3, 'กรอกข้อมูลให้ถูกต้อง'),
-                                        Validatorless.required(
-                                            'กรุณากรอกข้อมูล')
-                                      ]),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                                r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
-                                      ],
-                                      controller: weight,
-                                      onChanged: (newValue) {
-                                        //  onnewvalue();
-                                        onValidate();
-                                      },
-                                      decoration: const InputDecoration(
-                                          labelText: 'น้ำหนัก (kg.)',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
-                                          border: OutlineInputBorder(
+                                  Expanded(
+                                    child: Card(
+                                      child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.always,
+                                        keyboardType: TextInputType.text,
+                                        validator: RequiredValidator(
+                                            errorText: 'กรุณากรอกข้อมูล'),
+                                        controller: lastNameTh,
+                                        onChanged: (newValue) {
+                                          // onnewvalue();
+                                          onValidate();
+                                        },
+                                        decoration: const InputDecoration(
+                                            labelText: 'นามสกุล (TH)',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
                                               borderSide: BorderSide(
-                                                  color: Colors.white)),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Colors.black26),
-                                          ),
-                                          filled: true,
-                                          fillColor: Colors.white),
+                                                  color: Colors.black26),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Card(
+                                      child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.always,
+                                        keyboardType: TextInputType.text,
+                                        validator: RequiredValidator(
+                                            errorText: 'กรุณากรอกข้อมูล'),
+                                        controller: firstNameEn,
+                                        onChanged: (newValue) {
+                                          //  onnewvalue();
+                                          onValidate();
+                                        },
+                                        decoration: const InputDecoration(
+                                            labelText: 'Firstname (EN)',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black26),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Card(
+                                      child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.always,
+                                        keyboardType: TextInputType.text,
+                                        validator: RequiredValidator(
+                                            errorText: 'กรุณากรอกข้อมูล'),
+                                        controller: lastNameEn,
+                                        onChanged: (newValue) {
+                                          // onnewvalue();
+                                          onValidate();
+                                        },
+                                        decoration: const InputDecoration(
+                                            labelText: 'Lastname (EN)',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black26),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Card(
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.always,
+                                  validator: RequiredValidator(
+                                      errorText: 'กรุณากรอกข้อมูล'),
+                                  controller: dateOfBirth,
+                                  onChanged: (newValue) {
+                                    //  onnewvalue();
+                                  },
+                                  decoration: const InputDecoration(
+                                    labelText: 'Date of birth',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    suffixIcon: Icon(
+                                      Icons.calendar_today,
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black26),
+                                    ),
+                                  ),
+                                  readOnly: true,
+                                  onTap: () {
+                                    _selectDate();
+                                  },
                                 ),
-                              ],
-                            ),
-                          ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Card(
+                                      elevation: 1,
+                                      child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.always,
+                                        keyboardType: TextInputType.number,
+                                        validator: Validatorless.multiple([
+                                          Validatorless.min(
+                                              3, 'กรอกข้อมูลให้ถูกต้อง'),
+                                          Validatorless.max(
+                                              3, 'กรอกข้อมูลให้ถูกต้อง'),
+                                          Validatorless.required(
+                                              'กรุณากรอกข้อมูล')
+                                        ]),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(RegExp(
+                                              r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
+                                        ],
+                                        controller: height,
+                                        onChanged: (newValue) {
+                                          //  onnewvalue();
+                                          onValidate();
+                                        },
+                                        decoration: const InputDecoration(
+                                            labelText: 'ส่วนสูง (cm.)',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black26),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Card(
+                                      child: TextFormField(
+                                        autovalidateMode:
+                                            AutovalidateMode.always,
+                                        validator: Validatorless.multiple([
+                                          Validatorless.min(
+                                              2, 'กรอกข้อมูลให้ถูกต้อง'),
+                                          Validatorless.max(
+                                              3, 'กรอกข้อมูลให้ถูกต้อง'),
+                                          Validatorless.required(
+                                              'กรุณากรอกข้อมูล')
+                                        ]),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(RegExp(
+                                              r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
+                                        ],
+                                        controller: weight,
+                                        onChanged: (newValue) {
+                                          //  onnewvalue();
+                                          onValidate();
+                                        },
+                                        decoration: const InputDecoration(
+                                            labelText: 'น้ำหนัก (kg.)',
+                                            labelStyle:
+                                                TextStyle(color: Colors.black),
+                                            border: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white)),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide(
+                                                  color: Colors.black26),
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -690,14 +689,12 @@ class _AddpersonalState extends State<Addpersonal> {
                                             child: DropdownButtonFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
-                                              validator:
-                                                  Validatorless.required(
-                                                      'กรุณาเลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'กรุณาเลือกข้อมูล'),
                                               focusColor: Colors.white,
                                               value: genders,
                                               items: genderList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                                return DropdownMenuItem<String>(
                                                   value: e.genderId,
                                                   child: Text(
                                                       '${e.genderEn} : ${e.genderTh}'),
@@ -705,31 +702,26 @@ class _AddpersonalState extends State<Addpersonal> {
                                               }).toList(),
                                               onChanged: (newValue) {
                                                 setState(() {
-                                                  genders =
-                                                      newValue.toString();
+                                                  genders = newValue.toString();
                                                   // onnewvalue();
                                                   onValidate();
                                                 });
                                               },
-                                              hint: const Text(
-                                                  "Gender (เพศ)*",
+                                              hint: const Text("Gender (เพศ)*",
                                                   style: TextStyle(
                                                       color: Colors.red)),
                                               dropdownColor: Colors.white,
-                                              decoration:
-                                                  const InputDecoration(
+                                              decoration: const InputDecoration(
                                                 fillColor: Colors.white,
                                                 filled: true,
                                                 labelText: "Gender (เพศ)",
                                                 labelStyle: TextStyle(
                                                     color: Colors.black),
-                                                border:
-                                                    OutlineInputBorder(),
+                                                border: OutlineInputBorder(),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color:
-                                                          Colors.black26),
+                                                      color: Colors.black26),
                                                 ),
                                               ),
                                             ),
@@ -750,10 +742,8 @@ class _AddpersonalState extends State<Addpersonal> {
                                                   style: TextStyle(
                                                       color: Colors.red)),
                                               value: bloodgroup,
-                                              items:
-                                                  bloodgroupList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                              items: bloodgroupList.map((e) {
+                                                return DropdownMenuItem<String>(
                                                   value: e.bloodId,
                                                   child: SizedBox(
                                                     width: 80,
@@ -770,25 +760,21 @@ class _AddpersonalState extends State<Addpersonal> {
                                                   onValidate();
                                                 });
                                               },
-                                              validator:
-                                                  Validatorless.required(
-                                                      'กรุณาเลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'กรุณาเลือกข้อมูล'),
                                               dropdownColor: Colors.white,
-                                              decoration:
-                                                  const InputDecoration(
+                                              decoration: const InputDecoration(
                                                 fillColor: Colors.white,
                                                 filled: true,
                                                 labelText:
                                                     "Bloodtype (กรุ๊ปเลือด)",
                                                 labelStyle: TextStyle(
                                                     color: Colors.black),
-                                                border:
-                                                    OutlineInputBorder(),
+                                                border: OutlineInputBorder(),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color:
-                                                          Colors.black26),
+                                                      color: Colors.black26),
                                                 ),
                                               ),
                                             ),
@@ -807,22 +793,19 @@ class _AddpersonalState extends State<Addpersonal> {
                                             child: DropdownButtonFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
-                                              validator:
-                                                  Validatorless.required(
-                                                      'กรุณาเลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'กรุณาเลือกข้อมูล'),
                                               focusColor: Colors.white,
                                               hint: const Text(
                                                   "Status (สถานะ)*",
                                                   style: TextStyle(
                                                       color: Colors.red)),
                                               value: maritalstatus,
-                                              items: maritalstatusList
-                                                  .map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                              items: maritalstatusList.map((e) {
+                                                return DropdownMenuItem<String>(
                                                   value: e.maritalStatusId,
-                                                  child: Text(
-                                                      e.maritalStatusName),
+                                                  child:
+                                                      Text(e.maritalStatusName),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -834,20 +817,17 @@ class _AddpersonalState extends State<Addpersonal> {
                                                 });
                                               },
                                               dropdownColor: Colors.white,
-                                              decoration:
-                                                  const InputDecoration(
+                                              decoration: const InputDecoration(
                                                 fillColor: Colors.white,
                                                 filled: true,
                                                 labelText: "Status (สถานะ)",
                                                 labelStyle: TextStyle(
                                                     color: Colors.black),
-                                                border:
-                                                    OutlineInputBorder(),
+                                                border: OutlineInputBorder(),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color:
-                                                          Colors.black26),
+                                                      color: Colors.black26),
                                                 ),
                                               ),
                                             ),
@@ -869,8 +849,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                                       color: Colors.red)),
                                               value: religion,
                                               items: religionList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                                return DropdownMenuItem<String>(
                                                   value: e.religionId,
                                                   child: Text(e.religionTh),
                                                 );
@@ -883,25 +862,20 @@ class _AddpersonalState extends State<Addpersonal> {
                                                   onValidate();
                                                 });
                                               },
-                                              validator:
-                                                  Validatorless.required(
-                                                      'กรุณาเลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'กรุณาเลือกข้อมูล'),
                                               dropdownColor: Colors.white,
-                                              decoration:
-                                                  const InputDecoration(
+                                              decoration: const InputDecoration(
                                                 fillColor: Colors.white,
                                                 filled: true,
-                                                labelText:
-                                                    "Religion (ศาสนา)",
+                                                labelText: "Religion (ศาสนา)",
                                                 labelStyle: TextStyle(
                                                     color: Colors.black),
-                                                border:
-                                                    OutlineInputBorder(),
+                                                border: OutlineInputBorder(),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color:
-                                                          Colors.black26),
+                                                      color: Colors.black26),
                                                 ),
                                               ),
                                             ),
@@ -927,13 +901,11 @@ class _AddpersonalState extends State<Addpersonal> {
                                                       color: Colors.red)),
                                               value: racestatus,
                                               items: raceList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                                return DropdownMenuItem<String>(
                                                   value: e.raceId,
                                                   child: SizedBox(
                                                       width: 100,
-                                                      child:
-                                                          Text(e.raceTh)),
+                                                      child: Text(e.raceTh)),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -944,25 +916,20 @@ class _AddpersonalState extends State<Addpersonal> {
                                                   onValidate();
                                                 });
                                               },
-                                              validator:
-                                                  Validatorless.required(
-                                                      'กรุณาเลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'กรุณาเลือกข้อมูล'),
                                               dropdownColor: Colors.white,
-                                              decoration:
-                                                  const InputDecoration(
+                                              decoration: const InputDecoration(
                                                 fillColor: Colors.white,
                                                 filled: true,
-                                                labelText:
-                                                    "Race (เชื้อชาติ)",
+                                                labelText: "Race (เชื้อชาติ)",
                                                 labelStyle: TextStyle(
                                                     color: Colors.black),
-                                                border:
-                                                    OutlineInputBorder(),
+                                                border: OutlineInputBorder(),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color:
-                                                          Colors.black26),
+                                                      color: Colors.black26),
                                                 ),
                                               ),
                                             ),
@@ -983,10 +950,8 @@ class _AddpersonalState extends State<Addpersonal> {
                                                   style: TextStyle(
                                                       color: Colors.red)),
                                               value: nationality,
-                                              items:
-                                                  nationalityList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                              items: nationalityList.map((e) {
+                                                return DropdownMenuItem<String>(
                                                   value: e.nationalityId,
                                                   child: SizedBox(
                                                     width: 140,
@@ -1003,25 +968,21 @@ class _AddpersonalState extends State<Addpersonal> {
                                                   onValidate();
                                                 });
                                               },
-                                              validator:
-                                                  Validatorless.required(
-                                                      'กรุณาเลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'กรุณาเลือกข้อมูล'),
                                               dropdownColor: Colors.white,
-                                              decoration:
-                                                  const InputDecoration(
+                                              decoration: const InputDecoration(
                                                 fillColor: Colors.white,
                                                 filled: true,
                                                 labelText:
                                                     "Nationality (สัญชาติ)",
                                                 labelStyle: TextStyle(
                                                     color: Colors.black),
-                                                border:
-                                                    OutlineInputBorder(),
+                                                border: OutlineInputBorder(),
                                                 enabledBorder:
                                                     OutlineInputBorder(
                                                   borderSide: BorderSide(
-                                                      color:
-                                                          Colors.black26),
+                                                      color: Colors.black26),
                                                 ),
                                               ),
                                             ),
@@ -1045,8 +1006,8 @@ class _AddpersonalState extends State<Addpersonal> {
                                       decoration: const InputDecoration(
                                           hintText: 'E-mail',
                                           labelText: 'E-mail',
-                                          labelStyle: TextStyle(
-                                              color: Colors.black),
+                                          labelStyle:
+                                              TextStyle(color: Colors.black),
                                           border: OutlineInputBorder(
                                               borderSide: BorderSide(
                                                   color: Colors.white)),
@@ -1068,8 +1029,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                           child: TextFormField(
                                             autovalidateMode:
                                                 AutovalidateMode.always,
-                                            validator:
-                                                Validatorless.multiple([
+                                            validator: Validatorless.multiple([
                                               Validatorless.required(
                                                   'กรอกตัวเลข 10 หลัก'),
                                               Validatorless.number(
@@ -1083,37 +1043,28 @@ class _AddpersonalState extends State<Addpersonal> {
                                             onChanged: (newValue) {
                                               onValidate();
                                             },
-                                            keyboardType:
-                                                TextInputType.number,
+                                            keyboardType: TextInputType.number,
                                             inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .allow(RegExp(
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
                                                       r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
                                             ],
-                                            decoration:
-                                                const InputDecoration(
-                                                    hintText:
-                                                        'เบอร์โทรศัพท์หลัก',
-                                                    labelText:
-                                                        'Primary Phonenumber.',
-                                                    labelStyle: TextStyle(
-                                                        color:
-                                                            Colors.black),
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white)),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide:
-                                                          BorderSide(
-                                                              color: Colors
-                                                                  .black26),
-                                                    ),
-                                                    filled: true,
-                                                    fillColor:
-                                                        Colors.white),
+                                            decoration: const InputDecoration(
+                                                hintText: 'เบอร์โทรศัพท์หลัก',
+                                                labelText:
+                                                    'Primary Phonenumber.',
+                                                labelStyle: TextStyle(
+                                                    color: Colors.black),
+                                                border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.black26),
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.white),
                                           ),
                                         ),
                                       ),
@@ -1126,37 +1077,29 @@ class _AddpersonalState extends State<Addpersonal> {
                                               // onnewvalue();
                                               onValidate();
                                             },
-                                            keyboardType:
-                                                TextInputType.number,
+                                            keyboardType: TextInputType.number,
                                             inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .allow(RegExp(
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(
                                                       r'[0-9]')), // ใช้ input formatter เพื่อจำกัดให้เป็นตัวเลขเท่านั้น
                                             ],
-                                            decoration:
-                                                const InputDecoration(
-                                                    hintText:
-                                                        'เบอร์โทรศัพท์รอง (ถ้ามี)',
-                                                    labelText:
-                                                        'Secondary Phonenumber.',
-                                                    labelStyle: TextStyle(
-                                                        color:
-                                                            Colors.black),
-                                                    border: OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white)),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide:
-                                                          BorderSide(
-                                                              color: Colors
-                                                                  .black26),
-                                                    ),
-                                                    filled: true,
-                                                    fillColor:
-                                                        Colors.white),
+                                            decoration: const InputDecoration(
+                                                hintText:
+                                                    'เบอร์โทรศัพท์รอง (ถ้ามี)',
+                                                labelText:
+                                                    'Secondary Phonenumber.',
+                                                labelStyle: TextStyle(
+                                                    color: Colors.black),
+                                                border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white)),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderSide: BorderSide(
+                                                      color: Colors.black26),
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.white),
                                           ),
                                         ),
                                       )

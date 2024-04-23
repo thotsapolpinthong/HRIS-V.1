@@ -164,7 +164,7 @@ class _PositionDataTableState extends State<PositionDataTable> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          width: 1000,
+                          width: double.infinity,
                           child: PaginatedDataTable(
                             showFirstLastButtons: true,
                             rowsPerPage: rowIndex,

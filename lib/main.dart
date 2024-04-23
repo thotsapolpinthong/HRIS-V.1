@@ -11,6 +11,7 @@ import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/selfservice_bloc/selfservice_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
+import 'package:hris_app_prototype/src/bloc/trip_bloc/trip_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/routes/routes.dart';
 import 'src/page/login_page.dart';
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => TimeattendanceBloc());
     final selfServiceBloc =
         BlocProvider(create: (context) => SelfServiceBloc());
+    final tripBloc = BlocProvider(create: (context) => TripBloc());
 
     return MultiBlocProvider(
       providers: [
@@ -53,18 +55,22 @@ class MyApp extends StatelessWidget {
         positionOrgBloc,
         timeAttendanceBloc,
         selfServiceBloc,
+        tripBloc,
       ],
       child: MaterialApp(
         supportedLocales: const [
           Locale('en', 'us'),
           Locale('en', 'gb'),
+          Locale('th', 'TH'),
         ],
         title: 'HRIS Demo',
         theme: ThemeData(
           scaffoldBackgroundColor: mygreycolors,
-          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme),
+          textTheme: GoogleFonts.poppinsTextTheme(
+            Theme.of(context).textTheme,
+          ),
           colorScheme: ColorScheme.light(primary: mythemecolor),
-          // useMaterial3: true,
+          useMaterial3: false,
         ),
         routes: AppRoute.all,
         debugShowCheckedModeBanner: false,

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/employee_bloc/employee_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/position_org_bloc.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/create_employee_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
@@ -225,7 +225,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                                   Validatorless.required('*กรุณากรอกข้อมูล'),
                             )),
                             Expanded(
-                              child: DropdownOrg(
+                              child: DropdownGlobal(
                                 labeltext: 'Shift.',
                                 value: shiftData,
                                 validator:
@@ -320,7 +320,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: DropdownOrg(
+                              child: DropdownGlobal(
                                 labeltext: 'Staff status.',
                                 value: staffStatus,
                                 validator:
@@ -342,7 +342,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                               ),
                             ),
                             Expanded(
-                              child: DropdownOrg(
+                              child: DropdownGlobal(
                                 labeltext: 'Staff type.',
                                 value: staffType,
                                 validator:
@@ -383,7 +383,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Expanded(
-                              child: DropdownOrg(
+                              child: DropdownGlobal(
                                 labeltext: 'Organization.',
                                 value: ogData,
                                 validator:
@@ -407,7 +407,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                               ),
                             ),
                             Expanded(
-                              child: DropdownOrg(
+                              child: DropdownGlobal(
                                 labeltext: 'Position Organization',
                                 value: poData,
                                 validator:

@@ -77,7 +77,7 @@ class _SlideBarState extends State<SlideBar> {
                                 iconcolor: state.pageNumber == 8
                                     ? Colors.black87
                                     : mytextcolors,
-                                title: "Dashboard",
+                                title: "DASHBOARD",
                                 textColor: state.pageNumber == 8
                                     ? Colors.black87
                                     : mytextcolors,
@@ -97,7 +97,7 @@ class _SlideBarState extends State<SlideBar> {
                                 iconcolor: state.pageNumber == 0
                                     ? Colors.black87
                                     : mytextcolors,
-                                title: "Personal",
+                                title: "PERSONAL",
                                 textColor: state.pageNumber == 0
                                     ? Colors.black87
                                     : mytextcolors,
@@ -117,7 +117,7 @@ class _SlideBarState extends State<SlideBar> {
                                 iconcolor: state.pageNumber == 1
                                     ? Colors.black87
                                     : mytextcolors,
-                                title: "Organization",
+                                title: "ORGANIZATION",
                                 textColor: state.pageNumber == 1
                                     ? Colors.black87
                                     : mytextcolors,
@@ -169,26 +169,26 @@ class _SlideBarState extends State<SlideBar> {
                             .animate()
                             .fadeIn(delay: 700.ms)
                             .slideY(begin: 1, duration: 200.ms),
-                        DrawerTitle(
-                                color: state.pageNumber == 4
-                                    ? mygreycolors
-                                    : mythemecolor,
-                                icon: Icons.badge_rounded,
-                                iconcolor: state.pageNumber == 4
-                                    ? Colors.black87
-                                    : mytextcolors,
-                                title: "WELFARE",
-                                textColor: state.pageNumber == 4
-                                    ? Colors.black87
-                                    : mytextcolors,
-                                onTap: () {
-                                  context
-                                      .read<HomepageBloc>()
-                                      .add(WelfarePageEvent());
-                                })
-                            .animate()
-                            .fadeIn(delay: 800.ms)
-                            .slideY(begin: 1, duration: 200.ms),
+                        // DrawerTitle(
+                        //         color: state.pageNumber == 4
+                        //             ? mygreycolors
+                        //             : mythemecolor,
+                        //         icon: Icons.badge_rounded,
+                        //         iconcolor: state.pageNumber == 4
+                        //             ? Colors.black87
+                        //             : mytextcolors,
+                        //         title: "WELFARE",
+                        //         textColor: state.pageNumber == 4
+                        //             ? Colors.black87
+                        //             : mytextcolors,
+                        //         onTap: () {
+                        //           context
+                        //               .read<HomepageBloc>()
+                        //               .add(WelfarePageEvent());
+                        //         })
+                        //     .animate()
+                        //     .fadeIn(delay: 800.ms)
+                        //     .slideY(begin: 1, duration: 200.ms),
                         DrawerTitle(
                                 color: state.pageNumber == 5
                                     ? mygreycolors
@@ -217,7 +217,7 @@ class _SlideBarState extends State<SlideBar> {
                                 iconcolor: state.pageNumber == 6
                                     ? Colors.black87
                                     : mytextcolors,
-                                title: "Off-Side Working",
+                                title: "OFF-Side WORKING",
                                 textColor: state.pageNumber == 6
                                     ? Colors.black87
                                     : mytextcolors,

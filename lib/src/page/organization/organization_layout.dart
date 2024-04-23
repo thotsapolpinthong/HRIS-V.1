@@ -66,7 +66,7 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
         child: Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
-        backgroundColor: mygreycolors,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: isExpandedPage == 1
             ? SizedBox(
                 height: 50,
@@ -86,7 +86,7 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
             child: Column(
           children: [
             const Text(
-              'จัดการข้อมูลองค์กร (Organization).',
+              'Organization Management.',
               style: TextStyle(
                 fontSize: 20,
               ),
@@ -171,7 +171,7 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
                                 });
                               },
                               child: Text(
-                                "Departments",
+                                "Departments (List).",
                                 style: TextStyle(
                                     color: isExpandedPage == 2
                                         ? Colors.white
@@ -198,7 +198,7 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
                                 });
                               },
                               child: Text(
-                                "Position",
+                                "Position (List).",
                                 style: TextStyle(
                                     color: isExpandedPage == 3
                                         ? Colors.white

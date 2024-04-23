@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/employee_bloc/employee_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_employee_approve_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/ot_menu_model/dropdown_ot_request_type_model.dart';
@@ -522,7 +522,7 @@ class _CreateOtState extends State<CreateOt> {
                   Row(
                     children: [
                       Expanded(
-                        child: DropdownOrg(
+                        child: DropdownGlobal(
                             labeltext: 'OT Type',
                             value: otTypeId,
                             items: otTypeData?.overTimeTypeData.map((e) {
@@ -545,7 +545,7 @@ class _CreateOtState extends State<CreateOt> {
                             validator: null),
                       ),
                       Expanded(
-                        child: DropdownOrg(
+                        child: DropdownGlobal(
                             labeltext: 'Request Type',
                             value: otRequestTypeId,
                             items: otTypeId == "H"
@@ -574,7 +574,7 @@ class _CreateOtState extends State<CreateOt> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: TextFormFieldTimepickerOt(
+                        child: TextFormFieldpicker(
                           controller: checkIn,
                           labelText: "(Check In Time).",
                           validatorless: null,
@@ -596,7 +596,7 @@ class _CreateOtState extends State<CreateOt> {
                         ),
                       ),
                       Expanded(
-                        child: TextFormFieldTimepickerOt(
+                        child: TextFormFieldpicker(
                           controller: checkOut,
                           labelText: "(Check Out Time).",
                           validatorless: null,
@@ -665,7 +665,7 @@ class _CreateOtState extends State<CreateOt> {
                       enabled: true,
                       validatorless: Validatorless.required("โปรดระบุ")),
                   const Gap(10),
-                  DropdownOrg(
+                  DropdownGlobal(
                       labeltext: 'Approve By',
                       value: approveId,
                       items: approveList.map((e) {

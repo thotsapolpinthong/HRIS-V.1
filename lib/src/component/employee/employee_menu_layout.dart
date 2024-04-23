@@ -5,6 +5,7 @@ import 'package:hris_app_prototype/src/component/employee/menu/end/menu_end.dart
 import 'package:hris_app_prototype/src/component/employee/menu/leave/menu_leave.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/menu_manual_workdate.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/ot/menu_ot.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/promote/promote_employee.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/transfer/menu_transfer.dart';
 import 'package:hris_app_prototype/src/component/homepage/SlideBar.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
@@ -48,7 +49,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
-                      title: "ปรับตำแหน่ง (Promote)",
+                      title: "Promote",
                       onTap: () {
                         setState(() {
                           pageNumber = 0;
@@ -62,7 +63,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
-                      title: "ย้ายตำแหน่งงาน (Transfer)",
+                      title: "Transfer",
                       onTap: () {
                         setState(() {
                           pageNumber = 1;
@@ -76,7 +77,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
-                      title: "สิ้นสุดการเป็นพนักงาน",
+                      title: "Resign",
                       onTap: () {
                         setState(() {
                           pageNumber = 2;
@@ -90,7 +91,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
-                      title: "บันทึกการทำงานล่วงเวลา",
+                      title: "Overtime",
                       onTap: () {
                         setState(() {
                           pageNumber = 3;
@@ -104,7 +105,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
-                      title: "บันทึกการลา",
+                      title: "Leave",
                       onTap: () {
                         setState(() {
                           pageNumber = 4;
@@ -126,84 +127,90 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                       },
                     ),
                     const Gap(5),
-                    DrawerTitle(
-                      color:
-                          pageNumber == 6 ? Colors.blueGrey[200] : Colors.white,
-                      textColor: Colors.black,
-                      icon: Icons.edit,
-                      iconcolor: Colors.black,
-                      title: "การประเมิน",
-                      onTap: () {
-                        setState(() {
-                          pageNumber = 6;
-                        });
-                      },
-                    ),
+                    // DrawerTitle(
+                    //   color:
+                    //       pageNumber == 6 ? Colors.blueGrey[200] : Colors.white,
+                    //   textColor: Colors.black,
+                    //   icon: Icons.edit,
+                    //   iconcolor: Colors.black,
+                    //   title: "การประเมิน",
+                    //   onTap: () {
+                    //     setState(() {
+                    //       pageNumber = 6;
+                    //     });
+                    //   },
+                    // ),
                     Expanded(
                         child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Card(
-                          color: Colors.blueGrey[200],
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          child: SingleChildScrollView(
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                      child: pageNumber == 0 ||
+                              pageNumber == 1 ||
+                              pageNumber == 2
+                          ? Container()
+                          : SizedBox(
+                              width: double.infinity,
+                              child: Card(
+                                color: Colors.blueGrey[200],
+                                elevation: 6,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                child: SingleChildScrollView(
+                                  child: Stack(
                                     children: [
-                                      const Gap(10),
-                                      const Text(
-                                        "Employee Info",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Gap(10),
+                                            const Text(
+                                              "Employee Info",
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            // const Icon(
+                                            //   CupertinoIcons.person_alt_circle,
+                                            //   size: 60,
+                                            // ),
+                                            const Gap(6),
+                                            Text(
+                                                "รหัสพนักงาน :  ${widget.employeeData.employeeId}"),
+                                            Text(
+                                                "ชื่อ : ${widget.employeeData.personData.titleName.titleNameTh} ${widget.employeeData.personData.fisrtNameTh} ${widget.employeeData.personData.lastNameTh}"),
+                                            Text(
+                                                "ประเภท : ${widget.employeeData.staffTypeData.description}"),
+                                            Text(
+                                                "แผนก : ${widget.employeeData.positionData.organizationData.departMentData.deptNameEn}"),
+                                            Text(
+                                                "ตำแหน่ง : ${widget.employeeData.positionData.positionData.positionNameTh}"),
+                                            Text(
+                                                "กะการทำงาน : ${widget.employeeData.shiftData.shiftName} \n${widget.employeeData.shiftData.startTime} - ${widget.employeeData.shiftData.endTime}"), //
+                                          ],
+                                        ),
                                       ),
-                                      // const Icon(
-                                      //   CupertinoIcons.person_alt_circle,
-                                      //   size: 60,
-                                      // ),
-                                      const Gap(6),
-                                      Text(
-                                          "รหัสพนักงาน :  ${widget.employeeData.employeeId}"),
-                                      Text(
-                                          "ชื่อ : ${widget.employeeData.personData.titleName.titleNameTh} ${widget.employeeData.personData.fisrtNameTh} ${widget.employeeData.personData.lastNameTh}"),
-                                      Text(
-                                          "ประเภท : ${widget.employeeData.staffTypeData.description}"),
-                                      Text(
-                                          "แผนก : ${widget.employeeData.positionData.organizationData.departMentData.deptNameEn}"),
-                                      Text(
-                                          "ตำแหน่ง : ${widget.employeeData.positionData.positionData.positionNameTh}"),
-                                      Text(
-                                          "กะการทำงาน : ${widget.employeeData.shiftData.shiftName} \n${widget.employeeData.shiftData.startTime} - ${widget.employeeData.shiftData.endTime}"), //
+                                      const Positioned(
+                                        left: 145,
+                                        child: Icon(
+                                          CupertinoIcons.person_alt_circle,
+                                          size: 120,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
-                                const Positioned(
-                                  left: 145,
-                                  child: Icon(
-                                    CupertinoIcons.person_alt_circle,
-                                    size: 120,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
-                        ),
-                      ),
                     )),
                     const Gap(8)
                   ],
                 )),
             if (pageNumber == 0)
-              Expanded(flex: 4, child: Text("$pageNumber"))
+              Expanded(
+                  flex: 4,
+                  child: PromoteMenu(employeeData: widget.employeeData))
             else if (pageNumber == 1)
               Expanded(
                   flex: 4,

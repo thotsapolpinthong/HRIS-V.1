@@ -13,9 +13,7 @@ part 'employee_state.dart';
 
 class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
   EmployeeBloc() : super(const EmployeeState()) {
-    on<EmployeeEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<EmployeeEvent>((event, emit) {});
 
     on<FetchDataTableEmployeeEvent>((event, emit) async {
       emit(state.copyWith(isDataLoading: true));

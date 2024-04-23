@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/main.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/position_org_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
 
 import 'package:hris_app_prototype/src/model/organization/position/dropdown_position_model.dart';
@@ -256,21 +256,21 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
               Text(
                 success == true
                     ? widget.onEdit == false
-                        ? 'Created Employee Success.'
-                        : 'Edit Employee Success.'
+                        ? 'Created Position Organization Success.'
+                        : 'Edit Position Organization Success.'
                     : widget.onEdit == false
-                        ? 'Created Employee Fail.'
-                        : 'Edit Employee Fail.',
+                        ? 'Created Position Organization Fail.'
+                        : 'Edit Position Organization Fail.',
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
               Text(
                 success == true
                     ? widget.onEdit == false
-                        ? 'เพิ่ม สำเร็จ'
-                        : 'แก้ไข สำเร็จ'
+                        ? 'บันทึกข้อมูล สำเร็จ'
+                        : 'แก้ไขข้อมูล สำเร็จ'
                     : widget.onEdit == false
-                        ? 'เพิ่ม ไม่สำเร็จ'
-                        : 'แก้ไข ไม่สำเร็จ',
+                        ? 'บันทึกข้อมูล ไม่สำเร็จ'
+                        : 'แก้ไขข้อมูล ไม่สำเร็จ',
                 style: const TextStyle(fontStyle: FontStyle.italic),
               ),
             ],
@@ -282,6 +282,9 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
         setState(() {
           context.read<PositionOrgBloc>().add(FetchDataPositionOrgEvent(
               organizationId: widget.orgData!.organizationCode));
+          if (success == true) {
+            Navigator.pop(context);
+          }
         });
       },
     ).show();
@@ -314,7 +317,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                           key: _formKey,
                           child: Column(
                             children: [
-                              DropdownOrg(
+                              DropdownGlobal(
                                   labeltext: "Position",
                                   value: positionData,
                                   validator: Validatorless.required(
@@ -334,7 +337,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                                     positionData = newValue.toString();
                                   }),
                               const Gap(2),
-                              DropdownOrg(
+                              DropdownGlobal(
                                   labeltext: "Jobtitle",
                                   value: jobTitleData,
                                   validator: Validatorless.required(
@@ -355,7 +358,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                                     jobTitleData = newValue.toString();
                                   }),
                               const Gap(2),
-                              DropdownOrg(
+                              DropdownGlobal(
                                   labeltext: "Position Type",
                                   value: positionTypeData,
                                   validator: Validatorless.required(
@@ -379,7 +382,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                               const Gap(2),
                               if (widget.firstNode ==
                                   false) //------------------
-                                DropdownOrg(
+                                DropdownGlobal(
                                     labeltext: "Parent Position Organization",
                                     value: parentPositionOrgData,
                                     validator: Validatorless.required(
@@ -405,7 +408,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                                     }),
                               const Gap(2),
                               if (widget.firstNode == false)
-                                DropdownOrg(
+                                DropdownGlobal(
                                     labeltext:
                                         "Bussiness Parent Position Organization",
                                     value: bussinessParentData,

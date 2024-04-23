@@ -193,6 +193,8 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                   ? myLoadingScreen
                   : SafeArea(
                       child: Scaffold(
+                      floatingActionButtonLocation:
+                          FloatingActionButtonLocation.endDocked,
                       floatingActionButton: SizedBox(
                         height: 50,
                         width: 50,
@@ -206,178 +208,171 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                             },
                             child: const Icon(Icons.add, size: 30)),
                       ).animate().shake(),
-                      body: Center(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Card(
-                              elevation: 2,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: SizedBox(
-                                  width: 1000,
-                                  child: PaginatedDataTable(
-                                    showFirstLastButtons: true,
-                                    rowsPerPage: rowIndex,
-                                    availableRowsPerPage: const [5, 10, 20],
-                                    sortColumnIndex: sortColumnIndex,
-                                    sortAscending: sort,
-                                    onRowsPerPageChanged: (value) {
-                                      setState(() {
-                                        rowIndex = value!;
-                                      });
-                                    },
-                                    header: SizedBox(
-                                      width: double.infinity,
-                                      height: 50,
-                                      child: Row(
-                                        children: [
-                                          const Expanded(
-                                              flex: 2,
-                                              child: Text('Department Table.')),
-                                          Expanded(
-                                              flex: 1,
-                                              child: Row(
-                                                children: [
-                                                  const Icon(
-                                                      Icons.search_rounded),
-                                                  Expanded(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4.0),
-                                                      child: TextFormField(
-                                                        controller: search,
-                                                        onChanged: (value) {
-                                                          if (value == '') {
+                      body: SingleChildScrollView(
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: PaginatedDataTable(
+                                  showFirstLastButtons: true,
+                                  rowsPerPage: rowIndex,
+                                  availableRowsPerPage: const [5, 10, 20],
+                                  sortColumnIndex: sortColumnIndex,
+                                  sortAscending: sort,
+                                  onRowsPerPageChanged: (value) {
+                                    setState(() {
+                                      rowIndex = value!;
+                                    });
+                                  },
+                                  header: SizedBox(
+                                    width: double.infinity,
+                                    height: 50,
+                                    child: Row(
+                                      children: [
+                                        const Expanded(
+                                            flex: 2,
+                                            child: Text('Department Table.')),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Row(
+                                              children: [
+                                                const Icon(
+                                                    Icons.search_rounded),
+                                                Expanded(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                    child: TextFormField(
+                                                      controller: search,
+                                                      onChanged: (value) {
+                                                        if (value == '') {
+                                                          context
+                                                              .read<
+                                                                  DepartmentBloc>()
+                                                              .add(
+                                                                  DissSearchEvent());
+                                                        } else {
+                                                          setState(() {
                                                             context
                                                                 .read<
                                                                     DepartmentBloc>()
                                                                 .add(
-                                                                    DissSearchEvent());
-                                                          } else {
-                                                            setState(() {
-                                                              context
-                                                                  .read<
-                                                                      DepartmentBloc>()
-                                                                  .add(
-                                                                      SearchEvent());
-                                                              departmentData =
-                                                                  filterData!.where(
-                                                                      (element) {
-                                                                final nameId = element
-                                                                    .deptCode
-                                                                    .toLowerCase()
-                                                                    .contains(value
-                                                                        .toLowerCase());
-                                                                final nameTH = element
-                                                                    .deptNameTh
-                                                                    .toLowerCase()
-                                                                    .contains(value
-                                                                        .toLowerCase());
-                                                                final nameEN = element
-                                                                    .deptNameEn
-                                                                    .toLowerCase()
-                                                                    .contains(value
-                                                                        .toLowerCase());
+                                                                    SearchEvent());
+                                                            departmentData =
+                                                                filterData!.where(
+                                                                    (element) {
+                                                              final nameId = element
+                                                                  .deptCode
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final nameTH = element
+                                                                  .deptNameTh
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final nameEN = element
+                                                                  .deptNameEn
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
 
-                                                                return nameId ||
-                                                                    nameTH ||
-                                                                    nameEN;
-                                                              }).toList();
-                                                            });
-                                                          }
-                                                        },
-                                                        decoration: InputDecoration(
-                                                            contentPadding:
-                                                                const EdgeInsets
-                                                                    .all(10.0),
-                                                            hintText:
-                                                                'Search (EN/TH)',
-                                                            border: OutlineInputBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            8))),
-                                                      ),
+                                                              return nameId ||
+                                                                  nameTH ||
+                                                                  nameEN;
+                                                            }).toList();
+                                                          });
+                                                        }
+                                                      },
+                                                      decoration: InputDecoration(
+                                                          contentPadding:
+                                                              const EdgeInsets
+                                                                  .all(10.0),
+                                                          hintText:
+                                                              'Search (EN/TH)',
+                                                          border: OutlineInputBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8))),
                                                     ),
                                                   ),
-                                                ],
-                                              )),
-                                        ],
-                                      ),
+                                                ),
+                                              ],
+                                            )),
+                                      ],
                                     ),
-                                    columns: [
-                                      DataColumn(
-                                          numeric: true,
-                                          label: const Text('รหัสแผนก (Code)'),
-                                          onSort: (columnIndex, ascending) {
-                                            setState(() {
-                                              sort = !sort;
-                                              sortColumnIndex = 0;
-                                              if (state.onSearchData == true) {
-                                                onSortSearchColumn(
-                                                    columnIndex, ascending);
-                                              } else {
-                                                onSortColumn(
-                                                    columnIndex, ascending);
-                                              }
-                                            });
-                                          }),
-                                      DataColumn(
-                                        label:
-                                            const Text('Department name (TH)'),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            sort = !sort;
-                                            sortColumnIndex = 1;
-                                            if (state.onSearchData == true) {
-                                              onSortSearchColumn(
-                                                  columnIndex, ascending);
-                                            } else {
-                                              onSortColumn(
-                                                  columnIndex, ascending);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                      DataColumn(
-                                        label:
-                                            const Text('Department name (EN)'),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            sort = !sort;
-                                            sortColumnIndex = 2;
-                                            if (state.onSearchData == true) {
-                                              onSortSearchColumn(
-                                                  columnIndex, ascending);
-                                            } else {
-                                              onSortColumn(
-                                                  columnIndex, ascending);
-                                            }
-                                          });
-                                        },
-                                      ),
-                                      const DataColumn(
-                                          numeric: true,
-                                          label: Text('Status      ')),
-                                      const DataColumn(
-                                          numeric: true,
-                                          label: Text('Edit/Remove      ',
-                                              style: TextStyle(fontSize: 16))),
-                                    ],
-                                    source: PersonDataTableSource(
-                                        departmentData,
-                                        context,
-                                        fetchData,
-                                        deleteData),
                                   ),
+                                  columns: [
+                                    DataColumn(
+                                        numeric: true,
+                                        label: const Text('รหัสแผนก (Code)'),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = 0;
+                                            if (state.onSearchData == true) {
+                                              onSortSearchColumn(
+                                                  columnIndex, ascending);
+                                            } else {
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            }
+                                          });
+                                        }),
+                                    DataColumn(
+                                      label: const Text('Department name (TH)'),
+                                      onSort: (columnIndex, ascending) {
+                                        setState(() {
+                                          sort = !sort;
+                                          sortColumnIndex = 1;
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    DataColumn(
+                                      label: const Text('Department name (EN)'),
+                                      onSort: (columnIndex, ascending) {
+                                        setState(() {
+                                          sort = !sort;
+                                          sortColumnIndex = 2;
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
+                                        });
+                                      },
+                                    ),
+                                    const DataColumn(
+                                        numeric: true,
+                                        label: Text('Status      ')),
+                                    const DataColumn(
+                                        numeric: true,
+                                        label: Text('Edit/Remove      ',
+                                            style: TextStyle(fontSize: 16))),
+                                  ],
+                                  source: PersonDataTableSource(departmentData,
+                                      context, fetchData, deleteData),
                                 ),
                               ),
-                            ).animate().fadeIn(),
-                          ),
+                            ),
+                          ).animate().fadeIn(),
                         ),
                       ).animate().fade(duration: 100.ms),
                     ));

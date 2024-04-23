@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/ot_menu_model/dropdown_ot_request_type_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/ot_menu_model/dropdown_ot_type_model.dart';
@@ -742,7 +742,7 @@ class _OTManageState extends State<OTManage> {
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: DropdownOrg(
+                                        child: DropdownGlobal(
                                             labeltext: 'OT Type',
                                             value: otTypeId,
                                             items: otTypeData?.overTimeTypeData
@@ -769,7 +769,7 @@ class _OTManageState extends State<OTManage> {
                                             validator: null),
                                       ),
                                       Expanded(
-                                        child: DropdownOrg(
+                                        child: DropdownGlobal(
                                             labeltext: 'Request Type',
                                             value: otRequestTypeId,
                                             items: otTypeId == "H"
@@ -811,7 +811,7 @@ class _OTManageState extends State<OTManage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Expanded(
-                                        child: TextFormFieldTimepickerOt(
+                                        child: TextFormFieldpicker(
                                           controller: checkIn,
                                           labelText: "(Check In).",
                                           validatorless: null,
@@ -835,7 +835,7 @@ class _OTManageState extends State<OTManage> {
                                         ),
                                       ),
                                       Expanded(
-                                        child: TextFormFieldTimepickerOt(
+                                        child: TextFormFieldpicker(
                                           controller: checkOut,
                                           labelText: "(Check Out).",
                                           validatorless: null,

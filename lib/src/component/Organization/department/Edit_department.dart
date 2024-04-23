@@ -2,7 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/department_bloc/bloc/department_bloc.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/department/create_department_model.dart';
 import 'package:hris_app_prototype/src/model/organization/department/get_departmen_model.dart';
 import 'package:hris_app_prototype/src/model/organization/department/update_department_model.dart';
@@ -296,7 +296,7 @@ class _EditDepartmentState extends State<EditDepartment> {
                                     });
                                   },
                                   child: const Text(
-                                    "InActive",
+                                    "Inactive",
                                     style: TextStyle(color: Colors.white),
                                   )),
                             ),

@@ -36,7 +36,7 @@ class PositionOrganizationData {
   String positionOrganizationId;
   PositionData positionData;
   OrganizationData organizationData;
-  JobTitleData jobTitleData;
+  JobTitleData? jobTitleData;
   PositionTypeData positionTypeData;
   String status;
   ParentPositionNodeId parentPositionBusinessNodeId;
@@ -50,7 +50,7 @@ class PositionOrganizationData {
     required this.positionOrganizationId,
     required this.positionData,
     required this.organizationData,
-    required this.jobTitleData,
+    this.jobTitleData,
     required this.positionTypeData,
     required this.status,
     required this.parentPositionBusinessNodeId,
@@ -83,7 +83,7 @@ class PositionOrganizationData {
         "positionOrganizationId": positionOrganizationId,
         "positionData": positionData.toJson(),
         "organizationData": organizationData.toJson(),
-        "jobTitleData": jobTitleData.toJson(),
+        "jobTitleData": jobTitleData?.toJson(),
         "positionTypeData": positionTypeData.toJson(),
         "status": status,
         "parentPositionBusinessNodeId": parentPositionBusinessNodeId.toJson(),
@@ -129,11 +129,11 @@ class EmployeeData {
 
 class JobTitleData {
   String jobTitleId;
-  String jobTitleName;
+  String? jobTitleName;
 
   JobTitleData({
     required this.jobTitleId,
-    required this.jobTitleName,
+    this.jobTitleName,
   });
 
   factory JobTitleData.fromJson(Map<String, dynamic> json) => JobTitleData(
@@ -317,11 +317,11 @@ class PositionData {
 
 class PositionTypeData {
   String positionTypeId;
-  String positionTypeNameTh;
+  String? positionTypeNameTh;
 
   PositionTypeData({
     required this.positionTypeId,
-    required this.positionTypeNameTh,
+    this.positionTypeNameTh,
   });
 
   factory PositionTypeData.fromJson(Map<String, dynamic> json) =>

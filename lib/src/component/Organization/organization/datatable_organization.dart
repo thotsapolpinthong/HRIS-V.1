@@ -172,191 +172,181 @@ class _OrganizationDataTableState extends State<OrganizationDataTable> {
         } else {}
         return state.isDataLoading == true && orgData == null
             ? myLoadingScreen
-            : SafeArea(
-                child: Center(
-                  child: SingleChildScrollView(
+            : SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
                     child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: 1200,
-                            child: PaginatedDataTable(
-                              columnSpacing: 30,
-                              showFirstLastButtons: true,
-                              rowsPerPage: rowIndex,
-                              availableRowsPerPage: const [5, 10, 20],
-                              sortColumnIndex: sortColumnIndex,
-                              sortAscending: sort,
-                              onRowsPerPageChanged: (value) {
-                                setState(() {
-                                  rowIndex = value!;
-                                });
-                              },
-                              header: SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: Row(
-                                  children: [
-                                    const Expanded(
-                                        flex: 2,
-                                        child: Text('Organizations Table.')),
-                                    Expanded(
-                                        flex: 1,
-                                        child: Row(
-                                          children: [
-                                            const Icon(Icons.search_rounded),
-                                            Expanded(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(4.0),
-                                                child: TextFormField(
-                                                  controller: search,
-                                                  onChanged: (value) {
-                                                    if (value == '') {
-                                                      context
-                                                          .read<
-                                                              OrganizationBloc>()
-                                                          .add(
-                                                              DissSearchEvent());
-                                                    } else {
-                                                      setState(() {
-                                                        context
-                                                            .read<
-                                                                OrganizationBloc>()
-                                                            .add(SearchEvent());
-                                                        orgData = filterData!
-                                                            .where((element) {
-                                                          final nameId = element
-                                                              .organizationCode
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final type = element
-                                                              .organizationTypeData
-                                                              .organizationTypeName
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameTH = element
-                                                              .departMentData
-                                                              .deptNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameEn = element
-                                                              .departMentData
-                                                              .deptNameEn
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
+                      padding: const EdgeInsets.all(8.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: PaginatedDataTable(
+                          columnSpacing: 30,
+                          showFirstLastButtons: true,
+                          rowsPerPage: rowIndex,
+                          availableRowsPerPage: const [5, 10, 20],
+                          sortColumnIndex: sortColumnIndex,
+                          sortAscending: sort,
+                          onRowsPerPageChanged: (value) {
+                            setState(() {
+                              rowIndex = value!;
+                            });
+                          },
+                          header: SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: Row(
+                              children: [
+                                const Expanded(
+                                    flex: 2,
+                                    child: Text('Organizations Table.')),
+                                Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.search_rounded),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: TextFormField(
+                                              controller: search,
+                                              onChanged: (value) {
+                                                if (value == '') {
+                                                  context
+                                                      .read<OrganizationBloc>()
+                                                      .add(DissSearchEvent());
+                                                } else {
+                                                  setState(() {
+                                                    context
+                                                        .read<
+                                                            OrganizationBloc>()
+                                                        .add(SearchEvent());
+                                                    orgData = filterData!
+                                                        .where((element) {
+                                                      final nameId = element
+                                                          .organizationCode
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
+                                                      final type = element
+                                                          .organizationTypeData
+                                                          .organizationTypeName
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
+                                                      final nameTH = element
+                                                          .departMentData
+                                                          .deptNameTh
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
+                                                      final nameEn = element
+                                                          .departMentData
+                                                          .deptNameEn
+                                                          .toLowerCase()
+                                                          .contains(value
+                                                              .toLowerCase());
 
-                                                          return nameId ||
-                                                              nameEn ||
-                                                              type ||
-                                                              nameTH;
-                                                        }).toList();
-                                                      });
-                                                    }
-                                                  },
-                                                  decoration: InputDecoration(
-                                                      contentPadding:
-                                                          const EdgeInsets.all(
-                                                              10.0),
-                                                      hintText:
-                                                          'Search (EN/TH)',
-                                                      border:
-                                                          OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8))),
-                                                ),
-                                              ),
+                                                      return nameId ||
+                                                          nameEn ||
+                                                          type ||
+                                                          nameTH;
+                                                    }).toList();
+                                                  });
+                                                }
+                                              },
+                                              decoration: InputDecoration(
+                                                  contentPadding:
+                                                      const EdgeInsets.all(
+                                                          10.0),
+                                                  hintText: 'Search (EN/TH)',
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              8))),
                                             ),
-                                          ],
-                                        )),
-                                  ],
-                                ),
-                              ),
-                              columns: [
-                                DataColumn(
-                                    numeric: true,
-                                    label: const Text('Organization (Code)'),
-                                    onSort: (columnIndex, ascending) {
-                                      setState(() {
-                                        sort = !sort;
-                                        sortColumnIndex = 0;
-                                        if (state.onSearchData == true) {
-                                          onSortSearchColumn(
-                                              columnIndex, ascending);
-                                        } else {
-                                          onSortColumn(columnIndex, ascending);
-                                        }
-                                      });
-                                    }),
-                                const DataColumn(label: Text('Type')),
-                                DataColumn(
-                                    label: const Text('Name (TH)'),
-                                    onSort: (columnIndex, ascending) {
-                                      setState(() {
-                                        sort = !sort;
-                                        sortColumnIndex = 2;
-                                        if (state.onSearchData == true) {
-                                          onSortSearchColumn(
-                                              columnIndex, ascending);
-                                        } else {
-                                          onSortColumn(columnIndex, ascending);
-                                        }
-                                      });
-                                    }),
-                                DataColumn(
-                                    label: const Text('Name (EN)'),
-                                    onSort: (columnIndex, ascending) {
-                                      setState(() {
-                                        sort = !sort;
-                                        sortColumnIndex = 3;
-                                        if (state.onSearchData == true) {
-                                          onSortSearchColumn(
-                                              columnIndex, ascending);
-                                        } else {
-                                          onSortColumn(columnIndex, ascending);
-                                        }
-                                      });
-                                    }),
-                                DataColumn(
-                                    label: const Text('Parent'),
-                                    onSort: (columnIndex, ascending) {
-                                      setState(() {
-                                        sort = !sort;
-                                        sortColumnIndex = 4;
-                                        if (state.onSearchData == true) {
-                                          onSortSearchColumn(
-                                              columnIndex, ascending);
-                                        } else {
-                                          onSortColumn(columnIndex, ascending);
-                                        }
-                                      });
-                                    }),
-                                const DataColumn(
-                                    numeric: true, label: Text('Status      ')),
-                                const DataColumn(
-                                    numeric: true,
-                                    label: Text('Edit/Remove    ',
-                                        style: TextStyle(fontSize: 16))),
+                                          ),
+                                        ),
+                                      ],
+                                    )),
                               ],
-                              source: PersonDataTableSource(
-                                  orgData, context, fetchData, deleteData),
                             ),
                           ),
+                          columns: [
+                            DataColumn(
+                                numeric: true,
+                                label: const Text('Organization (Code)'),
+                                onSort: (columnIndex, ascending) {
+                                  setState(() {
+                                    sort = !sort;
+                                    sortColumnIndex = 0;
+                                    if (state.onSearchData == true) {
+                                      onSortSearchColumn(
+                                          columnIndex, ascending);
+                                    } else {
+                                      onSortColumn(columnIndex, ascending);
+                                    }
+                                  });
+                                }),
+                            const DataColumn(label: Text('Type')),
+                            DataColumn(
+                                label: const Text('Name (TH)'),
+                                onSort: (columnIndex, ascending) {
+                                  setState(() {
+                                    sort = !sort;
+                                    sortColumnIndex = 2;
+                                    if (state.onSearchData == true) {
+                                      onSortSearchColumn(
+                                          columnIndex, ascending);
+                                    } else {
+                                      onSortColumn(columnIndex, ascending);
+                                    }
+                                  });
+                                }),
+                            DataColumn(
+                                label: const Text('Name (EN)'),
+                                onSort: (columnIndex, ascending) {
+                                  setState(() {
+                                    sort = !sort;
+                                    sortColumnIndex = 3;
+                                    if (state.onSearchData == true) {
+                                      onSortSearchColumn(
+                                          columnIndex, ascending);
+                                    } else {
+                                      onSortColumn(columnIndex, ascending);
+                                    }
+                                  });
+                                }),
+                            DataColumn(
+                                label: const Text('Parent'),
+                                onSort: (columnIndex, ascending) {
+                                  setState(() {
+                                    sort = !sort;
+                                    sortColumnIndex = 4;
+                                    if (state.onSearchData == true) {
+                                      onSortSearchColumn(
+                                          columnIndex, ascending);
+                                    } else {
+                                      onSortColumn(columnIndex, ascending);
+                                    }
+                                  });
+                                }),
+                            const DataColumn(
+                                numeric: true, label: Text('Status      ')),
+                            const DataColumn(
+                                numeric: true,
+                                label: Text('Edit/Remove    ',
+                                    style: TextStyle(fontSize: 16))),
+                          ],
+                          source: PersonDataTableSource(
+                              orgData, context, fetchData, deleteData),
                         ),
-                      ).animate().fadeIn(),
+                      ),
                     ),
-                  ),
+                  ).animate().fadeIn(),
                 ),
               );
       },
@@ -392,7 +382,7 @@ class PersonDataTableSource extends DataTableSource {
       DataCell(orgData.organizationStatus == "Inactive"
           ? Container(
               constraints: const BoxConstraints(
-                  minWidth: 90, maxWidth: 90 // ความสูงขั้นต่ำที่ต้องการ
+                  minWidth: 92, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
                   ),
               child: const Card(
                   elevation: 2,
@@ -462,30 +452,6 @@ class PersonDataTableSource extends DataTableSource {
               },
               child: const Icon(Icons.delete_rounded)),
         ),
-        // Card(
-        //     elevation: 4,
-        //     child: IconButton(
-        //         splashRadius: 25,
-        //         hoverColor: Colors.yellow[100],
-        //         color: Colors.yellow[800],
-        //         icon: const Icon(Icons.edit),
-        //         onPressed: () {
-        //           showEditDialog(orgData);
-        //         })),
-        // Card(
-        //     elevation: 4,
-        //     child: IconButton(
-        //         splashRadius: 30,
-        //         hoverColor: Colors.red[100],
-        //         color: Colors.red,
-        //         icon: Container(
-        //           decoration:
-        //               BoxDecoration(borderRadius: BorderRadius.circular(8)),
-        //           child: const Icon(Icons.delete),
-        //         ),
-        //         onPressed: () {
-        //           showdialogDeletePerson(orgData.organizationId);
-        //         }))
       ])),
     ]);
   }

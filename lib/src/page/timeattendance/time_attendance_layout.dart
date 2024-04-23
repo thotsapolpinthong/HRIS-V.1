@@ -149,393 +149,362 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
             fetchData(maindata);
           }
         }
-
         return SafeArea(
-                child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Scaffold(
-                  floatingActionButton: widget.dashboard == true
-                      ? null
-                      : SizedBox(
-                          width: 50,
-                          height: 50,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.all(1),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12))),
-                              onPressed: () {
-                                showDialogCreate();
-                              },
-                              child: const Icon(
-                                  CupertinoIcons.calendar_badge_plus)),
-                        ).animate().shake(),
-                  body: Center(
-                    child: Column(
-                      children: [
-                        if (widget.dashboard == false)
-                          const Text(
-                            'บันทึกข้อมูลวันหยุดประจำปี',
-                            style: TextStyle(
-                              fontSize: 20,
-                            ),
-                          ),
-                        const Gap(10),
-                        if (widget.dashboard == false)
-                          Container(
-                            constraints: const BoxConstraints(maxWidth: 600),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 35,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          elevation:
-                                              isExpandedPage == 0 ? 2 : 0,
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.horizontal(
-                                                      left:
-                                                          Radius.circular(10))),
-                                          backgroundColor: isExpandedPage == 0
-                                              ? mythemecolor
-                                              : Colors.grey[350],
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            isExpandedPage = 0;
-                                          });
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              isExpandedPage == 0
-                                                  ? Icons.calendar_month_rounded
-                                                  : Icons
-                                                      .calendar_month_outlined,
-                                              color: isExpandedPage == 0
-                                                  ? Colors.white
-                                                  : Colors.grey[700],
-                                            ),
-                                            const Gap(20),
-                                            Text(
-                                              "ปฏิทิน - (Calendar).",
-                                              style: TextStyle(
-                                                  color: isExpandedPage == 0
-                                                      ? Colors.white
-                                                      : Colors.black54),
-                                            ),
-                                          ],
-                                        )),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: SizedBox(
-                                    height: 35,
-                                    child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          elevation:
-                                              isExpandedPage == 1 ? 2 : 0,
-                                          shape: const RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.horizontal(
-                                                      right:
-                                                          Radius.circular(10))),
-                                          backgroundColor: isExpandedPage == 1
-                                              ? mythemecolor
-                                              : Colors.grey[350],
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            isExpandedPage = 1;
-                                          });
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              isExpandedPage == 1
-                                                  ? Icons.table_chart_rounded
-                                                  : Icons.table_chart_outlined,
-                                              color: isExpandedPage == 1
-                                                  ? Colors.white
-                                                  : Colors.grey[700],
-                                            ),
-                                            const Gap(20),
-                                            Text(
-                                              "ตาราง - (Table).",
-                                              style: TextStyle(
-                                                  color: isExpandedPage == 1
-                                                      ? Colors.white
-                                                      : Colors.black54),
-                                            ),
-                                          ],
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        if (isExpandedPage == 0)
-                          state.isDataLoading == true
-                              ? myLoadingScreen
-                              : Expanded(
-                                  flex: 5,
-                                  child: Card(
-                                    elevation: 2,
-                                    clipBehavior: Clip.antiAlias,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12)),
-                                    margin: const EdgeInsets.symmetric(
-                                        vertical: 8, horizontal: 50),
-                                    child: SingleChildScrollView(
-                                      child: TableCalendar(
-                                        firstDay: DateTime.utc(1950),
-                                        lastDay: DateTime.utc(9999, 12, 31),
-                                        locale: "en_US",
-                                        weekendDays: const [DateTime.sunday],
-                                        pageJumpingEnabled: true,
-                                        focusedDay: focusedDay,
-                                        calendarFormat: format,
-                                        startingDayOfWeek:
-                                            StartingDayOfWeek.monday,
-                                        daysOfWeekVisible: true,
-                                        weekNumbersVisible: true,
-                                        onFormatChanged:
-                                            (CalendarFormat formatt) {
-                                          setState(() {
-                                            format = formatt;
-                                          });
-                                        },
-                                        //Day changed
-                                        onDaySelected: (DateTime selectDay,
-                                            DateTime focusday) {
-                                          setState(() {
-                                            selectDay = dateFormat
-                                                .parse(selectDay.toString());
-                                            selectedDay = selectDay;
-                                            focusedDay = focusday;
-                                          });
-                                          //print(focusedDay);
-                                        },
-                                        selectedDayPredicate: (DateTime date) {
-                                          return isSameDay(selectedDay, date);
-                                        },
-                                        eventLoader: _getEventsfromDay,
-                                        rowHeight: 62,
-                                        //Calendar Style
-                                        daysOfWeekStyle: const DaysOfWeekStyle(
-                                            weekendStyle:
-                                                TextStyle(color: Colors.red)),
-                                        headerStyle: HeaderStyle(
-                                          headerPadding:
-                                              const EdgeInsets.all(2),
-                                          headerMargin:
-                                              const EdgeInsets.only(bottom: 12),
-                                          decoration: BoxDecoration(
-                                              color: mythemecolor,
-                                              borderRadius:
-                                                  const BorderRadius.vertical(
-                                                      top:
-                                                          Radius.circular(12))),
-                                          titleTextStyle: const TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 18),
-                                          formatButtonTextStyle:
-                                              const TextStyle(
-                                                  color: Colors.white),
-                                          formatButtonDecoration: BoxDecoration(
-                                            border:
-                                                Border.all(color: Colors.white),
-                                            borderRadius:
-                                                BorderRadius.circular(6),
-                                          ),
-                                          leftChevronIcon: const Icon(
-                                            Icons.chevron_left_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          rightChevronIcon: const Icon(
-                                            Icons.chevron_right_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          formatButtonVisible: true,
-                                          titleCentered: true,
-                                          formatButtonShowsNext: false,
-                                        ),
-                                        calendarStyle: CalendarStyle(
-                                            outsideDecoration: BoxDecoration(
-                                                color: Colors.white,
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0)),
-                                            defaultDecoration: BoxDecoration(
-                                                color: Colors.white,
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0)),
-                                            todayDecoration: BoxDecoration(
-                                                color: Colors.amberAccent[100],
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0)),
-                                            selectedDecoration: BoxDecoration(
-                                                color: Colors.amber[400],
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0)),
-                                            weekendDecoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius:
-                                                    BorderRadius.circular(8.0)),
-                                            weekendTextStyle: const TextStyle(
-                                                color: Colors.red),
-                                            markerSize: 7,
-                                            cellMargin: EdgeInsets.symmetric(
-                                                horizontal:
-                                                    widget.dashboard == false
-                                                        ? 40
-                                                        : 15,
-                                                vertical: 6),
-                                            markerDecoration: BoxDecoration(
-                                                color: mythemecolor,
-                                                shape: BoxShape.circle)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                        // if (widget.dashboard == false && isExpandedPage == 0)
-                        //   Text(focusedDay.toString().split(" ")[0]),
-                        if (widget.dashboard == false && isExpandedPage == 0)
+            child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Scaffold(
+            floatingActionButton: widget.dashboard == true
+                ? null
+                : SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(1),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12))),
+                        onPressed: () {
+                          showDialogCreate();
+                        },
+                        child: const Icon(CupertinoIcons.calendar_badge_plus)),
+                  ).animate().shake(),
+            body: Center(
+              child: Column(
+                children: [
+                  if (widget.dashboard == false)
+                    const Text(
+                      'บันทึกข้อมูลวันหยุดประจำปี',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  const Gap(10),
+                  if (widget.dashboard == false)
+                    Container(
+                      constraints: const BoxConstraints(maxWidth: 600),
+                      child: Row(
+                        children: [
                           Expanded(
-                            flex: 2,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 48),
-                                      child: ListView.builder(
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount:
-                                            _getEventsfromDay(selectedDay)
-                                                .length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          HolidayDatum e = _getEventsfromDay(
-                                              selectedDay)[index];
-                                          return Container(
-                                            margin:
-                                                const EdgeInsets.only(right: 8),
-                                            constraints: const BoxConstraints(
-                                                maxHeight: 200, maxWidth: 340),
-                                            child: Card(
-                                              color: Colors.amberAccent,
-                                              elevation: 3,
-                                              clipBehavior: Clip.antiAlias,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          12)),
-                                              child: ListTile(
-                                                title: Column(
-                                                  children: [
-                                                    Expanded(
-                                                        child: Card(
-                                                      elevation: 3,
-                                                      margin: const EdgeInsets
-                                                          .fromLTRB(2, 6, 2, 0),
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12)),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(10.0),
-                                                        child: SizedBox(
-                                                          width:
-                                                              double.infinity,
-                                                          child:
-                                                              SingleChildScrollView(
-                                                            child: Column(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Text(
-                                                                  e.holidayNameTh,
-                                                                  style: const TextStyle(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      fontSize:
-                                                                          17),
-                                                                ),
-                                                                Text(
-                                                                  e.holidayNameEn,
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                              .grey[
-                                                                          700]),
-                                                                ),
-                                                                Text(
-                                                                  e.holidayFlag ==
-                                                                          true
-                                                                      ? "วันหยุดตามประกาศบริษัท"
-                                                                      : "วันหยุดพิเศษ",
-                                                                  style: TextStyle(
-                                                                      color:
-                                                                          mythemecolor),
-                                                                ),
-                                                                Text(e.note ==
-                                                                        "No data"
-                                                                    ? "หมายเหตุ : - "
-                                                                    : "หมายเหตุ : ${e.note}"),
-                                                              ],
-                                                            ),
+                            child: SizedBox(
+                              height: 35,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: isExpandedPage == 0 ? 2 : 0,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.horizontal(
+                                            left: Radius.circular(10))),
+                                    backgroundColor: isExpandedPage == 0
+                                        ? mythemecolor
+                                        : Colors.grey[350],
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isExpandedPage = 0;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        isExpandedPage == 0
+                                            ? Icons.calendar_month_rounded
+                                            : Icons.calendar_month_outlined,
+                                        color: isExpandedPage == 0
+                                            ? Colors.white
+                                            : Colors.grey[700],
+                                      ),
+                                      const Gap(20),
+                                      Text(
+                                        "ปฏิทิน - (Calendar).",
+                                        style: TextStyle(
+                                            color: isExpandedPage == 0
+                                                ? Colors.white
+                                                : Colors.black54),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                          Expanded(
+                            child: SizedBox(
+                              height: 35,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    elevation: isExpandedPage == 1 ? 2 : 0,
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.horizontal(
+                                            right: Radius.circular(10))),
+                                    backgroundColor: isExpandedPage == 1
+                                        ? mythemecolor
+                                        : Colors.grey[350],
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isExpandedPage = 1;
+                                    });
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        isExpandedPage == 1
+                                            ? Icons.table_chart_rounded
+                                            : Icons.table_chart_outlined,
+                                        color: isExpandedPage == 1
+                                            ? Colors.white
+                                            : Colors.grey[700],
+                                      ),
+                                      const Gap(20),
+                                      Text(
+                                        "ตาราง - (Table).",
+                                        style: TextStyle(
+                                            color: isExpandedPage == 1
+                                                ? Colors.white
+                                                : Colors.black54),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  if (isExpandedPage == 0)
+                    state.isDataLoading == true
+                        ? myLoadingScreen
+                        : Expanded(
+                            flex: 5,
+                            child: Card(
+                              elevation: 2,
+                              clipBehavior: Clip.antiAlias,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 50),
+                              child: SingleChildScrollView(
+                                child: TableCalendar(
+                                  firstDay: DateTime.utc(1950),
+                                  lastDay: DateTime.utc(9999, 12, 31),
+                                  locale: "en_US",
+                                  weekendDays: const [DateTime.sunday],
+                                  pageJumpingEnabled: true,
+                                  focusedDay: focusedDay,
+                                  calendarFormat: format,
+                                  startingDayOfWeek: StartingDayOfWeek.monday,
+                                  daysOfWeekVisible: true,
+                                  weekNumbersVisible: true,
+                                  onFormatChanged: (CalendarFormat formatt) {
+                                    setState(() {
+                                      format = formatt;
+                                    });
+                                  },
+                                  //Day changed
+                                  onDaySelected:
+                                      (DateTime selectDay, DateTime focusday) {
+                                    setState(() {
+                                      selectDay = dateFormat
+                                          .parse(selectDay.toString());
+                                      selectedDay = selectDay;
+                                      focusedDay = focusday;
+                                    });
+                                    //print(focusedDay);
+                                  },
+                                  selectedDayPredicate: (DateTime date) {
+                                    return isSameDay(selectedDay, date);
+                                  },
+                                  eventLoader: _getEventsfromDay,
+                                  rowHeight: 62,
+                                  //Calendar Style
+                                  daysOfWeekStyle: const DaysOfWeekStyle(
+                                      weekendStyle:
+                                          TextStyle(color: Colors.red)),
+                                  headerStyle: HeaderStyle(
+                                    headerPadding: const EdgeInsets.all(2),
+                                    headerMargin:
+                                        const EdgeInsets.only(bottom: 12),
+                                    decoration: BoxDecoration(
+                                        color: mythemecolor,
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                                top: Radius.circular(12))),
+                                    titleTextStyle: const TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                    formatButtonTextStyle:
+                                        const TextStyle(color: Colors.white),
+                                    formatButtonDecoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    leftChevronIcon: const Icon(
+                                      Icons.chevron_left_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    rightChevronIcon: const Icon(
+                                      Icons.chevron_right_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    formatButtonVisible: true,
+                                    titleCentered: true,
+                                    formatButtonShowsNext: false,
+                                  ),
+                                  calendarStyle: CalendarStyle(
+                                      outsideDecoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      defaultDecoration: BoxDecoration(
+                                          color: Colors.white,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      todayDecoration: BoxDecoration(
+                                          color: Colors.amberAccent[100],
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      selectedDecoration: BoxDecoration(
+                                          color: Colors.amber[400],
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      weekendDecoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          borderRadius:
+                                              BorderRadius.circular(8.0)),
+                                      weekendTextStyle:
+                                          const TextStyle(color: Colors.red),
+                                      markerSize: 7,
+                                      cellMargin: EdgeInsets.symmetric(
+                                          horizontal: widget.dashboard == false
+                                              ? 40
+                                              : 15,
+                                          vertical: 6),
+                                      markerDecoration: BoxDecoration(
+                                          color: mythemecolor,
+                                          shape: BoxShape.circle)),
+                                ),
+                              ),
+                            ),
+                          ),
+                  // if (widget.dashboard == false && isExpandedPage == 0)
+                  //   Text(focusedDay.toString().split(" ")[0]),
+                  if (widget.dashboard == false && isExpandedPage == 0)
+                    Expanded(
+                      flex: 2,
+                      child: Row(
+                        children: [
+                          Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 48),
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount:
+                                      _getEventsfromDay(selectedDay).length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    HolidayDatum e =
+                                        _getEventsfromDay(selectedDay)[index];
+                                    return Container(
+                                      margin: const EdgeInsets.only(right: 8),
+                                      constraints: const BoxConstraints(
+                                          maxHeight: 200, maxWidth: 340),
+                                      child: Card(
+                                        color: Colors.amberAccent,
+                                        elevation: 3,
+                                        clipBehavior: Clip.antiAlias,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        child: ListTile(
+                                          title: Column(
+                                            children: [
+                                              Expanded(
+                                                  child: Card(
+                                                elevation: 3,
+                                                margin:
+                                                    const EdgeInsets.fromLTRB(
+                                                        2, 6, 2, 0),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12)),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      10.0),
+                                                  child: SizedBox(
+                                                    width: double.infinity,
+                                                    child:
+                                                        SingleChildScrollView(
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Text(
+                                                            e.holidayNameTh,
+                                                            style: const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                fontSize: 17),
                                                           ),
-                                                        ),
-                                                      ),
-                                                    )),
-                                                    Center(
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .symmetric(
-                                                                horizontal: 16,
-                                                                vertical: 8),
-                                                        child: Text(
-                                                            "- ${e.date} -"),
+                                                          Text(
+                                                            e.holidayNameEn,
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .grey[700]),
+                                                          ),
+                                                          Text(
+                                                            e.holidayFlag ==
+                                                                    true
+                                                                ? "วันหยุดตามประกาศบริษัท"
+                                                                : "วันหยุดพิเศษ",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    mythemecolor),
+                                                          ),
+                                                          Text(e.note ==
+                                                                  "No data"
+                                                              ? "หมายเหตุ : - "
+                                                              : "หมายเหตุ : ${e.note}"),
+                                                        ],
                                                       ),
                                                     ),
-                                                  ],
+                                                  ),
+                                                ),
+                                              )),
+                                              Center(
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 8),
+                                                  child: Text("- ${e.date} -"),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        },
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                    )),
-                              ],
-                            ),
-                          ),
-                        if (isExpandedPage == 1) const CalendarDataTable()
-                      ],
+                                    );
+                                  },
+                                ),
+                              )),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ));
+                  if (isExpandedPage == 1) const CalendarDataTable()
+                ],
+              ),
+            ),
+          ),
+        ));
       },
     );
   }

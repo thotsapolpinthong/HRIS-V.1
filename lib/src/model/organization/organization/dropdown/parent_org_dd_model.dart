@@ -7,7 +7,7 @@ String dropDownParentOrgModelToJson(DropDownParentOrgModel data) =>
     json.encode(data.toJson());
 
 class DropDownParentOrgModel {
-  List<OrganizationData> organizationData;
+  List<OrganizationDataam> organizationData;
   String message;
   bool status;
 
@@ -19,8 +19,8 @@ class DropDownParentOrgModel {
 
   factory DropDownParentOrgModel.fromJson(Map<String, dynamic> json) =>
       DropDownParentOrgModel(
-        organizationData: List<OrganizationData>.from(
-            json["organizationData"].map((x) => OrganizationData.fromJson(x))),
+        organizationData: List<OrganizationDataam>.from(json["organizationData"]
+            .map((x) => OrganizationDataam.fromJson(x))),
         message: json["message"],
         status: json["status"],
       );
@@ -33,19 +33,19 @@ class DropDownParentOrgModel {
       };
 }
 
-class OrganizationData {
+class OrganizationDataam {
   String organizationId;
   String organizationCode;
   String organizationName;
 
-  OrganizationData({
+  OrganizationDataam({
     required this.organizationId,
     required this.organizationCode,
     required this.organizationName,
   });
 
-  factory OrganizationData.fromJson(Map<String, dynamic> json) =>
-      OrganizationData(
+  factory OrganizationDataam.fromJson(Map<String, dynamic> json) =>
+      OrganizationDataam(
         organizationId: json["organizationId"],
         organizationCode: json["organizationCode"],
         organizationName: json["organizationName"],

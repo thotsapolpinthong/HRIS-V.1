@@ -526,7 +526,7 @@ class PersonDataTableSource extends DataTableSource {
       if (employee == false)
         DataCell(Container(
           constraints: const BoxConstraints(
-              minWidth: 90, maxWidth: 90 // ความสูงขั้นต่ำที่ต้องการ
+              minWidth: 90, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
               ),
           child: person.personStatus == false
               ? const Card(

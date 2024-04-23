@@ -382,24 +382,24 @@ class PersonDataTableSource extends DataTableSource {
                   child: const Icon(Icons.edit)),
             ),
           ),
-          const Gap(5),
-          if (positionOrgData.employeeData.employeeId == '')
-            SizedBox(
-              height: 35,
-              width: 45,
-              child: Tooltip(
-                message: "ลบโต๊ะทำงาน",
-                child: ElevatedButton(
-                  onPressed: () {
-                    // showDialogSearch(positionOrgData);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.redAccent[700],
-                      padding: const EdgeInsets.all(1)),
-                  child: const Icon(Icons.delete_rounded),
-                ),
-              ),
-            ),
+          // const Gap(5),
+          // if (positionOrgData.employeeData.employeeId == '')
+          //   SizedBox(
+          //     height: 35,
+          //     width: 45,
+          //     child: Tooltip(
+          //       message: "ลบโต๊ะทำงาน",
+          //       child: ElevatedButton(
+          //         onPressed: () {
+          //           // showDialogSearch(positionOrgData);
+          //         },
+          //         style: ElevatedButton.styleFrom(
+          //             backgroundColor: Colors.redAccent[700],
+          //             padding: const EdgeInsets.all(1)),
+          //         child: const Icon(Icons.delete_rounded),
+          //       ),
+          //     ),
+          //   ),
           const Gap(5),
           if (positionOrgData.employeeData.employeeId == '')
             SizedBox(

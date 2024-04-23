@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -94,6 +95,24 @@ class RowDeleteBox extends StatelessWidget {
   }
 }
 
+class TextThai extends StatelessWidget {
+  final String text;
+  final TextStyle? textStyle;
+  const TextThai({
+    super.key,
+    required this.text,
+    this.textStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: GoogleFonts.kanit(textStyle: textStyle),
+    );
+  }
+}
+
 class MySaveButtons extends StatelessWidget {
   final String text;
   final void Function()? onPressed;
@@ -126,10 +145,12 @@ class MySaveButtons extends StatelessWidget {
 class TitleDialog extends StatelessWidget {
   final String title;
   final void Function()? onPressed;
+  final double? size;
   const TitleDialog({
     Key? key,
     required this.title,
     this.onPressed,
+    this.size = 18,
   }) : super(key: key);
 
   @override
@@ -141,10 +162,10 @@ class TitleDialog extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: size),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700]),
             onPressed: onPressed,
             child: const Text(
               'X',

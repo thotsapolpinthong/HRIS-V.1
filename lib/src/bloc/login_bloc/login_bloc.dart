@@ -29,6 +29,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         emit(state.copyWith(isAutlhened: false, error: 'Login failed.'));
       }
+      emit(state.copyWith(isAutlhened: true, error: null));
     });
   }
 }

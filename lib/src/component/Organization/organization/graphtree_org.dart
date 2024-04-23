@@ -30,19 +30,19 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
   bool isLoading = true;
   bool isNodeEmpty = true;
 
-  final Graph graph = Graph()..isTree = true;
+  Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
-  var json = {
-    'nodes': [
-      {'id': 'HQ001', 'label': 'STEC.'},
-      {'id': "ADM000", 'label': 'ADM000'},
-      {'id': "AGM001", 'label': 'AGM001'},
-      {'id': "EX001", 'label': 'EX001'},
-      {'id': "INV001", 'label': 'INV001'},
-      {'id': "IT001", 'label': 'IT001'},
-      {'id': "SH001", 'label': 'SH001'},
-    ],
-  };
+  // var json = {
+  //   'nodes': [
+  //     {'id': 'HQ001', 'label': 'STEC.'},
+  //     {'id': "ADM000", 'label': 'ADM000'},
+  //     {'id': "AGM001", 'label': 'AGM001'},
+  //     {'id': "EX001", 'label': 'EX001'},
+  //     {'id': "INV001", 'label': 'INV001'},
+  //     {'id': "IT001", 'label': 'IT001'},
+  //     {'id': "SH001", 'label': 'SH001'},
+  //   ],
+  // };
 
   @override
   void initState() {
@@ -123,6 +123,8 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
     return BlocBuilder<OrganizationBloc, OrganizationState>(
       builder: (context, state) {
         if (state.isDataLoading == false) {
+          graph = Graph()..isTree = true;
+          orgData = [];
           orgData = state.organizationDataTableModel?.organizationData;
           if (orgData != null) {
             nodedata(orgData);
@@ -306,12 +308,30 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
                           : () {
                               editPositionOranization(data);
                             },
-                      child: Text('${data!.departMentData.deptCode}.\n $name',
-                          textAlign: TextAlign.center)),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Card(
+                              color: mythemecolor,
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(
+                                  '${data!.departMentData.deptCode}.',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text('$name', textAlign: TextAlign.center),
+                        ],
+                      )),
                 ))),
           ),
         ),
         Positioned(
+          top: 10,
           right: -0.5,
           child: PopupMenuButton(
             splashRadius: 1,
@@ -327,10 +347,11 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
                   value: 'edit',
                   child: Text('Edit'),
                 ),
-                const PopupMenuItem<String>(
-                  value: 'del',
-                  child: Text('Delete'),
-                ),
+                if (a != "HQ001")
+                  const PopupMenuItem<String>(
+                    value: 'del',
+                    child: Text('Delete'),
+                  ),
               ];
             },
             onSelected: (value) {
@@ -344,6 +365,26 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
             },
           ),
         ).animate().fade(delay: 200.ms).shake(delay: 500.ms),
+        // if (a != "HQ001")
+        //   Positioned(
+        //       top: 1,
+        //       child: Container(
+        //         decoration: BoxDecoration(
+        //             color:
+        //                 data.organizationTypeData.organizationTypeName == "แผนก"
+        //                     ? Colors.teal
+        //                     : Colors.amber[700],
+        //             borderRadius: BorderRadius.circular(4)),
+        //         width: 40,
+        //         height: 20,
+        //         child: Center(
+        //           child: TextThai(
+        //             text: data.organizationTypeData.organizationTypeName,
+        //             textStyle:
+        //                 const TextStyle(color: Colors.white, fontSize: 12),
+        //           ),
+        //         ),
+        //       )).animate().fade(delay: 200.ms).shake(delay: 500.ms),
       ],
     );
   }

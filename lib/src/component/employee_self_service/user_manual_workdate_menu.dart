@@ -6,7 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/selfservice_bloc/selfservice_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/create_manual_workdate.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/lotnumber/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/model/self_service/user_info/get_user_info_model.dart';
@@ -397,7 +397,7 @@ class _ManualWorkDateManageState extends State<ManualWorkDateManage> {
                     Expanded(
                       child: SizedBox(
                         width: 122,
-                        child: DropdownOrg(
+                        child: DropdownGlobal(
                             labeltext: 'Lot Number',
                             value: lotNumberId,
                             items: lotNumberData?.lotNumberData.map((e) {

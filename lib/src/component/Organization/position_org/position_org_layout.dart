@@ -31,7 +31,7 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
   bool isLoading = true;
   bool isNodeEmpty = true;
   bool isExpandedPage = false;
-  final Graph graph = Graph()..isTree = true;
+  Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
 
   nodedata(List<PositionOrganizationDatum>? data) async {
@@ -241,6 +241,8 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
     return BlocBuilder<PositionOrgBloc, PositionOrgState>(
       builder: (context, state) {
         if (state.isDataLoading == false) {
+          graph = Graph()..isTree = true;
+          positionOrgData = null;
           positionOrgData = state.positionOrganizationDataModel;
           nodedata(positionOrgData?.positionOrganizationData);
         } else {
@@ -269,38 +271,44 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                       ),
                     ),
                     Expanded(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Tooltip(
-                            message: "แสดงข้อมูลรูปแบบตาราง",
-                            child: SizedBox(
-                              height: 35,
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: isExpandedPage == true ? 2 : 1,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(6)),
-                                    backgroundColor: isExpandedPage == true
-                                        ? mythemecolor
-                                        : Colors.grey[350],
+                      child: positionOrgData?.positionOrganizationData.length ==
+                              1
+                          ? Container()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Tooltip(
+                                  message: "แสดงข้อมูลรูปแบบตาราง",
+                                  child: SizedBox(
+                                    height: 35,
+                                    child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          elevation:
+                                              isExpandedPage == true ? 2 : 1,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(6)),
+                                          backgroundColor:
+                                              isExpandedPage == true
+                                                  ? mythemecolor
+                                                  : Colors.grey[350],
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            isExpandedPage = !isExpandedPage;
+                                          });
+                                        },
+                                        child: Text(
+                                          "   Position Organization (List).   ",
+                                          style: TextStyle(
+                                              color: isExpandedPage == true
+                                                  ? Colors.white
+                                                  : Colors.black54),
+                                        )),
                                   ),
-                                  onPressed: () {
-                                    setState(() {
-                                      isExpandedPage = !isExpandedPage;
-                                    });
-                                  },
-                                  child: Text(
-                                    "   Position Organization (List).   ",
-                                    style: TextStyle(
-                                        color: isExpandedPage == true
-                                            ? Colors.white
-                                            : Colors.black54),
-                                  )),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
-                      ),
                     ).animate().fade(delay: 250.ms).slide(delay: 250.ms),
                     const Gap(20),
                     SizedBox(
@@ -430,11 +438,12 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                               ),
                             ),
                           ),
-                          Text(
-                            data.employeeData.employeeId == ""
+                          TextThai(
+                            text: data.employeeData.employeeId == ""
                                 ? "ว่าง*"
                                 : "คุณ ${data.employeeData.employeeFirstNameTh}  ${data.employeeData.employeeLastNameTh}",
-                            style: TextStyle(
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.w300,
                                 color: data.employeeData.employeeId == ""
                                     ? Colors.red[700]
                                     : Colors.black),
@@ -447,41 +456,37 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
           ),
           Positioned(
               top: -8,
-              child: Column(
-                children: [
-                  SizedBox(
-                      width: 60,
-                      child: CircleAvatar(
-                          backgroundColor: mythemecolor,
-                          radius: 40,
-                          child: SizedBox(
-                            height: 55,
-                            child: Tooltip(
-                              message: data.employeeData.employeeId == ""
-                                  ? "เพิ่มพนักงาน"
-                                  : "",
-                              child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(360))),
-                                  onPressed: data.employeeData.employeeId == ""
-                                      ? () {
-                                          showDialogSearch(data);
-                                        }
-                                      : null,
-                                  child: Icon(
-                                    data.employeeData.employeeId == ""
-                                        ? Icons.search
-                                        : Icons.person,
-                                    color: data.employeeData.employeeId == ""
-                                        ? Colors.amberAccent
-                                        : Colors.white,
-                                  )),
-                            ),
-                          ))),
-                ],
-              )),
+              child: SizedBox(
+                  width: 60,
+                  child: CircleAvatar(
+                      backgroundColor: mythemecolor,
+                      radius: 40,
+                      child: SizedBox(
+                        height: 55,
+                        child: Tooltip(
+                          message: data.employeeData.employeeId == ""
+                              ? "เพิ่มพนักงาน"
+                              : "",
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(360))),
+                              onPressed: data.employeeData.employeeId == ""
+                                  ? () {
+                                      showDialogSearch(data);
+                                    }
+                                  : null,
+                              child: Icon(
+                                data.employeeData.employeeId == ""
+                                    ? Icons.search
+                                    : Icons.person,
+                                color: data.employeeData.employeeId == ""
+                                    ? Colors.amberAccent
+                                    : Colors.white,
+                              )),
+                        ),
+                      )))),
           Positioned(
             right: 40,
             child: PopupMenuButton(

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/create_leave.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_amount_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_data_employee_model.dart';
@@ -496,7 +496,7 @@ class _LeaveManageState extends State<LeaveManage> {
                                 style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
                             const Gap(5),
-                            DropdownOrg(
+                            DropdownGlobal(
                                 labeltext: '',
                                 value: selectLeaveType,
                                 items: leaveTypeList.map((e) {
@@ -602,7 +602,7 @@ class _LeaveManageState extends State<LeaveManage> {
                               onPressed:
                                   selectLeaveType != "L003" ? null : () {},
                               child: const SizedBox(
-                                width: 80,
+                                width: 82,
                                 height: 40,
                                 child: Row(
                                   children: [

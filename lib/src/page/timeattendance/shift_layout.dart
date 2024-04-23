@@ -65,6 +65,7 @@ class _ShiftLayoutState extends State<ShiftLayout> {
                           height: MediaQuery.of(context).size.height - 20,
                           child: const DatatableEmployee(
                             isSelected: true,
+                            isSelectedOne: false,
                           )),
                     ));
         });

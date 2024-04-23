@@ -37,7 +37,7 @@ class GetPositionOrgByOrgIdModel {
 class PositionOrganizationDatum {
   String positionOrganizationId;
   PositionData positionData;
-  OrganizationData organizationData;
+  OrganizationDatam organizationData;
   JobTitleData jobTitleData;
   PositionTypeData positionTypeData;
   String status;
@@ -67,7 +67,7 @@ class PositionOrganizationDatum {
       PositionOrganizationDatum(
         positionOrganizationId: json["positionOrganizationId"],
         positionData: PositionData.fromJson(json["positionData"]),
-        organizationData: OrganizationData.fromJson(json["organizationData"]),
+        organizationData: OrganizationDatam.fromJson(json["organizationData"]),
         jobTitleData: JobTitleData.fromJson(json["jobTitleData"]),
         positionTypeData: PositionTypeData.fromJson(json["positionTypeData"]),
         status: json["status"],
@@ -149,7 +149,7 @@ class JobTitleData {
       };
 }
 
-class OrganizationData {
+class OrganizationDatam {
   String organizationId;
   String organizationCode;
   DepartMentData departMentData;
@@ -160,7 +160,7 @@ class OrganizationData {
   String validFrom;
   String endDate;
 
-  OrganizationData({
+  OrganizationDatam({
     required this.organizationId,
     required this.organizationCode,
     required this.departMentData,
@@ -172,8 +172,8 @@ class OrganizationData {
     required this.endDate,
   });
 
-  factory OrganizationData.fromJson(Map<String, dynamic> json) =>
-      OrganizationData(
+  factory OrganizationDatam.fromJson(Map<String, dynamic> json) =>
+      OrganizationDatam(
         organizationId: json["organizationId"],
         organizationCode: json["organizationCode"],
         departMentData: DepartMentData.fromJson(json["departMentData"]),

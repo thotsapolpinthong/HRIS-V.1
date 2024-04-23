@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/selfservice_bloc/selfservice_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_employee_approve_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/manual_workdate_menu/create_manual_workdate_hr_model.dart';
@@ -312,7 +312,7 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
                 ),
               ),
               const Gap(5),
-              DropdownOrg(
+              DropdownGlobal(
                   labeltext: 'ManualWorkDate Type',
                   value: typeId,
                   items:
@@ -340,7 +340,7 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
                       : null,
                   validator: null),
               const Gap(5),
-              DropdownOrg(
+              DropdownGlobal(
                   labeltext: 'เลือกกะการทำงาน',
                   value: shiftId,
                   items: shiftList?.map((e) {
@@ -365,7 +365,7 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
                   validator: null),
               const Gap(5),
               if (widget.formpage == 2) // form employee
-                DropdownOrg(
+                DropdownGlobal(
                     labeltext: 'Approve By',
                     value: approveId,
                     items: approveList.map((e) {

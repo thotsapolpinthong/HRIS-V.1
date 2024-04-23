@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_address.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 
 import 'package:hris_app_prototype/src/model/time_attendance/shift/dropdown_shift_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/shift_control/create_shift_control.dart';
@@ -90,6 +90,7 @@ class _ShiftControlDataTableState extends State<ShiftControlDataTable> {
                     height: MediaQuery.of(context).size.height - 20,
                     child: const DatatableEmployee(
                       isSelected: true,
+                      isSelectedOne: false,
                     )),
               ));
         });
@@ -190,7 +191,7 @@ class _ShiftControlDataTableState extends State<ShiftControlDataTable> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  DropdownOrg(
+                                  DropdownGlobal(
                                     labeltext: 'Shift',
                                     value: changeshiftId,
                                     validator: null,
@@ -598,7 +599,7 @@ class _ShiftControlDataTableState extends State<ShiftControlDataTable> {
                                   )),
                             Expanded(
                               flex: 2,
-                              child: DropdownOrg(
+                              child: DropdownGlobal(
                                 labeltext: 'Shift',
                                 value: shiftData,
                                 validator: null,

@@ -241,52 +241,242 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Column(
-            children: [
-              CarouselSlider(
-                options: CarouselOptions(
-                  aspectRatio: 2.0,
-                  enlargeCenterPage: true,
-                  enableInfiniteScroll: false,
-                  initialPage: 0,
-                  autoPlay: false,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      activeIndex = index;
-                    });
-                  },
-                ),
-                items: [
-                  //leave manage
-                  Card(
-                    color: mythemecolor,
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    child: SizedBox(
-                      child: Column(
-                        children: [
-                          ListTile(
-                            textColor: mygreycolors,
-                            title: const Text("คำร้องการลา"),
-                            subtitle: const Text("Leave"),
-                            trailing: const SizedBox(
-                              width: 316,
-                              child: IconStatus(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                CarouselSlider(
+                  options: CarouselOptions(
+                    aspectRatio: 2.0,
+                    enlargeCenterPage: true,
+                    enableInfiniteScroll: false,
+                    initialPage: 0,
+                    autoPlay: false,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        activeIndex = index;
+                      });
+                    },
+                  ),
+                  items: [
+                    //leave manage
+                    Card(
+                      color: mythemecolor,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              textColor: mygreycolors,
+                              title: const Text("คำร้องการลา"),
+                              subtitle: const Text("Leave"),
+                              trailing: const SizedBox(
+                                width: 335,
+                                child: IconStatus(),
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Container(
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.vertical(
+                                        bottom: Radius.circular(14))),
+                                width: double.infinity,
+                                child: leaveData == null
+                                    ? isLoading == true
+                                        ? myLoadingScreen
+                                        : Center(
+                                            child: Text(
+                                            "ไม่มีคำร้อง",
+                                            style: TextStyle(
+                                                fontSize: 60,
+                                                color: Colors.grey[200],
+                                                fontWeight: FontWeight.bold),
+                                          ))
+                                    : ListView.builder(
+                                        itemCount:
+                                            leaveData?.leaveRequestData.length,
+                                        itemBuilder: (context, index) {
+                                          return Card(
+                                            color: mygreycolors,
+                                            child: Tooltip(
+                                              message: "",
+                                              child: Center(
+                                                child: ListTile(
+                                                    leading: leaveData == null
+                                                        ? null
+                                                        : SizedBox(
+                                                            width: 70,
+                                                            child: Text(
+                                                              "${leaveData?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}",
+                                                              style: const TextStyle(
+                                                                  fontSize: 16,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                    title: Text(
+                                                        "ชื่อ ${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}"),
+                                                    subtitle: Text(
+                                                        "จำนวน ${leaveData?.leaveRequestData[index].leaveAmount} วัน\nวันที่ ${leaveData?.leaveRequestData[index].leaveDate}"),
+                                                    trailing: Tooltip(
+                                                      message:
+                                                          "รหัสพนักงาน : ${leaveData?.leaveRequestData[index].employeeId}\nชื่อ : ${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}\nตำแหน่ง : ${leaveData?.leaveRequestData[index].positionName}\nแผนก : ${leaveData?.leaveRequestData[index].departmentName}\nประเภท : ${leaveData?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}\nสถานะ : ${leaveData?.leaveRequestData[index].status}\nลาเพื่อ : ${leaveData?.leaveRequestData[index].leaveDecription}\nจำนวน : ${leaveData?.leaveRequestData[index].leaveAmount} วัน\nวันที่ : ${leaveData?.leaveRequestData[index].leaveDate}",
+                                                      child: SizedBox(
+                                                        width: 242,
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            if (leaveData
+                                                                    ?.leaveRequestData[
+                                                                        index]
+                                                                    .status ==
+                                                                "request")
+                                                              SizedBox(
+                                                                width: 80,
+                                                                height: 38,
+                                                                child:
+                                                                    ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor: Colors
+                                                                                .greenAccent,
+                                                                            padding: const EdgeInsets.all(
+                                                                                1)),
+                                                                        onPressed:
+                                                                            () {
+                                                                          alertDialogInfo(
+                                                                              leaveData!.leaveRequestData[index].leaveRequestId,
+                                                                              1,
+                                                                              "leave");
+                                                                          // leaveApprove(leaveData!
+                                                                          //     .leaveRequestData[
+                                                                          //         index]
+                                                                          //     .leaveRequestId);
+                                                                        },
+                                                                        child:
+                                                                            const Text(
+                                                                          "Approve",
+                                                                          style:
+                                                                              TextStyle(color: Colors.black87),
+                                                                        )),
+                                                              ),
+                                                            const Gap(5),
+                                                            if (leaveData
+                                                                    ?.leaveRequestData[
+                                                                        index]
+                                                                    .status !=
+                                                                "reject")
+                                                              SizedBox(
+                                                                width: 80,
+                                                                height: 38,
+                                                                child:
+                                                                    ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor: Colors.red[
+                                                                                700],
+                                                                            padding: const EdgeInsets.all(
+                                                                                1)),
+                                                                        onPressed:
+                                                                            () {
+                                                                          alertDialogInfo(
+                                                                              leaveData!.leaveRequestData[index].leaveRequestId,
+                                                                              2,
+                                                                              "leave");
+                                                                          // leaveReject(leaveData!
+                                                                          //     .leaveRequestData[
+                                                                          //         index]
+                                                                          //     .leaveRequestId);
+                                                                        },
+                                                                        child: const Text(
+                                                                            "Reject")),
+                                                              ),
+                                                            const Gap(5),
+                                                            // const Icon(
+                                                            //   CupertinoIcons
+                                                            //       .doc_plaintext,
+                                                            //   size: 40,
+                                                            // ),
+                                                            leaveData
+                                                                        ?.leaveRequestData[
+                                                                            index]
+                                                                        .status ==
+                                                                    "request"
+                                                                ? const Icon(
+                                                                    Icons
+                                                                        .timelapse_rounded,
+                                                                    size: 30,
+                                                                  )
+                                                                : leaveData?.leaveRequestData[index]
+                                                                            .status ==
+                                                                        "approve"
+                                                                    ? Icon(
+                                                                        Icons
+                                                                            .check_box_rounded,
+                                                                        size:
+                                                                            30,
+                                                                        color: Colors
+                                                                            .greenAccent[400],
+                                                                      )
+                                                                    : Icon(
+                                                                        Icons
+                                                                            .cancel_rounded,
+                                                                        size:
+                                                                            30,
+                                                                        color: Colors
+                                                                            .red[700],
+                                                                      ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )),
+                                              ),
+                                            ),
+                                          );
+                                        }),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    //ot manage
+                    Card(
+                      elevation: 4,
+                      color: mythemecolor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              textColor: mygreycolors,
+                              title: const Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
+                              subtitle: const Text("OT"),
+                              trailing: const SizedBox(
+                                width: 335,
+                                child: IconStatus(),
+                              ),
+                            ),
+                            Expanded(
+                                child: Container(
+                              width: double.infinity,
                               padding: const EdgeInsets.all(12),
                               decoration: const BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.vertical(
                                       bottom: Radius.circular(14))),
-                              width: double.infinity,
-                              child: leaveData == null
-                                  ? isLoading == true
-                                      ? myLoadingScreen
-                                      : Center(
+                              child: isLoading == true
+                                  ? myLoadingScreen
+                                  : otData == null
+                                      ? Center(
                                           child: Text(
                                           "ไม่มีคำร้อง",
                                           style: TextStyle(
@@ -294,47 +484,303 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                               color: Colors.grey[200],
                                               fontWeight: FontWeight.bold),
                                         ))
-                                  : ListView.builder(
-                                      itemCount:
-                                          leaveData?.leaveRequestData.length,
-                                      itemBuilder: (context, index) {
-                                        return Card(
-                                          color: mygreycolors,
-                                          child: Tooltip(
-                                            message: "",
-                                            child: Center(
-                                              child: ListTile(
-                                                  leading: leaveData == null
-                                                      ? null
-                                                      : SizedBox(
-                                                          width: 70,
-                                                          child: Text(
-                                                            "${leaveData?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}",
-                                                            style: const TextStyle(
-                                                                fontSize: 16,
+                                      : isLoading == true
+                                          ? myLoadingScreen
+                                          : ListView.builder(
+                                              itemCount: otData
+                                                      ?.overTimeRequestData
+                                                      .length ??
+                                                  1,
+                                              itemBuilder: (context, index) {
+                                                return Card(
+                                                  color: mygreycolors,
+                                                  child: Center(
+                                                    child: ListTile(
+                                                        leading: leaveData ==
+                                                                null
+                                                            ? null
+                                                            : Text(
+                                                                "${otData?.overTimeRequestData[index].otTypeData.otTypeName}\n${otData?.overTimeRequestData[index].oTrequestTypeData.oTrequestTypeName}"),
+                                                        title: Row(
+                                                          children: [
+                                                            Text(
+                                                                "ชื่อ ${otData?.overTimeRequestData[index].employeeData.firstName} ${otData?.overTimeRequestData[index].employeeData.lastName}"),
+                                                            Text(
+                                                                " | Time Scan : ${otData?.overTimeRequestData[index].workTimeScan.startTime}"),
+                                                            otData
+                                                                        ?.overTimeRequestData[
+                                                                            index]
+                                                                        .workTimeScan
+                                                                        .startTimeType ==
+                                                                    ""
+                                                                ? Container()
+                                                                : Icon(
+                                                                    otData?.overTimeRequestData[index].workTimeScan.startTimeType ==
+                                                                            "time scan"
+                                                                        ? Icons
+                                                                            .fingerprint_rounded
+                                                                        : otData?.overTimeRequestData[index].workTimeScan.startTimeType ==
+                                                                                "manual work date"
+                                                                            ? Icons.edit_document
+                                                                            : Icons.abc,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                    size: 22,
+                                                                  ),
+                                                            const Gap(5),
+                                                            Text(
+                                                                "- ${otData?.overTimeRequestData[index].workTimeScan.endTime}"),
+                                                            otData
+                                                                        ?.overTimeRequestData[
+                                                                            index]
+                                                                        .workTimeScan
+                                                                        .endTimeType ==
+                                                                    ""
+                                                                ? Container()
+                                                                : Icon(
+                                                                    otData?.overTimeRequestData[index].workTimeScan.endTimeType ==
+                                                                            "time scan"
+                                                                        ? Icons
+                                                                            .fingerprint_rounded
+                                                                        : otData?.overTimeRequestData[index].workTimeScan.endTimeType ==
+                                                                                "manual work date"
+                                                                            ? Icons.edit_document
+                                                                            : Icons.abc,
+                                                                    color: Colors
+                                                                        .grey,
+                                                                  )
+                                                          ],
+                                                        ),
+                                                        subtitle: Text(
+                                                            "วันที่ ${otData?.overTimeRequestData[index].otDate} เวลา ${otData?.overTimeRequestData[index].otData[0].otStartTime} - ${otData?.overTimeRequestData[index].otData[0].otEndTime} จำนวนชั่วโมง ${otData?.overTimeRequestData[index].otData[0].nCountOt}"),
+                                                        trailing: SizedBox(
+                                                          width: 242,
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .end,
+                                                            children: [
+                                                              if (otData
+                                                                      ?.overTimeRequestData[
+                                                                          index]
+                                                                      .status ==
+                                                                  "request")
+                                                                SizedBox(
+                                                                  width: 80,
+                                                                  height: 38,
+                                                                  child: ElevatedButton(
+                                                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent, padding: const EdgeInsets.all(1)),
+                                                                      onPressed: () {
+                                                                        alertDialogInfo(
+                                                                            otData!.overTimeRequestData[index].otRequestId,
+                                                                            1,
+                                                                            "ot");
+                                                                      },
+                                                                      child: const Text(
+                                                                        "Approve",
+                                                                        style: TextStyle(
+                                                                            color:
+                                                                                Colors.black87),
+                                                                      )),
+                                                                ),
+                                                              const Gap(5),
+                                                              if (otData
+                                                                      ?.overTimeRequestData[
+                                                                          index]
+                                                                      .status !=
+                                                                  "reject")
+                                                                SizedBox(
+                                                                  width: 80,
+                                                                  height: 38,
+                                                                  child: ElevatedButton(
+                                                                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700], padding: const EdgeInsets.all(1)),
+                                                                      onPressed: () {
+                                                                        alertDialogInfo(
+                                                                            otData!.overTimeRequestData[index].otRequestId,
+                                                                            2,
+                                                                            "ot");
+                                                                      },
+                                                                      child: const Text("Reject")),
+                                                                ),
+                                                              const Gap(5),
+                                                              otData
+                                                                          ?.overTimeRequestData[
+                                                                              index]
+                                                                          .status ==
+                                                                      "request"
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .timelapse_rounded,
+                                                                      size: 30,
+                                                                    )
+                                                                  : otData?.overTimeRequestData[index]
+                                                                              .status ==
+                                                                          "approve"
+                                                                      ? Icon(
+                                                                          Icons
+                                                                              .check_box_rounded,
+                                                                          size:
+                                                                              30,
+                                                                          color:
+                                                                              Colors.greenAccent[400],
+                                                                        )
+                                                                      : Icon(
+                                                                          Icons
+                                                                              .cancel_rounded,
+                                                                          size:
+                                                                              30,
+                                                                          color:
+                                                                              Colors.red[700],
+                                                                        ),
+                                                            ],
+                                                          ),
+                                                        )),
+                                                  ),
+                                                );
+                                              }),
+                            )),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // manual work date manage
+                    Card(
+                      elevation: 4,
+                      color: mythemecolor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14)),
+                      child: SizedBox(
+                        child: Column(
+                          children: [
+                            ListTile(
+                              textColor: mygreycolors,
+                              title: const Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
+                              subtitle: const Text("ManualWorkDate"),
+                              trailing: const SizedBox(
+                                width: 335,
+                                child: IconStatus(),
+                              ),
+                            ),
+                            Expanded(
+                                child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(14))),
+                              child: manualWorkDateData == null
+                                  ? Center(
+                                      child: Text(
+                                      "ไม่มีคำร้อง",
+                                      style: TextStyle(
+                                          fontSize: 60,
+                                          color: Colors.grey[200],
+                                          fontWeight: FontWeight.bold),
+                                    ))
+                                  : isLoading == true
+                                      ? myLoadingScreen
+                                      : ListView.builder(
+                                          itemCount: manualWorkDateData
+                                                  ?.manualWorkDateRequestData
+                                                  .length ??
+                                              0,
+                                          itemBuilder: (context, index) {
+                                            return Card(
+                                              color: mygreycolors,
+                                              child: Center(
+                                                child: ListTile(
+                                                    leading:
+                                                        manualWorkDateData ==
+                                                                null
+                                                            ? null
+                                                            : SizedBox(
+                                                                height: 40,
+                                                                child: Icon(
+                                                                  manualWorkDateData
+                                                                              ?.manualWorkDateRequestData[
+                                                                                  index]
+                                                                              .manualWorkDateTypeData
+                                                                              .manualWorkDateTypeId ==
+                                                                          "A01"
+                                                                      ? CupertinoIcons
+                                                                          .square_arrow_right
+                                                                      : manualWorkDateData?.manualWorkDateRequestData[index].manualWorkDateTypeData.manualWorkDateTypeId ==
+                                                                              "A02"
+                                                                          ? CupertinoIcons
+                                                                              .square_arrow_left
+                                                                          : Icons
+                                                                              .credit_card_off_rounded,
+                                                                  color: manualWorkDateData
+                                                                              ?.manualWorkDateRequestData[
+                                                                                  index]
+                                                                              .manualWorkDateTypeData
+                                                                              .manualWorkDateTypeId ==
+                                                                          "A01"
+                                                                      ? mythemecolor
+                                                                      : manualWorkDateData?.manualWorkDateRequestData[index].manualWorkDateTypeData.manualWorkDateTypeId ==
+                                                                              "A02"
+                                                                          ? Colors.red[
+                                                                              700]
+                                                                          : Colors
+                                                                              .grey[600],
+                                                                  size: 30,
+                                                                )),
+                                                    title: manualWorkDateData ==
+                                                            null
+                                                        ? const Center(
+                                                            child: Text(
+                                                            "ไม่มีใบคำร้อง",
+                                                            style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight
                                                                         .bold),
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                          ))
+                                                        : Row(
+                                                            children: [
+                                                              Text(
+                                                                  "ชื่อ ${manualWorkDateData?.manualWorkDateRequestData[index].firstName} ${manualWorkDateData?.manualWorkDateRequestData[index].lastName}"),
+                                                              Text(
+                                                                  " | ${manualWorkDateData?.manualWorkDateRequestData[index].manualWorkDateTypeData.manualWorkDateTypeNameTh}"),
+                                                            ],
                                                           ),
-                                                        ),
-                                                  title: Text(
-                                                      "ชื่อ ${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}"),
-                                                  subtitle: Text(
-                                                      "จำนวน ${leaveData?.leaveRequestData[index].leaveAmount} วัน\nวันที่ ${leaveData?.leaveRequestData[index].leaveDate}"),
-                                                  trailing: Tooltip(
-                                                    message:
-                                                        "รหัสพนักงาน : ${leaveData?.leaveRequestData[index].employeeId}\nชื่อ : ${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}\nตำแหน่ง : ${leaveData?.leaveRequestData[index].positionName}\nแผนก : ${leaveData?.leaveRequestData[index].departmentName}\nประเภท : ${leaveData?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}\nสถานะ : ${leaveData?.leaveRequestData[index].status}\nลาเพื่อ : ${leaveData?.leaveRequestData[index].leaveDecription}\nจำนวน : ${leaveData?.leaveRequestData[index].leaveAmount} วัน\nวันที่ : ${leaveData?.leaveRequestData[index].leaveDate}",
-                                                    child: SizedBox(
+                                                    subtitle:
+                                                        manualWorkDateData ==
+                                                                null
+                                                            ? null
+                                                            : Row(
+                                                                children: [
+                                                                  Text(
+                                                                      "วันที่ ${manualWorkDateData?.manualWorkDateRequestData[index].date}  เวลาที่ขอ"),
+                                                                  const Gap(5),
+                                                                  manualWorkDateData
+                                                                              ?.manualWorkDateRequestData[
+                                                                                  index]
+                                                                              .startTime ==
+                                                                          "No data"
+                                                                      ? Container()
+                                                                      : Text(
+                                                                          " ${manualWorkDateData?.manualWorkDateRequestData[index].startTime}"),
+                                                                  const Gap(5),
+                                                                  manualWorkDateData
+                                                                              ?.manualWorkDateRequestData[
+                                                                                  index]
+                                                                              .endTime ==
+                                                                          "No data"
+                                                                      ? Container()
+                                                                      : Text(
+                                                                          "${manualWorkDateData?.manualWorkDateRequestData[index].endTime}")
+                                                                ],
+                                                              ),
+                                                    trailing: SizedBox(
                                                       width: 242,
                                                       child: Row(
                                                         mainAxisAlignment:
                                                             MainAxisAlignment
                                                                 .end,
                                                         children: [
-                                                          if (leaveData
-                                                                  ?.leaveRequestData[
+                                                          if (manualWorkDateData
+                                                                  ?.manualWorkDateRequestData[
                                                                       index]
                                                                   .status ==
                                                               "request")
@@ -352,13 +798,9 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                       onPressed:
                                                                           () {
                                                                         alertDialogInfo(
-                                                                            leaveData!.leaveRequestData[index].leaveRequestId,
+                                                                            manualWorkDateData!.manualWorkDateRequestData[index].manualWorkDateRequestId,
                                                                             1,
-                                                                            "leave");
-                                                                        // leaveApprove(leaveData!
-                                                                        //     .leaveRequestData[
-                                                                        //         index]
-                                                                        //     .leaveRequestId);
+                                                                            "manual");
                                                                       },
                                                                       child:
                                                                           const Text(
@@ -369,8 +811,8 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                       )),
                                                             ),
                                                           const Gap(5),
-                                                          if (leaveData
-                                                                  ?.leaveRequestData[
+                                                          if (manualWorkDateData
+                                                                  ?.manualWorkDateRequestData[
                                                                       index]
                                                                   .status !=
                                                               "reject")
@@ -388,25 +830,16 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                       onPressed:
                                                                           () {
                                                                         alertDialogInfo(
-                                                                            leaveData!.leaveRequestData[index].leaveRequestId,
+                                                                            manualWorkDateData!.manualWorkDateRequestData[index].manualWorkDateRequestId,
                                                                             2,
-                                                                            "leave");
-                                                                        // leaveReject(leaveData!
-                                                                        //     .leaveRequestData[
-                                                                        //         index]
-                                                                        //     .leaveRequestId);
+                                                                            "manual");
                                                                       },
                                                                       child: const Text(
                                                                           "Reject")),
                                                             ),
                                                           const Gap(5),
-                                                          // const Icon(
-                                                          //   CupertinoIcons
-                                                          //       .doc_plaintext,
-                                                          //   size: 40,
-                                                          // ),
-                                                          leaveData
-                                                                      ?.leaveRequestData[
+                                                          manualWorkDateData
+                                                                      ?.manualWorkDateRequestData[
                                                                           index]
                                                                       .status ==
                                                                   "request"
@@ -415,8 +848,8 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                       .timelapse_rounded,
                                                                   size: 30,
                                                                 )
-                                                              : leaveData
-                                                                          ?.leaveRequestData[
+                                                              : manualWorkDateData
+                                                                          ?.manualWorkDateRequestData[
                                                                               index]
                                                                           .status ==
                                                                       "approve"
@@ -438,473 +871,21 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                     ),
                                                         ],
                                                       ),
-                                                    ),
-                                                  )),
-                                            ),
-                                          ),
-                                        );
-                                      }),
-                            ),
-                          ),
-                        ],
+                                                    )),
+                                              ),
+                                            );
+                                          }),
+                            )),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  //ot manage
-                  Card(
-                    elevation: 4,
-                    color: mythemecolor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                    child: SizedBox(
-                      child: Column(
-                        children: [
-                          ListTile(
-                            textColor: mygreycolors,
-                            title: const Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
-                            subtitle: const Text("OT"),
-                            trailing: const SizedBox(
-                              width: 316,
-                              child: IconStatus(),
-                            ),
-                          ),
-                          Expanded(
-                              child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Radius.circular(14))),
-                            child: isLoading == true
-                                ? myLoadingScreen
-                                : otData == null
-                                    ? Center(
-                                        child: Text(
-                                        "ไม่มีคำร้อง",
-                                        style: TextStyle(
-                                            fontSize: 60,
-                                            color: Colors.grey[200],
-                                            fontWeight: FontWeight.bold),
-                                      ))
-                                    : isLoading == true
-                                        ? myLoadingScreen
-                                        : ListView.builder(
-                                            itemCount: otData
-                                                    ?.overTimeRequestData
-                                                    .length ??
-                                                1,
-                                            itemBuilder: (context, index) {
-                                              return Card(
-                                                color: mygreycolors,
-                                                child: Center(
-                                                  child: ListTile(
-                                                      leading: leaveData == null
-                                                          ? null
-                                                          : Text(
-                                                              "${otData?.overTimeRequestData[index].otTypeData.otTypeName}\n${otData?.overTimeRequestData[index].oTrequestTypeData.oTrequestTypeName}"),
-                                                      title: Row(
-                                                        children: [
-                                                          Text(
-                                                              "ชื่อ ${otData?.overTimeRequestData[index].employeeData.firstName} ${otData?.overTimeRequestData[index].employeeData.lastName}"),
-                                                          Text(
-                                                              " | Time Scan : ${otData?.overTimeRequestData[index].workTimeScan.startTime}"),
-                                                          otData
-                                                                      ?.overTimeRequestData[
-                                                                          index]
-                                                                      .workTimeScan
-                                                                      .startTimeType ==
-                                                                  ""
-                                                              ? Container()
-                                                              : Icon(
-                                                                  otData?.overTimeRequestData[index].workTimeScan.startTimeType ==
-                                                                          "time scan"
-                                                                      ? Icons
-                                                                          .fingerprint_rounded
-                                                                      : otData?.overTimeRequestData[index].workTimeScan.startTimeType ==
-                                                                              "manual work date"
-                                                                          ? Icons
-                                                                              .edit_document
-                                                                          : Icons
-                                                                              .abc,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  size: 22,
-                                                                ),
-                                                          const Gap(5),
-                                                          Text(
-                                                              "- ${otData?.overTimeRequestData[index].workTimeScan.endTime}"),
-                                                          otData
-                                                                      ?.overTimeRequestData[
-                                                                          index]
-                                                                      .workTimeScan
-                                                                      .endTimeType ==
-                                                                  ""
-                                                              ? Container()
-                                                              : Icon(
-                                                                  otData?.overTimeRequestData[index].workTimeScan.endTimeType ==
-                                                                          "time scan"
-                                                                      ? Icons
-                                                                          .fingerprint_rounded
-                                                                      : otData?.overTimeRequestData[index].workTimeScan.endTimeType ==
-                                                                              "manual work date"
-                                                                          ? Icons
-                                                                              .edit_document
-                                                                          : Icons
-                                                                              .abc,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                )
-                                                        ],
-                                                      ),
-                                                      subtitle: Text(
-                                                          "วันที่ ${otData?.overTimeRequestData[index].otDate} เวลา ${otData?.overTimeRequestData[index].otData[0].otStartTime} - ${otData?.overTimeRequestData[index].otData[0].otEndTime} จำนวนชั่วโมง ${otData?.overTimeRequestData[index].otData[0].nCountOt}"),
-                                                      trailing: SizedBox(
-                                                        width: 242,
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .end,
-                                                          children: [
-                                                            if (otData
-                                                                    ?.overTimeRequestData[
-                                                                        index]
-                                                                    .status ==
-                                                                "request")
-                                                              SizedBox(
-                                                                width: 80,
-                                                                height: 38,
-                                                                child:
-                                                                    ElevatedButton(
-                                                                        style: ElevatedButton.styleFrom(
-                                                                            backgroundColor: Colors
-                                                                                .greenAccent,
-                                                                            padding: const EdgeInsets.all(
-                                                                                1)),
-                                                                        onPressed:
-                                                                            () {
-                                                                          alertDialogInfo(
-                                                                              otData!.overTimeRequestData[index].otRequestId,
-                                                                              1,
-                                                                              "ot");
-                                                                        },
-                                                                        child:
-                                                                            const Text(
-                                                                          "Approve",
-                                                                          style:
-                                                                              TextStyle(color: Colors.black87),
-                                                                        )),
-                                                              ),
-                                                            const Gap(5),
-                                                            if (otData
-                                                                    ?.overTimeRequestData[
-                                                                        index]
-                                                                    .status !=
-                                                                "reject")
-                                                              SizedBox(
-                                                                width: 80,
-                                                                height: 38,
-                                                                child:
-                                                                    ElevatedButton(
-                                                                        style: ElevatedButton.styleFrom(
-                                                                            backgroundColor: Colors.red[
-                                                                                700],
-                                                                            padding: const EdgeInsets.all(
-                                                                                1)),
-                                                                        onPressed:
-                                                                            () {
-                                                                          alertDialogInfo(
-                                                                              otData!.overTimeRequestData[index].otRequestId,
-                                                                              2,
-                                                                              "ot");
-                                                                        },
-                                                                        child: const Text(
-                                                                            "Reject")),
-                                                              ),
-                                                            const Gap(5),
-                                                            otData
-                                                                        ?.overTimeRequestData[
-                                                                            index]
-                                                                        .status ==
-                                                                    "request"
-                                                                ? const Icon(
-                                                                    Icons
-                                                                        .timelapse_rounded,
-                                                                    size: 30,
-                                                                  )
-                                                                : otData?.overTimeRequestData[index]
-                                                                            .status ==
-                                                                        "approve"
-                                                                    ? Icon(
-                                                                        Icons
-                                                                            .check_box_rounded,
-                                                                        size:
-                                                                            30,
-                                                                        color: Colors
-                                                                            .greenAccent[400],
-                                                                      )
-                                                                    : Icon(
-                                                                        Icons
-                                                                            .cancel_rounded,
-                                                                        size:
-                                                                            30,
-                                                                        color: Colors
-                                                                            .red[700],
-                                                                      ),
-                                                          ],
-                                                        ),
-                                                      )),
-                                                ),
-                                              );
-                                            }),
-                          )),
-                        ],
-                      ),
-                    ),
-                  ),
-                  // manual work date manage
-                  Card(
-                    elevation: 4,
-                    color: mythemecolor,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                    child: SizedBox(
-                      child: Column(
-                        children: [
-                          ListTile(
-                            textColor: mygreycolors,
-                            title: const Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
-                            subtitle: const Text("ManualWorkDate"),
-                            trailing: const SizedBox(
-                              width: 316,
-                              child: IconStatus(),
-                            ),
-                          ),
-                          Expanded(
-                              child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12),
-                            decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.vertical(
-                                    bottom: Radius.circular(14))),
-                            child: manualWorkDateData == null
-                                ? Center(
-                                    child: Text(
-                                    "ไม่มีคำร้อง",
-                                    style: TextStyle(
-                                        fontSize: 60,
-                                        color: Colors.grey[200],
-                                        fontWeight: FontWeight.bold),
-                                  ))
-                                : isLoading == true
-                                    ? myLoadingScreen
-                                    : ListView.builder(
-                                        itemCount: manualWorkDateData
-                                                ?.manualWorkDateRequestData
-                                                .length ??
-                                            0,
-                                        itemBuilder: (context, index) {
-                                          return Card(
-                                            color: mygreycolors,
-                                            child: Center(
-                                              child: ListTile(
-                                                  leading:
-                                                      manualWorkDateData == null
-                                                          ? null
-                                                          : SizedBox(
-                                                              height: 40,
-                                                              child: Icon(
-                                                                manualWorkDateData
-                                                                            ?.manualWorkDateRequestData[
-                                                                                index]
-                                                                            .manualWorkDateTypeData
-                                                                            .manualWorkDateTypeId ==
-                                                                        "A01"
-                                                                    ? CupertinoIcons
-                                                                        .square_arrow_right
-                                                                    : manualWorkDateData?.manualWorkDateRequestData[index].manualWorkDateTypeData.manualWorkDateTypeId ==
-                                                                            "A02"
-                                                                        ? CupertinoIcons
-                                                                            .square_arrow_left
-                                                                        : Icons
-                                                                            .credit_card_off_rounded,
-                                                                color: manualWorkDateData
-                                                                            ?.manualWorkDateRequestData[
-                                                                                index]
-                                                                            .manualWorkDateTypeData
-                                                                            .manualWorkDateTypeId ==
-                                                                        "A01"
-                                                                    ? mythemecolor
-                                                                    : manualWorkDateData?.manualWorkDateRequestData[index].manualWorkDateTypeData.manualWorkDateTypeId ==
-                                                                            "A02"
-                                                                        ? Colors.red[
-                                                                            700]
-                                                                        : Colors
-                                                                            .grey[600],
-                                                                size: 30,
-                                                              )),
-                                                  title:
-                                                      manualWorkDateData == null
-                                                          ? const Center(
-                                                              child: Text(
-                                                              "ไม่มีใบคำร้อง",
-                                                              style: TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ))
-                                                          : Row(
-                                                              children: [
-                                                                Text(
-                                                                    "ชื่อ ${manualWorkDateData?.manualWorkDateRequestData[index].firstName} ${manualWorkDateData?.manualWorkDateRequestData[index].lastName}"),
-                                                                Text(
-                                                                    " | ${manualWorkDateData?.manualWorkDateRequestData[index].manualWorkDateTypeData.manualWorkDateTypeNameTh}"),
-                                                              ],
-                                                            ),
-                                                  subtitle:
-                                                      manualWorkDateData == null
-                                                          ? null
-                                                          : Row(
-                                                              children: [
-                                                                Text(
-                                                                    "วันที่ ${manualWorkDateData?.manualWorkDateRequestData[index].date}  เวลาที่ขอ"),
-                                                                const Gap(5),
-                                                                manualWorkDateData
-                                                                            ?.manualWorkDateRequestData[
-                                                                                index]
-                                                                            .startTime ==
-                                                                        "No data"
-                                                                    ? Container()
-                                                                    : Text(
-                                                                        " ${manualWorkDateData?.manualWorkDateRequestData[index].startTime}"),
-                                                                const Gap(5),
-                                                                manualWorkDateData
-                                                                            ?.manualWorkDateRequestData[
-                                                                                index]
-                                                                            .endTime ==
-                                                                        "No data"
-                                                                    ? Container()
-                                                                    : Text(
-                                                                        "${manualWorkDateData?.manualWorkDateRequestData[index].endTime}")
-                                                              ],
-                                                            ),
-                                                  trailing: SizedBox(
-                                                    width: 242,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        if (manualWorkDateData
-                                                                ?.manualWorkDateRequestData[
-                                                                    index]
-                                                                .status ==
-                                                            "request")
-                                                          SizedBox(
-                                                            width: 80,
-                                                            height: 38,
-                                                            child:
-                                                                ElevatedButton(
-                                                                    style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors
-                                                                            .greenAccent,
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            1)),
-                                                                    onPressed:
-                                                                        () {
-                                                                      alertDialogInfo(
-                                                                          manualWorkDateData!
-                                                                              .manualWorkDateRequestData[index]
-                                                                              .manualWorkDateRequestId,
-                                                                          1,
-                                                                          "manual");
-                                                                    },
-                                                                    child:
-                                                                        const Text(
-                                                                      "Approve",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Colors.black87),
-                                                                    )),
-                                                          ),
-                                                        const Gap(5),
-                                                        if (manualWorkDateData
-                                                                ?.manualWorkDateRequestData[
-                                                                    index]
-                                                                .status !=
-                                                            "reject")
-                                                          SizedBox(
-                                                            width: 80,
-                                                            height: 38,
-                                                            child:
-                                                                ElevatedButton(
-                                                                    style: ElevatedButton.styleFrom(
-                                                                        backgroundColor: Colors.red[
-                                                                            700],
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            1)),
-                                                                    onPressed:
-                                                                        () {
-                                                                      alertDialogInfo(
-                                                                          manualWorkDateData!
-                                                                              .manualWorkDateRequestData[index]
-                                                                              .manualWorkDateRequestId,
-                                                                          2,
-                                                                          "manual");
-                                                                    },
-                                                                    child: const Text(
-                                                                        "Reject")),
-                                                          ),
-                                                        const Gap(5),
-                                                        manualWorkDateData
-                                                                    ?.manualWorkDateRequestData[
-                                                                        index]
-                                                                    .status ==
-                                                                "request"
-                                                            ? const Icon(
-                                                                Icons
-                                                                    .timelapse_rounded,
-                                                                size: 30,
-                                                              )
-                                                            : manualWorkDateData
-                                                                        ?.manualWorkDateRequestData[
-                                                                            index]
-                                                                        .status ==
-                                                                    "approve"
-                                                                ? Icon(
-                                                                    Icons
-                                                                        .check_box_rounded,
-                                                                    size: 30,
-                                                                    color: Colors
-                                                                            .greenAccent[
-                                                                        400],
-                                                                  )
-                                                                : Icon(
-                                                                    Icons
-                                                                        .cancel_rounded,
-                                                                    size: 30,
-                                                                    color: Colors
-                                                                            .red[
-                                                                        700],
-                                                                  ),
-                                                      ],
-                                                    ),
-                                                  )),
-                                            ),
-                                          );
-                                        }),
-                          )),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(10),
-              buildIndicator(),
-            ],
+                  ],
+                ),
+                const Gap(10),
+                buildIndicator(),
+              ],
+            ),
           ),
         ),
       ),
@@ -941,12 +922,14 @@ class IconStatus extends StatelessWidget {
           color: Colors.greenAccent[400],
         ),
         const Text("Approve "),
+        const Gap(5),
         Icon(
           Icons.cancel_rounded,
           size: 30,
           color: Colors.red[700],
         ),
         const Text("Reject "),
+        const Gap(5),
         Icon(
           Icons.timelapse_rounded,
           size: 30,

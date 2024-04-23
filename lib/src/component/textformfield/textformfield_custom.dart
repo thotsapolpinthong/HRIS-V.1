@@ -300,13 +300,14 @@ class TextFormFieldPositionDescription extends StatelessWidget {
   }
 }
 
-class DropdownOrg extends StatelessWidget {
+// Global <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+class DropdownGlobal extends StatelessWidget {
   final String labeltext;
   final String? value;
   final List<DropdownMenuItem<String>>? items;
   final Function(Object?)? onChanged;
   final String? Function(String?)? validator;
-  const DropdownOrg(
+  const DropdownGlobal(
       {super.key,
       required this.labeltext,
       required this.value,
@@ -317,13 +318,68 @@ class DropdownOrg extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       child: DropdownButtonFormField(
           decoration: InputDecoration(
               contentPadding: const EdgeInsets.all(10.0),
               labelText: labeltext,
               labelStyle: const TextStyle(color: Colors.black87),
-              border: const OutlineInputBorder(),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
               filled: true,
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Colors.black87)),
+              fillColor: Colors.white),
+          autovalidateMode: AutovalidateMode.always,
+          validator: validator,
+          borderRadius: BorderRadius.circular(8),
+          value: value,
+          items: items,
+          onChanged: onChanged),
+    );
+  }
+}
+
+class DropdownGlobalOutline extends StatelessWidget {
+  final String labeltext;
+  final String? value;
+  final List<DropdownMenuItem<String>>? items;
+  final Function(Object?)? onChanged;
+  final String? Function(String?)? validator;
+  final bool enable;
+  const DropdownGlobalOutline(
+      {super.key,
+      required this.labeltext,
+      required this.value,
+      required this.items,
+      required this.onChanged,
+      required this.validator,
+      this.enable = true});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 2,
+      child: DropdownButtonFormField(
+          decoration: InputDecoration(
+              contentPadding: const EdgeInsets.all(10.0),
+              labelText: labeltext,
+              labelStyle: const TextStyle(color: Colors.black87),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.black12),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.black12),
+              ),
+              filled: true,
+              enabled: enable,
               fillColor: Colors.white),
           autovalidateMode: AutovalidateMode.always,
           validator: validator,
@@ -353,6 +409,7 @@ class TextFormFieldGlobal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
       child: TextFormField(
         autovalidateMode: AutovalidateMode.always,
         validator: validatorless,
@@ -365,12 +422,69 @@ class TextFormFieldGlobal extends StatelessWidget {
             hintText: hintText,
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.black87),
-            border: const OutlineInputBorder(),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black54),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: const BorderSide(color: Colors.black87),
             ),
-            disabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black12),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: const BorderSide(color: Colors.black12),
+            ),
+            filled: true,
+            fillColor: Colors.white),
+      ),
+    );
+  }
+}
+
+class TextFormFieldGlobalWithOutLine extends StatelessWidget {
+  final TextEditingController controller;
+  final String labelText;
+  final String hintText;
+  final String? Function(String?)? validatorless;
+  final bool enabled;
+  final Widget? suffixIcon;
+  final bool readOnly;
+  const TextFormFieldGlobalWithOutLine({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    required this.hintText,
+    required this.validatorless,
+    required this.enabled,
+    this.suffixIcon,
+    this.readOnly = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 2,
+      child: TextFormField(
+        autovalidateMode: AutovalidateMode.always,
+        validator: validatorless,
+        controller: controller,
+        minLines: 1,
+        maxLines: 4,
+        enabled: enabled,
+        readOnly: readOnly,
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(10.0),
+            hintText: hintText,
+            labelText: labelText,
+            suffixIcon: suffixIcon,
+            labelStyle: TextStyle(
+                color: enabled == false ? Colors.black54 : Colors.black87),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black12),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.black12),
             ),
             filled: true,
             fillColor: Colors.white),
@@ -410,14 +524,71 @@ class TextFormFieldDatepickGlobal extends StatelessWidget {
           suffixIcon: const Icon(
             Icons.calendar_today_rounded,
           ),
-          border: const OutlineInputBorder(),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black54),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(color: Colors.black87),
           ),
         ),
         readOnly: true,
         onChanged: onChanged,
         onTap: ontap,
+      ),
+    );
+  }
+}
+
+class TextFormFieldDatepickGlobalWithoutLine extends StatelessWidget {
+  final TextEditingController controller;
+  final String? labelText;
+  final String? Function(String?)? validatorless;
+  final Function()? ontap;
+  final Function(String)? onChanged;
+  final bool enable;
+  const TextFormFieldDatepickGlobalWithoutLine({
+    Key? key,
+    required this.controller,
+    required this.labelText,
+    required this.validatorless,
+    required this.ontap,
+    this.onChanged,
+    this.enable = true,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: TextFormField(
+        controller: controller,
+        autovalidateMode: AutovalidateMode.always,
+        validator: validatorless,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(10.0),
+          labelText: labelText,
+          labelStyle: const TextStyle(color: Colors.black),
+          filled: true,
+          fillColor: Colors.white,
+          suffixIcon: const Icon(
+            Icons.calendar_today_rounded,
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.black12),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.black12),
+          ),
+        ),
+        readOnly: true,
+        onChanged: onChanged,
+        onTap: ontap,
+        enabled: enable,
       ),
     );
   }
@@ -511,22 +682,28 @@ class TextFormFieldTimepickGlobal extends StatelessWidget {
   }
 }
 
-class TextFormFieldTimepickerOt extends StatelessWidget {
+class TextFormFieldpicker extends StatelessWidget {
   final TextEditingController controller;
   final String? labelText;
   final String? Function(String?)? validatorless;
   final Function()? ontap;
   final bool? enabled;
   final Widget? suffixIcon;
-  const TextFormFieldTimepickerOt({
-    Key? key,
-    required this.controller,
-    required this.labelText,
-    required this.validatorless,
-    required this.ontap,
-    required this.enabled,
-    this.suffixIcon,
-  }) : super(key: key);
+  final String? hintText;
+  final Function(String)? onChanged;
+  final bool readOnly;
+  const TextFormFieldpicker(
+      {Key? key,
+      required this.controller,
+      required this.labelText,
+      required this.validatorless,
+      this.ontap,
+      required this.enabled,
+      this.suffixIcon,
+      this.hintText,
+      this.onChanged,
+      this.readOnly = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -538,6 +715,7 @@ class TextFormFieldTimepickerOt extends StatelessWidget {
           decoration: InputDecoration(
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.black),
+            hintText: hintText,
             filled: true,
             fillColor: Colors.white,
             suffixIcon: suffixIcon,
@@ -547,8 +725,49 @@ class TextFormFieldTimepickerOt extends StatelessWidget {
             ),
           ),
           enabled: enabled,
-          readOnly: true,
+          readOnly: readOnly,
+          onChanged: onChanged,
           onTap: ontap),
     );
+  }
+}
+
+class TextFormFieldSearch extends StatelessWidget {
+  final TextEditingController controller;
+  final String? labelText;
+  final Function()? ontap;
+  final bool? enabled;
+  final Widget? suffixIcon;
+  final String? hintText;
+  final Function(String)? onChanged;
+  final bool readOnly;
+  const TextFormFieldSearch(
+      {Key? key,
+      required this.controller,
+      this.labelText,
+      this.ontap,
+      required this.enabled,
+      this.suffixIcon,
+      this.hintText,
+      this.onChanged,
+      this.readOnly = true})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+        controller: controller,
+        autovalidateMode: AutovalidateMode.always,
+        decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(10.0),
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Colors.black),
+            hintText: hintText,
+            suffixIcon: suffixIcon,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
+        enabled: enabled,
+        readOnly: readOnly,
+        onChanged: onChanged,
+        onTap: ontap);
   }
 }
