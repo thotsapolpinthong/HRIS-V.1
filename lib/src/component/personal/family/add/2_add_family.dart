@@ -357,8 +357,8 @@ class _AddFamilymemberState extends State<AddFamilymember> {
                                           child: TextFormField(
                                             autovalidateMode:
                                                 AutovalidateMode.always,
-                                            validator: Validatorless.required(
-                                                'กรุณากรอกข้อมูล'),
+                                            // validator: Validatorless.required(
+                                            //     'กรุณากรอกข้อมูล'),
                                             controller: dateOfBirth,
                                             decoration: const InputDecoration(
                                               labelText: 'Birthday : วันเกิด',

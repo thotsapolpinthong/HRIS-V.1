@@ -211,11 +211,12 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
                               child: Row(children: [
                                 const Expanded(
                                     flex: 2,
-                                    child: Text(
-                                        "ตารางแสดงข้อมูลการทำงานล่วงเวลา (OT)",
-                                        style: TextStyle(
+                                    child: TextThai(
+                                        text:
+                                            "ตารางแสดงข้อมูลการทำงานล่วงเวลา (OT)",
+                                        textStyle: TextStyle(
                                             fontSize: 20,
-                                            fontWeight: FontWeight.w800))),
+                                            fontWeight: FontWeight.w500))),
                                 Expanded(
                                   flex: 3,
                                   child: rowStat(otTimeCountData),

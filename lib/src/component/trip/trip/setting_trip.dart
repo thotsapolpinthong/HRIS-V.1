@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/trip_bloc/trip_bloc.dart';
@@ -23,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingTrip extends StatefulWidget {
   final int type; //type 0 = create, type 1 = edit
+  final String? statusType; //prepare / on-trip
   final String? tripId;
   final String startDate;
   final String endDate;
@@ -30,6 +32,7 @@ class SettingTrip extends StatefulWidget {
       {super.key,
       required this.type,
       this.tripId,
+      this.statusType,
       required this.startDate,
       required this.endDate});
 
@@ -104,42 +107,25 @@ class _SettingTripState extends State<SettingTrip> {
 
 //dropdown
   bool isDropdownLoading = true;
+  //trip type
   List<TripTypeDatum> tripTypeList = [];
   String? tripTypesId;
-  // List<MockupModel> tripTypes = [
-  //   MockupModel(id: "0", name: "รถบริษัท"),
-  //   MockupModel(id: "1", name: "รถส่วนตัว"),
-  // ];
 
   List<ProvinceDatum> provinceList = [];
   String? provinceId;
-  // List<MockupModel> province = [
-  //   MockupModel(id: "0", name: "เชียงใหม่"),
-  //   MockupModel(id: "1", name: "เชียงราย"),
-  //   MockupModel(id: "2", name: "แพร่"),
-  // ];
 
+// car
   List<CarDatum> carData = [];
   String? carId;
   String? carMileage;
-  // List<MockupModel> carList = [
-  //   MockupModel(id: "0", name: "กข 1555"),
-  //   MockupModel(id: "1", name: "หอ 2631"),
-  // ];
+  String? checkcarId;
 
+//triper type
   List<TriperTypeDatum> triperTypeList = [];
   String? triperTypeId;
   String? triperTypeName;
-  // List<MockupModel> triperType = [
-  //   MockupModel(id: "0", name: "คนขับ"),
-  //   MockupModel(id: "1", name: "ผู้โดยสาร"),
-  // ];
 
-  // List<MockupModel> hostelList = [
-  //   MockupModel(id: "0", name: "โรงแรมพักผ่อน2นาทีพักใจตลอดไป"),
-  //   MockupModel(id: "1", name: "โรงแรมพักนะพักให้เต็มที่"),
-  // ];
-
+//hotel
   List<HotelDatum> hostelList = [];
   String? hostelId;
   String? hostelName;
@@ -584,13 +570,15 @@ class _SettingTripState extends State<SettingTrip> {
   }
 
   Future getDropdown() async {
-    if (widget.type == 0) {
-      CarsModel? car = await ApiTripService.getCarsData();
-      carData = car?.carData ?? [];
-    } else {
-      CarsModel car = await ApiTripService.getCarsOnTripDropdown();
-      carData = car.carData;
-    }
+    // if (widget.type == 0) {
+    //   CarsModel? car = await ApiTripService.getCarsData();
+    //   carData = car?.carData ?? [];
+    // } else {
+    //   CarsModel car = await ApiTripService.getCarsOnTripDropdown();
+    //   carData = car.carData;
+    // }
+    CarsModel? car = await ApiTripService.getCarsData();
+    carData = car?.carData ?? [];
     TripTypeDropdownModel tripType = await ApiTripService.getTripTypeDropdown();
     TriperTypeDropdownModel triperType =
         await ApiTripService.getTriperTypeDropdown();
@@ -625,6 +613,7 @@ class _SettingTripState extends State<SettingTrip> {
           ? "001"
           : data.tripTypeData.tripTypeId;
       carId = data.carData.carId;
+      checkcarId = data.carData.carId;
       startDate.text = data.startDate;
       endDate.text = data.endDate;
       description.text = data.tripDescription;
@@ -782,8 +771,9 @@ class _SettingTripState extends State<SettingTrip> {
                                         child: Container(
                                             width: 58,
                                             constraints: const BoxConstraints(
-                                                maxWidth: 150, minWidth: 100),
-                                            child: Text(e.carRegistation)),
+                                                maxWidth: 250, minWidth: 200),
+                                            child: Text(
+                                                "${e.carRegistation} ${e.carModel}")),
                                         onTap: () {
                                           setState(() {
                                             carMileage = e.mileageNumber;
@@ -793,7 +783,7 @@ class _SettingTripState extends State<SettingTrip> {
                                     }).toList(),
                                     onChanged: isExpandedTriper == true
                                         ? null
-                                        : (newValue) async {
+                                        : (newValue) {
                                             setState(() {
                                               carId = newValue.toString();
                                             });
@@ -846,21 +836,32 @@ class _SettingTripState extends State<SettingTrip> {
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(8))),
-                                      onPressed: carId == null
+                                      onPressed: carId == null ||
+                                              tripTypesId == null
                                           ? null
-                                          : () {
-                                              setState(() {
-                                                if (isExpandedTriper == false) {
-                                                  checkCar(
-                                                      carId!,
-                                                      startDate.text,
-                                                      endDate.text);
-                                                } else {
-                                                  isExpandedTriper =
-                                                      !isExpandedTriper;
-                                                }
-                                              });
-                                            },
+                                          : widget.statusType == "on-trip"
+                                              ? null
+                                              : () {
+                                                  setState(() {
+                                                    if (isExpandedTriper ==
+                                                        false) {
+                                                      if (widget.statusType ==
+                                                              "prepare" &&
+                                                          carId == checkcarId) {
+                                                        isExpandedTriper =
+                                                            !isExpandedTriper;
+                                                      } else {
+                                                        checkCar(
+                                                            carId!,
+                                                            startDate.text,
+                                                            endDate.text);
+                                                      }
+                                                    } else {
+                                                      isExpandedTriper =
+                                                          !isExpandedTriper;
+                                                    }
+                                                  });
+                                                },
                                       child: isExpandedTriper
                                           ? Transform.flip(
                                               flipX: true,
@@ -973,9 +974,11 @@ class _SettingTripState extends State<SettingTrip> {
                                                                             35,
                                                                         child: ElevatedButton(
                                                                             style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
-                                                                            onPressed: () {
-                                                                              getEmployeeData();
-                                                                            },
+                                                                            onPressed: widget.statusType == "on-trip"
+                                                                                ? null
+                                                                                : () {
+                                                                                    getEmployeeData();
+                                                                                  },
                                                                             child: const TextThai(
                                                                               text: "เลือกพนักงาน",
                                                                             )),
@@ -1136,6 +1139,9 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                 2,
                                                                             child: TextFormFieldGlobalWithOutLine(
                                                                                 controller: costAllowance,
+                                                                                inputFormatters: [
+                                                                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                                                ],
                                                                                 labelText: "ค่าเบี้ยเลี้ยง",
                                                                                 hintText: "",
                                                                                 validatorless: null,
@@ -1169,6 +1175,9 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                 2,
                                                                             child: TextFormFieldGlobalWithOutLine(
                                                                                 controller: descGasoline,
+                                                                                inputFormatters: [
+                                                                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                                                ],
                                                                                 labelText: "ค่าน้ำมัน",
                                                                                 hintText: "",
                                                                                 validatorless: null,
@@ -1252,6 +1261,9 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                 2,
                                                                             child: TextFormFieldGlobalWithOutLine(
                                                                                 controller: costOther,
+                                                                                inputFormatters: [
+                                                                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                                                ],
                                                                                 labelText: "จำนวนเงิน",
                                                                                 hintText: "",
                                                                                 validatorless: null,
@@ -1289,11 +1301,13 @@ class _SettingTripState extends State<SettingTrip> {
                                                                               height: 32,
                                                                               child: ElevatedButton(
                                                                                 style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
-                                                                                onPressed: () {
-                                                                                  setState(() {
-                                                                                    editCostMembertrip();
-                                                                                  });
-                                                                                },
+                                                                                onPressed: widget.statusType == "on-trip"
+                                                                                    ? null
+                                                                                    : () {
+                                                                                        setState(() {
+                                                                                          editCostMembertrip();
+                                                                                        });
+                                                                                      },
                                                                                 child: const TextThai(text: "เพิ่ม / แก้ไข", textStyle: TextStyle(color: Colors.black)),
                                                                               ),
                                                                             ),
@@ -1444,155 +1458,134 @@ class _SettingTripState extends State<SettingTrip> {
                                                               ),
                                                               Row(
                                                                 children: [
-                                                                  SizedBox(
-                                                                    width: 40,
-                                                                    height: 38,
-                                                                    child:
-                                                                        ElevatedButton(
-                                                                      style: ElevatedButton.styleFrom(
-                                                                          backgroundColor: Colors
-                                                                              .lightBlue,
-                                                                          padding: const EdgeInsets
-                                                                              .all(
-                                                                              1)),
-                                                                      onPressed:
-                                                                          () {
-                                                                        setState(
-                                                                            () {
-                                                                          moveTriperDialog(
-                                                                              editTriperList[index]);
-                                                                        });
-                                                                      },
+                                                                  if (widget
+                                                                          .statusType ==
+                                                                      "on-trip")
+                                                                    SizedBox(
+                                                                      width: 40,
+                                                                      height:
+                                                                          38,
                                                                       child:
-                                                                          const Icon(
-                                                                        Icons
-                                                                            .repeat_rounded,
-                                                                        size:
-                                                                            22,
+                                                                          ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            backgroundColor:
+                                                                                Colors.lightBlue,
+                                                                            padding: const EdgeInsets.all(1)),
+                                                                        onPressed:
+                                                                            () {
+                                                                          setState(
+                                                                              () {
+                                                                            moveTriperDialog(editTriperList[index]);
+                                                                          });
+                                                                        },
+                                                                        child:
+                                                                            const Icon(
+                                                                          Icons
+                                                                              .repeat_rounded,
+                                                                          size:
+                                                                              22,
+                                                                        ),
                                                                       ),
                                                                     ),
-                                                                  ),
                                                                   const Gap(5),
-                                                                  SizedBox(
-                                                                    width: 40,
-                                                                    height: 38,
-                                                                    child:
-                                                                        ElevatedButton(
-                                                                      style: ElevatedButton.styleFrom(
-                                                                          padding: const EdgeInsets
-                                                                              .all(
-                                                                              1)),
-                                                                      child: const Icon(
-                                                                          Icons
-                                                                              .edit),
-                                                                      onPressed:
-                                                                          () {
-                                                                        name.text =
-                                                                            "${editTriperList[index].employeeData.firstNameTh} ${editTriperList[index].employeeData.lastNameTh}";
-                                                                        department
-                                                                            .text = editTriperList[
-                                                                                index]
-                                                                            .organization
-                                                                            .organizationName;
-                                                                        position
-                                                                            .text = editTriperList[
-                                                                                index]
-                                                                            .position
-                                                                            .positionOrganizationName;
-                                                                        memberStartDate
-                                                                            .text = editTriperList[
-                                                                                index]
-                                                                            .startDate;
-                                                                        memberEndDate
-                                                                            .text = editTriperList[
-                                                                                index]
-                                                                            .endDate;
-                                                                        List<
-                                                                            Expendition> allowance = editTriperList[
-                                                                                index]
-                                                                            .expendition
-                                                                            .where((element) =>
-                                                                                element.expenditureTypeId ==
-                                                                                "00")
-                                                                            .toList();
-                                                                        List<
-                                                                            Expendition> hotel = editTriperList[
-                                                                                index]
-                                                                            .expendition
-                                                                            .where((element) =>
-                                                                                element.expenditureTypeId ==
-                                                                                "01")
-                                                                            .toList();
-                                                                        List<
-                                                                            Expendition> gas = editTriperList[
-                                                                                index]
-                                                                            .expendition
-                                                                            .where((element) =>
-                                                                                element.expenditureTypeId ==
-                                                                                "02")
-                                                                            .toList();
-                                                                        List<
-                                                                            Expendition> other = editTriperList[
-                                                                                index]
-                                                                            .expendition
-                                                                            .where((element) =>
-                                                                                element.expenditureTypeId ==
-                                                                                "03")
-                                                                            .toList();
-
-                                                                        setState(
+                                                                  if (widget
+                                                                          .statusType ==
+                                                                      "prepare")
+                                                                    SizedBox(
+                                                                      width: 40,
+                                                                      height:
+                                                                          38,
+                                                                      child:
+                                                                          ElevatedButton(
+                                                                        style: ElevatedButton.styleFrom(
+                                                                            padding:
+                                                                                const EdgeInsets.all(1)),
+                                                                        child: const Icon(
+                                                                            Icons.edit),
+                                                                        onPressed:
                                                                             () {
-                                                                          employeeId =
-                                                                              editTriperList[index].employeeId;
-                                                                          triperTypeId = editTriperList[index]
-                                                                              .triperTypeData
-                                                                              .triperTypeId;
-                                                                          isCheckedAllowance = allowance.isEmpty
-                                                                              ? false
-                                                                              : true;
+                                                                          name.text =
+                                                                              "${editTriperList[index].employeeData.firstNameTh} ${editTriperList[index].employeeData.lastNameTh}";
+                                                                          department.text = editTriperList[index]
+                                                                              .organization
+                                                                              .organizationName;
+                                                                          position.text = editTriperList[index]
+                                                                              .position
+                                                                              .positionOrganizationName;
+                                                                          memberStartDate.text =
+                                                                              editTriperList[index].startDate;
+                                                                          memberEndDate.text =
+                                                                              editTriperList[index].endDate;
+                                                                          List<Expendition> allowance = editTriperList[index]
+                                                                              .expendition
+                                                                              .where((element) => element.expenditureTypeId == "00")
+                                                                              .toList();
+                                                                          List<Expendition> hotel = editTriperList[index]
+                                                                              .expendition
+                                                                              .where((element) => element.expenditureTypeId == "01")
+                                                                              .toList();
+                                                                          List<Expendition> gas = editTriperList[index]
+                                                                              .expendition
+                                                                              .where((element) => element.expenditureTypeId == "02")
+                                                                              .toList();
+                                                                          List<Expendition> other = editTriperList[index]
+                                                                              .expendition
+                                                                              .where((element) => element.expenditureTypeId == "03")
+                                                                              .toList();
 
-                                                                          //hostelId
-                                                                          hostelName =
-                                                                              hotel[0].description;
-                                                                          isCheckedGasoline = gas.isEmpty
-                                                                              ? false
-                                                                              : true;
+                                                                          setState(
+                                                                              () {
+                                                                            employeeId =
+                                                                                editTriperList[index].employeeId;
+                                                                            triperTypeId =
+                                                                                editTriperList[index].triperTypeData.triperTypeId;
+                                                                            isCheckedAllowance = allowance.isEmpty
+                                                                                ? false
+                                                                                : true;
 
-                                                                          isCheckedHotel = hotel.isEmpty
-                                                                              ? false
-                                                                              : true;
-                                                                          isCheckedOther = other.isEmpty
-                                                                              ? false
-                                                                              : true;
-                                                                          costAllowance.text = allowance.isEmpty
-                                                                              ? ""
-                                                                              : allowance[0].cost;
-                                                                          descGasoline.text = gas.isEmpty
-                                                                              ? ""
-                                                                              : gas[0].cost;
-                                                                          descOther.text = other.isEmpty
-                                                                              ? ""
-                                                                              : other[0].description;
-                                                                          costOther.text = other.isEmpty
-                                                                              ? ""
-                                                                              : other[0].cost;
-                                                                        });
-                                                                      },
+                                                                            //hostelId
+                                                                            hostelName =
+                                                                                hotel[0].description;
+                                                                            isCheckedGasoline = gas.isEmpty
+                                                                                ? false
+                                                                                : true;
+
+                                                                            isCheckedHotel = hotel.isEmpty
+                                                                                ? false
+                                                                                : true;
+                                                                            isCheckedOther = other.isEmpty
+                                                                                ? false
+                                                                                : true;
+                                                                            costAllowance.text = allowance.isEmpty
+                                                                                ? ""
+                                                                                : allowance[0].cost;
+                                                                            descGasoline.text = gas.isEmpty
+                                                                                ? ""
+                                                                                : gas[0].cost;
+                                                                            descOther.text = other.isEmpty
+                                                                                ? ""
+                                                                                : other[0].description;
+                                                                            costOther.text = other.isEmpty
+                                                                                ? ""
+                                                                                : other[0].cost;
+                                                                          });
+                                                                        },
+                                                                      ),
                                                                     ),
-                                                                  ),
                                                                   const Gap(5),
-                                                                  RowDeleteBox(
-                                                                      onPressed:
+                                                                  if (widget
+                                                                          .statusType !=
+                                                                      "on-trip")
+                                                                    RowDeleteBox(
+                                                                        onPressed:
+                                                                            () {
+                                                                      setState(
                                                                           () {
-                                                                    setState(
-                                                                        () {
-                                                                      editTriperList.removeWhere((element) =>
-                                                                          element
-                                                                              .employeeId ==
-                                                                          editTriperList[index]
-                                                                              .employeeId);
-                                                                    });
-                                                                  }),
+                                                                        editTriperList.removeWhere((element) =>
+                                                                            element.employeeId ==
+                                                                            editTriperList[index].employeeId);
+                                                                      });
+                                                                    }),
                                                                 ],
                                                               ),
                                                             ],

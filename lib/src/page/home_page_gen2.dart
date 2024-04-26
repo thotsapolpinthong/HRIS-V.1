@@ -122,9 +122,6 @@ class _MyHomepageState extends State<MyHomepage> {
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(40))),
                         child: const OffSideLayout(),
-                        // const TimeAttendancePageLayout(
-                        //   dashboard: false,
-                        // ),
                       ),
                     )),
               if (state.pageNumber == 61)

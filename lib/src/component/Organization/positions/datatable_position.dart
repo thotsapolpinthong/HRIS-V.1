@@ -182,7 +182,10 @@ class _PositionDataTableState extends State<PositionDataTable> {
                               child: Row(
                                 children: [
                                   const Expanded(
-                                      flex: 2, child: Text('Positions Table.')),
+                                      flex: 2,
+                                      child: Text('Positions Table.',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w800))),
                                   Expanded(
                                       flex: 1,
                                       child: Row(

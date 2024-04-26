@@ -237,7 +237,10 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                                       children: [
                                         const Expanded(
                                             flex: 2,
-                                            child: Text('Department Table.')),
+                                            child: Text('Department Table.',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w800))),
                                         Expanded(
                                             flex: 1,
                                             child: Row(

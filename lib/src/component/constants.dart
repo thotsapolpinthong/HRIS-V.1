@@ -98,10 +98,12 @@ class RowDeleteBox extends StatelessWidget {
 class TextThai extends StatelessWidget {
   final String text;
   final TextStyle? textStyle;
+  final TextAlign? textAlign;
   const TextThai({
     super.key,
     required this.text,
     this.textStyle,
+    this.textAlign,
   });
 
   @override
@@ -109,6 +111,7 @@ class TextThai extends StatelessWidget {
     return Text(
       text,
       style: GoogleFonts.kanit(textStyle: textStyle),
+      textAlign: textAlign,
     );
   }
 }

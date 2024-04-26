@@ -228,6 +228,9 @@ class _CreateUpdateCalendarState extends State<CreateUpdateCalendar> {
           context
               .read<TimeattendanceBloc>()
               .add(FetchDataTimeAttendanceEvent());
+          if (success == true) {
+            Navigator.pop(context);
+          }
         });
       },
     ).show();

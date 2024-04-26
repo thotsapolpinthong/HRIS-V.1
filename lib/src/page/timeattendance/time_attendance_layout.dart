@@ -149,6 +149,7 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
             fetchData(maindata);
           }
         }
+
         return SafeArea(
             child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -410,7 +411,7 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                     return Container(
                                       margin: const EdgeInsets.only(right: 8),
                                       constraints: const BoxConstraints(
-                                          maxHeight: 200, maxWidth: 340),
+                                          maxHeight: 200, maxWidth: 440),
                                       child: Card(
                                         color: Colors.amberAccent,
                                         elevation: 3,
@@ -446,13 +447,16 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                                             CrossAxisAlignment
                                                                 .start,
                                                         children: [
-                                                          Text(
-                                                            e.holidayNameTh,
-                                                            style: const TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                                fontSize: 17),
+                                                          TextThai(
+                                                            text:
+                                                                e.holidayNameTh,
+                                                            textStyle:
+                                                                const TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        17),
                                                           ),
                                                           Text(
                                                             e.holidayNameEn,
@@ -460,14 +464,31 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                                                 color: Colors
                                                                     .grey[700]),
                                                           ),
-                                                          Text(
-                                                            e.holidayFlag ==
-                                                                    true
-                                                                ? "วันหยุดตามประกาศบริษัท"
-                                                                : "วันหยุดพิเศษ",
-                                                            style: TextStyle(
-                                                                color:
-                                                                    mythemecolor),
+                                                          Card(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    vertical:
+                                                                        5),
+                                                            color: Colors
+                                                                .amberAccent,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          10),
+                                                              child: TextThai(
+                                                                text: e.holidayFlag ==
+                                                                        true
+                                                                    ? "วันหยุดตามประกาศบริษัท"
+                                                                    : "วันหยุดพิเศษ",
+                                                                textStyle:
+                                                                    TextStyle(
+                                                                        color:
+                                                                            mythemecolor),
+                                                              ),
+                                                            ),
                                                           ),
                                                           Text(e.note ==
                                                                   "No data"

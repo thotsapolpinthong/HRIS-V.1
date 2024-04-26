@@ -197,7 +197,7 @@ class _SlideBarState extends State<SlideBar> {
                                 iconcolor: state.pageNumber == 5
                                     ? Colors.black87
                                     : mytextcolors,
-                                title: "PAYROLL",
+                                title: "PAYROLL**",
                                 textColor: state.pageNumber == 5
                                     ? Colors.black87
                                     : mytextcolors,
@@ -241,7 +241,7 @@ class _SlideBarState extends State<SlideBar> {
                                 iconcolor: state.pageNumber == 7
                                     ? Colors.black87
                                     : mytextcolors,
-                                title: "REPORT",
+                                title: "REPORT**",
                                 textColor: state.pageNumber == 7
                                     ? Colors.black87
                                     : mytextcolors,

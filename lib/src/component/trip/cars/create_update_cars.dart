@@ -2,6 +2,7 @@
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/trip_bloc/trip_bloc.dart';
@@ -201,6 +202,7 @@ class _CreateUpdateCarsState extends State<CreateUpdateCars> {
       number.text = data.carRegistation;
       description.text = data.carColor;
       status = data.carStatus;
+      mileage.text = data.mileageNumber;
     }
   }
 
@@ -278,6 +280,9 @@ class _CreateUpdateCarsState extends State<CreateUpdateCars> {
                 Expanded(
                   child: TextFormFieldGlobal(
                       controller: mileage,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      ],
                       labelText: "เลขไมล์",
                       hintText: "",
                       validatorless: null,

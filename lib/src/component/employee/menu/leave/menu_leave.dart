@@ -238,10 +238,11 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                               child: Row(children: [
                                 const Expanded(
                                     flex: 1,
-                                    child: Text("ตารางแสดงข้อมูลการลา",
-                                        style: TextStyle(
+                                    child: TextThai(
+                                        text: "ตารางแสดงข้อมูลการลา (Leave)",
+                                        textStyle: TextStyle(
                                             fontSize: 20,
-                                            fontWeight: FontWeight.w800))),
+                                            fontWeight: FontWeight.w500))),
                                 Expanded(
                                   flex: 3,
                                   child: Row(

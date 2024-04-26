@@ -190,14 +190,14 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                                           ],
                                         ),
                                       ),
-                                      const Positioned(
-                                        left: 145,
-                                        child: Icon(
-                                          CupertinoIcons.person_alt_circle,
-                                          size: 120,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
+                                      // const Positioned(
+                                      //   left: 145,
+                                      //   child: Icon(
+                                      //     CupertinoIcons.person_alt_circle,
+                                      //     size: 120,
+                                      //     color: Colors.black87,
+                                      //   ),
+                                      // ),
                                     ],
                                   ),
                                 ),

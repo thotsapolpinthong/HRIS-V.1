@@ -2,6 +2,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/organization_bloc/bloc/organization_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/create_edit_org.dart';
@@ -9,6 +10,7 @@ import 'package:hris_app_prototype/src/component/Organization/position_org/posit
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/delete_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
+import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
 
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -310,6 +312,7 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
                             },
                       child: Column(
                         children: [
+                          const Gap(8),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
                             child: Card(
@@ -317,7 +320,7 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
                               child: SizedBox(
                                 width: double.infinity,
                                 child: Text(
-                                  '${data!.departMentData.deptCode}.',
+                                  '${data?.departMentData.deptCode}.',
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(color: Colors.white),
                                 ),
@@ -331,7 +334,7 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
           ),
         ),
         Positioned(
-          top: 10,
+          top: 18,
           right: -0.5,
           child: PopupMenuButton(
             splashRadius: 1,
@@ -354,37 +357,47 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
                   ),
               ];
             },
-            onSelected: (value) {
+            onSelected: (value) async {
               if (value == 'add') {
                 showDialogCreate(data);
               } else if (value == 'edit') {
                 showEditDialog(data);
               } else {
-                showdialogDeletePerson(data.organizationId);
+                GetPositionOrgByOrgIdModel? datum =
+                    await ApiOrgService.fetchPositionOrgByOrgId(
+                        data!.organizationCode);
+                if (datum == null) {
+                  showdialogDelete(data.organizationId);
+                } else {
+                  errorDialog();
+                }
               }
             },
           ),
         ).animate().fade(delay: 200.ms).shake(delay: 500.ms),
-        // if (a != "HQ001")
-        //   Positioned(
-        //       top: 1,
-        //       child: Container(
-        //         decoration: BoxDecoration(
-        //             color:
-        //                 data.organizationTypeData.organizationTypeName == "แผนก"
-        //                     ? Colors.teal
-        //                     : Colors.amber[700],
-        //             borderRadius: BorderRadius.circular(4)),
-        //         width: 40,
-        //         height: 20,
-        //         child: Center(
-        //           child: TextThai(
-        //             text: data.organizationTypeData.organizationTypeName,
-        //             textStyle:
-        //                 const TextStyle(color: Colors.white, fontSize: 12),
-        //           ),
-        //         ),
-        //       )).animate().fade(delay: 200.ms).shake(delay: 500.ms),
+        if (a != "HQ001")
+          Positioned(
+              top: 1,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: data?.organizationTypeData.organizationTypeName ==
+                            "แผนก"
+                        ? Colors.teal
+                        : Colors.lightGreen[600],
+                    borderRadius: BorderRadius.circular(4)),
+                width: 40,
+                height: 20,
+                child: Center(
+                  child: TextThai(
+                    text: data?.organizationTypeData.organizationTypeName ==
+                            "แผนก"
+                        ? "Dept."
+                        : "Sec.",
+                    textStyle:
+                        const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+              )).animate().fade(delay: 200.ms).shake(delay: 500.ms),
       ],
     );
   }
@@ -488,7 +501,7 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
         });
   }
 
-  showdialogDeletePerson(id) {
+  showdialogDelete(id) {
     showDialog(
         barrierDismissible: false,
         context: context,
@@ -505,66 +518,26 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
               comment.text = '';
             },
           );
-
-          // AlertDialog(
-          //     backgroundColor: mygreycolors,
-          //     icon: IconButton(
-          //       color: Colors.red[600],
-          //       icon: const Icon(
-          //         Icons.cancel,
-          //       ),
-          //       onPressed: () {
-          //         Navigator.pop(context);
-          //         comment.text = '';
-          //       },
-          //     ),
-          //     content: SizedBox(
-          //       width: 300,
-          //       height: 200,
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
-          //           Expanded(
-          //             flex: 12,
-          //             child: Center(
-          //               child: Card(
-          //                 elevation: 2,
-          //                 child: TextFormField(
-          //                   validator: Validatorless.required('กรอกข้อความ'),
-          //                   controller: comment,
-          //                   minLines: 1,
-          //                   maxLines: 4,
-          //                   decoration: const InputDecoration(
-          //                       labelStyle: TextStyle(color: Colors.black),
-          //                       border: OutlineInputBorder(
-          //                           borderSide:
-          //                               BorderSide(color: Colors.black)),
-          //                       filled: true,
-          //                       fillColor: Colors.white),
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //           Padding(
-          //             padding: const EdgeInsets.all(4.0),
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.end,
-          //               children: [
-          //                 ElevatedButton(
-          //                     onPressed: () {
-          //                       deleteData(id, comment.text);
-          //                       Navigator.pop(context);
-          //                       comment.text = '';
-          //                     },
-          //                     child: const Text("OK"))
-          //               ],
-          //             ),
-          //           )
-          //         ],
-          //       ),
-          //     ));
         });
+  }
+
+  errorDialog() {
+    AwesomeDialog(
+      width: 360,
+      context: context,
+      animType: AnimType.topSlide,
+      dialogType: DialogType.info,
+      body: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+            child: TextThai(
+          text: "ไม่สามารถลบได้\nเนื่องจากมีข้อมูลตำแหน่งงานภายใน",
+          textAlign: TextAlign.center,
+        )),
+      ),
+      btnOkColor: mythemecolor,
+      btnOkOnPress: () {},
+    ).show();
   }
 
   editPositionOranization(orgData) {

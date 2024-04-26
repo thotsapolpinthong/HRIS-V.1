@@ -268,6 +268,9 @@ class _AddPassportState extends State<AddPassport> {
                                   suffixIcon: Icon(
                                     Icons.calendar_today,
                                   ),
+                                  border: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.white)),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.white),
                                   ),

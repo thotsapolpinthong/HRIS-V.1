@@ -1,16 +1,22 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart';
 import 'package:hris_app_prototype/src/model/education/add/create_education_model.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/create_institute.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/create_major.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/create_qualificaion.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/education_level_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/education_qualification_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/institute_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/major_madel.dart';
 import 'package:hris_app_prototype/src/services/api_personal_service.dart';
-
 import 'package:intl/intl.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -37,6 +43,7 @@ class _AddEducationState extends State<AddEducation> {
 
   List<EducationQualificationDatum>? qualificationList = [];
   String? qualification;
+  String? qualificationIdDialog;
 
   List<InstituteDatum>? instituteList = [];
   String? institute;
@@ -59,22 +66,22 @@ class _AddEducationState extends State<AddEducation> {
     qualificationList = await ApiService.getEducationQualificationDropdown();
     instituteList = await ApiService.getInstitueDropdown();
     majorlList = await ApiService.getMajorDropdown();
-    CountryDataModel? _countryDataModel = await ApiService.getCountry();
+    CountryDataModel? countryDataModel = await ApiService.getCountry();
     setState(() {
-      countryList = _countryDataModel?.countryData;
+      countryList = countryDataModel?.countryData;
     });
   }
 
   Future<void> _selectadmissionDate() async {
-    DateTime? _picker = await showDatePicker(
+    DateTime? picker = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1950),
       lastDate: DateTime(3000),
     );
-    if (_picker != null) {
+    if (picker != null) {
       setState(() {
-        admissionDate.text = _picker.toString().split(" ")[0];
+        admissionDate.text = picker.toString().split(" ")[0];
         disableExp = true;
         graduatedDate.text = "";
         onNewValue();
@@ -86,15 +93,15 @@ class _AddEducationState extends State<AddEducation> {
   Future<void> _selectgraduatedDate() async {
     DateFormat format = DateFormat('yyyy-MM-dd');
     DateTime dateTime = format.parse(admissionDate.text);
-    DateTime? _picker = await showDatePicker(
+    DateTime? picker = await showDatePicker(
       context: context,
       initialDate: dateTime,
       firstDate: dateTime,
       lastDate: DateTime(3000),
     );
-    if (_picker != null) {
+    if (picker != null) {
       setState(() {
-        graduatedDate.text = _picker.toString().split(" ")[0];
+        graduatedDate.text = picker.toString().split(" ")[0];
         onNewValue();
         onValidate();
       });
@@ -203,6 +210,147 @@ class _AddEducationState extends State<AddEducation> {
     });
   }
 
+  createDropdownDialog(int type) async {
+    //0 วุฒิการศึกษา //1 สถาบัน //2วิชาหลัก
+    TextEditingController text = TextEditingController();
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: TitleDialog(
+                title: type == 0
+                    ? "เพิ่มตัวเลือกวุติการศึกษา"
+                    : type == 1
+                        ? "เพิ่มตัวเลือกสถาบัน"
+                        : "เพิ่มตัวเลือกวิชาหลัก",
+                onPressed: () {
+                  Navigator.pop(context);
+                  text.text = "";
+                },
+              ),
+              content: SizedBox(
+                width: 300,
+                height: 180,
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            if (type == 2)
+                              DropdownGlobal(
+                                  labeltext: 'วุฒิการศึกษา',
+                                  value: qualificationIdDialog,
+                                  items: qualificationList?.map((e) {
+                                    return DropdownMenuItem<String>(
+                                      value:
+                                          e.educationQualificationId.toString(),
+                                      child: Container(
+                                          width: 58,
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 250, minWidth: 200),
+                                          child:
+                                              Text(e.educationQualificaionTh)),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      qualificationIdDialog =
+                                          newValue.toString();
+                                    });
+                                  },
+                                  validator: null),
+                            const Gap(5),
+                            TextFormFieldGlobal(
+                                controller: text,
+                                labelText: "ข้อมูลที่ต้องการเพิ่ม",
+                                hintText: "",
+                                validatorless: null,
+                                enabled: true),
+                          ],
+                        ),
+                      ),
+                    ),
+                    MySaveButtons(
+                      text: "Submit",
+                      onPressed: () async {
+                        switch (type) {
+                          case 0:
+                            CreateQualificaionThModel createModel =
+                                CreateQualificaionThModel(
+                                    educationQualificaionTh: text.text);
+                            bool success = await ApiService
+                                .createEducationQualificationDropdown(
+                                    createModel);
+                            alertDialog(success);
+                            break;
+                          case 1:
+                            CreateinstituteModel createModel =
+                                CreateinstituteModel(
+                                    instituteNameTh: text.text);
+                            bool success =
+                                await ApiService.createInstitueDropdown(
+                                    createModel);
+                            alertDialog(success);
+                            break;
+                          case 2:
+                            CreateMajorModel createModel = CreateMajorModel(
+                                educationQualificationId:
+                                    qualificationIdDialog.toString(),
+                                majorTh: text.text);
+                            bool success = await ApiService.createMajorDropdown(
+                                createModel);
+                            alertDialog(success);
+                            break;
+                        }
+                      },
+                    )
+                  ],
+                ),
+              ));
+        });
+  }
+
+  alertDialog(bool success) {
+    AwesomeDialog(
+      dismissOnTouchOutside: false,
+      width: 400,
+      context: context,
+      animType: AnimType.topSlide,
+      dialogType: success == true ? DialogType.success : DialogType.error,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                success == true ? 'Created Success.' : 'Created Fail.',
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+              TextThai(
+                text: success == true
+                    ? 'เพิ่มข้อมูล สำเร็จ'
+                    : 'เพิ่มข้อมูล ไม่สำเร็จ',
+                textStyle: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ],
+          ),
+        ),
+      ),
+      btnOkColor: success == true ? Colors.greenAccent : Colors.red,
+      btnOkOnPress: () {
+        if (success == true) {
+          fetchData();
+          Navigator.pop(context);
+        } else {}
+      },
+    ).show();
+  }
+
   @override
   Widget build(BuildContext context) {
     return isloading == true
@@ -304,122 +452,6 @@ class _AddEducationState extends State<AddEducation> {
                                         },
                                       ),
                                     ),
-                                    Card(
-                                      child: DropdownButtonFormField(
-                                        decoration: const InputDecoration(
-                                            labelText:
-                                                'Qualification : วุฒิการศึกษา',
-                                            labelStyle: TextStyle(
-                                                color: Colors.black87),
-                                            border: OutlineInputBorder(),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black26),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white),
-                                        borderRadius: BorderRadius.circular(8),
-                                        autovalidateMode:
-                                            AutovalidateMode.always,
-                                        validator: Validatorless.required(
-                                            'กรุณากรอกข้อมูล'),
-                                        value: qualification,
-                                        items: qualificationList?.map((e) {
-                                          return DropdownMenuItem<String>(
-                                            value: e.educationQualificationId
-                                                .toString(),
-                                            child:
-                                                Text(e.educationQualificaionTh),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            qualification = newValue.toString();
-                                            onNewValue();
-                                            onValidate();
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    Card(
-                                      child: DropdownButtonFormField(
-                                        decoration: const InputDecoration(
-                                            labelText: 'Institute : สถาบัน',
-                                            labelStyle: TextStyle(
-                                                color: Colors.black87),
-                                            border: OutlineInputBorder(),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black26),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white),
-                                        borderRadius: BorderRadius.circular(8),
-                                        autovalidateMode:
-                                            AutovalidateMode.always,
-                                        validator: Validatorless.required(
-                                            'กรุณากรอกข้อมูล'),
-                                        value: institute,
-                                        items: instituteList?.map((e) {
-                                          return DropdownMenuItem<String>(
-                                            value: e.instituteId.toString(),
-                                            child: SizedBox(
-                                                width: 280,
-                                                child: Text(e.instituteNameTh)),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            institute = newValue.toString();
-                                            onNewValue();
-                                            onValidate();
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  children: [
-                                    Card(
-                                      child: DropdownButtonFormField(
-                                        decoration: const InputDecoration(
-                                            labelText: 'Major : วิชาหลัก',
-                                            labelStyle: TextStyle(
-                                                color: Colors.black87),
-                                            border: OutlineInputBorder(),
-                                            enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(
-                                                  color: Colors.black26),
-                                            ),
-                                            filled: true,
-                                            fillColor: Colors.white),
-                                        borderRadius: BorderRadius.circular(8),
-                                        autovalidateMode:
-                                            AutovalidateMode.always,
-                                        validator: Validatorless.required(
-                                            'กรุณากรอกข้อมูล'),
-                                        value: major,
-                                        items: majorlList?.map((e) {
-                                          return DropdownMenuItem<String>(
-                                            value: e.majorId.toString(),
-                                            child: Text(e.majorTh),
-                                          );
-                                        }).toList(),
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            major = newValue.toString();
-                                            onNewValue();
-                                            onValidate();
-                                          });
-                                        },
-                                      ),
-                                    ),
                                     Padding(
                                       padding: const EdgeInsets.only(bottom: 4),
                                       child: Card(
@@ -482,6 +514,231 @@ class _AddEducationState extends State<AddEducation> {
                                           },
                                         ),
                                       ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Card(
+                                            child: DropdownButtonFormField(
+                                              decoration: const InputDecoration(
+                                                  labelText:
+                                                      'Qualification : วุฒิการศึกษา',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.black26),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              autovalidateMode:
+                                                  AutovalidateMode.always,
+                                              validator: null,
+                                              value: qualification,
+                                              items:
+                                                  qualificationList?.map((e) {
+                                                return DropdownMenuItem<String>(
+                                                  value: e
+                                                      .educationQualificationId
+                                                      .toString(),
+                                                  child: Text(e
+                                                      .educationQualificaionTh),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  qualification =
+                                                      newValue.toString();
+                                                  onNewValue();
+                                                  onValidate();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 4),
+                                          child: SizedBox(
+                                            height: 45,
+                                            width: 45,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            0)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    createDropdownDialog(0);
+                                                  });
+                                                },
+                                                child: const Icon(Icons.add)),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Card(
+                                            child: DropdownButtonFormField(
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Major : วิชาหลัก',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.black26),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              autovalidateMode:
+                                                  AutovalidateMode.always,
+                                              validator: null,
+                                              value: major,
+                                              items: majorlList?.map((e) {
+                                                return DropdownMenuItem<String>(
+                                                  value: e.majorId.toString(),
+                                                  child: Text(e.majorTh),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  major = newValue.toString();
+                                                  onNewValue();
+                                                  onValidate();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 4),
+                                          child: SizedBox(
+                                            height: 45,
+                                            width: 45,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            0)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    createDropdownDialog(2);
+                                                  });
+                                                },
+                                                child: const Icon(Icons.add)),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          child: Card(
+                                            child: DropdownButtonFormField(
+                                              decoration: const InputDecoration(
+                                                  labelText:
+                                                      'Institute : สถาบัน',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.black26),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              autovalidateMode:
+                                                  AutovalidateMode.always,
+                                              validator: null,
+                                              value: institute,
+                                              items: instituteList?.map((e) {
+                                                return DropdownMenuItem<String>(
+                                                  value:
+                                                      e.instituteId.toString(),
+                                                  child: SizedBox(
+                                                      width: 280,
+                                                      child: Text(
+                                                          e.instituteNameTh)),
+                                                );
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  institute =
+                                                      newValue.toString();
+                                                  onNewValue();
+                                                  onValidate();
+                                                });
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8, horizontal: 4),
+                                          child: SizedBox(
+                                            height: 45,
+                                            width: 45,
+                                            child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8)),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            0)),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    createDropdownDialog(1);
+                                                  });
+                                                },
+                                                child: const Icon(Icons.add)),
+                                          ),
+                                        )
+                                      ],
                                     ),
                                     Card(
                                       child: TextFormField(

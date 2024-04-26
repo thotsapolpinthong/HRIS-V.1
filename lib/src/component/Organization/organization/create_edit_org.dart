@@ -11,7 +11,6 @@ import 'package:hris_app_prototype/src/model/organization/organization/dropdown/
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/update_org_model.dart';
-import 'package:hris_app_prototype/src/page/home_page_gen2.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,64 +102,79 @@ class _EditOrganizationState extends State<EditOrganization> {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-              icon: IconButton(
-                color: Colors.red[600],
-                icon: const Icon(
-                  Icons.cancel,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              content: SizedBox(
-                width: 300,
-                height: 200,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
-                    Expanded(
-                      flex: 11,
-                      child: Center(
-                        child: Card(
-                          elevation: 2,
-                          child: TextFormField(
-                            controller: comment,
-                            minLines: 1,
-                            maxLines: 5,
-                            decoration: const InputDecoration(
-                                labelStyle: TextStyle(color: Colors.black),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black)),
-                                filled: true,
-                                fillColor: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                onSave();
-                                Navigator.pop(context);
-                              },
-                              child: const Text("OK"))
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ));
+          return MyDeleteBox(
+            onPressedCancel: () {
+              Navigator.pop(context);
+              comment.text = '';
+            },
+            controller: comment,
+            onPressedOk: () {
+              onSave(comment.text);
+              Navigator.pop(context);
+              comment.text = '';
+            },
+          );
+
+          //  AlertDialog(
+          //     icon: IconButton(
+          //       color: Colors.red[600],
+          //       icon: const Icon(
+          //         Icons.cancel,
+          //       ),
+          //       onPressed: () {
+          //         Navigator.pop(context);
+          //       },
+          //     ),
+          //     content:
+
+          //      SizedBox(
+          //       width: 300,
+          //       height: 200,
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
+          //           Expanded(
+          //             flex: 11,
+          //             child: Center(
+          //               child: Card(
+          //                 elevation: 2,
+          //                 child: TextFormField(
+          //                   controller: comment,
+          //                   minLines: 1,
+          //                   maxLines: 5,
+          //                   decoration: const InputDecoration(
+          //                       labelStyle: TextStyle(color: Colors.black),
+          //                       border: OutlineInputBorder(
+          //                           borderSide:
+          //                               BorderSide(color: Colors.black)),
+          //                       filled: true,
+          //                       fillColor: Colors.white),
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //           Padding(
+          //             padding: const EdgeInsets.all(4.0),
+          //             child: Row(
+          //               mainAxisAlignment: MainAxisAlignment.end,
+          //               children: [
+          //                 ElevatedButton(
+          //                     onPressed: () {
+          //                       onSave();
+          //                       Navigator.pop(context);
+          //                     },
+          //                     child: const Text("OK"))
+          //               ],
+          //             ),
+          //           )
+          //         ],
+          //       ),
+          //     ));
         });
   }
 
-  Future onSave() async {
+  Future onSave(String comment) async {
     String employeeId = "";
     SharedPreferences preferences = await SharedPreferences.getInstance();
     employeeId = preferences.getString("employeeId")!;
@@ -177,13 +191,12 @@ class _EditOrganizationState extends State<EditOrganization> {
         validFrom: validFrom.text,
         endDate: expFrom.text,
         modifiedBy: employeeId,
-        comment: comment.text,
+        comment: comment.toString(),
       );
       setState(() {});
       bool success =
           await ApiOrgService.updatedOrganizationById(updateOrganization);
       alertDialog(success);
-      comment.text = '';
     } else {}
   }
 
@@ -227,6 +240,7 @@ class _EditOrganizationState extends State<EditOrganization> {
       btnOkOnPress: () {
         setState(() {
           context.read<OrganizationBloc>().add(FetchDataTableOrgEvent());
+          Navigator.pop(context);
           // if (widget.ongraph == true) {
           //   Navigator.pushReplacement(
           //     context,

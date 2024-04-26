@@ -391,8 +391,12 @@ class _TripDatatableState extends State<TripDatatable> {
                                   DataColumn(label: textThai("วันเริ่มต้น")),
                                   DataColumn(label: textThai("วันสิ้นสุด")),
                                   DataColumn(label: textThai("ทะเบียนรถ")),
-                                  DataColumn(label: textThai("เลขไมล์")),
-                                  // DataColumn(label: textThai("เลขไมล์สิ้นสุด")),
+                                  DataColumn(
+                                      numeric: true,
+                                      label: textThai("เลขไมล์ปัจจุบัน")),
+                                  DataColumn(
+                                      numeric: true,
+                                      label: textThai("เลขไมล์สิ้นสุดทริป")),
                                   // DataColumn(label: textThai("ผู้ขับขี่")),
                                   DataColumn(label: textThai("รายละเอียดทริป")),
                                   DataColumn(label: textThai("สถานะ")),
@@ -636,7 +640,7 @@ class DataTable extends DataTableSource {
         .show();
   }
 
-  showCreateTrip(int type, String tripId) {
+  showEditTrip(int type, String tripId, String status) {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -684,6 +688,7 @@ class DataTable extends DataTableSource {
                       SettingTrip(
                           type: type,
                           tripId: tripId,
+                          statusType: status,
                           startDate: startDate,
                           endDate: endDate),
                     ],
@@ -701,9 +706,10 @@ class DataTable extends DataTableSource {
       DataCell(Text(destination)),
       DataCell(Text(datarow.startDate)),
       DataCell(Text(datarow.endDate)),
-      DataCell(Text(datarow.carData.carRegistation)),
-      DataCell(Text(datarow.carData.mileageNumber)),
-      // DataCell(Text("")),
+      DataCell(Text(
+          "${datarow.carData.carRegistation} - ${datarow.carData.carModel}")),
+      DataCell(Text(datarow.startMileageNumber)),
+      DataCell(Text(datarow.endMileageNumber)),
       // DataCell(Text("")),
       DataCell(Text(datarow.tripDescription)),
       DataCell(
@@ -742,56 +748,59 @@ class DataTable extends DataTableSource {
       DataCell(datarow.tripStatus == "cancel" || datarow.tripStatus == "finish"
           ? Container()
           : Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
-                  height: 34,
-                  width: 40,
-                  child: datarow.tripStatus != "on-trip"
-                      ? Container()
-                      : ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.lightBlue,
-                              padding: const EdgeInsets.all(1),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
-                          child: const Icon(Icons.directions_car_rounded),
-                          onPressed: () {
-                            changeCarDialog(datarow);
-                          },
-                        ),
-                ),
-                const Gap(5),
-                SizedBox(
-                  height: 34,
-                  width: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.greenAccent[700],
-                        padding: const EdgeInsets.all(1),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8))),
-                    child: const Icon(Icons.check),
-                    onPressed: () {
-                      finishTripDialog(datarow.tripId);
-                    },
+                if (datarow.tripStatus == "on-trip") const Gap(5),
+                if (datarow.tripStatus == "on-trip")
+                  SizedBox(
+                    height: 34,
+                    width: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.lightBlue,
+                          padding: const EdgeInsets.all(1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      child: const Icon(Icons.directions_car_rounded),
+                      onPressed: () {
+                        changeCarDialog(datarow);
+                      },
+                    ),
                   ),
-                ),
-                const Gap(5),
-                SizedBox(
-                  height: 34,
-                  width: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red[700],
-                        padding: const EdgeInsets.all(1),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8))),
-                    child: const Icon(Icons.cancel),
-                    onPressed: () {
-                      cancelDialog(datarow.tripId);
-                    },
+                if (datarow.tripStatus == "on-trip") const Gap(5),
+                if (datarow.tripStatus == "on-trip")
+                  SizedBox(
+                    height: 34,
+                    width: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.greenAccent[700],
+                          padding: const EdgeInsets.all(1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      child: const Icon(Icons.check),
+                      onPressed: () {
+                        finishTripDialog(datarow.tripId);
+                      },
+                    ),
                   ),
-                ),
+                if (datarow.tripStatus != "on-trip") const Gap(5),
+                if (datarow.tripStatus != "on-trip")
+                  SizedBox(
+                    height: 34,
+                    width: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red[700],
+                          padding: const EdgeInsets.all(1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      child: const Icon(Icons.cancel),
+                      onPressed: () {
+                        cancelDialog(datarow.tripId);
+                      },
+                    ),
+                  ),
                 const Gap(5),
                 SizedBox(
                   height: 34,
@@ -803,7 +812,7 @@ class DataTable extends DataTableSource {
                             borderRadius: BorderRadius.circular(8))),
                     child: const Icon(Icons.settings),
                     onPressed: () {
-                      showCreateTrip(1, datarow.tripId);
+                      showEditTrip(1, datarow.tripId, datarow.tripStatus);
                     },
                   ),
                 ),

@@ -397,6 +397,7 @@ class TextFormFieldGlobal extends StatelessWidget {
   final String hintText;
   final String? Function(String?)? validatorless;
   final bool enabled;
+  final List<TextInputFormatter>? inputFormatters;
   const TextFormFieldGlobal({
     Key? key,
     required this.controller,
@@ -404,6 +405,7 @@ class TextFormFieldGlobal extends StatelessWidget {
     required this.hintText,
     required this.validatorless,
     required this.enabled,
+    this.inputFormatters,
   }) : super(key: key);
 
   @override
@@ -413,6 +415,7 @@ class TextFormFieldGlobal extends StatelessWidget {
       child: TextFormField(
         autovalidateMode: AutovalidateMode.always,
         validator: validatorless,
+        inputFormatters: inputFormatters,
         controller: controller,
         minLines: 1,
         maxLines: 4,
@@ -446,6 +449,7 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
   final bool enabled;
   final Widget? suffixIcon;
   final bool readOnly;
+  final List<TextInputFormatter>? inputFormatters;
   const TextFormFieldGlobalWithOutLine({
     Key? key,
     required this.controller,
@@ -455,6 +459,7 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
     required this.enabled,
     this.suffixIcon,
     this.readOnly = false,
+    this.inputFormatters,
   }) : super(key: key);
 
   @override
@@ -465,6 +470,7 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
       child: TextFormField(
         autovalidateMode: AutovalidateMode.always,
         validator: validatorless,
+        inputFormatters: inputFormatters,
         controller: controller,
         minLines: 1,
         maxLines: 4,

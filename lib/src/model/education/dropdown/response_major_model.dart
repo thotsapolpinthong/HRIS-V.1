@@ -1,53 +1,54 @@
 import 'dart:convert';
 
-MajorModel majorModelFromJson(String str) =>
-    MajorModel.fromJson(json.decode(str));
+ResponseMajorModel responseMajorModelFromJson(String str) =>
+    ResponseMajorModel.fromJson(json.decode(str));
 
-String majorModelToJson(MajorModel data) => json.encode(data.toJson());
+String responseMajorModelToJson(ResponseMajorModel data) =>
+    json.encode(data.toJson());
 
-class MajorModel {
-  List<MajorDatum> majorData;
+class ResponseMajorModel {
+  MajorData majorData;
   String message;
   bool status;
 
-  MajorModel({
+  ResponseMajorModel({
     required this.majorData,
     required this.message,
     required this.status,
   });
 
-  factory MajorModel.fromJson(Map<String, dynamic> json) => MajorModel(
-        majorData: List<MajorDatum>.from(
-            json["majorData"].map((x) => MajorDatum.fromJson(x))),
+  factory ResponseMajorModel.fromJson(Map<String, dynamic> json) =>
+      ResponseMajorModel(
+        majorData: MajorData.fromJson(json["majorData"]),
         message: json["message"],
         status: json["status"],
       );
 
   Map<String, dynamic> toJson() => {
-        "majorData": List<dynamic>.from(majorData.map((x) => x.toJson())),
+        "majorData": majorData.toJson(),
         "message": message,
         "status": status,
       };
 }
 
-class MajorDatum {
+class MajorData {
   String majorId;
   String educationQualificationId;
   String majorTh;
-  String? majorEn;
-  String? majorInitialTh;
-  String? majorInitialEn;
+  String majorEn;
+  String majorInitialTh;
+  String majorInitialEn;
 
-  MajorDatum({
+  MajorData({
     required this.majorId,
     required this.educationQualificationId,
     required this.majorTh,
-    this.majorEn,
-    this.majorInitialTh,
-    this.majorInitialEn,
+    required this.majorEn,
+    required this.majorInitialTh,
+    required this.majorInitialEn,
   });
 
-  factory MajorDatum.fromJson(Map<String, dynamic> json) => MajorDatum(
+  factory MajorData.fromJson(Map<String, dynamic> json) => MajorData(
         majorId: json["majorId"],
         educationQualificationId: json["educationQualificationId"],
         majorTh: json["majorTh"],

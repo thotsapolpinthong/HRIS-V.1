@@ -1,56 +1,54 @@
 import 'dart:convert';
 
-EducationQualificationModel educationQualificationModelFromJson(String str) =>
-    EducationQualificationModel.fromJson(json.decode(str));
+ResponseQualificaionThModel responseQualificaionThModelFromJson(String str) =>
+    ResponseQualificaionThModel.fromJson(json.decode(str));
 
-String educationQualificationModelToJson(EducationQualificationModel data) =>
+String responseQualificaionThModelToJson(ResponseQualificaionThModel data) =>
     json.encode(data.toJson());
 
-class EducationQualificationModel {
-  List<EducationQualificationDatum> educationQualificationData;
+class ResponseQualificaionThModel {
+  EducationQualificationData educationQualificationData;
   String message;
   bool status;
 
-  EducationQualificationModel({
+  ResponseQualificaionThModel({
     required this.educationQualificationData,
     required this.message,
     required this.status,
   });
 
-  factory EducationQualificationModel.fromJson(Map<String, dynamic> json) =>
-      EducationQualificationModel(
-        educationQualificationData: List<EducationQualificationDatum>.from(
-            json["educationQualificationData"]
-                .map((x) => EducationQualificationDatum.fromJson(x))),
+  factory ResponseQualificaionThModel.fromJson(Map<String, dynamic> json) =>
+      ResponseQualificaionThModel(
+        educationQualificationData: EducationQualificationData.fromJson(
+            json["educationQualificationData"]),
         message: json["message"],
         status: json["status"],
       );
 
   Map<String, dynamic> toJson() => {
-        "educationQualificationData": List<dynamic>.from(
-            educationQualificationData.map((x) => x.toJson())),
+        "educationQualificationData": educationQualificationData.toJson(),
         "message": message,
         "status": status,
       };
 }
 
-class EducationQualificationDatum {
+class EducationQualificationData {
   String educationQualificationId;
   String educationQualificaionTh;
-  String? educationQualificationEn;
-  String? educationQualificationInitialTh;
-  String? educationQualificationInitialEn;
+  String educationQualificationEn;
+  String educationQualificationInitialTh;
+  String educationQualificationInitialEn;
 
-  EducationQualificationDatum({
+  EducationQualificationData({
     required this.educationQualificationId,
     required this.educationQualificaionTh,
-    this.educationQualificationEn,
-    this.educationQualificationInitialTh,
-    this.educationQualificationInitialEn,
+    required this.educationQualificationEn,
+    required this.educationQualificationInitialTh,
+    required this.educationQualificationInitialEn,
   });
 
-  factory EducationQualificationDatum.fromJson(Map<String, dynamic> json) =>
-      EducationQualificationDatum(
+  factory EducationQualificationData.fromJson(Map<String, dynamic> json) =>
+      EducationQualificationData(
         educationQualificationId: json["educationQualificationId"],
         educationQualificaionTh: json["educationQualificaionTh"],
         educationQualificationEn: json["educationQualificationEn"],

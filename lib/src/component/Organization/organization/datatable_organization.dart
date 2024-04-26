@@ -202,7 +202,9 @@ class _OrganizationDataTableState extends State<OrganizationDataTable> {
                               children: [
                                 const Expanded(
                                     flex: 2,
-                                    child: Text('Organizations Table.')),
+                                    child: Text('Organizations Table.',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800))),
                                 Expanded(
                                     flex: 1,
                                     child: Row(

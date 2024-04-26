@@ -268,12 +268,17 @@ class DataTable extends DataTableSource {
               color: datacar.carStatus == "1"
                   ? Colors.greenAccent
                   : datacar.carStatus == "0"
-                      ? mythemecolor
+                      ? null
                       : datacar.carStatus == "2"
                           ? Colors.amberAccent
                           : Colors.red[800],
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
+              shape: datacar.carStatus == "0"
+                  ? OutlineInputBorder(
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.greenAccent),
+                      borderRadius: BorderRadius.circular(6))
+                  : RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
               child: Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: Center(
@@ -286,10 +291,9 @@ class DataTable extends DataTableSource {
                                 ? "ซ่อมบำรุง"
                                 : "เพิกถอน",
                     style: TextStyle(
-                        color:
-                            datacar.carStatus == "0" || datacar.carStatus == "3"
-                                ? Colors.white
-                                : Colors.grey[800]),
+                        color: datacar.carStatus == "3"
+                            ? Colors.white
+                            : Colors.grey[800]),
                   ),
                 ),
               )),

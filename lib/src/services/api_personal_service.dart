@@ -6,10 +6,16 @@ import 'package:hris_app_prototype/src/model/contact_person/getdata_contact_mode
 import 'package:hris_app_prototype/src/model/contact_person/update/update_contact_model.dart';
 import 'package:hris_app_prototype/src/model/education/add/create_education_model.dart';
 import 'package:hris_app_prototype/src/model/education/delete/delete_education_model.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/create_institute.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/create_major.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/create_qualificaion.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/education_level_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/education_qualification_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/institute_model.dart';
 import 'package:hris_app_prototype/src/model/education/dropdown/major_madel.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/response_institute_model.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/response_major_model.dart';
+import 'package:hris_app_prototype/src/model/education/dropdown/response_qualification_model.dart';
 import 'package:hris_app_prototype/src/model/education/getdata_education_model.dart';
 import 'package:hris_app_prototype/src/model/education/update/update_education_model.dart';
 import 'package:hris_app_prototype/src/model/family_member/add/create_family_model.dart';
@@ -700,6 +706,32 @@ class ApiService {
     }
   }
 
+  static Future createEducationQualificationDropdown(
+      CreateQualificaionThModel? createModel) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.post(
+      Uri.parse("$baseUrl/NewEducationQualification"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(createModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseQualificaionThModel data =
+          responseQualificaionThModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
+    }
+  }
+
   static getInstitueDropdown() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -717,6 +749,32 @@ class ApiService {
     }
   }
 
+  static Future createInstitueDropdown(
+      CreateinstituteModel? createModel) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.post(
+      Uri.parse("$baseUrl/NewInstitue"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(createModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseInstituteModel data =
+          responseInstituteModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
+    }
+  }
+
   static getMajorDropdown() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
@@ -731,6 +789,30 @@ class ApiService {
         return dataList;
       }
       return data;
+    }
+  }
+
+  static Future createMajorDropdown(CreateMajorModel? createModel) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.post(
+      Uri.parse("$baseUrl/NewMajor"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(createModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseMajorModel data = responseMajorModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
     }
   }
 

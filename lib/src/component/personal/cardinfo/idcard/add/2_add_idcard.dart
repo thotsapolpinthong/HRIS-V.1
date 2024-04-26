@@ -282,8 +282,8 @@ class _AddIdCardState extends State<AddIdCard> {
                                     padding: const EdgeInsets.all(2.0),
                                     child: TextFormField(
                                       autovalidateMode: AutovalidateMode.always,
-                                      validator: Validatorless.required(
-                                          'กรุณากรอกข้อมูล'),
+                                      // validator: Validatorless.required(
+                                      //     'กรุณากรอกข้อมูล'),
                                       controller: issueDate,
                                       decoration: const InputDecoration(
                                         labelText: 'Issued Date : วันออกบัตร',
@@ -315,8 +315,8 @@ class _AddIdCardState extends State<AddIdCard> {
                                     child: TextFormField(
                                       autovalidateMode: AutovalidateMode.always,
                                       controller: expDate,
-                                      validator: Validatorless.required(
-                                          'กรุณากรอกข้อมูล'),
+                                      // validator: Validatorless.required(
+                                      //     'กรุณากรอกข้อมูล'),
                                       decoration: const InputDecoration(
                                         labelText:
                                             'Expired Date : วันหมดอายุบัตร',
@@ -350,8 +350,8 @@ class _AddIdCardState extends State<AddIdCard> {
                                   elevation: 2,
                                   child: DropdownButtonFormField(
                                     autovalidateMode: AutovalidateMode.always,
-                                    validator: Validatorless.required(
-                                        'กรุณากรอกข้อมูล'),
+                                    // validator: Validatorless.required(
+                                    //     'กรุณากรอกข้อมูล'),
                                     decoration: const InputDecoration(
                                         labelText:
                                             'ออกให้ ณ จังหวัด : Province.',
@@ -400,8 +400,8 @@ class _AddIdCardState extends State<AddIdCard> {
                                     padding: const EdgeInsets.all(2.0),
                                     child: DropdownButtonFormField(
                                       autovalidateMode: AutovalidateMode.always,
-                                      validator: Validatorless.required(
-                                          'กรุณากรอกข้อมูล'),
+                                      // validator: Validatorless.required(
+                                      //     'กรุณากรอกข้อมูล'),
                                       decoration: const InputDecoration(
                                           labelText:
                                               'ออกให้ ณ เขต/อำเภอ : District.',

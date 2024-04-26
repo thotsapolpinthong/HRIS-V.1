@@ -28,39 +28,38 @@ class _AddEducationLayoutState extends State<AddEducationLayout> {
                   SizedBox(
                     height: 482,
                     child: Column(
-                  children: [
-                    const SizedBox(height: 40),
-                    Expanded(
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 4),
-                        child: AddEducation(
-                          personId: widget.personId,
-                          addButton: false,
+                      children: [
+                        const SizedBox(height: 50),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: AddEducation(
+                              personId: widget.personId,
+                              addButton: false,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      ],
                     ),
                   ),
                   const Padding(
-                     padding: EdgeInsets.symmetric(horizontal: 3),
-                     child: Card(
-                       color: Colors.greenAccent,
-                       shape: RoundedRectangleBorder(
-                           borderRadius: BorderRadius.vertical(
-                               top: Radius.circular(8))),
-                       child: SizedBox(
-                         height: 50,
-                         child: Center(
-                           child: Text(
-                             'เพิ่มประวัติการศึกษา (Education Information.)',
-                             style: TextStyle(fontSize: 16),
-                           ),
-                         ),
-                       ),
-                     ),
-                   ),
+                    padding: EdgeInsets.symmetric(horizontal: 3),
+                    child: Card(
+                      color: Colors.greenAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(8))),
+                      child: SizedBox(
+                        height: 50,
+                        child: Center(
+                          child: Text(
+                            'เพิ่มประวัติการศึกษา (Education Information.)',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

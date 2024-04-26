@@ -165,7 +165,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                       children: [
                                         const Expanded(
                                             flex: 2,
-                                            child: Text('Employee Table.')),
+                                            child: Text('Employee Table.',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w800))),
                                         orgList == null
                                             ? const SizedBox(
                                                 width: 20,
@@ -335,10 +338,17 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                   ),
                                   columns: [
                                     if (widget.isSelected == false)
-                                      const DataColumn(label: Text("  Menu")),
+                                      const DataColumn(
+                                          label: Text("  Menu",
+                                              style: TextStyle(
+                                                  fontWeight:
+                                                      FontWeight.bold))),
                                     DataColumn(
                                         //numeric: true,
-                                        label: const Text('รหัสพนักงาน'),
+                                        label: const TextThai(
+                                            text: 'รหัสพนักงาน',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -353,7 +363,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                         }),
                                     DataColumn(
                                         //  numeric: true,
-                                        label: const Text('รหัสประจำตัว'),
+                                        label: const TextThai(
+                                            text: 'รหัสประจำตัว',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -367,7 +380,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('ชื่อ'),
+                                        label: const TextThai(
+                                            text: 'ชื่อ',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -381,7 +397,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('นามสกุล'),
+                                        label: const TextThai(
+                                            text: 'นามสกุล',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -395,7 +414,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('ประเภท'),
+                                        label: const TextThai(
+                                            text: 'ประเภทพนักงาน',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -409,7 +431,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('แผนก'),
+                                        label: const TextThai(
+                                            text: 'แผนก',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -423,7 +448,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('ชื่อตำแหน่งงาน'),
+                                        label: const TextThai(
+                                            text: 'ตำแหน่งงาน',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -437,7 +465,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('วันที่เริ่มงาน'),
+                                        label: const TextThai(
+                                            text: 'วันที่เริ่มงาน',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -451,7 +482,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     DataColumn(
-                                        label: const Text('สิ้นสุด'),
+                                        label: const TextThai(
+                                            text: 'สิ้นสุด',
+                                            textStyle: TextStyle(
+                                                fontWeight: FontWeight.w500)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             // sort = !sort;
@@ -465,7 +499,9 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           });
                                         }),
                                     const DataColumn(
-                                      label: Text('status'),
+                                      label: Text('status',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold)),
                                     ),
                                     if (widget.isSelected == true &&
                                         widget.isSelectedOne == true)
