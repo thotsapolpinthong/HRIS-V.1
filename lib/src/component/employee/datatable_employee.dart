@@ -13,6 +13,7 @@ import 'package:hris_app_prototype/src/component/personal/datatable_personal.dar
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
+import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 
 class DatatableEmployee extends StatefulWidget {
@@ -61,15 +62,15 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
   }
 
   Future fetchData() async {
-    // GetEmployeeAllDataModel? data =
-    //     await ApiEmployeeService.fetchDataTableEmployee("1");
+    //   GetEmployeeAllDataModel? data =
+    //       await ApiEmployeeService.fetchDataTableEmployee("1");
 
     GetOrganizationAllModel? og =
         await ApiOrgService.fetchDataTableOrganization();
 
     setState(() {
       orgList = og?.organizationData;
-
+      // data;
       // employeeData = data?.employeeData;
       // filterData = data?.employeeData;
     });

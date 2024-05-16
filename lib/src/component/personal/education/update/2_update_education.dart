@@ -58,7 +58,8 @@ class _UpdateEducationState extends State<UpdateEducation> {
     educationlevelList = await ApiService.getEducationLevelDropdown();
     qualificationList = await ApiService.getEducationQualificationDropdown();
     instituteList = await ApiService.getInstitueDropdown();
-    majorlList = await ApiService.getMajorDropdown();
+    majorlList = await ApiService.getMajorDropdown(
+        widget.educationData.educationQualification.educationQualificationId);
     CountryDataModel countryDataModel = await ApiService.getCountry();
 
     setState(() {

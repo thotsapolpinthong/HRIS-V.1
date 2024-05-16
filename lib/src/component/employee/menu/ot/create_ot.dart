@@ -177,8 +177,8 @@ class _CreateOtState extends State<CreateOt> {
       helpText: from == true //true = start time , false = end time
           ? "เวลาที่เริ่มทำงานล่วงเวลา (Start time OT)"
           : "เวลาที่สิ้นสุดทำงานล่วงเวลา \n(Finish time OT)",
-      hourLabelText: " ชั่วโมง              hour",
-      minuteLabelText: " นาที           minute",
+      hourLabelText: " ชั่วโมง         hour",
+      minuteLabelText: " นาที         minute",
       initialTime: const TimeOfDay(hour: 0, minute: 0),
       initialEntryMode: TimePickerEntryMode.input,
       builder: (BuildContext context, Widget? child) {
@@ -208,7 +208,8 @@ class _CreateOtState extends State<CreateOt> {
     TimeOfDay timeOut = TimeOfDay(
         hour: int.parse(checkOut.text.split(':')[0]),
         minute: int.parse(checkOut.text.split(':')[1]));
-
+//ot type  H = Holiday, N = OT-normal , S = OT-holiday, SP = OT-Special
+//check type 0 = no check , 1 = fingerprint , 2 = manual time , 3 = trip *อยาคต, 4 = empty
 // OT Normal | Ot holiday (มีเวลาสแกนนิ้ว ปกติ)
 //เงื่อนไข เวลาเริ่ม จะต้องมากกว่าเวลาสแกนเข้า และน้อยกว่าสแกนออก
 //เวลาสิ้นสุด จะต้องมากกว่าเวลาที่เลือกจะต้องน้อยกว่าเวลาสแกนออก
@@ -219,13 +220,14 @@ class _CreateOtState extends State<CreateOt> {
         // for StartTime กรอกเวลาเริ่ม
         if ((selectedTime!.hour > timeIn.hour ||
                 (selectedTime.hour == timeIn.hour &&
-                    selectedTime.minute > timeIn.minute)) &&
+                    selectedTime.minute >= timeIn.minute)) &&
             (selectedTime.hour < timeOut.hour ||
                 (selectedTime.hour == timeOut.hour &&
                     selectedTime.minute <= timeOut.minute))) {
           startTime.text = selectedStartTime!.format(context).toString();
         } else {
           // เตือนข้อความอะไรบางอย่าง
+          alertDialogInfoError("โปรดระบุเวลาในขอบเขต เวลาแสกนนิ้วเท่านั้น");
           startTime.text = "";
         }
       } else {
@@ -243,6 +245,7 @@ class _CreateOtState extends State<CreateOt> {
           endTime.text = selectedStartTime!.format(context).toString();
         } else {
           // เตือนข้อความอะไรบางอย่าง
+          alertDialogInfoError("โปรดระบุเวลาในขอบเขต เวลาแสกนนิ้วเท่านั้น");
           endTime.text = "";
         }
       } //----------------------------------------------------------------
@@ -260,6 +263,7 @@ class _CreateOtState extends State<CreateOt> {
               startTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาก่อนเวลาจาก Manualworkdate");
               startTime.text = "";
             }
             break;
@@ -271,6 +275,7 @@ class _CreateOtState extends State<CreateOt> {
               startTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาก่อนเวลาแสกนนิ้ว");
               startTime.text = "";
             }
             break;
@@ -291,6 +296,7 @@ class _CreateOtState extends State<CreateOt> {
               endTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาก่อนเวลาจาก Manualworkdate");
               endTime.text = "";
             }
             break;
@@ -304,6 +310,7 @@ class _CreateOtState extends State<CreateOt> {
               endTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาในขอบเขต เวลาแสกนนิ้วเท่านั้น");
               endTime.text = "";
             }
             break;
@@ -324,6 +331,8 @@ class _CreateOtState extends State<CreateOt> {
               startTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError(
+                  "*เนื่องจากมีเวลาแสกนนิ้ว\nโปรดระบุเวลาในขอบเขต เวลาแสกนนิ้วเท่านั้น");
               startTime.text = "";
             }
             break;
@@ -334,6 +343,8 @@ class _CreateOtState extends State<CreateOt> {
               startTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError(
+                  "*เนื่องจากมีเวลาManualworkdate\nโปรดระบุเวลาหลังจากเวลา Check Out ");
               startTime.text = "";
             }
             break;
@@ -354,16 +365,19 @@ class _CreateOtState extends State<CreateOt> {
               endTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาในขอบเขต เวลาแสกนนิ้วเท่านั้น");
               endTime.text = "";
             }
             break;
           case "B": // ot หลังเลิกงาน
             if (selectedTime!.hour > timeStart.hour ||
                 selectedTime.hour == timeStart.hour &&
-                    selectedTime.minute > timeStart.minute) {
+                    selectedTime.minute >= timeStart.minute) {
               endTime.text = selectedStartTime!.format(context).toString();
             } else {
               // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError(
+                  "*เนื่องจากมีเวลาManualworkdate\nโปรดระบุเวลาหลังจากเวลา Check Out");
               endTime.text = "";
             }
             break;
@@ -384,6 +398,29 @@ class _CreateOtState extends State<CreateOt> {
 // OT Normal | Ot holiday (มีเวลาสแกนนิ้ว รวมกับเวลา manualworkdate)
 //>>> โอที ก่อนเริ่มงาน <<<
 //>>> โอทีหลังเลิกงาน <<<
+  }
+
+  alertDialogInfoError(String text) {
+    AwesomeDialog(
+      width: 400,
+      context: context,
+      animType: AnimType.topSlide,
+      dialogType: DialogType.error,
+      body: Column(
+        children: [
+          const Gap(10),
+          const TextThai(text: "ไม่สามารถใส่เวลาดังกล่าวได้"),
+          const Gap(5),
+          TextThai(
+            text: text,
+            textAlign: TextAlign.center,
+          ),
+          const Gap(10),
+        ],
+      ),
+      btnOkColor: Colors.red[600],
+      btnOkOnPress: () {},
+    ).show();
   }
 
 // end of function Time ot Start time / End time----------------------------------------------
@@ -462,7 +499,11 @@ class _CreateOtState extends State<CreateOt> {
       ),
       btnOkColor: success == true ? Colors.greenAccent : Colors.red,
       btnOkOnPress: () {
-        // fetchData();
+        if (success == true) {
+          context.read<EmployeeBloc>().add(FetchDataOtEmployeeEvent(
+              employeeId: widget.employeeData.employeeId));
+          Navigator.pop(context);
+        }
       },
     ).show();
   }
@@ -537,6 +578,8 @@ class _CreateOtState extends State<CreateOt> {
                             onChanged: (newValue) {
                               setState(() {
                                 otTypeId = newValue.toString();
+                                startTime.text = "";
+                                endTime.text = "";
                                 if (otTypeId == "H") {
                                   otRequestTypeId = null;
                                 }
@@ -563,6 +606,8 @@ class _CreateOtState extends State<CreateOt> {
                             onChanged: (newValue) {
                               setState(() {
                                 otRequestTypeId = newValue.toString();
+                                startTime.text = "";
+                                endTime.text = "";
                               });
                             },
                             validator: null),

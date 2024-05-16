@@ -204,6 +204,7 @@ class _EmployeeOtMenuState extends State<EmployeeOtMenu> {
                     : SizedBox(
                         width: double.infinity, ///////////////
                         child: PaginatedDataTable(
+                            showFirstLastButtons: true,
                             columnSpacing: 10,
                             header: SizedBox(
                               width: double.infinity,

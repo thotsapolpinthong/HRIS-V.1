@@ -610,7 +610,7 @@ class _ShiftControlDataTableState extends State<ShiftControlDataTable> {
                                         constraints:
                                             const BoxConstraints(maxWidth: 260),
                                         child: Text(
-                                            "${e.shiftName}  ${e.startTime} : ${e.endTime}")),
+                                            "${e.shiftName} : ${e.startTime} - ${e.endTime}")),
                                     onTap: () {
                                       shiftTime =
                                           "${e.startTime} - ${e.endTime}";

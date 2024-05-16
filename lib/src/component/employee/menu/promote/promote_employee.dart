@@ -318,9 +318,10 @@ class _PromoteMenuState extends State<PromoteMenu> {
                                                 value: e.positionOrganizationId
                                                     .toString(),
                                                 child: Container(
+                                                    width: 200,
                                                     constraints:
                                                         const BoxConstraints(
-                                                            minWidth: 150),
+                                                            minWidth: 145),
                                                     child: Text(e.positionData
                                                         .positionNameTh)),
                                               );

@@ -49,8 +49,13 @@ class _UpdateIdCardState extends State<UpdateIdCard> {
         expDate.text = idcardData!.personalCardData.expiredDate;
         provinceId = idcardData!.personalCardData.issuedAtProvince.provinceId;
         districtId = idcardData!.personalCardData.issuedAtDistrict.districtId;
-        fetchdDataProvince();
-        fetchdDataDistricts();
+        if (provinceId != "") {
+          fetchdDataProvince();
+        }
+        if (districtId != "") {
+          fetchdDataDistricts();
+        }
+
         isloading = false;
       } else {
         idcard.text = "ไม่พบข้อมูล";
@@ -68,10 +73,12 @@ class _UpdateIdCardState extends State<UpdateIdCard> {
   }
 
   fetchdDataDistricts() async {
-    DistrictModel _distictdata = await ApiService.getdistrict(provinceId!);
-    setState(() {
-      districtList = _distictdata.districtData;
-    });
+    if (provinceId != "") {
+      DistrictModel _distictdata = await ApiService.getdistrict(provinceId!);
+      setState(() {
+        districtList = _distictdata.districtData;
+      });
+    } else {}
   }
 
   Future<void> _selectissueDate() async {
@@ -252,140 +259,145 @@ class _UpdateIdCardState extends State<UpdateIdCard> {
               child: Column(
                 children: [
                   Expanded(
-                      child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Card(
-                        elevation: 2,
-                        child: TextFormField(
-                          validator: Validatorless.multiple([
-                            Validatorless.number('กรอกเฉพาะตัวเลข'),
-                          ]),
-                          controller: idcard,
-                          decoration: InputDecoration(
-                              hintText: 'กรอกเฉพาะตัวเลข',
-                              labelText: 'ID Card : เลขบัตรประจำตัวประชาชน',
-                              labelStyle:
-                                  const TextStyle(color: Colors.black87),
-                              border: const OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.white),
-                              ),
+                      child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Card(
+                          elevation: 2,
+                          child: TextFormField(
+                            validator: Validatorless.multiple([
+                              Validatorless.number('กรอกเฉพาะตัวเลข'),
+                            ]),
+                            controller: idcard,
+                            decoration: InputDecoration(
+                                hintText: 'กรอกเฉพาะตัวเลข',
+                                labelText: 'ID Card : เลขบัตรประจำตัวประชาชน',
+                                labelStyle:
+                                    const TextStyle(color: Colors.black87),
+                                border: const OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
+                                enabledBorder: const OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[100]),
+                          ),
+                        ),
+                        Card(
+                          elevation: 2,
+                          child: TextFormField(
+                            controller: issueDate,
+                            decoration: const InputDecoration(
+                              labelText: 'วันออกบัตร',
+                              labelStyle: TextStyle(color: Colors.black),
                               filled: true,
-                              fillColor: Colors.grey[100]),
-                        ),
-                      ),
-                      Card(
-                        elevation: 2,
-                        child: TextFormField(
-                          controller: issueDate,
-                          decoration: const InputDecoration(
-                            labelText: 'วันออกบัตร',
-                            labelStyle: TextStyle(color: Colors.black),
-                            filled: true,
-                            fillColor: Colors.white,
-                            suffixIcon: Icon(
-                              Icons.calendar_today,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                          readOnly: true,
-                          onTap: () {
-                            _selectissueDate();
-                          },
-                        ),
-                      ),
-                      Card(
-                        elevation: 2,
-                        child: TextFormField(
-                          controller: expDate,
-                          decoration: const InputDecoration(
-                            labelText: 'วันหมดอายุบัคร',
-                            labelStyle: TextStyle(color: Colors.black),
-                            filled: true,
-                            fillColor: Colors.white,
-                            suffixIcon: Icon(
-                              Icons.calendar_today,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                            ),
-                          ),
-                          readOnly: true,
-                          onTap: () {
-                            _selectexpDate();
-                          },
-                        ),
-                      ),
-                      Card(
-                        elevation: 2,
-                        child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                              labelText: 'Province.',
-                              labelStyle: TextStyle(color: Colors.black87),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
+                              fillColor: Colors.white,
+                              suffixIcon: Icon(
+                                Icons.calendar_today,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
-                              filled: true,
-                              fillColor: Colors.white),
-                          borderRadius: BorderRadius.circular(8),
-                          hint: const Text("Province."),
-                          value: provinceId,
-                          items: provinceList.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: e.provinceId.toString(),
-                              child: Text(e.provinceNameTh),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              if (districtId != null) {
-                                provinceId = newValue.toString();
-                                districtId = null;
-                                fetchdDataDistricts();
-                              } else {
-                                provinceId = newValue.toString();
-                                fetchdDataDistricts();
-                              }
-                            });
-                          },
+                            ),
+                            readOnly: true,
+                            onTap: () {
+                              _selectissueDate();
+                            },
+                          ),
                         ),
-                      ),
-                      Card(
-                        elevation: 2,
-                        child: DropdownButtonFormField(
-                          decoration: const InputDecoration(
-                              labelText: 'District.',
-                              labelStyle: TextStyle(color: Colors.black87),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white)),
+                        Card(
+                          elevation: 2,
+                          child: TextFormField(
+                            controller: expDate,
+                            decoration: const InputDecoration(
+                              labelText: 'วันหมดอายุบัคร',
+                              labelStyle: TextStyle(color: Colors.black),
+                              filled: true,
+                              fillColor: Colors.white,
+                              suffixIcon: Icon(
+                                Icons.calendar_today,
+                              ),
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.white),
                               ),
-                              filled: true,
-                              fillColor: Colors.white),
-                          borderRadius: BorderRadius.circular(8),
-                          hint: const Text("District."),
-                          value: districtId,
-                          items: districtList.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: e.districtId.toString(),
-                              child: Text(e.districtNameTh),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              districtId = newValue.toString();
-                            });
-                          },
+                            ),
+                            readOnly: true,
+                            onTap: () {
+                              _selectexpDate();
+                            },
+                          ),
                         ),
-                      ),
-                    ],
+                        Card(
+                          elevation: 2,
+                          child: DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Province.',
+                                labelStyle: TextStyle(color: Colors.black87),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white),
+                            borderRadius: BorderRadius.circular(8),
+                            hint: const Text("Province."),
+                            value: provinceId,
+                            items: provinceList.map((e) {
+                              return DropdownMenuItem<String>(
+                                value: e.provinceId.toString(),
+                                child: Text(e.provinceNameTh),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              setState(() {
+                                if (districtId != null) {
+                                  provinceId = newValue.toString();
+                                  districtId = null;
+                                  fetchdDataDistricts();
+                                } else {
+                                  provinceId = newValue.toString();
+                                  fetchdDataDistricts();
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        Card(
+                          elevation: 2,
+                          child: DropdownButtonFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'District.',
+                                labelStyle: TextStyle(color: Colors.black87),
+                                border: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.white)),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                filled: true,
+                                fillColor: Colors.white),
+                            borderRadius: BorderRadius.circular(8),
+                            hint: const Text("District."),
+                            value: districtId,
+                            items: districtList.map((e) {
+                              return DropdownMenuItem<String>(
+                                value: e.districtId.toString(),
+                                child: Text(e.districtNameTh),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              setState(() {
+                                districtId = newValue.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   )),
                   Align(
                     alignment: Alignment.bottomRight,

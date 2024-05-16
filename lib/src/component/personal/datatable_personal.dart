@@ -1,7 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/create_employee.dart';
@@ -732,8 +734,35 @@ class PersonDataTableSource extends DataTableSource {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                        'เพิ่มข้อมูลพนักงาน : ${data.titleName.titleNameTh} ${data.fisrtNameTh} ${data.lastNameTh} รหัส ${data.personId}'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มข้อมูลพนักงาน : ',
+                              style: GoogleFonts.kanit(),
+                            ),
+                            TextSpan(
+                              text:
+                                  '${data.titleName.titleNameTh} ${data.fisrtNameTh} ${data.lastNameTh} ',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 17)),
+                            ),
+                            TextSpan(
+                              text: 'รหัส ',
+                              style: GoogleFonts.kanit(),
+                            ),
+                            TextSpan(
+                              text: data.personId,
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 17)),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),

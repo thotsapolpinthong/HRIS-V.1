@@ -142,7 +142,7 @@ class PersonData {
   Nationality nationality;
   Race race;
   Religion religion;
-  bool personStatus;
+  bool? personStatus;
 
   PersonData({
     required this.personId,

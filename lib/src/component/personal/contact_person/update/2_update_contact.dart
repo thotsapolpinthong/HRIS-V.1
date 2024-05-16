@@ -50,7 +50,7 @@ class _UpdateContactPersonState extends State<UpdateContactPerson> {
       firstname.text = widget.contactdata.firstName;
       midname.text = widget.contactdata.midName;
       lastname.text = widget.contactdata.lastName;
-      occupation.text = widget.contactdata.occupation;
+      occupation.text = widget.contactdata.occupation ?? "";
       companyName.text = widget.contactdata.companyName;
       positionName.text = widget.contactdata.positionName;
       mobilePhone.text = widget.contactdata.mobilePhone;

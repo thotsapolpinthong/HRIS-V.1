@@ -327,7 +327,7 @@ class PersonDataTableSource extends DataTableSource {
           : positions.positionNameEn)),
       DataCell(Container(
           constraints: const BoxConstraints(
-              minWidth: 90, maxWidth: 90 // ความสูงขั้นต่ำที่ต้องการ
+              minWidth: 92, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
               ),
           child: positions.positionStatus == "Inactive"
               ? const Card(
@@ -468,65 +468,6 @@ class PersonDataTableSource extends DataTableSource {
               comment.text = '';
             },
           );
-          // AlertDialog(
-          //     icon: IconButton(
-          //       color: Colors.red[600],
-          //       icon: const Icon(
-          //         Icons.cancel,
-          //       ),
-          //       onPressed: () {
-          //         fetchFunction;
-          //         Navigator.pop(context);
-          //         comment.text = '';
-          //       },
-          //     ),
-          //     content: SizedBox(
-          //       width: 300,
-          //       height: 200,
-          //       child: Column(
-          //         mainAxisAlignment: MainAxisAlignment.center,
-          //         children: [
-          //           const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
-          //           Expanded(
-          //             flex: 11,
-          //             child: Center(
-          //               child: Card(
-          //                 elevation: 2,
-          //                 child: TextFormField(
-          //                   validator: Validatorless.required('กรอกข้อความ'),
-          //                   controller: comment,
-          //                   minLines: 1,
-          //                   maxLines: 4,
-          //                   decoration: const InputDecoration(
-          //                       labelStyle: TextStyle(color: Colors.black),
-          //                       border: OutlineInputBorder(
-          //                           borderSide:
-          //                               BorderSide(color: Colors.black)),
-          //                       filled: true,
-          //                       fillColor: Colors.white),
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //           Padding(
-          //             padding: const EdgeInsets.all(4.0),
-          //             child: Row(
-          //               mainAxisAlignment: MainAxisAlignment.end,
-          //               children: [
-          //                 ElevatedButton(
-          //                     onPressed: () {
-          //                       deletePerson(positionId, comment.text);
-          //                       fetchFunction;
-          //                       Navigator.pop(context);
-          //                       comment.text = '';
-          //                     },
-          //                     child: const Text("OK"))
-          //               ],
-          //             ),
-          //           )
-          //         ],
-          //       ),
-          //     ));
         });
   }
 }

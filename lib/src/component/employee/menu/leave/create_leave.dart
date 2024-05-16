@@ -339,7 +339,7 @@ class _CreateLeaveState extends State<CreateLeave> {
                     ElevatedButton(
                         onPressed: selectLeaveType != "L003" ? null : () {},
                         child: const SizedBox(
-                          width: 76,
+                          width: 78,
                           child: Row(
                             children: [
                               Icon(

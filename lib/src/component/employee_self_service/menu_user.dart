@@ -1,6 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -64,13 +62,14 @@ class _UserMenuServiceState extends State<UserMenuService> {
         }
       }
     } else {}
-    if (otTimeCountData != null) {
-      holiday = otTimeCountData!.overTimeCountData.holidayTotalAmount;
-      otNormal = otTimeCountData!.overTimeCountData.otNormalTotalAmount;
-      otHoliday = otTimeCountData!.overTimeCountData.otHolidayTotalAmount;
-      otSpecial = otTimeCountData!.overTimeCountData.otSpecialTotalAmount;
-    } else {}
+
     setState(() {
+      if (otTimeCountData != null) {
+        holiday = otTimeCountData!.overTimeCountData.holidayTotalAmount;
+        otNormal = otTimeCountData!.overTimeCountData.otNormalTotalAmount;
+        otHoliday = otTimeCountData!.overTimeCountData.otHolidayTotalAmount;
+        otSpecial = otTimeCountData!.overTimeCountData.otSpecialTotalAmount;
+      } else {}
       isLoading = false;
     });
   }
@@ -142,10 +141,20 @@ class _UserMenuServiceState extends State<UserMenuService> {
                             padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                const ListTile(
-                                  title: Text("ข้อมูลบันทึกการลา"),
-                                  subtitle: Text("Leave"),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: mythemecolor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: const ListTile(
+                                    title: TextThai(
+                                        text: "ข้อมูลบันทึกการลา",
+                                        textStyle:
+                                            TextStyle(color: Colors.white)),
+                                    subtitle: Text("Leave",
+                                        style: TextStyle(color: Colors.white)),
+                                  ),
                                 ),
+                                const Gap(5),
                                 const Text(
                                   "Quota : รายปี",
                                   style: TextStyle(fontSize: 18),
@@ -269,10 +278,20 @@ class _UserMenuServiceState extends State<UserMenuService> {
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
                             children: [
-                              const ListTile(
-                                title: Text("ข้อมูลบันทึกการทำงานล่วงเวลา"),
-                                subtitle: Text("OT"),
+                              Container(
+                                decoration: BoxDecoration(
+                                    color: mythemecolor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: const ListTile(
+                                  title: TextThai(
+                                    text: "ข้อมูลบันทึกการทำงานล่วงเวลา",
+                                    textStyle: TextStyle(color: Colors.white),
+                                  ),
+                                  subtitle: Text("OT",
+                                      style: TextStyle(color: Colors.white)),
+                                ),
                               ),
+                              const Gap(5),
                               const Text(
                                 "OT : รายเดือน",
                                 style: TextStyle(fontSize: 18),
@@ -444,12 +463,23 @@ class _UserMenuServiceState extends State<UserMenuService> {
                           width: 340,
                           height: 540,
                           child: Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
-                                ListTile(
-                                  title: Text("ข้อมูลบันทึกเวลาเข้า ออกงาน"),
-                                  subtitle: Text("Manual work date"),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: mythemecolor,
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: const ListTile(
+                                    title: TextThai(
+                                      text: "ข้อมูลบันทึกเวลาเข้า ออกงาน",
+                                      textStyle: TextStyle(color: Colors.white),
+                                    ),
+                                    subtitle: Text(
+                                      "Manual work date",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
                                 ),
                                 Expanded(
                                   child: Lottie.asset(

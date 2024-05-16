@@ -50,14 +50,12 @@ class _MyWidgetState extends State<MyWidget> {
             state: currentStep > 4 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 4,
             title: const Text('Family'),
-            content: AddFamilyLayout(personId: widget.personId)
-            ),
+            content: AddFamilyLayout(personId: widget.personId)),
         Step(
             state: currentStep > 5 ? StepState.complete : StepState.indexed,
             isActive: currentStep >= 5,
             title: const Text('Contact'),
-            content: AddContactLayout(personId: widget.personId)
-            ),
+            content: AddContactLayout(personId: widget.personId)),
       ];
 
   @override
@@ -304,11 +302,11 @@ class _MyWidgetState extends State<MyWidget> {
                         type: StepperType.horizontal,
                         steps: getSteps(),
                         currentStep: currentStep,
-                        onStepTapped: (step) {
-                          setState(() {
-                            currentStep = step;
-                          });
-                        },
+                        // onStepTapped: (step) {
+                        //   setState(() {
+                        //     currentStep = step;
+                        //   });
+                        // },
                         onStepContinue: () {
                           final isLastStep =
                               currentStep == getSteps().length - 1;
@@ -319,9 +317,7 @@ class _MyWidgetState extends State<MyWidget> {
                                 .read<PersonalBloc>()
                                 .add(CreatedPersonalEvent());
                             if (state.contactValidateState == true) {
-                              context
-                                  .read<PersonalBloc>()
-                                  .add(ContinueEvent());
+                              context.read<PersonalBloc>().add(ContinueEvent());
                             } else {
                               context
                                   .read<PersonalBloc>()
@@ -331,9 +327,7 @@ class _MyWidgetState extends State<MyWidget> {
                           if (currentStep == 0) {
                             setState(() => currentStep += 1);
                             if (state.addressValidateState == true) {
-                              context
-                                  .read<PersonalBloc>()
-                                  .add(ContinueEvent());
+                              context.read<PersonalBloc>().add(ContinueEvent());
                             } else {
                               context
                                   .read<PersonalBloc>()
@@ -342,9 +336,7 @@ class _MyWidgetState extends State<MyWidget> {
                           } else if (currentStep == 1) {
                             setState(() => currentStep += 1);
                             if (state.cardValidateState == true) {
-                              context
-                                  .read<PersonalBloc>()
-                                  .add(ContinueEvent());
+                              context.read<PersonalBloc>().add(ContinueEvent());
                             } else {
                               context
                                   .read<PersonalBloc>()
@@ -353,9 +345,7 @@ class _MyWidgetState extends State<MyWidget> {
                           } else if (currentStep == 2) {
                             setState(() => currentStep += 1);
                             if (state.educationValidateState == true) {
-                              context
-                                  .read<PersonalBloc>()
-                                  .add(ContinueEvent());
+                              context.read<PersonalBloc>().add(ContinueEvent());
                             } else {
                               context
                                   .read<PersonalBloc>()
@@ -364,9 +354,7 @@ class _MyWidgetState extends State<MyWidget> {
                           } else if (currentStep == 3) {
                             setState(() => currentStep += 1);
                             if (state.familyValidateState == true) {
-                              context
-                                  .read<PersonalBloc>()
-                                  .add(ContinueEvent());
+                              context.read<PersonalBloc>().add(ContinueEvent());
                             } else {
                               context
                                   .read<PersonalBloc>()
@@ -375,9 +363,7 @@ class _MyWidgetState extends State<MyWidget> {
                           } else if (currentStep == 4) {
                             setState(() => currentStep += 1);
                             if (state.contactValidateState == true) {
-                              context
-                                  .read<PersonalBloc>()
-                                  .add(ContinueEvent());
+                              context.read<PersonalBloc>().add(ContinueEvent());
                             } else {
                               context
                                   .read<PersonalBloc>()
@@ -450,9 +436,8 @@ class _MyWidgetState extends State<MyWidget> {
                                     flex: 1,
                                     child: ElevatedButton(
                                       onPressed: details.onStepContinue,
-                                      child: Text(isLastStep
-                                          ? 'CONFIRM'
-                                          : 'Continue'),
+                                      child: Text(
+                                          isLastStep ? 'CONFIRM' : 'Continue'),
                                     ),
                                   ),
                               ],

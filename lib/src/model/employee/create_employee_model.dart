@@ -18,6 +18,7 @@ class CreateEmployeeModel {
   String staffType;
   String shiftId;
   String positionOrganizationId;
+  String cardId;
 
   CreateEmployeeModel({
     required this.personId,
@@ -31,6 +32,7 @@ class CreateEmployeeModel {
     required this.staffType,
     required this.shiftId,
     required this.positionOrganizationId,
+    required this.cardId,
   });
 
   factory CreateEmployeeModel.fromJson(Map<String, dynamic> json) =>
@@ -46,6 +48,7 @@ class CreateEmployeeModel {
         staffType: json["staffType"],
         shiftId: json["shiftId"],
         positionOrganizationId: json["positionOrganizationId"],
+        cardId: json["cardId"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -60,5 +63,6 @@ class CreateEmployeeModel {
         "staffType": staffType,
         "shiftId": shiftId,
         "positionOrganizationId": positionOrganizationId,
+        "cardId": cardId,
       };
 }

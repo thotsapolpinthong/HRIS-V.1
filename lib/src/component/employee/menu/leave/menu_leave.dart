@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -232,6 +233,7 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                     : SizedBox(
                         width: double.infinity, ///////////////
                         child: PaginatedDataTable(
+                            showFirstLastButtons: true,
                             header: SizedBox(
                               width: double.infinity,
                               height: double.infinity,
@@ -253,90 +255,134 @@ class _EmployeeLeaveMenuState extends State<EmployeeLeaveMenu> {
                                               fontSize: 17,
                                               fontWeight: FontWeight.w800)),
                                       const Gap(15),
-                                      Card(
-                                        elevation: 3,
-                                        color: vacationLeave >= 1
-                                            ? Colors.greenAccent
-                                            : Colors.amberAccent[100],
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "ลาพักร้อน",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w800),
+                                      Stack(
+                                        children: [
+                                          Card(
+                                            elevation: 3,
+                                            color: mygreycolors,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    "ลาพักร้อน",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                  Text(
+                                                      "ใช้ไป $vacationLeaveRequest วัน คงเหลือ $vacationLeave วัน"),
+                                                ],
                                               ),
-                                              Text(
-                                                  "ใช้ไป $vacationLeaveRequest วัน คงเหลือ $vacationLeave วัน"),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                          Positioned(
+                                            right: 10,
+                                            top: 10,
+                                            child: Icon(
+                                              Icons.circle,
+                                              size: 18,
+                                              color: vacationLeave >= 1
+                                                  ? Colors.greenAccent[700]
+                                                  : vacationLeave < 0
+                                                      ? Colors.redAccent[700]
+                                                      : Colors.amberAccent,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      Card(
-                                        elevation: 3,
-                                        color: bussinessLeave >= 1
-                                            ? Colors.greenAccent
-                                            : bussinessLeave < 0
-                                                ? Colors.redAccent[100]
-                                                : Colors.amberAccent[100],
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "ลากิจ",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w800),
+                                      Stack(
+                                        children: [
+                                          Card(
+                                            elevation: 3,
+                                            color: mygreycolors,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const TextThai(
+                                                    text: "ลากิจ",
+                                                    textStyle: TextStyle(
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                  TextThai(
+                                                      text:
+                                                          "ใช้ไป $bussinessLeaveRequest วัน คงเหลือ $bussinessLeave วัน"),
+                                                ],
                                               ),
-                                              Text(
-                                                  "ใช้ไป $bussinessLeaveRequest วัน คงเหลือ $bussinessLeave วัน"),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                          Positioned(
+                                            right: 10,
+                                            top: 10,
+                                            child: Icon(
+                                              Icons.circle,
+                                              size: 18,
+                                              color: bussinessLeave >= 1
+                                                  ? Colors.greenAccent[700]
+                                                  : bussinessLeave < 0
+                                                      ? Colors.redAccent[700]
+                                                      : Colors.amberAccent,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                      Card(
-                                        elevation: 3,
-                                        color: sickLeave >= 1
-                                            ? Colors.greenAccent
-                                            : sickLeave < 0
-                                                ? Colors.redAccent[100]
-                                                : Colors.amberAccent[100],
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "ลาป่วย",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.w800),
+                                      Stack(
+                                        children: [
+                                          Card(
+                                            elevation: 3,
+                                            color: mygreycolors,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    "ลาป่วย",
+                                                    style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight:
+                                                            FontWeight.w800),
+                                                  ),
+                                                  Text(
+                                                      "ใช้ไป $sickLeaveRequest วัน คงเหลือ $sickLeave วัน"),
+                                                ],
                                               ),
-                                              Text(
-                                                  "ใช้ไป $sickLeaveRequest วัน คงเหลือ $sickLeave วัน"),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                          Positioned(
+                                            right: 10,
+                                            top: 10,
+                                            child: Icon(
+                                              Icons.circle,
+                                              size: 18,
+                                              color: sickLeave >= 1
+                                                  ? Colors.greenAccent[700]
+                                                  : sickLeave < 0
+                                                      ? Colors.redAccent[700]
+                                                      : Colors.amberAccent,
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ],
                                   ),

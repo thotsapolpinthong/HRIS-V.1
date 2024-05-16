@@ -65,10 +65,11 @@ class _AddEducationState extends State<AddEducation> {
     educationlevelList = await ApiService.getEducationLevelDropdown();
     qualificationList = await ApiService.getEducationQualificationDropdown();
     instituteList = await ApiService.getInstitueDropdown();
-    majorlList = await ApiService.getMajorDropdown();
+    // majorlList = await ApiService.getMajorDropdown();
     CountryDataModel? countryDataModel = await ApiService.getCountry();
     setState(() {
       countryList = countryDataModel?.countryData;
+      educationlevelList;
     });
   }
 
@@ -560,8 +561,12 @@ class _AddEducationState extends State<AddEducation> {
                                                       .educationQualificaionTh),
                                                 );
                                               }).toList(),
-                                              onChanged: (newValue) {
+                                              onChanged: (newValue) async {
+                                                majorlList = await ApiService
+                                                    .getMajorDropdown(
+                                                        newValue.toString());
                                                 setState(() {
+                                                  majorlList;
                                                   qualification =
                                                       newValue.toString();
                                                   onNewValue();

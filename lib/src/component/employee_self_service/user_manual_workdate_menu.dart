@@ -506,16 +506,20 @@ class _ManualWorkDateManageState extends State<ManualWorkDateManage> {
                                                           index.checkOutTime ==
                                                               ""
                                                       ? ElevatedButton(
-                                                          onPressed: () {
-                                                            showDialogCreate(
-                                                                index.checkInTime ==
-                                                                            "" &&
-                                                                        index.checkOutTime !=
-                                                                            ""
-                                                                    ? 0
-                                                                    : 1,
-                                                                index.date);
-                                                          },
+                                                          onPressed:
+                                                              index.checkInTime ==
+                                                                          "" &&
+                                                                      index.checkOutTime ==
+                                                                          ""
+                                                                  ? null
+                                                                  : () {
+                                                                      showDialogCreate(
+                                                                          index.checkInTime == "" && index.checkOutTime != ""
+                                                                              ? 0
+                                                                              : 1,
+                                                                          index
+                                                                              .date);
+                                                                    },
                                                           child: const Text(
                                                               "ยื่นคำขอ"))
                                                       : Container()),

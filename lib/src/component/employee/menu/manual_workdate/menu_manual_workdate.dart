@@ -146,7 +146,6 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -162,7 +161,8 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Scaffold(
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.endDocked,
             floatingActionButton: MyFloatingButton(
               onPressed: () {
                 showDialogCreate();
@@ -172,211 +172,228 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
             backgroundColor: Colors.white,
             body: BlocBuilder<SelfServiceBloc, SelfServiceState>(
               builder: (context, state) {
-                return state.isManualDataLoading == true
+                return userInfoData == null
                     ? myLoadingScreen
-                    : SizedBox(
-                        width: double.infinity, ///////////////
-                        child: PaginatedDataTable(
-                            header: SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: Row(children: [
-                                const Expanded(
-                                    flex: 1,
-                                    child: Text("Manual Work date",
-                                        style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.w800))),
-                                Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Expanded(
-                                        flex: 2,
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              child: SizedBox(
-                                                height: 43,
-                                                child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      elevation:
-                                                          isExpandedPage == 0
-                                                              ? 2
-                                                              : 0,
-                                                      shape: const RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius
-                                                              .horizontal(
-                                                                  left: Radius
-                                                                      .circular(
-                                                                          8))),
-                                                      backgroundColor:
-                                                          isExpandedPage == 0
-                                                              ? mythemecolor
-                                                              : Colors
-                                                                  .grey[350],
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        isExpandedPage = 0;
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      "TimeStamp.",
-                                                      style: TextStyle(
-                                                          color:
+                    : state.isManualDataLoading == true
+                        ? myLoadingScreen
+                        : SizedBox(
+                            width: double.infinity, ///////////////
+                            child: PaginatedDataTable(
+                                showFirstLastButtons: true,
+                                header: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: Row(children: [
+                                    const Expanded(
+                                        flex: 1,
+                                        child: Text("Manual Work date",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w800))),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          Expanded(
+                                            flex: 2,
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 43,
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          elevation:
                                                               isExpandedPage ==
+                                                                      0
+                                                                  ? 2
+                                                                  : 0,
+                                                          shape: const RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .horizontal(
+                                                                      left: Radius
+                                                                          .circular(
+                                                                              8))),
+                                                          backgroundColor:
+                                                              isExpandedPage ==
+                                                                      0
+                                                                  ? mythemecolor
+                                                                  : Colors.grey[
+                                                                      350],
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            isExpandedPage = 0;
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                          "TimeStamp.",
+                                                          style: TextStyle(
+                                                              color: isExpandedPage ==
                                                                       0
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black54),
-                                                    )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: SizedBox(
-                                                height: 43,
-                                                child: ElevatedButton(
-                                                    style: ElevatedButton
-                                                        .styleFrom(
-                                                      elevation:
-                                                          isExpandedPage == 1
-                                                              ? 2
-                                                              : 0,
-                                                      shape: const RoundedRectangleBorder(
-                                                          borderRadius: BorderRadius
-                                                              .horizontal(
-                                                                  right: Radius
-                                                                      .circular(
-                                                                          8))),
-                                                      backgroundColor:
-                                                          isExpandedPage == 1
-                                                              ? mythemecolor
-                                                              : Colors
-                                                                  .grey[350],
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        isExpandedPage = 1;
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                      "Request.",
-                                                      style: TextStyle(
-                                                          color:
+                                                        )),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: SizedBox(
+                                                    height: 43,
+                                                    child: ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                          elevation:
                                                               isExpandedPage ==
+                                                                      1
+                                                                  ? 2
+                                                                  : 0,
+                                                          shape: const RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .horizontal(
+                                                                      right: Radius
+                                                                          .circular(
+                                                                              8))),
+                                                          backgroundColor:
+                                                              isExpandedPage ==
+                                                                      1
+                                                                  ? mythemecolor
+                                                                  : Colors.grey[
+                                                                      350],
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            isExpandedPage = 1;
+                                                          });
+                                                        },
+                                                        child: Text(
+                                                          "Request.",
+                                                          style: TextStyle(
+                                                              color: isExpandedPage ==
                                                                       1
                                                                   ? Colors.white
                                                                   : Colors
                                                                       .black54),
-                                                    )),
-                                              ),
+                                                        )),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      const Gap(5),
-                                      Expanded(
-                                        child: SizedBox(
-                                          width: 122,
-                                          child: DropdownGlobal(
-                                              labeltext: 'Lot Number',
-                                              value: lotNumberId,
-                                              items: lotNumberData
-                                                  ?.lotNumberData
-                                                  .map((e) {
-                                                return DropdownMenuItem<String>(
-                                                  value: e.lotMonth.toString(),
-                                                  child: Container(
-                                                      width: 58,
-                                                      constraints:
-                                                          const BoxConstraints(
-                                                              maxWidth: 150,
-                                                              minWidth: 100),
-                                                      child: Text(
-                                                          "${e.lotYear} / ${e.lotMonth}")),
-                                                );
-                                              }).toList(),
-                                              onChanged: isExpandedPage == 1
-                                                  ? null
-                                                  : (newValue) async {
-                                                      setState(() {
-                                                        lotNumberId =
-                                                            newValue.toString();
-                                                        Iterable<LotNumberDatum>
-                                                            result =
-                                                            lotNumberData!
-                                                                .lotNumberData
-                                                                .where((element) =>
-                                                                    element
-                                                                        .lotMonth ==
-                                                                    newValue);
-                                                        if (result.isNotEmpty) {
-                                                          startDate.text =
-                                                              result.first
-                                                                  .startDate
+                                          ),
+                                          const Gap(5),
+                                          Expanded(
+                                            child: SizedBox(
+                                              width: 122,
+                                              child: DropdownGlobal(
+                                                  labeltext: 'Lot Number',
+                                                  value: lotNumberId,
+                                                  items: lotNumberData
+                                                      ?.lotNumberData
+                                                      .map((e) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value:
+                                                          e.lotMonth.toString(),
+                                                      child: Container(
+                                                          width: 58,
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                                  maxWidth: 150,
+                                                                  minWidth:
+                                                                      100),
+                                                          child: Text(
+                                                              "${e.lotYear} / ${e.lotMonth}")),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: isExpandedPage == 1
+                                                      ? null
+                                                      : (newValue) async {
+                                                          setState(() {
+                                                            lotNumberId =
+                                                                newValue
+                                                                    .toString();
+                                                            Iterable<
+                                                                    LotNumberDatum>
+                                                                result =
+                                                                lotNumberData!
+                                                                    .lotNumberData
+                                                                    .where((element) =>
+                                                                        element
+                                                                            .lotMonth ==
+                                                                        newValue);
+                                                            if (result
+                                                                .isNotEmpty) {
+                                                              startDate.text =
+                                                                  result.first
+                                                                      .startDate
+                                                                      .toString();
+                                                              endDate.text = result
+                                                                  .first
+                                                                  .finishDate
                                                                   .toString();
-                                                          endDate.text = result
-                                                              .first.finishDate
-                                                              .toString();
-                                                        }
-                                                        fetchDataTimeStamp(
-                                                            startDate.text,
-                                                            endDate.text);
-                                                      });
-                                                    },
-                                              validator: null),
-                                        ),
+                                                            }
+                                                            fetchDataTimeStamp(
+                                                                startDate.text,
+                                                                endDate.text);
+                                                          });
+                                                        },
+                                                  validator: null),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: TextFormFieldGlobal(
+                                                controller: startDate,
+                                                labelText: "วันที่เริ่มต้น",
+                                                hintText: '',
+                                                enabled: false,
+                                                validatorless: null),
+                                          ),
+                                          Expanded(
+                                            child: TextFormFieldGlobal(
+                                                controller: endDate,
+                                                labelText: "วันที่สิ้นสุด",
+                                                hintText: '',
+                                                enabled: false,
+                                                validatorless: null),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: TextFormFieldGlobal(
-                                            controller: startDate,
-                                            labelText: "วันที่เริ่มต้น",
-                                            hintText: '',
-                                            enabled: false,
-                                            validatorless: null),
-                                      ),
-                                      Expanded(
-                                        child: TextFormFieldGlobal(
-                                            controller: endDate,
-                                            labelText: "วันที่สิ้นสุด",
-                                            hintText: '',
-                                            enabled: false,
-                                            validatorless: null),
-                                      ),
-                                    ],
-                                  ),
+                                    ),
+                                  ]),
                                 ),
-                              ]),
-                            ),
 
-                            //  columnSpacing: 30,
-                            columns: isExpandedPage == 0
-                                ? const [
-                                    DataColumn(label: Text("Date")),
-                                    DataColumn(label: Text("Time Scan(In)")),
-                                    DataColumn(label: Text("Time Scan(Out)")),
-                                  ]
-                                : const [
-                                    DataColumn(label: Text("Date")),
-                                    DataColumn(label: Text("Type")),
-                                    DataColumn(label: Text("Request Time In")),
-                                    DataColumn(label: Text("Request Time Out")),
-                                    DataColumn(label: Text("Description")),
-                                    DataColumn(label: Text("Status")),
-                                    DataColumn(label: Text("Reject")),
-                                  ],
-                            source: isExpandedPage == 0
-                                ? DataTableRowSource(
-                                    userInfoData?.userInfoData.workTimeData)
-                                : DataTableRowRequestSource(
-                                    state.manualRequestData
-                                        ?.manualWorkDateRequestData,
-                                    context,
-                                    widget.employeeData.employeeId)),
-                      );
+                                //  columnSpacing: 30,
+                                columns: isExpandedPage == 0
+                                    ? const [
+                                        DataColumn(label: Text("Date")),
+                                        DataColumn(
+                                            label: Text("Time Scan(In)")),
+                                        DataColumn(
+                                            label: Text("Time Scan(Out)")),
+                                      ]
+                                    : const [
+                                        DataColumn(label: Text("Date")),
+                                        DataColumn(label: Text("Type")),
+                                        DataColumn(
+                                            label: Text("Request Time In")),
+                                        DataColumn(
+                                            label: Text("Request Time Out")),
+                                        DataColumn(label: Text("Description")),
+                                        DataColumn(label: Text("Status")),
+                                        DataColumn(label: Text("Reject")),
+                                      ],
+                                source: isExpandedPage == 0
+                                    ? DataTableRowSource(
+                                        userInfoData?.userInfoData.workTimeData)
+                                    : DataTableRowRequestSource(
+                                        state.manualRequestData
+                                            ?.manualWorkDateRequestData,
+                                        context,
+                                        widget.employeeData.employeeId)),
+                          );
               },
             ),
           ),

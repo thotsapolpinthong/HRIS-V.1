@@ -340,7 +340,7 @@ class _UpdateContactbypersonState extends State<UpdateContactbyperson> {
                                     final relationship = data?.relation;
                                     final firstname = data?.firstName;
                                     final lastname = data?.lastName;
-                                    final occupation = data?.occupation;
+                                    final occupation = data?.occupation ?? " -";
                                     final companyname =
                                         data?.companyName == 'ไม่พบข้อมูล'
                                             ? '  - '

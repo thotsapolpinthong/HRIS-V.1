@@ -192,108 +192,86 @@ class _AddPassportState extends State<AddPassport> {
                   child: Column(
                     children: [
                       Expanded(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          if (widget.addButton == false)
-                            const SizedBox(height: 56),
-                          Card(
-                            elevation: 1,
-                            child: TextFormField(
-                              autovalidateMode: AutovalidateMode.always,
-                              validator: Validatorless.multiple([
-                                Validatorless.required('กรุณากรอกข้อมูล'),
-                                Validatorless.max(9, 'Overvalue'),
-                                Validatorless.min(9, 'กรอกให้ครบ 9 หลัก')
-                              ]),
-                              controller: passportId,
-                              onChanged: (newValue) {
-                                onNewValue();
-                                onValidate();
-                              },
-                              decoration: const InputDecoration(
-                                  labelText:
-                                      'Passport Number : เลขที่หนังสือเดินทาง',
-                                  labelStyle: TextStyle(color: Colors.black87),
-                                  border: OutlineInputBorder(),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black26),
-                                  ),
-                                  filled: true,
-                                  fillColor: Colors.white),
-                            ),
-                          ),
-                          Card(
-                            elevation: 1,
-                            child: TextFormField(
-                              autovalidateMode: AutovalidateMode.always,
-                              validator:
+                          child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            if (widget.addButton == false)
+                              const SizedBox(height: 56),
+                            Card(
+                              elevation: 1,
+                              child: TextFormField(
+                                autovalidateMode: AutovalidateMode.always,
+                                validator: Validatorless.multiple([
                                   Validatorless.required('กรุณากรอกข้อมูล'),
-                              controller: expiredDatePassport,
-                              decoration: const InputDecoration(
-                                labelText:
-                                    'Expiring Date : วันหมดอายุหนังสือเดินทาง',
-                                labelStyle: TextStyle(color: Colors.black),
-                                filled: true,
-                                fillColor: Colors.white,
-                                suffixIcon: Icon(
-                                  Icons.calendar_today,
-                                ),
-                                border: OutlineInputBorder(),
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black26),
-                                ),
+                                  Validatorless.max(9, 'Overvalue'),
+                                  Validatorless.min(9, 'กรอกให้ครบ 9 หลัก')
+                                ]),
+                                controller: passportId,
+                                onChanged: (newValue) {
+                                  onNewValue();
+                                  onValidate();
+                                },
+                                decoration: const InputDecoration(
+                                    labelText:
+                                        'Passport Number : เลขที่หนังสือเดินทาง',
+                                    labelStyle:
+                                        TextStyle(color: Colors.black87),
+                                    border: OutlineInputBorder(),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black26),
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors.white),
                               ),
-                              readOnly: true,
-                              onTap: () {
-                                _selectpassportDate();
-                              },
                             ),
-                          ),
-                          Card(
-                            elevation: 1,
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
+                            Card(
+                              elevation: 1,
                               child: TextFormField(
                                 autovalidateMode: AutovalidateMode.always,
                                 validator:
                                     Validatorless.required('กรุณากรอกข้อมูล'),
-                                controller: expireDateVisa,
+                                controller: expiredDatePassport,
                                 decoration: const InputDecoration(
-                                  labelText: 'Expiring Visa : วันหมดอายุวิช่า',
+                                  labelText:
+                                      'Expiring Date : วันหมดอายุหนังสือเดินทาง',
                                   labelStyle: TextStyle(color: Colors.black),
                                   filled: true,
                                   fillColor: Colors.white,
                                   suffixIcon: Icon(
                                     Icons.calendar_today,
                                   ),
-                                  border: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.white)),
+                                  border: OutlineInputBorder(),
                                   enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.white),
+                                    borderSide:
+                                        BorderSide(color: Colors.black26),
                                   ),
                                 ),
                                 readOnly: true,
                                 onTap: () {
-                                  _selectvisaDate();
+                                  _selectpassportDate();
                                 },
                               ),
                             ),
-                          ),
-                          Card(
-                            elevation: 2,
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: DropdownButtonFormField(
-                                autovalidateMode: AutovalidateMode.always,
-                                validator:
-                                    Validatorless.required('กรุณากรอกข้อมูล'),
-                                decoration: const InputDecoration(
-                                    labelText: 'At Country. : ออกให้ ณ ประเทศ',
-                                    labelStyle:
-                                        TextStyle(color: Colors.black87),
+                            Card(
+                              elevation: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: TextFormField(
+                                  autovalidateMode: AutovalidateMode.always,
+                                  validator:
+                                      Validatorless.required('กรุณากรอกข้อมูล'),
+                                  controller: expireDateVisa,
+                                  decoration: const InputDecoration(
+                                    labelText:
+                                        'Expiring Visa : วันหมดอายุวิช่า',
+                                    labelStyle: TextStyle(color: Colors.black),
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    suffixIcon: Icon(
+                                      Icons.calendar_today,
+                                    ),
                                     border: OutlineInputBorder(
                                         borderSide:
                                             BorderSide(color: Colors.white)),
@@ -301,27 +279,56 @@ class _AddPassportState extends State<AddPassport> {
                                       borderSide:
                                           BorderSide(color: Colors.white),
                                     ),
-                                    filled: true,
-                                    fillColor: Colors.white),
-                                borderRadius: BorderRadius.circular(8),
-                                value: countryId,
-                                items: countryList.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e.countryId.toString(),
-                                    child: Text(e.countryNameTh),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    countryId = newValue.toString();
-                                    onNewValue();
-                                    onValidate();
-                                  });
-                                },
+                                  ),
+                                  readOnly: true,
+                                  onTap: () {
+                                    _selectvisaDate();
+                                  },
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                            Card(
+                              elevation: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: DropdownButtonFormField(
+                                  autovalidateMode: AutovalidateMode.always,
+                                  validator:
+                                      Validatorless.required('กรุณากรอกข้อมูล'),
+                                  decoration: const InputDecoration(
+                                      labelText:
+                                          'At Country. : ออกให้ ณ ประเทศ',
+                                      labelStyle:
+                                          TextStyle(color: Colors.black87),
+                                      border: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white)),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white),
+                                      ),
+                                      filled: true,
+                                      fillColor: Colors.white),
+                                  borderRadius: BorderRadius.circular(8),
+                                  value: countryId,
+                                  items: countryList.map((e) {
+                                    return DropdownMenuItem<String>(
+                                      value: e.countryId.toString(),
+                                      child: Text(e.countryNameTh),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      countryId = newValue.toString();
+                                      onNewValue();
+                                      onValidate();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       )),
                       if (widget.addButton == true)
                         Align(

@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/employee_bloc/employee_bloc.dart';
@@ -8,12 +10,14 @@ import 'package:hris_app_prototype/src/component/textformfield/textformfield_cus
 import 'package:hris_app_prototype/src/model/employee/create_employee_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
-import 'package:hris_app_prototype/src/model/employee/get_shift_model.dart';
+import 'package:hris_app_prototype/src/model/employee/get_fingerscan_id_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/shift/dropdown_shift_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
 import 'package:hris_app_prototype/src/model/person/allperson_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
+import 'package:hris_app_prototype/src/services/api_time_attendance_service.dart';
 import 'package:intl/intl.dart';
 import 'package:validatorless/validatorless.dart';
 
@@ -33,7 +37,7 @@ class CreateEmployee extends StatefulWidget {
 
 class _CreateEmployeeState extends State<CreateEmployee> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController test = TextEditingController();
+  TextEditingController cardId = TextEditingController();
   TextEditingController fingerscan = TextEditingController();
   TextEditingController validFrom = TextEditingController();
   TextEditingController expFrom = TextEditingController();
@@ -92,7 +96,9 @@ class _CreateEmployeeState extends State<CreateEmployee> {
   Future<void> fetchData() async {
     staffStatusList = await ApiEmployeeService.getStaffStatueDropdown();
     staffTypeList = await ApiEmployeeService.getStaffTypeDropdown();
-    shiftDataList = await ApiEmployeeService.getShiftData();
+    shiftDataList = await ApiTimeAtendanceService.getShiftDropdown();
+    FingerScanModel? fs = await ApiEmployeeService.getFingerScanId(
+        widget.person!.fisrtNameTh, widget.person!.lastNameTh);
     GetOrganizationAllModel? og =
         await ApiOrgService.fetchDataTableOrganization();
     if (widget.positionOrg != null) {
@@ -102,6 +108,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
       poList = po?.positionOrganizationData;
     }
     setState(() {
+      fingerscan.text = fs?.fingerScanId ?? "";
       ogList = og!.organizationData;
       if (widget.positionOrg != null) {
         poData = widget.positionOrg!.positionOrganizationId;
@@ -120,18 +127,18 @@ class _CreateEmployeeState extends State<CreateEmployee> {
   Future onAdd() async {
     if (_formKey.currentState!.validate()) {
       CreateEmployeeModel createModel = CreateEmployeeModel(
-        personId: widget.person!.personId,
-        fingerScanId: fingerscan.text,
-        startDate: validFrom.text,
-        endDate: expFrom.text,
-        noted: note.text,
-        email: email.text,
-        deptCode: "",
-        staffStatus: staffStatus.toString(),
-        staffType: staffType.toString(),
-        shiftId: shiftData.toString(),
-        positionOrganizationId: poData.toString(),
-      );
+          personId: widget.person!.personId,
+          fingerScanId: fingerscan.text,
+          startDate: validFrom.text,
+          endDate: expFrom.text,
+          noted: note.text,
+          email: email.text,
+          deptCode: "",
+          staffStatus: "1",
+          staffType: staffType.toString(),
+          shiftId: shiftData.toString(),
+          positionOrganizationId: poData.toString(),
+          cardId: cardId.text);
       setState(() {});
       bool success = await ApiEmployeeService.createEmployee(createModel);
       alertDialog(success);
@@ -182,6 +189,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
             context.read<PositionOrgBloc>().add(FetchDataPositionOrgEvent(
                 organizationId:
                     widget.positionOrg!.organizationData.organizationCode));
+            Navigator.pop(context);
           });
         }
       },
@@ -225,28 +233,34 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                                   Validatorless.required('*กรุณากรอกข้อมูล'),
                             )),
                             Expanded(
-                              child: DropdownGlobal(
-                                labeltext: 'Shift.',
-                                value: shiftData,
-                                validator:
-                                    Validatorless.required('*กรุณากรอกข้อมูล'),
-                                items: shiftDataList?.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e.shiftId.toString(),
-                                    child: Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 140),
-                                        child: Text(e.shiftName)),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    shiftData = newValue.toString();
-                                  });
-                                },
-                              ),
-                            ),
+                                child: TextFormFieldNumber(
+                              controller: cardId,
+                              labelText: "Card Id",
+                              hintText: "เลขบัตร",
+                              validatorless: null,
+                            )),
                           ],
+                        ),
+                        const Gap(2),
+                        DropdownGlobal(
+                          labeltext: 'Shift.',
+                          value: shiftData,
+                          validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                          items: shiftDataList?.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.shiftId.toString(),
+                              child: Container(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 300),
+                                  child: Text(
+                                      "${e.shiftName} : ${e.startTime} - ${e.endTime}")),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              shiftData = newValue.toString();
+                            });
+                          },
                         ),
                         const Gap(2),
                         Row(
@@ -319,28 +333,28 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: DropdownGlobal(
-                                labeltext: 'Staff status.',
-                                value: staffStatus,
-                                validator:
-                                    Validatorless.required('*กรุณากรอกข้อมูล'),
-                                items: staffStatusList?.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e.staffStatusId.toString(),
-                                    child: Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 120),
-                                        child: Text(e.description)),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    staffStatus = newValue.toString();
-                                  });
-                                },
-                              ),
-                            ),
+                            // Expanded(
+                            //   child: DropdownGlobal(
+                            //     labeltext: 'Staff status.',
+                            //     value: staffStatus,
+                            //     validator:
+                            //         Validatorless.required('*กรุณากรอกข้อมูล'),
+                            //     items: staffStatusList?.map((e) {
+                            //       return DropdownMenuItem<String>(
+                            //         value: e.staffStatusId.toString(),
+                            //         child: Container(
+                            //             constraints:
+                            //                 const BoxConstraints(maxWidth: 120),
+                            //             child: Text(e.description)),
+                            //       );
+                            //     }).toList(),
+                            //     onChanged: (newValue) {
+                            //       setState(() {
+                            //         staffStatus = newValue.toString();
+                            //       });
+                            //     },
+                            //   ),
+                            // ),
                             Expanded(
                               child: DropdownGlobal(
                                 labeltext: 'Staff type.',
@@ -366,18 +380,26 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                           ],
                         ),
                         const Gap(2),
-                        TextFormFieldPosition(
-                          controller: email,
-                          labelText: "Email",
-                          hintText: "ถ้ามี*",
-                          validatorless:
-                              Validatorless.email("admin@example.com"),
-                        ),
-                        TextFormFieldPositionDescription(
-                          controller: note,
-                          labelText: "หมายเหตุ",
-                          hintText: "เพิ่มคำอธิบาย*",
-                          validatorless: null,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: TextFormFieldPosition(
+                                controller: email,
+                                labelText: "Email",
+                                hintText: "ถ้ามี*",
+                                validatorless:
+                                    Validatorless.email("admin@example.com"),
+                              ),
+                            ),
+                            Expanded(
+                              child: TextFormFieldPositionDescription(
+                                controller: note,
+                                labelText: "หมายเหตุ",
+                                hintText: "เพิ่มคำอธิบาย*",
+                                validatorless: null,
+                              ),
+                            ),
+                          ],
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,

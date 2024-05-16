@@ -40,7 +40,7 @@ class ContactPersonInfoDatum {
   String firstName;
   String midName;
   String lastName;
-  String occupation;
+  String? occupation;
   String companyName;
   String positionName;
   String homePhone;
@@ -54,7 +54,7 @@ class ContactPersonInfoDatum {
     required this.firstName,
     required this.midName,
     required this.lastName,
-    required this.occupation,
+    this.occupation,
     required this.companyName,
     required this.positionName,
     required this.homePhone,

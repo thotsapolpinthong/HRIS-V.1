@@ -5,6 +5,7 @@ import 'package:hris_app_prototype/src/model/employee/dropdown_positionorganizat
 import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
+import 'package:hris_app_prototype/src/model/employee/get_fingerscan_id_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_shift_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/create_leave_by_hr_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_employee_approve_model.dart';
@@ -376,6 +377,28 @@ class ApiEmployeeService {
       }
     } else {
       return create;
+    }
+  }
+
+//fingerscan
+  static Future<FingerScanModel?> getFingerScanId(
+      String firstNameTh, String lastNameTh) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/Times/GetFingerScanId?firstNameTh=$firstNameTh&lastNameTh=$lastNameTh"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      FingerScanModel? data = fingerScanModelFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
     }
   }
 }

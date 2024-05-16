@@ -33,7 +33,7 @@ class _WorkHistoryLayoutState extends State<WorkHistoryLayout> {
                 });
               },
               leading: const Icon(
-                Icons.contact_phone_rounded,
+                Icons.history_rounded,
                 color: Colors.white,
               ),
               title: const Text(

@@ -674,7 +674,7 @@ class ApiService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
     var response = await http.get(
-      Uri.parse("$baseUrlDropdown/GetEducationLevalAll"),
+      Uri.parse("http://192.168.0.205/StecApi/Hr/GetEducationLevelAll"),
       headers: {"Authorization": "Bearer $sharedToken"},
     );
     if (response.statusCode == 200) {
@@ -775,11 +775,12 @@ class ApiService {
     }
   }
 
-  static getMajorDropdown() async {
+  static getMajorDropdown(String educationQualificationId) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
     var response = await http.get(
-      Uri.parse("$baseUrlDropdown/GetMajorAll"),
+      Uri.parse(
+          "$baseUrlDropdown/GetMajorAll?educationQualificationId=$educationQualificationId"),
       headers: {"Authorization": "Bearer $sharedToken"},
     );
     if (response.statusCode == 200) {
