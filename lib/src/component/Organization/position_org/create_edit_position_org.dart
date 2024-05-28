@@ -51,6 +51,9 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
   TextEditingController expFrom = TextEditingController();
   TextEditingController comment = TextEditingController();
   TextEditingController salary = TextEditingController();
+  TextEditingController positionMenu = TextEditingController();
+  TextEditingController bussinessParentMenu = TextEditingController();
+  TextEditingController parentPositionOrgMenu = TextEditingController();
   bool disableExp = false;
 
   List<PositionDatum>? positionList;
@@ -99,6 +102,8 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
     if (widget.onEdit == true) {
       if (widget.positionOrgData?.positionData.positionId != '') {
         positionData = widget.positionOrgData?.positionData.positionId;
+        positionMenu.text =
+            widget.positionOrgData!.positionData.positionNameTh.toString();
       }
       if (widget.positionOrgData?.jobTitleData.jobTitleId != '') {
         jobTitleData = widget.positionOrgData!.jobTitleData.jobTitleId;
@@ -112,11 +117,15 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
           null) {
         bussinessParentData = widget.positionOrgData
             ?.parentPositionBusinessNodeId.positionOrganizationId;
+        bussinessParentMenu.text = widget.positionOrgData!
+            .parentPositionBusinessNodeId.positionData.positionNameTh;
       }
       if (widget.positionOrgData?.parentPositionNodeId.positionOrganizationId !=
           null) {
         parentPositionOrgData =
             widget.positionOrgData?.parentPositionNodeId.positionOrganizationId;
+        parentPositionOrgMenu.text = widget
+            .positionOrgData!.parentPositionNodeId.positionData.positionNameTh;
       }
       if (widget.positionOrgData?.startingSalary != null) {
         salary.text = widget.positionOrgData!.startingSalary;
@@ -154,7 +163,8 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
 
   Future<void> selectexpDate() async {
     DateFormat format = DateFormat('yyyy-MM-dd');
-    DateTime dateTime = format.parse(validFrom.text);
+    DateTime dateTime =
+        validFrom.text == "" ? DateTime(1950) : format.parse(validFrom.text);
     DateTime? picker = await showDatePicker(
       context: context,
       initialDate: DateTime(9999, 12, 31),
@@ -178,8 +188,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
         positionTypeId: positionTypeData.toString(),
         parentPositionNodeId:
             widget.firstNode == true ? "" : parentPositionOrgData.toString(),
-        parentPositionBusinessNodeId:
-            widget.firstNode == true ? "" : bussinessParentData.toString(),
+        parentPositionBusinessNodeId: bussinessParentData.toString(),
         startingSalary: salary.text,
         validFromDate: validFrom.text,
         endDate: expFrom.text,
@@ -305,203 +314,253 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
             child: Column(
               children: [
                 Expanded(
-                  child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Form(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          key: _formKey,
-                          child: Column(
-                            children: [
-                              DropdownGlobal(
-                                  labeltext: "Position",
-                                  value: positionData,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  items: positionList?.map((e) {
-                                    return DropdownMenuItem<String>(
-                                      value: e.positionId.toString(),
-                                      child: Container(
-                                          constraints: const BoxConstraints(
-                                              maxWidth: 350, minWidth: 120),
-                                          child: Text(e.positionNameTh == "NULL"
-                                              ? '-'
-                                              : "${e.positionId} : ${e.positionNameTh}")),
-                                    );
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    positionData = newValue.toString();
-                                  }),
-                              const Gap(2),
-                              DropdownGlobal(
-                                  labeltext: "Jobtitle",
-                                  value: jobTitleData,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  items: jobTitleList?.map((e) {
-                                    return DropdownMenuItem<String>(
-                                      value: e.jobTitleId.toString(),
-                                      child: Container(
-                                          constraints: const BoxConstraints(
-                                            minWidth: 100,
-                                          ),
-                                          child: Text(e.jobTitleName == "NULL"
-                                              ? '-'
-                                              : e.jobTitleName)),
-                                    );
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    jobTitleData = newValue.toString();
-                                  }),
-                              const Gap(2),
-                              DropdownGlobal(
-                                  labeltext: "Position Type",
-                                  value: positionTypeData,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  items: positionTypeList?.map((e) {
-                                    return DropdownMenuItem<String>(
-                                      value: e.positionTypeId.toString(),
-                                      child: Container(
-                                          constraints: const BoxConstraints(
-                                            minWidth: 100,
-                                          ),
-                                          child: Text(
-                                              e.positionTypeNameTh == "NULL"
-                                                  ? '-'
-                                                  : e.positionTypeNameTh)),
-                                    );
-                                  }).toList(),
-                                  onChanged: (newValue) {
-                                    positionTypeData = newValue.toString();
-                                  }),
-                              const Gap(2),
-                              if (widget.firstNode ==
-                                  false) //------------------
-                                DropdownGlobal(
-                                    labeltext: "Parent Position Organization",
-                                    value: parentPositionOrgData,
-                                    validator: Validatorless.required(
-                                        '*กรุณากรอกข้อมูล'),
-                                    items: parentPositionOrgList?.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        value:
-                                            e.positionOrganizationId.toString(),
-                                        child: Container(
-                                            constraints: const BoxConstraints(
-                                              minWidth: 100,
-                                            ),
-                                            child: Text(e.positionData
-                                                        .positionNameTh ==
-                                                    "NULL"
-                                                ? "${e.positionData.positionId} : '-'"
-                                                : "${e.positionData.positionId} : ${e.positionData.positionNameTh}")),
-                                      );
-                                    }).toList(),
-                                    onChanged: (newValue) {
-                                      parentPositionOrgData =
-                                          newValue.toString();
-                                    }),
-                              const Gap(2),
-                              if (widget.firstNode == false)
-                                DropdownGlobal(
-                                    labeltext:
-                                        "Bussiness Parent Position Organization",
-                                    value: bussinessParentData,
-                                    validator: Validatorless.required(
-                                        '*กรุณากรอกข้อมูล'),
-                                    items: bussinessParentList?.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        value:
-                                            e.positionOrganizationId.toString(),
-                                        child: Container(
-                                            constraints: const BoxConstraints(
-                                              minWidth: 100,
-                                            ),
-                                            child: Text(e.positionData
-                                                        .positionNameTh ==
-                                                    "NULL"
-                                                ? '-'
-                                                : "${e.positionData.positionId} : ${e.positionData.positionNameTh}")),
-                                      );
-                                    }).toList(),
-                                    onChanged: (newValue) {
-                                      bussinessParentData = newValue.toString();
-                                    }),
-                              const Gap(2),
-                              TextFormFieldNumber(
-                                controller: salary,
-                                labelText: "Salary",
-                                hintText: "ฐานเงินเดือนประจำตำแหน่ง*",
-                                validatorless:
-                                    Validatorless.required('*กรุณากรอกข้อมูล'),
-                              ),
-                              const Gap(2),
-                              Card(
-                                child: TextFormField(
-                                  controller: validFrom,
-                                  autovalidateMode: AutovalidateMode.always,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  decoration: const InputDecoration(
-                                    labelText: 'มีผลตั้งแต่',
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon: Icon(
-                                      Icons.calendar_today,
-                                    ),
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black54),
-                                    ),
-                                  ),
-                                  readOnly: true,
-                                  onTap: () {
-                                    selectvalidFromDate();
-                                  },
-                                ),
-                              ),
-                              const Gap(2),
-                              Card(
-                                child: TextFormField(
-                                  controller: expFrom,
-                                  autovalidateMode: AutovalidateMode.always,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  decoration: InputDecoration(
-                                    labelText: 'สิ้นสุดเมื่อ',
-                                    labelStyle: TextStyle(
-                                        color: disableExp == true
-                                            ? Colors.black
-                                            : Colors.grey),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon: const Icon(
-                                      Icons.calendar_today,
-                                    ),
-                                    disabledBorder: InputBorder.none,
-                                    border: const OutlineInputBorder(),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black54),
-                                    ),
-                                  ),
-                                  readOnly: true,
-                                  enabled: disableExp,
-                                  onTap: () {
-                                    selectexpDate();
-                                  },
-                                ),
-                              ),
-                            ],
+                  child: SingleChildScrollView(
+                    child: Form(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          DropdownMenuGlobal(
+                              label: 'Position',
+                              width: 422,
+                              controller: positionMenu,
+                              onSelected: (value) {
+                                setState(() {
+                                  positionData = value.toString();
+                                });
+                              },
+                              dropdownMenuEntries:
+                                  positionList!.map((PositionDatum e) {
+                                return DropdownMenuEntry(
+                                    value: e.positionId,
+                                    label: e.positionNameTh == "NULL"
+                                        ? '-'
+                                        : "${e.positionId} : ${e.positionNameTh}",
+                                    style: MenuItemButton.styleFrom());
+                              }).toList()),
+                          // DropdownGlobal(
+                          //     labeltext: "Position",
+                          //     value: positionData,
+                          //     validator:
+                          //         Validatorless.required('*กรุณากรอกข้อมูล'),
+                          //     items: positionList?.map((e) {
+                          //       return DropdownMenuItem<String>(
+                          //         value: e.positionId.toString(),
+                          //         child: Container(
+                          //             constraints: const BoxConstraints(
+                          //                 maxWidth: 350, minWidth: 120),
+                          //             child: Text(e.positionNameTh == "NULL"
+                          //                 ? '-'
+                          //                 : "${e.positionId} : ${e.positionNameTh}")),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (newValue) {
+                          //       positionData = newValue.toString();
+                          //     }),
+                          const Gap(2),
+                          DropdownGlobal(
+                              labeltext: "Jobtitle",
+                              value: jobTitleData,
+                              validator:
+                                  Validatorless.required('*กรุณากรอกข้อมูล'),
+                              items: jobTitleList?.map((e) {
+                                return DropdownMenuItem<String>(
+                                  value: e.jobTitleId.toString(),
+                                  child: Container(
+                                      constraints: const BoxConstraints(
+                                        minWidth: 100,
+                                      ),
+                                      child: Text(e.jobTitleName == "NULL"
+                                          ? '-'
+                                          : e.jobTitleName)),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                jobTitleData = newValue.toString();
+                              }),
+                          const Gap(2),
+                          DropdownGlobal(
+                              labeltext: "Position Type",
+                              value: positionTypeData,
+                              validator:
+                                  Validatorless.required('*กรุณากรอกข้อมูล'),
+                              items: positionTypeList?.map((e) {
+                                return DropdownMenuItem<String>(
+                                  value: e.positionTypeId.toString(),
+                                  child: Container(
+                                      constraints: const BoxConstraints(
+                                        minWidth: 100,
+                                      ),
+                                      child: Text(e.positionTypeNameTh == "NULL"
+                                          ? '-'
+                                          : e.positionTypeNameTh)),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                positionTypeData = newValue.toString();
+                              }),
+                          const Gap(2),
+                          if (widget.firstNode == false) //------------------
+                            DropdownMenuGlobal(
+                                label: "Parent Position Organization",
+                                width: 422,
+                                controller: parentPositionOrgMenu,
+                                onSelected: (value) {
+                                  setState(() {
+                                    parentPositionOrgData = value.toString();
+                                  });
+                                },
+                                dropdownMenuEntries: parentPositionOrgList!
+                                    .map((PositionOrganizationDatumById e) {
+                                  return DropdownMenuEntry(
+                                      value: e.positionOrganizationId,
+                                      label: e.positionData.positionNameTh ==
+                                              "NULL"
+                                          ? '-'
+                                          : "${e.positionData.positionId} : ${e.positionData.positionNameTh}",
+                                      style: MenuItemButton.styleFrom());
+                                }).toList()),
+                          // DropdownGlobal(
+                          //     labeltext: "Parent Position Organization",
+                          //     value: parentPositionOrgData,
+                          //     validator:
+                          //         Validatorless.required('*กรุณากรอกข้อมูล'),
+                          //     items: parentPositionOrgList?.map((e) {
+                          //       return DropdownMenuItem<String>(
+                          //         value: e.positionOrganizationId.toString(),
+                          //         child: Container(
+                          //             constraints: const BoxConstraints(
+                          //               minWidth: 100,
+                          //             ),
+                          //             child: Text(e.positionData
+                          //                         .positionNameTh ==
+                          //                     "NULL"
+                          //                 ? "${e.positionData.positionId} : '-'"
+                          //                 : "${e.positionData.positionId} : ${e.positionData.positionNameTh}")),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (newValue) {
+                          //       parentPositionOrgData = newValue.toString();
+                          //     }),
+                          const Gap(2),
+                          if (widget.positionOrgData?.positionOrganizationId !=
+                                  widget.positionOrgData?.parentPositionNodeId
+                                      .positionOrganizationId &&
+                              widget.firstNode == false)
+                            DropdownMenuGlobal(
+                                label: "Bussiness Parent Position Organization",
+                                width: 422,
+                                controller: bussinessParentMenu,
+                                onSelected: (value) {
+                                  setState(() {
+                                    bussinessParentData = value.toString();
+                                  });
+                                },
+                                dropdownMenuEntries: parentPositionOrgList!
+                                    .map((PositionOrganizationDatumById e) {
+                                  return DropdownMenuEntry(
+                                      value: e.positionOrganizationId,
+                                      label: e.positionData.positionNameTh ==
+                                              "NULL"
+                                          ? '-'
+                                          : "${e.positionData.positionId} : ${e.positionData.positionNameTh}",
+                                      style: MenuItemButton.styleFrom());
+                                }).toList())
+                          // DropdownGlobal(
+                          //     labeltext:
+                          //         "Bussiness Parent Position Organization",
+                          //     value: bussinessParentData,
+                          //     validator:
+                          //         Validatorless.required('*กรุณากรอกข้อมูล'),
+                          //     items: parentPositionOrgList?.map((e) {
+                          //       return DropdownMenuItem<String>(
+                          //         value: e.positionOrganizationId.toString(),
+                          //         child: Container(
+                          //             constraints: const BoxConstraints(
+                          //               minWidth: 100,
+                          //             ),
+                          //             child: Text(e.positionData
+                          //                         .positionNameTh ==
+                          //                     "NULL"
+                          //                 ? '-'
+                          //                 : "${e.positionData.positionId} : ${e.positionData.positionNameTh}")),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (newValue) {
+                          //       bussinessParentData = newValue.toString();
+                          //     })
+                          else
+                            DropdownMenuGlobal(
+                                label: "Bussiness Parent Position Organization",
+                                width: 422,
+                                controller: bussinessParentMenu,
+                                onSelected: (value) {
+                                  setState(() {
+                                    bussinessParentData = value.toString();
+                                  });
+                                },
+                                dropdownMenuEntries: bussinessParentList!
+                                    .map((PositionOrganizationDatumDropdown e) {
+                                  return DropdownMenuEntry(
+                                      value: e.positionOrganizationId,
+                                      label: e.positionData.positionNameTh ==
+                                              "NULL"
+                                          ? '-'
+                                          : "${e.positionData.positionId} : ${e.positionData.positionNameTh}",
+                                      style: MenuItemButton.styleFrom());
+                                }).toList()),
+                          // DropdownGlobal(
+                          //     labeltext:
+                          //         "Bussiness Parent Position Organization",
+                          //     value: bussinessParentData,
+                          //     validator:
+                          //         Validatorless.required('*กรุณากรอกข้อมูล'),
+                          //     items: bussinessParentList?.map((e) {
+                          //       return DropdownMenuItem<String>(
+                          //         value: e.positionOrganizationId.toString(),
+                          //         child: Container(
+                          //             constraints: const BoxConstraints(
+                          //               minWidth: 100,
+                          //             ),
+                          //             child: Text(e.positionData
+                          //                         .positionNameTh ==
+                          //                     "NULL"
+                          //                 ? '-'
+                          //                 : "${e.positionData.positionId} : ${e.positionData.positionNameTh}")),
+                          //       );
+                          //     }).toList(),
+                          //     onChanged: (newValue) {
+                          //       bussinessParentData = newValue.toString();
+                          //     }),
+                          const Gap(2),
+                          TextFormFieldGlobal(
+                              controller: salary,
+                              labelText: "Salary",
+                              hintText: "ฐานเงินเดือนประจำตำแหน่ง",
+                              validatorless:
+                                  Validatorless.required('*กรุณากรอกข้อมูล'),
+                              enabled: true),
+                          const Gap(2),
+                          TextFormFieldDatepickGlobal(
+                            controller: validFrom,
+                            labelText: 'มีผลตั้งแต่',
+                            validatorless:
+                                Validatorless.required('*กรุณากรอกข้อมูล'),
+                            ontap: () {
+                              selectvalidFromDate();
+                            },
                           ),
-                        ),
+                          const Gap(2),
+                          TextFormFieldDatepickGlobal(
+                            controller: expFrom,
+                            labelText: 'สิ้นสุดเมื่อ',
+                            validatorless:
+                                Validatorless.required('*กรุณากรอกข้อมูล'),
+                            ontap: () {
+                              selectexpDate();
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -515,9 +574,13 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.greenAccent,
                             ),
-                            onPressed: () {
-                              onAdd();
-                            },
+                            onPressed: positionData == null ||
+                                    bussinessParentData == null ||
+                                    parentPositionOrgData == null
+                                ? null
+                                : () {
+                                    onAdd();
+                                  },
                             child: const Text(
                               "Add",
                               style: TextStyle(color: Colors.black87),
@@ -532,9 +595,13 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.greenAccent,
                             ),
-                            onPressed: () {
-                              showdialogEdit();
-                            },
+                            onPressed: positionData == null ||
+                                    bussinessParentData == null ||
+                                    parentPositionOrgData == null
+                                ? null
+                                : () {
+                                    showdialogEdit();
+                                  },
                             child: const Text(
                               "Save",
                               style: TextStyle(color: Colors.black87),

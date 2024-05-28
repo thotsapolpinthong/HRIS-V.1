@@ -23,7 +23,6 @@ class _MyHomepageState extends State<MyHomepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //appBar: AppBar(),
       backgroundColor: mythemecolor,
       body: SafeArea(child: BlocBuilder<HomepageBloc, HomepageState>(
         builder: (context, state) {

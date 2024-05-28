@@ -4,7 +4,6 @@ import 'package:hris_app_prototype/src/model/employee/create_employee_model.dart
 import 'package:hris_app_prototype/src/model/employee/dropdown_positionorganization.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
-import 'package:hris_app_prototype/src/model/employee/get_employee_by_id_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_fingerscan_id_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_shift_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/create_leave_by_hr_model.dart';

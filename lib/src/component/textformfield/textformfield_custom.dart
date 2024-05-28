@@ -301,6 +301,49 @@ class TextFormFieldPositionDescription extends StatelessWidget {
 }
 
 // Global <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+class DropdownMenuGlobal extends StatelessWidget {
+  final double? width;
+  final TextEditingController? controller;
+  final String? label;
+  final Function(dynamic)? onSelected;
+  final List<DropdownMenuEntry<dynamic>> dropdownMenuEntries;
+  const DropdownMenuGlobal({
+    Key? key,
+    required this.label,
+    required this.width,
+    required this.controller,
+    required this.onSelected,
+    required this.dropdownMenuEntries,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      child: DropdownMenu(
+          controller: controller,
+          width: width,
+          trailingIcon: const Icon(Icons.content_paste_search_rounded),
+          inputDecorationTheme: InputDecorationTheme(
+              contentPadding: const EdgeInsets.all(10.0),
+              filled: true,
+              fillColor: Colors.white,
+              iconColor: Colors.black,
+              labelStyle: const TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: const BorderSide(color: Colors.black)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+              )),
+          label: Text(label.toString()),
+          enableFilter: true,
+          onSelected: onSelected,
+          dropdownMenuEntries: dropdownMenuEntries),
+    );
+  }
+}
+
 class DropdownGlobal extends StatelessWidget {
   final String labeltext;
   final String? value;

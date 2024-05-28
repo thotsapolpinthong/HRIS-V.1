@@ -87,6 +87,10 @@ flutter:
     - assets/idcard.png
     - assets/passport.png
     - assets/stec2.png
+    - assets/steclogo.png
+    - assets/profile.jpg
+    - assets/logoThapawong.jpg
+    - assets/logoaoi.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

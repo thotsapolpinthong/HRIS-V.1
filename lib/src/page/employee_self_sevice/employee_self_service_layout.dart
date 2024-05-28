@@ -67,12 +67,11 @@ class _EmployeeSelfServiceLayoutState extends State<EmployeeSelfServiceLayout> {
               width: 1000, // MediaQuery.of(context).size.width - 140,
               height: 800, //MediaQuery.of(context).size.height - 120,
               padding: const EdgeInsets.all(20),
-              child: Container(
-                  child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: Text("Close"))));
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Close")));
         });
   }
 

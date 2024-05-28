@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/component/Organization/department/datatable_department.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/create_edit_org.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/datatable_organization.dart';
@@ -29,7 +30,24 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('เพิ่มโครงสร้างองค์กร (Create Organization.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มโครงสร้างองค์กร',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' (Create Organization.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -87,9 +105,7 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
           children: [
             const Text(
               'Organization Management.',
-              style: TextStyle(
-                fontSize: 20,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const Gap(4),
             Expanded(

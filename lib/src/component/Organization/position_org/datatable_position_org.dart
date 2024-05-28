@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/position_org_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/position_org/create_edit_position_org.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -371,35 +372,19 @@ class PersonDataTableSource extends DataTableSource {
           SizedBox(
             height: 35,
             width: 45,
-            child: Tooltip(
-              message: "แก้ไขโต๊ะทำงาน",
-              child: ElevatedButton(
-                  onPressed: () {
-                    showDialogCreate(positionOrgData);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(1)),
-                  child: const Icon(Icons.edit)),
-            ),
+            child: positionOrgData.employeeData.employeeId != ''
+                ? Container()
+                : Tooltip(
+                    message: "แก้ไขโต๊ะทำงาน",
+                    child: ElevatedButton(
+                        onPressed: () {
+                          showDialogCreate(positionOrgData);
+                        },
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(1)),
+                        child: const Icon(Icons.edit)),
+                  ),
           ),
-          // const Gap(5),
-          // if (positionOrgData.employeeData.employeeId == '')
-          //   SizedBox(
-          //     height: 35,
-          //     width: 45,
-          //     child: Tooltip(
-          //       message: "ลบโต๊ะทำงาน",
-          //       child: ElevatedButton(
-          //         onPressed: () {
-          //           // showDialogSearch(positionOrgData);
-          //         },
-          //         style: ElevatedButton.styleFrom(
-          //             backgroundColor: Colors.redAccent[700],
-          //             padding: const EdgeInsets.all(1)),
-          //         child: const Icon(Icons.delete_rounded),
-          //       ),
-          //     ),
-          //   ),
           const Gap(5),
           if (positionOrgData.employeeData.employeeId == '')
             SizedBox(
@@ -453,7 +438,25 @@ class PersonDataTableSource extends DataTableSource {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('เพิ่มโต๊ะทำงาน (Position Organization.)'),
+                    // const Text('เพิ่มโต๊ะทำงาน (Position Organization.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มโต๊ะทำงาน',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' ( Position Organization.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red[700]),

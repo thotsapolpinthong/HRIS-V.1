@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/position_org_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/position_org/create_edit_position_org.dart';
@@ -86,7 +87,27 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('เพิ่มโต๊ะทำงาน (Position Organization.)'),
+                    // const Text('เพิ่มโต๊ะทำงาน (Position Organization.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: edit == false
+                                  ? 'เพิ่มโต๊ะทำงาน'
+                                  : 'แก้ไขโต๊ะทำงาน',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' ( Position Organization.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red[700]),
@@ -96,10 +117,9 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-
-                        context.read<PositionOrgBloc>().add(
-                            FetchDataPositionOrgEvent(
-                                organizationId: widget.data!.organizationId));
+                        // context.read<PositionOrgBloc>().add(
+                        //     FetchDataPositionOrgEvent(
+                        //         organizationId: widget.data!.organizationId));
                       },
                     ),
                   ],
@@ -108,11 +128,8 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
               content: SizedBox(
                 width: 450,
                 height: 600,
-                child: Column(
-                  children: [
-                    if (edit == false)
-                      Expanded(
-                          child: EditPositionOrganization(
+                child: edit == false
+                    ? EditPositionOrganization(
                         onEdit: false,
                         positionOrgData:
                             null, //positionOrgData ?? positionOrgData,//null
@@ -121,18 +138,13 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                         firstNode:
                             positionOrgData == null ? true : false, //true
                         positionOrgDataAddNode: positionOrgData,
-                      )),
-                    if (edit == true)
-                      Expanded(
-                        child: EditPositionOrganization(
-                            onEdit: true,
-                            positionOrgData: positionOrgData,
-                            orgData: widget.data,
-                            ongraph: true,
-                            firstNode: false),
                       )
-                  ],
-                ),
+                    : EditPositionOrganization(
+                        onEdit: true,
+                        positionOrgData: positionOrgData,
+                        orgData: widget.data,
+                        ongraph: true,
+                        firstNode: false),
               ));
         });
   }
@@ -240,9 +252,10 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
   Widget build(BuildContext context) {
     return BlocBuilder<PositionOrgBloc, PositionOrgState>(
       builder: (context, state) {
+        graph = Graph()..isTree = true;
+        positionOrgData = null;
         if (state.isDataLoading == false) {
-          graph = Graph()..isTree = true;
-          positionOrgData = null;
+          positionOrgData?.positionOrganizationData = [];
           positionOrgData = state.positionOrganizationDataModel;
           nodedata(positionOrgData?.positionOrganizationData);
         } else {
@@ -264,7 +277,7 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          "Position Organization ( ${widget.data!.organizationCode} : ${widget.data!.departMentData.deptNameEn} ).",
+                          "Position Organization ( ${widget.data!.organizationCode} : ${widget.data!.departMentData.deptNameEn} )",
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ).animate().fade().slide(),
@@ -407,89 +420,121 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                   borderRadius: BorderRadius.circular(12)),
               child: Container(
                   width: 200,
-                  constraints: const BoxConstraints(
-                    minHeight: 60, // ความสูงขั้นต่ำที่ต้องการ
+                  constraints: BoxConstraints(
+                    minHeight: data.positionData.positionId == "259"
+                        ? 100
+                        : 60, // ความสูงขั้นต่ำที่ต้องการ
                   ),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(16),
-                    boxShadow: const [
-                      BoxShadow(color: Colors.white, spreadRadius: 1),
+                    boxShadow: [
+                      BoxShadow(
+                          color: data.positionData.positionId == "259"
+                              ? mythemecolor
+                              : Colors.white,
+                          spreadRadius: 1),
                     ],
                   ),
-                  child: Center(
-                      child: Padding(
-                    padding: const EdgeInsets.fromLTRB(4, 12, 4, 4),
-                    child: Tooltip(
-                      message:
-                          "ชื่อตำแหน่งงาน : ${data.positionData.positionNameTh}\nแผนก : ${data.organizationData.departMentData.deptNameTh}\nประเภทพนักงาน : ${data.positionTypeData.positionTypeNameTh}\nรายละเอียดงาน : ${data.jobTitleData.jobTitleName}\nวันที่เริ่มตำแหน่งงาน : ${data.validFromDate}\nวันที่ตำแหน่งงานสิ้นสุด : ${data.endDate}",
-                      child: Column(
-                        children: [
-                          Card(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(6)),
-                            color: mythemecolor,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-                              child: Text(
-                                data.positionData.positionNameTh,
-                                style: const TextStyle(color: Colors.white),
-                                textAlign: TextAlign.center,
+                  child: data.positionData.positionId == "259"
+                      ? Center(
+                          child: Column(
+                            children: [
+                              const Gap(15),
+                              Text(
+                                "\nBoard of Directors.",
+                                style: TextStyle(
+                                  color: mygreycolors,
+                                  fontSize: 18,
+                                ),
                               ),
+                            ],
+                          ),
+                        )
+                      : Center(
+                          child: Padding(
+                          padding: const EdgeInsets.fromLTRB(4, 12, 4, 4),
+                          child: Tooltip(
+                            message:
+                                "ชื่อตำแหน่งงาน : ${data.positionData.positionNameTh}\nแผนก : ${data.organizationData.departMentData.deptNameTh}\nประเภทพนักงาน : ${data.positionTypeData.positionTypeNameTh}\nรายละเอียดงาน : ${data.jobTitleData.jobTitleName}\nวันที่เริ่มตำแหน่งงาน : ${data.validFromDate}\nวันที่ตำแหน่งงานสิ้นสุด : ${data.endDate}",
+                            child: Column(
+                              children: [
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6)),
+                                  color: mythemecolor,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                    child: Text(
+                                      data.positionData.positionNameTh,
+                                      style:
+                                          const TextStyle(color: Colors.white),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                                TextThai(
+                                  text: data.employeeData.employeeId == ""
+                                      ? "ว่าง*"
+                                      : "คุณ ${data.employeeData.employeeFirstNameTh}  ${data.employeeData.employeeLastNameTh}",
+                                  textStyle: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      color: data.employeeData.employeeId == ""
+                                          ? Colors.red[700]
+                                          : Colors.black),
+                                )
+                              ],
                             ),
                           ),
-                          TextThai(
-                            text: data.employeeData.employeeId == ""
-                                ? "ว่าง*"
-                                : "คุณ ${data.employeeData.employeeFirstNameTh}  ${data.employeeData.employeeLastNameTh}",
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: data.employeeData.employeeId == ""
-                                    ? Colors.red[700]
-                                    : Colors.black),
-                          )
-                        ],
-                      ),
-                    ),
-                  ))),
+                        ))),
             ),
           ),
-          Positioned(
-              top: -8,
-              child: SizedBox(
-                  width: 60,
-                  child: CircleAvatar(
-                      backgroundColor: mythemecolor,
-                      radius: 40,
-                      child: SizedBox(
-                        height: 55,
-                        child: Tooltip(
-                          message: data.employeeData.employeeId == ""
-                              ? "เพิ่มพนักงาน"
-                              : "",
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(360))),
-                              onPressed: data.employeeData.employeeId == ""
-                                  ? () {
-                                      showDialogSearch(data);
-                                    }
-                                  : null,
-                              child: Icon(
-                                data.employeeData.employeeId == ""
-                                    ? Icons.search
-                                    : Icons.person,
-                                color: data.employeeData.employeeId == ""
-                                    ? Colors.amberAccent
-                                    : Colors.white,
-                              )),
-                        ),
-                      )))),
+          data.positionData.positionId == "259"
+              ? Icon(
+                  Icons.group_rounded,
+                  color: Colors.amber[400],
+                  size: 48,
+                )
+              : Positioned(
+                  top: -8,
+                  child: SizedBox(
+                      width: 60,
+                      child: CircleAvatar(
+                          backgroundColor: mythemecolor,
+                          radius: 40,
+                          child: SizedBox(
+                            height: 55,
+                            child: Tooltip(
+                              message: data.employeeData.employeeId == ""
+                                  ? "เพิ่มพนักงาน"
+                                  : "",
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(360))),
+                                  onPressed: data.employeeData.employeeId == ""
+                                      ? () {
+                                          showDialogSearch(data);
+                                        }
+                                      : null,
+                                  child: Icon(
+                                    data.employeeData.employeeId == ""
+                                        ? Icons.search
+                                        : Icons.person,
+                                    color: data.employeeData.employeeId == ""
+                                        ? Colors.amberAccent
+                                        : Colors.white,
+                                  )),
+                            ),
+                          )))),
           Positioned(
             right: 40,
             child: PopupMenuButton(
+              iconColor: data.positionData.positionId == "259"
+                  ? mygreycolors
+                  : Colors.black,
               splashRadius: 1,
               elevation: 10,
               iconSize: 22,
@@ -499,10 +544,11 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                     value: 'add',
                     child: Text('Add'),
                   ),
-                  const PopupMenuItem<String>(
-                    value: 'edit',
-                    child: Text('Edit'),
-                  ),
+                  if (data.employeeData.employeeId == "")
+                    const PopupMenuItem<String>(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
                   if (data.employeeData.employeeId == "" && outEdges.isEmpty)
                     const PopupMenuItem<String>(
                       value: 'del',

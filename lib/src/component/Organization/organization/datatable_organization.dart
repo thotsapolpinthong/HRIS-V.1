@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/organization_bloc/bloc/organization_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/create_edit_org.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -428,33 +429,39 @@ class PersonDataTableSource extends DataTableSource {
                     ),
                   )),
             )),
-      DataCell(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showEditDialog(orgData);
-              },
-              child: const Icon(Icons.edit)),
-        ),
-        const Gap(5),
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showdialogDeletePerson(orgData.organizationId);
-              },
-              child: const Icon(Icons.delete_rounded)),
-        ),
-      ])),
+      DataCell(
+          orgData.departMentData.deptNameTh == "Alliance One International" ||
+                  orgData.departMentData.deptNameTh == "THAPAWONG" ||
+                  orgData.departMentData.deptNameTh == "Factory manager" ||
+                  orgData.departMentData.deptNameTh == "STEC."
+              ? Container()
+              : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  SizedBox(
+                    width: 40,
+                    height: 38,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.amber[700],
+                            padding: const EdgeInsets.all(1)),
+                        onPressed: () {
+                          showEditDialog(orgData);
+                        },
+                        child: const Icon(Icons.edit)),
+                  ),
+                  const Gap(5),
+                  SizedBox(
+                    width: 40,
+                    height: 38,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[700],
+                            padding: const EdgeInsets.all(1)),
+                        onPressed: () {
+                          showdialogDeletePerson(orgData.organizationId);
+                        },
+                        child: const Icon(Icons.delete_rounded)),
+                  ),
+                ])),
     ]);
   }
 
@@ -480,7 +487,24 @@ class PersonDataTableSource extends DataTableSource {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('แก้ไขโครงสร้างองค์กร (Edit Organization.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'แก้ไขโครงสร้างองค์กร',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' (Edit Organization.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -496,7 +520,7 @@ class PersonDataTableSource extends DataTableSource {
                 ),
               ),
               content: SizedBox(
-                width: 420,
+                width: 450,
                 height: 480,
                 child: Column(
                   children: [

@@ -257,8 +257,44 @@ class _SlideBarState extends State<SlideBar> {
                     ),
                   ),
                 ),
+                state.expandMenu == false
+                    ? CircleAvatar(
+                        radius: 25,
+                        backgroundColor: mygreycolors,
+                        child: Text(
+                          'Hi',
+                          style: TextStyle(color: mythemecolor),
+                        ))
+                    : Card(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(
+                                right: Radius.circular(12))),
+                        color: mygreycolors,
+                        child: ListTile(
+                          leading: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: mythemecolor,
+                              child: const Text(
+                                'Hi',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                          //  CircleAvatar(
+                          //   radius: 25,
+                          //   backgroundColor: mythemecolor,
+                          //   backgroundImage: const AssetImage("assets/profile.jpg"),
+                          //   // child: Image.asset("assets/profile.jpg"),
+                          // ),
+                          title: Text(
+                            "Thotsapol Pinthong",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          subtitle: TextThai(
+                              text: "โปรแกรมเมอร์",
+                              textStyle: TextStyle(fontSize: 13)),
+                        ),
+                      ),
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 4, 8),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [

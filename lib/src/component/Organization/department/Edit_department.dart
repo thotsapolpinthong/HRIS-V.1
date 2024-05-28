@@ -1,7 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/department_bloc/bloc/department_bloc.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/department/create_department_model.dart';
 import 'package:hris_app_prototype/src/model/organization/department/get_departmen_model.dart';
@@ -32,64 +34,22 @@ class _EditDepartmentState extends State<EditDepartment> {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-              icon: IconButton(
-                color: Colors.red[600],
-                icon: const Icon(
-                  Icons.cancel,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              content: SizedBox(
-                width: 300,
-                height: 200,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
-                    Expanded(
-                      flex: 11,
-                      child: Center(
-                        child: Card(
-                          elevation: 2,
-                          child: TextFormField(
-                            controller: comment,
-                            minLines: 1,
-                            maxLines: 5,
-                            decoration: const InputDecoration(
-                                labelStyle: TextStyle(color: Colors.black),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black)),
-                                filled: true,
-                                fillColor: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                onSave();
-                                Navigator.pop(context);
-                              },
-                              child: const Text("OK"))
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ));
+          return MyDeleteBox(
+            onPressedCancel: () {
+              Navigator.pop(context);
+              comment.text = '';
+            },
+            controller: comment,
+            onPressedOk: () {
+              onSave(comment.text);
+              Navigator.pop(context);
+              comment.text = '';
+            },
+          );
         });
   }
 
-  Future onSave() async {
+  Future onSave(String comment) async {
     String employeeId = "";
     SharedPreferences preferences = await SharedPreferences.getInstance();
     employeeId = preferences.getString("employeeId")!;
@@ -100,13 +60,12 @@ class _EditDepartmentState extends State<EditDepartment> {
         deptNameTh: nameTH.text,
         deptStatus: status == true ? 'Active' : 'Inactive',
         modifiedBy: employeeId,
-        comment: comment.text,
+        comment: comment.toString(),
       );
       setState(() {});
       bool success =
           await ApiOrgService.updatedDepartmentById(updatedDepartment);
       alertDialog(success);
-      comment.text = '';
     } else {}
   }
 
@@ -163,6 +122,7 @@ class _EditDepartmentState extends State<EditDepartment> {
       btnOkOnPress: () {
         setState(() {
           context.read<DepartmentBloc>().add(FetchDataEvent());
+          Navigator.pop(context);
         });
       },
     ).show();
@@ -188,42 +148,33 @@ class _EditDepartmentState extends State<EditDepartment> {
         child: Column(
           children: [
             Expanded(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: SizedBox(
-                  width: 400,
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(children: [
-                        TextFormFieldPositionDescription(
-                            controller: deptCode,
-                            labelText: 'Department Code',
-                            hintText: 'กรอกรหัสแผนกที่ต้องการ 2-3 ตำแหน่ง',
-                            validatorless: Validatorless.multiple([
-                              Validatorless.max(3, '*สูงสุด 3 ตำแหน่ง'),
-                              Validatorless.min(2, '*กรอกให้ครบ 2 ตำแหน่ง'),
-                              Validatorless.required('*กรุณากรอกข้อมูล')
-                            ])),
-                        TextFormFieldPosition(
-                          controller: nameTH,
-                          labelText: 'Department name (TH)',
-                          hintText: 'Name (TH)',
-                          validatorless:
-                              Validatorless.required('*กรุณากรอกข้อมูล'),
-                        ),
-                        TextFormFieldPosition(
-                          controller: nameEN,
-                          labelText: 'Department Name (EN)',
-                          hintText: 'Name (EN)',
-                          validatorless:
-                              Validatorless.required('*กรุณากรอกข้อมูล'),
-                        ),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  TextFormFieldGlobal(
+                      controller: deptCode,
+                      labelText: 'Department Code',
+                      hintText: 'กรอกรหัสแผนกที่ต้องการ 2-3 ตำแหน่ง',
+                      validatorless: Validatorless.multiple([
+                        Validatorless.max(3, '*สูงสุด 3 ตำแหน่ง'),
+                        Validatorless.min(2, '*กรอกให้ครบ 2 ตำแหน่ง'),
+                        Validatorless.required('*กรุณากรอกข้อมูล')
                       ]),
-                    ),
-                  ),
-                ),
+                      enabled: true),
+                  const Gap(5),
+                  TextFormFieldGlobal(
+                      controller: nameTH,
+                      labelText: 'Department name (TH)',
+                      hintText: 'Name (TH)',
+                      validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                      enabled: true),
+                  const Gap(5),
+                  TextFormFieldGlobal(
+                      controller: nameEN,
+                      labelText: 'Department Name (EN)',
+                      hintText: 'Name (EN)',
+                      validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                      enabled: true),
+                ]),
               ),
             ),
             if (widget.onEdit == false)

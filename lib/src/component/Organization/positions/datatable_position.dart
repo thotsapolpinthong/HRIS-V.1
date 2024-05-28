@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_bloc/positions_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/positions/add/created_position.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -156,7 +157,7 @@ class _PositionDataTableState extends State<PositionDataTable> {
             : SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: Card(
                       elevation: 2,
                       shape: RoundedRectangleBorder(
@@ -214,13 +215,20 @@ class _PositionDataTableState extends State<PositionDataTable> {
                                                             .toLowerCase()
                                                             .contains(value
                                                                 .toLowerCase());
-                                                        final nameEn = element
+                                                        final nameTh = element
                                                             .positionNameTh
                                                             .toLowerCase()
                                                             .contains(value
                                                                 .toLowerCase());
+                                                        final nameEn = element
+                                                            .positionNameEn
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
 
-                                                        return nameId || nameEn;
+                                                        return nameId ||
+                                                            nameEn ||
+                                                            nameTh;
                                                       }).toList();
                                                     });
                                                   }
@@ -418,7 +426,24 @@ class PersonDataTableSource extends DataTableSource {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('แก้ไขตำแหน่งพนักงาน (Create Position.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'แก้ไขตำแหน่งพนักงาน',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' ( Edit Position.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -436,14 +461,9 @@ class PersonDataTableSource extends DataTableSource {
               content: SizedBox(
                 width: 420,
                 height: 480,
-                child: Column(
-                  children: [
-                    Expanded(
-                        child: EditPositions(
-                      onEdit: true,
-                      positions: positions,
-                    )),
-                  ],
+                child: EditPositions(
+                  onEdit: true,
+                  positions: positions,
                 ),
               ));
         });

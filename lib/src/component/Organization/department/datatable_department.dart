@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/department_bloc/bloc/department_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/department/Edit_department.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -104,7 +105,24 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('เพิ่มแผนก (Create Department.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มแผนก',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' (Create Department.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -121,12 +139,8 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
               ),
               content: const SizedBox(
                 width: 420,
-                height: 440,
-                child: Column(
-                  children: [
-                    Expanded(child: EditDepartment(onEdit: false)),
-                  ],
-                ),
+                height: 300,
+                child: EditDepartment(onEdit: false),
               ));
         });
   }
@@ -210,7 +224,7 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                       ).animate().shake(),
                       body: SingleChildScrollView(
                         child: Padding(
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -497,7 +511,24 @@ class PersonDataTableSource extends DataTableSource {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('แก้ไขตำแหน่งพนักงาน (Create Position.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'แก้ไขตำแหน่งพนักงาน',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' (Edit Department.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -514,7 +545,7 @@ class PersonDataTableSource extends DataTableSource {
               ),
               content: SizedBox(
                 width: 420,
-                height: 440,
+                height: 300,
                 child: Column(
                   children: [
                     Expanded(

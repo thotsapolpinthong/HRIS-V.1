@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/component/Organization/positions/add/created_position.dart';
 import 'package:hris_app_prototype/src/component/Organization/positions/datatable_position.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -25,7 +26,24 @@ class _MyPositionsLayoutState extends State<MyPositionsLayout> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('เพิ่มตำแหน่งพนักงาน (Create Position.)'),
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มตำแหน่งพนักงาน',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' ( Create Position.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
                     ElevatedButton(
                       style:
                           ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -43,13 +61,8 @@ class _MyPositionsLayoutState extends State<MyPositionsLayout> {
               content: const SizedBox(
                 width: 420,
                 height: 480,
-                child: Column(
-                  children: [
-                    Expanded(
-                        child: EditPositions(
-                      onEdit: false,
-                    )),
-                  ],
+                child: EditPositions(
+                  onEdit: false,
                 ),
               ));
         });

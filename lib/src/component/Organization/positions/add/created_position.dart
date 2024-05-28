@@ -1,7 +1,9 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_bloc/positions_bloc.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/position/created_position_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position/getpositionall_model.dart';
@@ -36,7 +38,7 @@ class _EditPositionsState extends State<EditPositions> {
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(1950),
-      lastDate: DateTime(3000),
+      lastDate: DateTime(9999, 12, 31),
     );
     if (picker != null) {
       setState(() {
@@ -50,12 +52,13 @@ class _EditPositionsState extends State<EditPositions> {
 
   Future<void> selectexpDate() async {
     DateFormat format = DateFormat('yyyy-MM-dd');
-    DateTime dateTime = format.parse(validFrom.text);
+    DateTime dateTime =
+        validFrom.text == "" ? DateTime(1950) : format.parse(validFrom.text);
     DateTime? picker = await showDatePicker(
       context: context,
-      initialDate: dateTime,
+      initialDate: DateTime(9999, 12, 31),
       firstDate: dateTime,
-      lastDate: DateTime(9999),
+      lastDate: DateTime(9999, 12, 31),
     );
     if (picker != null) {
       setState(() {
@@ -70,64 +73,22 @@ class _EditPositionsState extends State<EditPositions> {
         barrierDismissible: false,
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-              icon: IconButton(
-                color: Colors.red[600],
-                icon: const Icon(
-                  Icons.cancel,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-              content: SizedBox(
-                width: 300,
-                height: 200,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
-                    Expanded(
-                      flex: 11,
-                      child: Center(
-                        child: Card(
-                          elevation: 2,
-                          child: TextFormField(
-                            controller: comment,
-                            minLines: 1,
-                            maxLines: 5,
-                            decoration: const InputDecoration(
-                                labelStyle: TextStyle(color: Colors.black),
-                                border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black)),
-                                filled: true,
-                                fillColor: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                onSave();
-                                Navigator.pop(context);
-                              },
-                              child: const Text("OK"))
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ));
+          return MyDeleteBox(
+            onPressedCancel: () {
+              Navigator.pop(context);
+              comment.text = '';
+            },
+            controller: comment,
+            onPressedOk: () {
+              onSave(comment.text);
+              Navigator.pop(context);
+              comment.text = '';
+            },
+          );
         });
   }
 
-  Future onSave() async {
+  Future onSave(String comment) async {
     String employeeId = "";
     SharedPreferences preferences = await SharedPreferences.getInstance();
     employeeId = preferences.getString("employeeId")!;
@@ -141,12 +102,11 @@ class _EditPositionsState extends State<EditPositions> {
         endDate: expFrom.text,
         positionStatus: status == true ? 'Active' : 'Inactive',
         modifiedBy: employeeId,
-        comment: comment.text,
+        comment: comment.toString(),
       );
       setState(() {});
       bool success = await ApiOrgService.updatedPositionById(updatedPosition);
       alertDialog(success);
-      comment.text = '';
     } else {}
   }
 
@@ -205,6 +165,7 @@ class _EditPositionsState extends State<EditPositions> {
       btnOkOnPress: () {
         setState(() {
           context.read<PositionsBloc>().add(FetchDataEvent());
+          Navigator.pop(context);
         });
       },
     ).show();
@@ -232,95 +193,48 @@ class _EditPositionsState extends State<EditPositions> {
         child: Column(
           children: [
             Expanded(
-              child: Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: SizedBox(
-                  width: 400,
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: Column(children: [
-                        TextFormFieldPosition(
-                          controller: nameTH,
-                          labelText: 'ชื่อตำแหน่งงาน (TH)',
-                          hintText: 'ชื่อตำแหน่งงาน',
-                          validatorless:
-                              Validatorless.required('*กรุณากรอกข้อมูล'),
-                        ),
-                        TextFormFieldPosition(
-                          controller: nameEN,
-                          labelText: 'Position Name (EN)',
-                          hintText: 'ชื่อตำแหน่งงาน',
-                          validatorless:
-                              Validatorless.required('*กรุณากรอกข้อมูล'),
-                        ),
-                        TextFormFieldPositionDescription(
-                          controller: discription,
-                          labelText: 'Job Specification (TH/EN)',
-                          hintText: 'อธิบายลักษณะงาน',
-                          validatorless:
-                              Validatorless.required('*กรุณากรอกข้อมูล'),
-                        ),
-                        Card(
-                          child: TextFormField(
-                            controller: validFrom,
-                            autovalidateMode: AutovalidateMode.always,
-                            validator:
-                                Validatorless.required('*กรุณากรอกข้อมูล'),
-                            decoration: const InputDecoration(
-                              labelText: 'มีผลตั้งแต่',
-                              labelStyle: TextStyle(color: Colors.black),
-                              filled: true,
-                              fillColor: Colors.white,
-                              suffixIcon: Icon(
-                                Icons.calendar_today,
-                              ),
-                              border: OutlineInputBorder(),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black26),
-                              ),
-                            ),
-                            readOnly: true,
-                            onTap: () {
-                              selectvalidFromDate();
-                            },
-                          ),
-                        ),
-                        Card(
-                          child: TextFormField(
-                            controller: expFrom,
-                            autovalidateMode: AutovalidateMode.always,
-                            validator:
-                                Validatorless.required('*กรุณากรอกข้อมูล'),
-                            decoration: InputDecoration(
-                              labelText: 'สิ้นสุดเมื่อ',
-                              labelStyle: TextStyle(
-                                  color: disableExp == true
-                                      ? Colors.black
-                                      : Colors.grey),
-                              filled: true,
-                              fillColor: Colors.white,
-                              suffixIcon: const Icon(
-                                Icons.calendar_today,
-                              ),
-                              disabledBorder: InputBorder.none,
-                              border: const OutlineInputBorder(),
-                              enabledBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black26),
-                              ),
-                            ),
-                            readOnly: true,
-                            enabled: disableExp,
-                            onTap: () {
-                              selectexpDate();
-                            },
-                          ),
-                        ),
-                      ]),
-                    ),
+              child: SingleChildScrollView(
+                child: Column(children: [
+                  TextFormFieldGlobal(
+                      controller: nameTH,
+                      labelText: 'ชื่อตำแหน่งงาน (TH)',
+                      hintText: 'ชื่อตำแหน่งงาน',
+                      validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                      enabled: true),
+                  const Gap(5),
+                  TextFormFieldGlobal(
+                      controller: nameEN,
+                      labelText: 'Position Name (EN)',
+                      hintText: 'ชื่อตำแหน่งงาน',
+                      validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                      enabled: true),
+                  const Gap(5),
+                  TextFormFieldGlobal(
+                      controller: discription,
+                      labelText: 'Job Specification (TH/EN)',
+                      hintText: 'อธิบายลักษณะงาน',
+                      validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                      enabled: true),
+                  const Gap(5),
+                  TextFormFieldDatepickGlobal(
+                    controller: validFrom,
+                    labelText: "มีผลตั้งแต่",
+                    validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                    ontap: () {
+                      selectvalidFromDate();
+                    },
                   ),
-                ),
+                  const Gap(5),
+                  TextFormFieldDatepickGlobal(
+                    controller: expFrom,
+                    labelText: "สิ้นสุดเมื่อ",
+                    validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                    ontap: () {
+                      selectexpDate();
+                    },
+                  ),
+                  const Gap(5),
+                ]),
               ),
             ),
             if (widget.onEdit == false)
