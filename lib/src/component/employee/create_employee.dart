@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +10,6 @@ import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/create_employee_model.dart';
 import 'package:hris_app_prototype/src/model/employee/dropdown_staffstatus_model.dart';
-import 'package:hris_app_prototype/src/model/employee/dropdown_stafftype_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_fingerscan_id_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/dropdown_shift_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
@@ -43,14 +43,14 @@ class _CreateEmployeeState extends State<CreateEmployee> {
   TextEditingController expFrom = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController note = TextEditingController();
-  bool disableExp = false;
+  // bool disableExp = false;
   bool disablePo = false;
 
   List<StaffStatusDatum>? staffStatusList;
   String staffStatus = "1";
 
-  List<StaffTypeDatum>? staffTypeList;
-  String? staffType;
+  // List<StaffTypeDatum>? staffTypeList;
+  // String? staffType;
 
   List<ShiftDatum>? shiftDataList;
   String? shiftData;
@@ -71,7 +71,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
     if (picker != null) {
       setState(() {
         validFrom.text = picker.toString().split(" ")[0];
-        disableExp = true;
+        // disableExp = true;
         expFrom.text = "";
       });
     }
@@ -95,7 +95,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
 
   Future<void> fetchData() async {
     staffStatusList = await ApiEmployeeService.getStaffStatueDropdown();
-    staffTypeList = await ApiEmployeeService.getStaffTypeDropdown();
+    // staffTypeList = await ApiEmployeeService.getStaffTypeDropdown();
     shiftDataList = await ApiTimeAtendanceService.getShiftDropdown();
     FingerScanModel? fs = await ApiEmployeeService.getFingerScanId(
         widget.person!.fisrtNameTh, widget.person!.lastNameTh);
@@ -130,12 +130,11 @@ class _CreateEmployeeState extends State<CreateEmployee> {
           personId: widget.person!.personId,
           fingerScanId: fingerscan.text,
           startDate: validFrom.text,
-          endDate: expFrom.text,
+          // endDate: expFrom.text,
           noted: note.text,
           email: email.text,
-          deptCode: "",
           staffStatus: "1",
-          staffType: staffType.toString(),
+          // staffType: staffType.toString(),
           shiftId: shiftData.toString(),
           positionOrganizationId: poData.toString(),
           cardId: cardId.text);
@@ -209,253 +208,233 @@ class _CreateEmployeeState extends State<CreateEmployee> {
       child: Column(
         children: [
           Expanded(
-              child: Card(
-            elevation: 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Form(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                                child: TextFormFieldNumber(
-                              controller: fingerscan,
-                              labelText: "Fingerscan",
-                              hintText: "ลายนิ้วมือ*",
-                              validatorless:
-                                  Validatorless.required('*กรุณากรอกข้อมูล'),
-                            )),
-                            Expanded(
-                                child: TextFormFieldNumber(
-                              controller: cardId,
-                              labelText: "Card Id",
-                              hintText: "เลขบัตร",
-                              validatorless: null,
-                            )),
-                          ],
-                        ),
-                        const Gap(2),
-                        DropdownGlobal(
-                          labeltext: 'Shift.',
-                          value: shiftData,
-                          validator: Validatorless.required('*กรุณากรอกข้อมูล'),
-                          items: shiftDataList?.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: e.shiftId.toString(),
-                              child: Container(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 300),
-                                  child: Text(
-                                      "${e.shiftName} : ${e.startTime} - ${e.endTime}")),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              shiftData = newValue.toString();
-                            });
-                          },
-                        ),
-                        const Gap(2),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Card(
-                                child: TextFormField(
-                                  controller: validFrom,
-                                  autovalidateMode: AutovalidateMode.always,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  decoration: const InputDecoration(
-                                    labelText: 'วันที่เริ่มงาน',
-                                    labelStyle: TextStyle(color: Colors.black),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon: Icon(
-                                      Icons.calendar_today,
-                                    ),
-                                    border: OutlineInputBorder(),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black38),
-                                    ),
-                                  ),
-                                  readOnly: true,
-                                  onTap: () {
-                                    selectvalidFromDate();
-                                  },
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: Card(
-                                child: TextFormField(
-                                  controller: expFrom,
-                                  autovalidateMode: AutovalidateMode.always,
-                                  validator: Validatorless.required(
-                                      '*กรุณากรอกข้อมูล'),
-                                  decoration: InputDecoration(
-                                    labelText: 'สิ้นสุดเมื่อ',
-                                    labelStyle: TextStyle(
-                                        color: disableExp == true
-                                            ? Colors.black
-                                            : Colors.grey),
-                                    filled: true,
-                                    fillColor: Colors.white,
-                                    suffixIcon: const Icon(
-                                      Icons.calendar_today,
-                                    ),
-                                    disabledBorder: InputBorder.none,
-                                    border: const OutlineInputBorder(),
-                                    enabledBorder: const OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black38),
-                                    ),
-                                  ),
-                                  readOnly: true,
-                                  enabled: disableExp,
-                                  onTap: () {
-                                    selectexpDate();
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Gap(2),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // Expanded(
-                            //   child: DropdownGlobal(
-                            //     labeltext: 'Staff status.',
-                            //     value: staffStatus,
-                            //     validator:
-                            //         Validatorless.required('*กรุณากรอกข้อมูล'),
-                            //     items: staffStatusList?.map((e) {
-                            //       return DropdownMenuItem<String>(
-                            //         value: e.staffStatusId.toString(),
-                            //         child: Container(
-                            //             constraints:
-                            //                 const BoxConstraints(maxWidth: 120),
-                            //             child: Text(e.description)),
-                            //       );
-                            //     }).toList(),
-                            //     onChanged: (newValue) {
-                            //       setState(() {
-                            //         staffStatus = newValue.toString();
-                            //       });
-                            //     },
-                            //   ),
-                            // ),
-                            Expanded(
-                              child: DropdownGlobal(
-                                labeltext: 'Staff type.',
-                                value: staffType,
-                                validator:
-                                    Validatorless.required('*กรุณากรอกข้อมูล'),
-                                items: staffTypeList?.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e.staffTypeId.toString(),
-                                    child: Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 140),
-                                        child: Text(e.description)),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    staffType = newValue.toString();
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Gap(2),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextFormFieldPosition(
-                                controller: email,
-                                labelText: "Email",
-                                hintText: "ถ้ามี*",
+              child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Form(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: TextFormFieldGlobal(
+                                controller: fingerscan,
+                                labelText: "Fingerscan",
+                                hintText: "ลายนิ้วมือ*",
                                 validatorless:
-                                    Validatorless.email("admin@example.com"),
-                              ),
-                            ),
-                            Expanded(
-                              child: TextFormFieldPositionDescription(
-                                controller: note,
-                                labelText: "หมายเหตุ",
-                                hintText: "เพิ่มคำอธิบาย*",
+                                    Validatorless.required('*กรุณากรอกข้อมูล'),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9/]'))
+                                ],
+                                enabled: true),
+                          ),
+                          Expanded(
+                            child: TextFormFieldGlobal(
+                                controller: cardId,
+                                labelText: "Card Id",
+                                hintText: "เลขบัตร*",
                                 validatorless: null,
-                              ),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9/]'))
+                                ],
+                                enabled: true),
+                          ),
+                        ],
+                      ),
+                      const Gap(5),
+                      DropdownGlobal(
+                        labeltext: 'Shift.',
+                        value: shiftData,
+                        validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                        items: shiftDataList?.map((e) {
+                          return DropdownMenuItem<String>(
+                            value: e.shiftId.toString(),
+                            child: Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 300),
+                                child: Text(
+                                    "${e.shiftName} : ${e.startTime} - ${e.endTime}")),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            shiftData = newValue.toString();
+                          });
+                        },
+                      ),
+                      const Gap(5),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                              child: TextFormFieldDatepickGlobal(
+                                  controller: validFrom,
+                                  labelText: 'วันที่เริ่มงาน',
+                                  validatorless: Validatorless.required(
+                                      '*กรุณากรอกข้อมูล'),
+                                  ontap: () {
+                                    selectvalidFromDate();
+                                  })),
+                          Expanded(
+                            child: TextFormFieldGlobal(
+                              controller: email,
+                              labelText: "Email",
+                              hintText: "ถ้ามี*",
+                              validatorless:
+                                  Validatorless.email("admin@example.com"),
+                              enabled: true,
                             ),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: DropdownGlobal(
-                                labeltext: 'Organization.',
-                                value: ogData,
-                                validator:
-                                    Validatorless.required('*กรุณากรอกข้อมูล'),
-                                items: ogList.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e.organizationCode.toString(),
-                                    child: Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 180),
-                                        child: Text(
-                                            "${e.departMentData.deptCode} : ${e.departMentData.deptNameTh}")),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    ogData = newValue.toString();
-                                    fetchDataPo();
-                                  });
-                                },
-                              ),
+                          ),
+
+                          // Expanded(
+                          //   child: Card(
+                          //     child: TextFormField(
+                          //       controller: expFrom,
+                          //       autovalidateMode: AutovalidateMode.always,
+                          //       validator: Validatorless.required(
+                          //           '*กรุณากรอกข้อมูล'),
+                          //       decoration: InputDecoration(
+                          //         labelText: 'สิ้นสุดเมื่อ',
+                          //         labelStyle: TextStyle(
+                          //             color: disableExp == true
+                          //                 ? Colors.black
+                          //                 : Colors.grey),
+                          //         filled: true,
+                          //         fillColor: Colors.white,
+                          //         suffixIcon: const Icon(
+                          //           Icons.calendar_today,
+                          //         ),
+                          //         disabledBorder: InputBorder.none,
+                          //         border: const OutlineInputBorder(),
+                          //         enabledBorder: const OutlineInputBorder(
+                          //           borderSide:
+                          //               BorderSide(color: Colors.black38),
+                          //         ),
+                          //       ),
+                          //       readOnly: true,
+                          //       enabled: disableExp,
+                          //       onTap: () {
+                          //         selectexpDate();
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                      const Gap(5),
+                      // Row(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     // Expanded(
+                      //     //   child: DropdownGlobal(
+                      //     //     labeltext: 'Staff status.',
+                      //     //     value: staffStatus,
+                      //     //     validator:
+                      //     //         Validatorless.required('*กรุณากรอกข้อมูล'),
+                      //     //     items: staffStatusList?.map((e) {
+                      //     //       return DropdownMenuItem<String>(
+                      //     //         value: e.staffStatusId.toString(),
+                      //     //         child: Container(
+                      //     //             constraints:
+                      //     //                 const BoxConstraints(maxWidth: 120),
+                      //     //             child: Text(e.description)),
+                      //     //       );
+                      //     //     }).toList(),
+                      //     //     onChanged: (newValue) {
+                      //     //       setState(() {
+                      //     //         staffStatus = newValue.toString();
+                      //     //       });
+                      //     //     },
+                      //     //   ),
+                      //     // ),
+                      //     Expanded(
+                      //       child: DropdownGlobal(
+                      //         labeltext: 'Staff type.',
+                      //         value: staffType,
+                      //         validator:
+                      //             Validatorless.required('*กรุณากรอกข้อมูล'),
+                      //         items: staffTypeList?.map((e) {
+                      //           return DropdownMenuItem<String>(
+                      //             value: e.staffTypeId.toString(),
+                      //             child: Container(
+                      //                 constraints:
+                      //                     const BoxConstraints(maxWidth: 140),
+                      //                 child: Text(e.description)),
+                      //           );
+                      //         }).toList(),
+                      //         onChanged: (newValue) {
+                      //           setState(() {
+                      //             staffType = newValue.toString();
+                      //           });
+                      //         },
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormFieldGlobal(
+                              controller: note,
+                              labelText: "หมายเหตุ",
+                              hintText: "เพิ่มคำอธิบาย*",
+                              validatorless: null,
+                              enabled: true,
                             ),
-                            Expanded(
-                              child: DropdownGlobal(
-                                labeltext: 'Position Organization',
-                                value: poData,
-                                validator:
-                                    Validatorless.required('*กรุณากรอกข้อมูล'),
-                                items: poList?.map((e) {
-                                  return DropdownMenuItem<String>(
-                                    value: e.positionOrganizationId.toString(),
-                                    child: Container(
-                                        constraints:
-                                            const BoxConstraints(maxWidth: 197),
-                                        child: Text(
-                                            "${e.positionData.positionId} : ${e.positionData.positionNameTh}")),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    poData = newValue.toString();
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    )),
-              ),
+                          ),
+                        ],
+                      ),
+                      const Gap(5),
+                      DropdownGlobal(
+                        labeltext: 'Organization.',
+                        value: ogData,
+                        validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                        items: ogList.map((e) {
+                          return DropdownMenuItem<String>(
+                            value: e.organizationCode.toString(),
+                            child: Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 300),
+                                child: Text(
+                                    "${e.departMentData.deptCode} : ${e.departMentData.deptNameTh}")),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            ogData = newValue.toString();
+                            fetchDataPo();
+                          });
+                        },
+                      ),
+                      const Gap(5),
+                      DropdownGlobal(
+                        labeltext: 'Position Organization',
+                        value: poData,
+                        validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                        items: poList?.map((e) {
+                          return DropdownMenuItem<String>(
+                            value: e.positionOrganizationId.toString(),
+                            child: Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 300),
+                                child: Text(e.employeeData.employeeId != ""
+                                    ? "ตำแหน่งงานไม่ว่าง"
+                                    : " ${e.positionData.positionNameTh}")),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            poData = newValue.toString();
+                          });
+                        },
+                      ),
+                    ],
+                  )),
             ),
           )),
           Align(

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -481,11 +482,11 @@ class _UserMenuServiceState extends State<UserMenuService> {
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  child: Lottie.asset(
-                                      'assets/manualworkdate.json',
-                                      frameRate: FrameRate(59)),
-                                ),
+                                // Expanded(
+                                //   child: Lottie.asset(
+                                //       'assets/manualworkdate.json',
+                                //       frameRate: FrameRate(59)),
+                                // ),
                               ],
                             ),
                           ),

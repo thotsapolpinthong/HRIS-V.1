@@ -23,5 +23,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     on<ReportPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 7)));
     on<DashboardPageEvent>(
         (event, emit) => emit(state.copyWith(pageNumber: 8)));
+    //Lot management
+    on<SubPayroll1PageEvent>(
+        (event, emit) => emit(state.copyWith(pageNumber: 5.1)));
   }
 }

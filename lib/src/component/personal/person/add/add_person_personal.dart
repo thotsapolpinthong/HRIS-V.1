@@ -1,8 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/person/createperson_model.dart';
 import 'package:hris_app_prototype/src/model/person/dropdown/bloodgroup_model.dart';
 import 'package:hris_app_prototype/src/model/person/dropdown/gender_model.dart';
@@ -40,6 +43,9 @@ class _AddpersonalState extends State<Addpersonal> {
   TextEditingController weight = TextEditingController();
   TextEditingController phoneNumber1 = TextEditingController();
   TextEditingController phoneNumber2 = TextEditingController();
+  //dropdown search
+  TextEditingController racestatusMenu = TextEditingController();
+  TextEditingController nationalityMenu = TextEditingController();
 //dropdown ----------------------------------------------------------------
   List<TitleNameDatum> titleList = [];
   String? titles;
@@ -66,22 +72,22 @@ class _AddpersonalState extends State<Addpersonal> {
   }
 
   Future<void> fetchPersonById() async {
-    TitleModel _titledata = await ApiService.getTitle();
-    GenderModel _gender = await ApiService.getGender();
-    BloodGroupModel _blood = await ApiService.getBloodGroup();
-    MaritalStatusModel _marital = await ApiService.getMaritalStatus();
-    RaceModel _race = await ApiService.getRaceStatus();
-    ReligionModel _religion = await ApiService.getReligionStatus();
-    NationalityModel _nationality = await ApiService.getNationalityStatus();
+    TitleModel titledata = await ApiService.getTitle();
+    GenderModel gender = await ApiService.getGender();
+    BloodGroupModel blood = await ApiService.getBloodGroup();
+    MaritalStatusModel marital = await ApiService.getMaritalStatus();
+    RaceModel race = await ApiService.getRaceStatus();
+    ReligionModel religion = await ApiService.getReligionStatus();
+    NationalityModel nationality = await ApiService.getNationalityStatus();
 
     setState(() {
-      titleList = _titledata.titleNameData;
-      genderList = _gender.genderData;
-      bloodgroupList = _blood.bloodGroupData;
-      maritalstatusList = _marital.maritalStatusData;
-      raceList = _race.raceData;
-      religionList = _religion.religionData;
-      nationalityList = _nationality.nationalityData;
+      titleList = titledata.titleNameData;
+      genderList = gender.genderData;
+      bloodgroupList = blood.bloodGroupData;
+      maritalstatusList = marital.maritalStatusData;
+      raceList = race.raceData;
+      religionList = religion.religionData;
+      nationalityList = nationality.nationalityData;
       isloading = false;
 
       raceList.sort((a, b) => a.raceTh.compareTo(b.raceTh));
@@ -92,15 +98,15 @@ class _AddpersonalState extends State<Addpersonal> {
   }
 
   Future<void> _selectDate() async {
-    DateTime? _picker = await showDatePicker(
+    DateTime? picker = await showDatePicker(
       context: context,
       initialDate: DateTime.now().subtract(const Duration(days: 18 * 365)),
       firstDate: DateTime.now().subtract(const Duration(days: 70 * 365)),
       lastDate: DateTime.now().subtract(const Duration(days: 18 * 365)),
     );
-    if (_picker != null) {
+    if (picker != null) {
       setState(() {
-        dateOfBirth.text = _picker.toString().split(" ")[0];
+        dateOfBirth.text = picker.toString().split(" ")[0];
         onValidate();
       });
     }
@@ -132,9 +138,9 @@ class _AddpersonalState extends State<Addpersonal> {
       phoneNumber2: phoneNumber2.text,
     );
 
-    bool _isaddperson = await ApiService.addPersonalData(updatepersondata);
+    bool isaddperson = await ApiService.addPersonalData(updatepersondata);
     setState(() {
-      if (_isaddperson == true) {
+      if (isaddperson == true) {
         AwesomeDialog(
           width: 500,
           context: context,
@@ -398,6 +404,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                   ),
                                 ],
                               ),
+                              const Gap(5),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -461,6 +468,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                   ),
                                 ],
                               ),
+                              const Gap(5),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -552,6 +560,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                   },
                                 ),
                               ),
+                              const Gap(5),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -783,6 +792,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                       )
                                     ],
                                   ),
+                                  const Gap(5),
                                   Row(
                                     children: [
                                       Expanded(
@@ -884,111 +894,151 @@ class _AddpersonalState extends State<Addpersonal> {
                                       )
                                     ],
                                   ),
+                                  const Gap(5),
                                   Row(
                                     children: [
                                       Expanded(
-                                        child: Card(
-                                          elevation: 2,
-                                          child: SizedBox(
-                                            height: 53,
-                                            child: DropdownButtonFormField(
-                                              autovalidateMode:
-                                                  AutovalidateMode.always,
-                                              focusColor: Colors.white,
-                                              hint: const Text(
-                                                  "Race (เชื้อชาติ)*",
-                                                  style: TextStyle(
-                                                      color: Colors.red)),
-                                              value: racestatus,
-                                              items: raceList.map((e) {
-                                                return DropdownMenuItem<String>(
-                                                  value: e.raceId,
-                                                  child: SizedBox(
-                                                      width: 100,
-                                                      child: Text(e.raceTh)),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  racestatus =
-                                                      newValue.toString();
-                                                  //  onnewvalue();
-                                                  onValidate();
-                                                });
-                                              },
-                                              validator: Validatorless.required(
-                                                  'กรุณาเลือกข้อมูล'),
-                                              dropdownColor: Colors.white,
-                                              decoration: const InputDecoration(
-                                                fillColor: Colors.white,
-                                                filled: true,
-                                                labelText: "Race (เชื้อชาติ)",
-                                                labelStyle: TextStyle(
-                                                    color: Colors.black),
-                                                border: OutlineInputBorder(),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black26),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
+                                        child: DropdownMenuGlobalOutline(
+                                            label: "Race (เชื้อชาติ)",
+                                            width: 265,
+                                            controller: racestatusMenu,
+                                            onSelected: (value) {
+                                              setState(() {
+                                                racestatus = value.toString();
+                                                onValidate();
+                                              });
+                                            },
+                                            dropdownMenuEntries:
+                                                raceList.map((e) {
+                                              return DropdownMenuEntry(
+                                                value: e.raceId,
+                                                label: e.raceTh,
+                                              );
+                                            }).toList()),
                                       ),
+                                      // Expanded(
+                                      //   child: Card(
+                                      //     elevation: 2,
+                                      //     child: SizedBox(
+                                      //       height: 53,
+                                      //       child: DropdownButtonFormField(
+                                      //         autovalidateMode:
+                                      //             AutovalidateMode.always,
+                                      //         focusColor: Colors.white,
+                                      //         hint: const Text(
+                                      //             "Race (เชื้อชาติ)*",
+                                      //             style: TextStyle(
+                                      //                 color: Colors.red)),
+                                      //         value: racestatus,
+                                      //         items: raceList.map((e) {
+                                      //           return DropdownMenuItem<String>(
+                                      //             value: e.raceId,
+                                      //             child: SizedBox(
+                                      //                 width: 100,
+                                      //                 child: Text(e.raceTh)),
+                                      //           );
+                                      //         }).toList(),
+                                      //         onChanged: (newValue) {
+                                      //           setState(() {
+                                      //             racestatus =
+                                      //                 newValue.toString();
+                                      //             //  onnewvalue();
+                                      //             onValidate();
+                                      //           });
+                                      //         },
+                                      //         validator: Validatorless.required(
+                                      //             'กรุณาเลือกข้อมูล'),
+                                      //         dropdownColor: Colors.white,
+                                      //         decoration: const InputDecoration(
+                                      //           fillColor: Colors.white,
+                                      //           filled: true,
+                                      //           labelText: "Race (เชื้อชาติ)",
+                                      //           labelStyle: TextStyle(
+                                      //               color: Colors.black),
+                                      //           border: OutlineInputBorder(),
+                                      //           enabledBorder:
+                                      //               OutlineInputBorder(
+                                      //             borderSide: BorderSide(
+                                      //                 color: Colors.black26),
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                       Expanded(
-                                        child: Card(
-                                          elevation: 2,
-                                          child: SizedBox(
-                                            height: 53,
-                                            child: DropdownButtonFormField(
-                                              autovalidateMode:
-                                                  AutovalidateMode.always,
-                                              focusColor: Colors.white,
-                                              hint: const Text(
-                                                  "Nationality (สัญชาติ)*",
-                                                  style: TextStyle(
-                                                      color: Colors.red)),
-                                              value: nationality,
-                                              items: nationalityList.map((e) {
-                                                return DropdownMenuItem<String>(
-                                                  value: e.nationalityId,
-                                                  child: SizedBox(
-                                                    width: 140,
-                                                    child: Text(
-                                                        '${e.nationalityEn} : ${e.nationalityTh}'),
-                                                  ),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                setState(() {
-                                                  nationality =
-                                                      newValue.toString();
-                                                  // onnewvalue();
-                                                  onValidate();
-                                                });
-                                              },
-                                              validator: Validatorless.required(
-                                                  'กรุณาเลือกข้อมูล'),
-                                              dropdownColor: Colors.white,
-                                              decoration: const InputDecoration(
-                                                fillColor: Colors.white,
-                                                filled: true,
-                                                labelText:
-                                                    "Nationality (สัญชาติ)",
-                                                labelStyle: TextStyle(
-                                                    color: Colors.black),
-                                                border: OutlineInputBorder(),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black26),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      )
+                                        child: DropdownMenuGlobalOutline(
+                                            label: "Nationality (สัญชาติ)",
+                                            width: 265,
+                                            controller: nationalityMenu,
+                                            onSelected: (value) {
+                                              setState(() {
+                                                nationality = value.toString();
+                                                onValidate();
+                                              });
+                                            },
+                                            dropdownMenuEntries:
+                                                nationalityList.map((e) {
+                                              return DropdownMenuEntry(
+                                                value: e.nationalityId,
+                                                label:
+                                                    '${e.nationalityEn} : ${e.nationalityTh}',
+                                              );
+                                            }).toList()),
+                                      ),
+                                      // Expanded(
+                                      //   child: Card(
+                                      //     elevation: 2,
+                                      //     child: SizedBox(
+                                      //       height: 53,
+                                      //       child: DropdownButtonFormField(
+                                      //         autovalidateMode:
+                                      //             AutovalidateMode.always,
+                                      //         focusColor: Colors.white,
+                                      //         hint: const Text(
+                                      //             "Nationality (สัญชาติ)*",
+                                      //             style: TextStyle(
+                                      //                 color: Colors.red)),
+                                      //         value: nationality,
+                                      //         items: nationalityList.map((e) {
+                                      //           return DropdownMenuItem<String>(
+                                      //             value: e.nationalityId,
+                                      //             child: SizedBox(
+                                      //               width: 140,
+                                      //               child: Text(
+                                      //                   '${e.nationalityEn} : ${e.nationalityTh}'),
+                                      //             ),
+                                      //           );
+                                      //         }).toList(),
+                                      //         onChanged: (newValue) {
+                                      //           setState(() {
+                                      //             nationality =
+                                      //                 newValue.toString();
+                                      //             // onnewvalue();
+                                      //             onValidate();
+                                      //           });
+                                      //         },
+                                      //         validator: Validatorless.required(
+                                      //             'กรุณาเลือกข้อมูล'),
+                                      //         dropdownColor: Colors.white,
+                                      //         decoration: const InputDecoration(
+                                      //           fillColor: Colors.white,
+                                      //           filled: true,
+                                      //           labelText:
+                                      //               "Nationality (สัญชาติ)",
+                                      //           labelStyle: TextStyle(
+                                      //               color: Colors.black),
+                                      //           border: OutlineInputBorder(),
+                                      //           enabledBorder:
+                                      //               OutlineInputBorder(
+                                      //             borderSide: BorderSide(
+                                      //                 color: Colors.black26),
+                                      //           ),
+                                      //         ),
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // )
                                     ],
                                   ),
                                   Card(
@@ -1019,6 +1069,7 @@ class _AddpersonalState extends State<Addpersonal> {
                                           fillColor: Colors.white),
                                     ),
                                   ),
+                                  const Gap(5),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,

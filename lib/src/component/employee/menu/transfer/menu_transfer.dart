@@ -63,7 +63,8 @@ class _TransferMenuState extends State<TransferMenu> {
       orgDataList;
       staffTypeList;
       promoteTypeList;
-      staffTypeId = widget.employeeData.staffTypeData.staffTypeId;
+      staffTypeId =
+          widget.employeeData.positionData.positionTypeData.positionTypeId;
       isDataLoading = false;
     });
   }
@@ -368,17 +369,27 @@ class _TransferMenuState extends State<TransferMenu> {
                                             controller: transferSalary,
                                             labelText: "ฐานเงินเดือนใหม่",
                                             hintText: "",
-                                            validatorless: Validatorless.number(
-                                                "กรอกได้เฉพาะตัวเลข"),
+                                            validatorless:
+                                                Validatorless.multiple([
+                                              Validatorless.number(
+                                                  "กรอกได้เฉพาะตัวเลข"),
+                                              Validatorless.required(
+                                                  "โปรดระบุเงินเดือนใหม่")
+                                            ]),
                                             enabled: true),
                                         Expanded(child: Container()),
                                         MySaveButtons(
                                           text: "Confirm",
-                                          onPressed: () {
-                                            setState(() {
-                                              alertDialogInfo();
-                                            });
-                                          },
+                                          onPressed: promoteTypeId == null ||
+                                                  orgId == null ||
+                                                  positionOrgId == null ||
+                                                  transferStartDate.text == ""
+                                              ? null
+                                              : () {
+                                                  setState(() {
+                                                    alertDialogInfo();
+                                                  });
+                                                },
                                         )
                                       ],
                                     ),

@@ -266,7 +266,7 @@ class DataTable extends DataTableSource {
           child: Card(
               elevation: 2,
               color: datacar.carStatus == "1"
-                  ? Colors.greenAccent
+                  ? mythemecolor
                   : datacar.carStatus == "0"
                       ? null
                       : datacar.carStatus == "2"
@@ -291,9 +291,10 @@ class DataTable extends DataTableSource {
                                 ? "ซ่อมบำรุง"
                                 : "เพิกถอน",
                     style: TextStyle(
-                        color: datacar.carStatus == "3"
-                            ? Colors.white
-                            : Colors.grey[800]),
+                        color:
+                            datacar.carStatus == "3" || datacar.carStatus == "1"
+                                ? Colors.white
+                                : Colors.grey[800]),
                   ),
                 ),
               )),

@@ -166,7 +166,7 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                       children: [
                                         const Expanded(
                                             flex: 2,
-                                            child: Text('Employee Table.',
+                                            child: Text('Employee Management.',
                                                 style: TextStyle(
                                                     fontWeight:
                                                         FontWeight.w800))),
@@ -629,7 +629,9 @@ class PersonDataTableSource extends DataTableSource {
           DataCell(Text(employeeData.personData.personId)),
           DataCell(Text(employeeData.personData.fisrtNameTh)),
           DataCell(Text(employeeData.personData.lastNameTh)),
-          DataCell(Text(employeeData.staffTypeData.description)),
+          DataCell(Text(
+              employeeData.positionData.positionTypeData.positionTypeNameTh ??
+                  "")),
           DataCell(Text(employeeData
               .positionData.organizationData.departMentData.deptNameTh)),
           DataCell(Text(employeeData.positionData.positionData.positionNameTh)),

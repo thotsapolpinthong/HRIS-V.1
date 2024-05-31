@@ -50,8 +50,8 @@ class _CreateUpdateCalendarState extends State<CreateUpdateCalendar> {
         ),
         disabledDayTextStyle:
             const TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
-        weekdayLabelTextStyle:
-            TextStyle(color: mythemecolor, fontWeight: FontWeight.bold),
+        weekdayLabelTextStyle: TextStyle(
+            color: mythemecolor, fontWeight: FontWeight.bold, fontSize: 16),
         dayTextStylePredicate: ({required date}) {
           TextStyle? textStyle;
           if (date.weekday == DateTime.sunday) {

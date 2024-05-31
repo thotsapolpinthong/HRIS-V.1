@@ -54,6 +54,7 @@ class _AddEducationState extends State<AddEducation> {
   TextEditingController admissionDate = TextEditingController();
   TextEditingController graduatedDate = TextEditingController();
   TextEditingController gpa = TextEditingController();
+  TextEditingController instituteMenu = TextEditingController();
 
   @override
   initState() {
@@ -676,51 +677,71 @@ class _AddEducationState extends State<AddEducation> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Expanded(
-                                          child: Card(
-                                            child: DropdownButtonFormField(
-                                              decoration: const InputDecoration(
-                                                  labelText:
-                                                      'Institute : สถาบัน',
-                                                  labelStyle: TextStyle(
-                                                      color: Colors.black87),
-                                                  border: OutlineInputBorder(),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Colors.black26),
-                                                  ),
-                                                  filled: true,
-                                                  fillColor: Colors.white),
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              autovalidateMode:
-                                                  AutovalidateMode.always,
-                                              validator: null,
-                                              value: institute,
-                                              items: instituteList?.map((e) {
-                                                return DropdownMenuItem<String>(
-                                                  value:
-                                                      e.instituteId.toString(),
-                                                  child: SizedBox(
-                                                      width: 280,
-                                                      child: Text(
-                                                          e.instituteNameTh)),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
+                                          child: DropdownMenuGlobalOutline(
+                                              label: "Institute : สถาบัน",
+                                              width: 370,
+                                              controller: instituteMenu,
+                                              onSelected: (value) {
                                                 setState(() {
-                                                  institute =
-                                                      newValue.toString();
+                                                  institute = value.toString();
                                                   onNewValue();
                                                   onValidate();
                                                 });
                                               },
-                                            ),
-                                          ),
+                                              dropdownMenuEntries:
+                                                  instituteList!.map((e) {
+                                                return DropdownMenuEntry(
+                                                  value: e.instituteId,
+                                                  label: e.instituteNameTh,
+                                                );
+                                              }).toList()),
                                         ),
+                                        // Expanded(
+                                        //   child: Card(
+                                        //     child: DropdownButtonFormField(
+                                        //       decoration: const InputDecoration(
+                                        //           labelText:
+                                        //               'Institute : สถาบัน',
+                                        //           labelStyle: TextStyle(
+                                        //               color: Colors.black87),
+                                        //           border: OutlineInputBorder(),
+                                        //           enabledBorder:
+                                        //               OutlineInputBorder(
+                                        //             borderSide: BorderSide(
+                                        //                 color: Colors.black26),
+                                        //           ),
+                                        //           filled: true,
+                                        //           fillColor: Colors.white),
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(8),
+                                        //       autovalidateMode:
+                                        //           AutovalidateMode.always,
+                                        //       validator: null,
+                                        //       value: institute,
+                                        //       items: instituteList?.map((e) {
+                                        //         return DropdownMenuItem<String>(
+                                        //           value:
+                                        //               e.instituteId.toString(),
+                                        //           child: SizedBox(
+                                        //               width: 280,
+                                        //               child: Text(
+                                        //                   e.instituteNameTh)),
+                                        //         );
+                                        //       }).toList(),
+                                        //       onChanged: (newValue) {
+                                        //         setState(() {
+                                        //           institute =
+                                        //               newValue.toString();
+                                        //           onNewValue();
+                                        //           onValidate();
+                                        //         });
+                                        //       },
+                                        //     ),
+                                        //   ),
+                                        // ),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 8, horizontal: 4),
+                                              vertical: 4, horizontal: 4),
                                           child: SizedBox(
                                             height: 45,
                                             width: 45,

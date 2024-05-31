@@ -302,11 +302,11 @@ class _MyWidgetState extends State<MyWidget> {
                         type: StepperType.horizontal,
                         steps: getSteps(),
                         currentStep: currentStep,
-                        // onStepTapped: (step) {
-                        //   setState(() {
-                        //     currentStep = step;
-                        //   });
-                        // },
+                        onStepTapped: (step) {
+                          setState(() {
+                            currentStep = step;
+                          });
+                        },
                         onStepContinue: () {
                           final isLastStep =
                               currentStep == getSteps().length - 1;

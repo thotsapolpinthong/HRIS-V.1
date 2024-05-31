@@ -344,6 +344,56 @@ class DropdownMenuGlobal extends StatelessWidget {
   }
 }
 
+class DropdownMenuGlobalOutline extends StatelessWidget {
+  final double? width;
+  final TextEditingController? controller;
+  final String? label;
+  final Function(dynamic)? onSelected;
+  final List<DropdownMenuEntry<dynamic>> dropdownMenuEntries;
+  const DropdownMenuGlobalOutline({
+    Key? key,
+    required this.label,
+    required this.width,
+    required this.controller,
+    required this.onSelected,
+    required this.dropdownMenuEntries,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+      child: DropdownMenu(
+          controller: controller,
+          width: width,
+          hintText: "กรุณากรอกข้อมูล*",
+          trailingIcon: Icon(
+            Icons.content_paste_search_rounded,
+            color: controller?.text == "" ? Colors.red[700]! : Colors.grey[600],
+          ),
+          inputDecorationTheme: InputDecorationTheme(
+              hintStyle: TextStyle(color: Colors.red[700]),
+              contentPadding: const EdgeInsets.all(10.0),
+              filled: true,
+              fillColor: Colors.white,
+              labelStyle: const TextStyle(color: Colors.black),
+              enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(6),
+                  borderSide: BorderSide(
+                      color: controller?.text == ""
+                          ? Colors.red[800]!
+                          : Colors.grey[400]!)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(6),
+              )),
+          label: Text(label.toString()),
+          enableFilter: true,
+          onSelected: onSelected,
+          dropdownMenuEntries: dropdownMenuEntries),
+    );
+  }
+}
+
 class DropdownGlobal extends StatelessWidget {
   final String labeltext;
   final String? value;

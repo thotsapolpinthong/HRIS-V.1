@@ -296,11 +296,41 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                     child: Row(
                                       children: [
                                         Expanded(
-                                            flex:
-                                                widget.employee == true ? 2 : 3,
-                                            child: Text(widget.employee == true
-                                                ? "เลือกบุคคลเข้ารายงานตัว (Select Your Person)"
-                                                : 'บันทึกข้อมูลส่วนบุคคล (Personel Profile)')),
+                                          flex: widget.employee == true ? 2 : 3,
+                                          child: RichText(
+                                            text: TextSpan(
+                                                style:
+                                                    DefaultTextStyle.of(context)
+                                                        .style,
+                                                children: [
+                                                  TextSpan(
+                                                    text: widget.employee ==
+                                                            true
+                                                        ? "เลือกบุคคลเข้ารายงานตัว"
+                                                        : 'บันทึกข้อมูลส่วนบุคคล',
+                                                    style: GoogleFonts.kanit(
+                                                        textStyle:
+                                                            const TextStyle(
+                                                                fontSize: 19)),
+                                                  ),
+                                                  TextSpan(
+                                                    text: widget.employee ==
+                                                            true
+                                                        ? "  (Select Your Person)"
+                                                        : '  (Personel Profile)',
+                                                    style: const TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ]),
+                                          ),
+
+                                          //  Text(widget.employee == true
+                                          //     ? "เลือกบุคคลเข้ารายงานตัว (Select Your Person)"
+                                          //     : 'บันทึกข้อมูลส่วนบุคคล (Personel Profile)')
+                                        ),
                                         Expanded(
                                             flex: 1,
                                             child: Row(
@@ -400,9 +430,8 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                           label: Icon(
                                               Icons.photo_camera_front_sharp)),
                                     DataColumn(
-                                        label: const Text(
-                                          'รหัสประจำตัว',
-                                          style: TextStyle(fontSize: 16),
+                                        label: const TextThai(
+                                          text: 'รหัสประจำตัว',
                                         ),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
@@ -420,11 +449,9 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                         }),
 
                                     const DataColumn(
-                                        label: Text('  คำนำหน้า',
-                                            style: TextStyle(fontSize: 16))),
+                                        label: TextThai(text: '  คำนำหน้า')),
                                     DataColumn(
-                                        label: const Text('ชื่อ(TH)',
-                                            style: TextStyle(fontSize: 16)),
+                                        label: const TextThai(text: 'ชื่อ'),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             sort = !sort;
@@ -440,11 +467,10 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                           });
                                         }),
                                     const DataColumn(
-                                        label: Text('นามสกุล(TH)',
-                                            style: TextStyle(fontSize: 16))),
+                                        label: TextThai(text: 'นามสกุล')),
                                     DataColumn(
-                                        label: const Text('Name(EN)',
-                                            style: TextStyle(fontSize: 16)),
+                                        label: const Text('Name',
+                                            style: TextStyle(fontSize: 15)),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {
                                             sort = !sort;
@@ -460,21 +486,21 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                           });
                                         }),
                                     const DataColumn(
-                                      label: Text('Lastname(EN)',
-                                          style: TextStyle(fontSize: 16)),
+                                      label: Text('Lastname',
+                                          style: TextStyle(fontSize: 15)),
                                     ),
                                     // const DataColumn(
                                     //     label: Text('ประเภท',
                                     //         style: TextStyle(fontSize: 16))),
                                     if (widget.employee == false)
                                       const DataColumn(
-                                          label: Text('    สถานะ',
-                                              style: TextStyle(fontSize: 16))),
+                                          label: Text('    Status',
+                                              style: TextStyle(fontSize: 15))),
 
                                     if (widget.employee == false)
                                       const DataColumn(
                                           label: Text('     Edit/Remove',
-                                              style: TextStyle(fontSize: 16))),
+                                              style: TextStyle(fontSize: 15))),
                                     if (widget.employee == true)
                                       const DataColumn(
                                           label: Text("   Select")),
@@ -576,7 +602,7 @@ class PersonDataTableSource extends DataTableSource {
             height: 38,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.amber[700],
+                    backgroundColor: myambercolors,
                     padding: const EdgeInsets.all(1)),
                 onPressed: () {
                   showEditDialog(person.personId);
@@ -589,7 +615,7 @@ class PersonDataTableSource extends DataTableSource {
             height: 38,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[700],
+                    backgroundColor: myredcolors,
                     padding: const EdgeInsets.all(1)),
                 onPressed: () {
                   showdialogDeletePerson(person.personId);
@@ -782,8 +808,8 @@ class PersonDataTableSource extends DataTableSource {
               ),
               content: SafeArea(
                 child: SizedBox(
-                  width: 550,
-                  height: 600,
+                  width: 520,
+                  height: 550,
                   child: Column(
                     children: [
                       Expanded(

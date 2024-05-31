@@ -2,7 +2,7 @@
 part of 'homepage_bloc.dart';
 
 class HomepageState extends Equatable {
-  final int pageNumber;
+  final double pageNumber;
   final bool expandMenu;
   const HomepageState({
     this.pageNumber = 8,
@@ -10,7 +10,7 @@ class HomepageState extends Equatable {
   });
 
   HomepageState copyWith({
-    int? pageNumber,
+    double? pageNumber,
     bool? expandMenu,
   }) {
     return HomepageState(

@@ -133,7 +133,8 @@ class _PromoteMenuState extends State<PromoteMenu> {
       if (position != null) {
         positionOrgList = position.positionOrganizationData;
         staffTypeList;
-        staffTypeId = widget.employeeData.staffTypeData.staffTypeId;
+        staffTypeId =
+            widget.employeeData.positionData.positionTypeData.positionTypeId;
         promoteTypeList;
         isDataLoading = false;
       } else {

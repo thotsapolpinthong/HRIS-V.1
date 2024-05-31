@@ -264,6 +264,12 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
         typeId = "A03";
         description.text = "ลืมบัตร/บัตรเสีย";
         break;
+      case 4: //HR
+        //free
+        break;
+      case 5: //ใส่วันที่เลือกให้
+        selectedDate.text = widget.date ?? "";
+        break;
     }
     super.initState();
   }
@@ -283,33 +289,18 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
               child: Column(
             children: [
               const Gap(5),
-              Card(
-                child: TextFormField(
-                  controller: selectedDate,
-                  autovalidateMode: AutovalidateMode.always,
-                  validator: Validatorless.required('*กรุณากรอกข้อมูล'),
-                  decoration: const InputDecoration(
-                    labelText: 'Date',
-                    labelStyle: TextStyle(color: Colors.black),
-                    filled: true,
-                    fillColor: Colors.white,
-                    suffixIcon: Icon(
-                      Icons.calendar_today_rounded,
-                    ),
-                    border: OutlineInputBorder(),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black54),
-                    ),
-                  ),
-                  readOnly: true,
-                  onTap: widget.menuType == 0 ||
-                          widget.menuType == 1 ||
-                          widget.menuType == 2
-                      ? null
-                      : () {
-                          selectvalidFromDate();
-                        },
-                ),
+              TextFormFieldDatepickGlobal(
+                controller: selectedDate,
+                labelText: 'Date',
+                validatorless: Validatorless.required('*กรุณากรอกข้อมูล'),
+                ontap: widget.menuType == 0 ||
+                        widget.menuType == 1 ||
+                        widget.menuType == 2 ||
+                        widget.menuType == 5
+                    ? null
+                    : () {
+                        selectvalidFromDate();
+                      },
               ),
               const Gap(5),
               DropdownGlobal(
@@ -331,7 +322,7 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
                               "${e.manualWorkDateTypeId} : ${e.manualWorkDateTypeNameTh}")),
                     );
                   }).toList(),
-                  onChanged: widget.menuType == 4
+                  onChanged: widget.menuType == 4 || widget.menuType == 5
                       ? (newValue) {
                           setState(() {
                             typeId = newValue.toString();

@@ -835,7 +835,7 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
                                 child: SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    '${data?.departMentData.deptCode}.',
+                                    '${data.departMentData.deptCode}.',
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(color: Colors.white),
                                   ),

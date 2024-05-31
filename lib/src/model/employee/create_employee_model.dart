@@ -10,12 +10,9 @@ class CreateEmployeeModel {
   String personId;
   String fingerScanId;
   String startDate;
-  String endDate;
   String noted;
   String email;
-  String deptCode;
   String staffStatus;
-  String staffType;
   String shiftId;
   String positionOrganizationId;
   String cardId;
@@ -24,12 +21,9 @@ class CreateEmployeeModel {
     required this.personId,
     required this.fingerScanId,
     required this.startDate,
-    required this.endDate,
     required this.noted,
     required this.email,
-    required this.deptCode,
     required this.staffStatus,
-    required this.staffType,
     required this.shiftId,
     required this.positionOrganizationId,
     required this.cardId,
@@ -40,12 +34,9 @@ class CreateEmployeeModel {
         personId: json["personId"],
         fingerScanId: json["fingerScanId"],
         startDate: json["startDate"],
-        endDate: json["endDate"],
         noted: json["noted"],
         email: json["email"],
-        deptCode: json["deptCode"],
         staffStatus: json["staffStatus"],
-        staffType: json["staffType"],
         shiftId: json["shiftId"],
         positionOrganizationId: json["positionOrganizationId"],
         cardId: json["cardId"],
@@ -55,12 +46,9 @@ class CreateEmployeeModel {
         "personId": personId,
         "fingerScanId": fingerScanId,
         "startDate": startDate,
-        "endDate": endDate,
         "noted": noted,
         "email": email,
-        "deptCode": deptCode,
         "staffStatus": staffStatus,
-        "staffType": staffType,
         "shiftId": shiftId,
         "positionOrganizationId": positionOrganizationId,
         "cardId": cardId,

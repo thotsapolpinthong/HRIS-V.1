@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:hris_app_prototype/src/component/employee/menu/end/menu_end.dart';
+import 'package:hris_app_prototype/src/component/employee/menu/resign/menu_resign.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/menu_leave.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/menu_manual_workdate.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/ot/menu_ot.dart';

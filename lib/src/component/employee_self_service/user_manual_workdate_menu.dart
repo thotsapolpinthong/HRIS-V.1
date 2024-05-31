@@ -173,20 +173,23 @@ class _ManualWorkDateManageState extends State<ManualWorkDateManage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const Gap(40),
-                  SizedBox(
-                      width: 110,
-                      height: 40,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.all(1),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12))),
-                          onPressed: () {
-                            showDialogCreate(2, null);
-                          },
-                          child: const Text(
-                            "ลืมสแกนเข้า",
-                          ))),
+                  Tooltip(
+                    message: "เฉพาะลืมสแกนเข้า ณ วันที่ปัจจุบัน",
+                    child: SizedBox(
+                        width: 110,
+                        height: 40,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.all(1),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            onPressed: () {
+                              showDialogCreate(2, null);
+                            },
+                            child: const Text(
+                              "ลืมสแกนเข้า",
+                            ))),
+                  ),
                   const Gap(10),
                   SizedBox(
                       width: 110,
@@ -196,7 +199,7 @@ class _ManualWorkDateManageState extends State<ManualWorkDateManage> {
                               backgroundColor: Colors.amberAccent[100],
                               padding: const EdgeInsets.all(1),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12))),
+                                  borderRadius: BorderRadius.circular(8))),
                           onPressed: () {
                             showDialogCreate(3, null);
                           },
@@ -501,25 +504,29 @@ class _ManualWorkDateManageState extends State<ManualWorkDateManage> {
                                                       Text(index.checkInTime)),
                                                   DataCell(
                                                       Text(index.checkOutTime)),
-                                                  DataCell(index.checkInTime ==
+                                                  DataCell(index
+                                                                  .checkInTime ==
                                                               "" ||
                                                           index.checkOutTime ==
-                                                              ""
+                                                              "" ||
+                                                          (index.checkInTime ==
+                                                              index
+                                                                  .checkOutTime)
                                                       ? ElevatedButton(
-                                                          onPressed:
-                                                              index.checkInTime ==
-                                                                          "" &&
-                                                                      index.checkOutTime ==
-                                                                          ""
-                                                                  ? null
-                                                                  : () {
-                                                                      showDialogCreate(
-                                                                          index.checkInTime == "" && index.checkOutTime != ""
-                                                                              ? 0
-                                                                              : 1,
-                                                                          index
-                                                                              .date);
-                                                                    },
+                                                          onPressed: () {
+                                                            showDialogCreate(
+                                                                index.checkInTime ==
+                                                                        index
+                                                                            .checkOutTime
+                                                                    ? 5
+                                                                    : index.checkInTime ==
+                                                                                "" &&
+                                                                            index.checkOutTime !=
+                                                                                ""
+                                                                        ? 0
+                                                                        : 1,
+                                                                index.date);
+                                                          },
                                                           child: const Text(
                                                               "ยื่นคำขอ"))
                                                       : Container()),

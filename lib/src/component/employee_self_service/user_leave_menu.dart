@@ -72,17 +72,17 @@ class _LeaveManageState extends State<LeaveManage> {
     var picker = await showCalendarDatePicker2Dialog(
       context: context,
       config: CalendarDatePicker2WithActionButtonsConfig(
+        calendarType: CalendarDatePicker2Type.multi,
         firstDate: DateTime(DateTime.now().year, 01, 1),
         lastDate: DateTime(DateTime.now().year, 12, 31),
         firstDayOfWeek: 1,
-        calendarType: CalendarDatePicker2Type.multi,
         dayTextStyle: const TextStyle(
           color: Colors.black,
         ),
         disabledDayTextStyle:
             const TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
-        weekdayLabelTextStyle:
-            TextStyle(color: mythemecolor, fontWeight: FontWeight.bold),
+        weekdayLabelTextStyle: TextStyle(
+            color: mythemecolor, fontWeight: FontWeight.bold, fontSize: 16),
         dayTextStylePredicate: ({required date}) {
           TextStyle? textStyle;
           if (date.weekday == DateTime.sunday) {

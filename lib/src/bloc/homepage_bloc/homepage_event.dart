@@ -21,6 +21,8 @@ class WelfarePageEvent extends HomepageEvent {}
 
 class PayrollPageEvent extends HomepageEvent {}
 
+class SubPayroll1PageEvent extends HomepageEvent {}
+
 class TimePageEvent extends HomepageEvent {}
 
 class ReportPageEvent extends HomepageEvent {}
