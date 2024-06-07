@@ -122,9 +122,7 @@ class _EmployeeSelfServiceLayoutState extends State<EmployeeSelfServiceLayout> {
                 children: [
                   const Text(
                     'Employee Self Service.',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const Gap(4),
                   Expanded(

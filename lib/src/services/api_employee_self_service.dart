@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_amount_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_approve_and_reject_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_data_employee_model.dart';
+import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/response_leave_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/manual_workdate_menu/create_manual_workdate_hr_model.dart';
-import 'package:hris_app_prototype/src/model/lotnumber/get_lotnumber_dropdown_model.dart';
+import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/model/self_service/leave/create_leave_request_online.dart';
 import 'package:hris_app_prototype/src/model/self_service/leave/leave_request_data_model.dart';
 import 'package:hris_app_prototype/src/model/self_service/ot/create_ot_request_manual_model.dart';
@@ -152,6 +153,31 @@ class ApiEmployeeSelfService {
     sharedToken = preferences.getString("token")!;
     var response = await http.put(
       Uri.parse("$baseUrl/RejectLeaveRequest"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(model.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseLeaveModel data = responseLeaveModelFromJson(response.body);
+      if (data.message == "Requester's email is empty.") {
+        isUpdate == false;
+      } else {
+        isUpdate = true;
+      }
+      return isUpdate;
+    } else {
+      return isUpdate;
+    }
+  }
+
+  static Future leaveManualReject(LeaveRejectModel model) async {
+    bool isUpdate = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.put(
+      Uri.parse("$baseUrl/ManualRejectLeaveRequest"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"

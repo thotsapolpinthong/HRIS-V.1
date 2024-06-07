@@ -496,19 +496,25 @@ class _SlideBarState extends State<SlideBar> {
                                 .add(SubPayroll1PageEvent());
                           }),
                       DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
+                          color: state.pageNumber == 5.2
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 5.2
+                              ? Colors.white
+                              : Colors.black87,
                           title: "2. SEND TO PAYROLL",
+                          onTap: () => context
+                              .read<HomepageBloc>()
+                              .add(SubPayrollPage2Event())),
+                      DrawerTitleSubmenu(
+                          color: Colors.white,
+                          textColor: Colors.black87,
+                          title: "3. ประมวลผลข้อมูลการจ่ายเงินเดือน (Payroll)",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "3. พิมพ์สลิปเงินเดือน",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "4. ประมวลผลข้อมูลการจ่ายเงินเดือน (Payroll)",
+                          title: "4. พิมพ์สลิปเงินเดือน",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,

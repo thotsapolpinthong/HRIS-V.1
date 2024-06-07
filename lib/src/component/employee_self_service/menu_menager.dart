@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leave_approve_and_reject_model.dart';
@@ -321,10 +322,63 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                       .center,
                                                             ),
                                                           ),
-                                                    title: Text(
-                                                        "ชื่อ ${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}"),
-                                                    subtitle: Text(
-                                                        "จำนวน ${leaveData?.leaveRequestData[index].leaveAmount} วัน\nวันที่ ${leaveData?.leaveRequestData[index].leaveDate}"),
+                                                    title: RichText(
+                                                      text: TextSpan(
+                                                          style: DefaultTextStyle
+                                                                  .of(context)
+                                                              .style,
+                                                          children: [
+                                                            const TextSpan(
+                                                                text: 'ชื่อ '),
+                                                            TextSpan(
+                                                              text:
+                                                                  "${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}",
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ]),
+                                                    ),
+                                                    subtitle: RichText(
+                                                      text: TextSpan(
+                                                          style: DefaultTextStyle
+                                                                  .of(context)
+                                                              .style,
+                                                          children: [
+                                                            const TextSpan(
+                                                                text: 'จำนวน '),
+                                                            TextSpan(
+                                                              text:
+                                                                  "${leaveData?.leaveRequestData[index].leaveAmount}",
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                            const TextSpan(
+                                                                text:
+                                                                    ' วัน วันที่'),
+                                                            TextSpan(
+                                                              text: leaveData
+                                                                  ?.leaveRequestData[
+                                                                      index]
+                                                                  .leaveDate
+                                                                  .toString(),
+                                                              style:
+                                                                  const TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
+                                                            ),
+                                                          ]),
+                                                    ),
                                                     trailing: Tooltip(
                                                       message:
                                                           "รหัสพนักงาน : ${leaveData?.leaveRequestData[index].employeeId}\nชื่อ : ${leaveData?.leaveRequestData[index].firstName} ${leaveData?.leaveRequestData[index].lastName}\nตำแหน่ง : ${leaveData?.leaveRequestData[index].positionName}\nแผนก : ${leaveData?.leaveRequestData[index].departmentName}\nประเภท : ${leaveData?.leaveRequestData[index].leaveTypeData.leaveTypeNameTh}\nสถานะ : ${leaveData?.leaveRequestData[index].status}\nลาเพื่อ : ${leaveData?.leaveRequestData[index].leaveDecription}\nจำนวน : ${leaveData?.leaveRequestData[index].leaveAmount} วัน\nวันที่ : ${leaveData?.leaveRequestData[index].leaveDate}",
@@ -503,8 +557,30 @@ class _ManagerMenuServiceState extends State<ManagerMenuService> {
                                                                 "${otData?.overTimeRequestData[index].otTypeData.otTypeName}\n${otData?.overTimeRequestData[index].oTrequestTypeData.oTrequestTypeName}"),
                                                         title: Row(
                                                           children: [
-                                                            Text(
-                                                                "ชื่อ ${otData?.overTimeRequestData[index].employeeData.firstName} ${otData?.overTimeRequestData[index].employeeData.lastName}"),
+                                                            RichText(
+                                                              text: TextSpan(
+                                                                  style: DefaultTextStyle.of(
+                                                                          context)
+                                                                      .style,
+                                                                  children: [
+                                                                    const TextSpan(
+                                                                        text:
+                                                                            'ชื่อ '),
+                                                                    TextSpan(
+                                                                      text:
+                                                                          "${otData?.overTimeRequestData[index].employeeData.firstName} ${otData?.overTimeRequestData[index].employeeData.lastName}",
+                                                                      style:
+                                                                          const TextStyle(
+                                                                        fontSize:
+                                                                            16,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
+                                                                      ),
+                                                                    ),
+                                                                  ]),
+                                                            ),
+                                                            // Text(
+                                                            //     "ชื่อ ${otData?.overTimeRequestData[index].employeeData.firstName} ${otData?.overTimeRequestData[index].employeeData.lastName}"),
                                                             Text(
                                                                 " | Time Scan : ${otData?.overTimeRequestData[index].workTimeScan.startTime}"),
                                                             otData

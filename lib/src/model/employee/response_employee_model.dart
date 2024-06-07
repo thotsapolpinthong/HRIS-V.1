@@ -144,7 +144,7 @@ class PersonData {
   Nationality nationality;
   Race race;
   Religion religion;
-  bool personStatus;
+  bool? personStatus;
 
   PersonData({
     required this.personId,
@@ -168,7 +168,7 @@ class PersonData {
     required this.nationality,
     required this.race,
     required this.religion,
-    required this.personStatus,
+    this.personStatus,
   });
 
   factory PersonData.fromJson(Map<String, dynamic> json) => PersonData(
@@ -485,11 +485,11 @@ class PositionDataEmployeeData {
 
 class JobTitleData {
   String jobTitleId;
-  String jobTitleName;
+  String? jobTitleName;
 
   JobTitleData({
     required this.jobTitleId,
-    required this.jobTitleName,
+    this.jobTitleName,
   });
 
   factory JobTitleData.fromJson(Map<String, dynamic> json) => JobTitleData(
@@ -708,12 +708,12 @@ class ShiftData {
 }
 
 class StaffStatusData {
-  String staffStatusId;
-  String description;
+  String? staffStatusId;
+  String? description;
 
   StaffStatusData({
-    required this.staffStatusId,
-    required this.description,
+    this.staffStatusId,
+    this.description,
   });
 
   factory StaffStatusData.fromJson(Map<String, dynamic> json) =>

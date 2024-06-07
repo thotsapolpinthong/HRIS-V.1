@@ -140,6 +140,12 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
         widget.firstNode == false) {
       parentPositionOrgData =
           widget.positionOrgDataAddNode?.positionOrganizationId;
+      parentPositionOrgMenu.text = widget.positionOrgDataAddNode!
+          .parentPositionNodeId.positionData.positionNameTh;
+      bussinessParentData = widget.positionOrgDataAddNode
+          ?.parentPositionBusinessNodeId.positionOrganizationId;
+      bussinessParentMenu.text = widget.positionOrgDataAddNode!
+          .parentPositionBusinessNodeId.positionData.positionNameTh;
     }
     setState(() {});
   }
@@ -575,8 +581,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                               backgroundColor: Colors.greenAccent,
                             ),
                             onPressed: positionData == null ||
-                                    bussinessParentData == null ||
-                                    parentPositionOrgData == null
+                                    bussinessParentData == null
                                 ? null
                                 : () {
                                     onAdd();
@@ -596,8 +601,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
                               backgroundColor: Colors.greenAccent,
                             ),
                             onPressed: positionData == null ||
-                                    bussinessParentData == null ||
-                                    parentPositionOrgData == null
+                                    bussinessParentData == null
                                 ? null
                                 : () {
                                     showdialogEdit();

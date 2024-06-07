@@ -487,18 +487,20 @@ class DropdownGlobalOutline extends StatelessWidget {
 class TextFormFieldGlobal extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
-  final String hintText;
+  final String? hintText;
   final String? Function(String?)? validatorless;
   final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
+  final Function(String)? onChanged;
   const TextFormFieldGlobal({
     Key? key,
     required this.controller,
     required this.labelText,
-    required this.hintText,
-    required this.validatorless,
+    this.hintText,
+    this.validatorless,
     required this.enabled,
     this.inputFormatters,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -510,6 +512,7 @@ class TextFormFieldGlobal extends StatelessWidget {
         validator: validatorless,
         inputFormatters: inputFormatters,
         controller: controller,
+        onChanged: onChanged,
         minLines: 1,
         maxLines: 4,
         enabled: enabled,

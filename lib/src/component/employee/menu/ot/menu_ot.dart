@@ -461,7 +461,7 @@ class DataTableRowSource extends DataTableSource {
         context
             .read<EmployeeBloc>()
             .add(FetchDataOtEmployeeEvent(employeeId: employeeIdRequest));
-        Navigator.pop(context);
+        // Navigator.pop(context);
       },
     ).show();
   }

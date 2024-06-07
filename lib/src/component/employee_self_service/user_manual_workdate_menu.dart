@@ -8,7 +8,7 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/create_manual_workdate.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
-import 'package:hris_app_prototype/src/model/lotnumber/get_lotnumber_dropdown_model.dart';
+import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/model/self_service/user_info/get_user_info_model.dart';
 import 'package:hris_app_prototype/src/model/self_service/workdate/request_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';

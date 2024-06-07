@@ -177,7 +177,7 @@ class _CreateOtState extends State<CreateOt> {
       helpText: from == true //true = start time , false = end time
           ? "เวลาที่เริ่มทำงานล่วงเวลา (Start time OT)"
           : "เวลาที่สิ้นสุดทำงานล่วงเวลา \n(Finish time OT)",
-      hourLabelText: " ชั่วโมง         hour",
+      hourLabelText: " นาฬิกา         hour",
       minuteLabelText: " นาที         minute",
       initialTime: const TimeOfDay(hour: 0, minute: 0),
       initialEntryMode: TimePickerEntryMode.input,

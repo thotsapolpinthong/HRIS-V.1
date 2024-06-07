@@ -19,9 +19,13 @@ class EssPageEvent extends HomepageEvent {}
 
 class WelfarePageEvent extends HomepageEvent {}
 
+//payroll
 class PayrollPageEvent extends HomepageEvent {}
 
 class SubPayroll1PageEvent extends HomepageEvent {}
+
+class SubPayrollPage2Event extends HomepageEvent {}
+//end payroll
 
 class TimePageEvent extends HomepageEvent {}
 

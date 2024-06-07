@@ -2,6 +2,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
@@ -305,11 +306,11 @@ class _TransferMenuState extends State<TransferMenu> {
                                                 value: e.organizationCode
                                                     .toString(),
                                                 child: Container(
-                                                    width: 140,
+                                                    width: 180,
                                                     constraints:
                                                         const BoxConstraints(
                                                             maxHeight: 150,
-                                                            minWidth: 140),
+                                                            minWidth: 180),
                                                     child: Text(
                                                         e.organizationName)),
                                               );
@@ -327,7 +328,13 @@ class _TransferMenuState extends State<TransferMenu> {
                                               if (position != null) {
                                                 setState(() {
                                                   positionOrgList = position
-                                                      .positionOrganizationData;
+                                                      .positionOrganizationData
+                                                      .where((element) =>
+                                                          element.employeeData
+                                                              .employeeId ==
+                                                          "")
+                                                      .toList();
+                                                  ;
                                                 });
                                               }
                                             },
@@ -341,12 +348,16 @@ class _TransferMenuState extends State<TransferMenu> {
                                                 value: e.positionOrganizationId
                                                     .toString(),
                                                 child: Container(
-                                                    width: 150,
+                                                    width: 180,
                                                     constraints:
                                                         const BoxConstraints(
                                                             minWidth: 150),
-                                                    child: Text(e.positionData
-                                                        .positionNameTh)),
+                                                    child: Text(e.employeeData
+                                                                .employeeId ==
+                                                            ""
+                                                        ? e.positionData
+                                                            .positionNameTh
+                                                        : "ตำแหน่งงานไม่ว่าง")),
                                               );
                                             }).toList(),
                                             onChanged: (newValue) {
@@ -370,12 +381,12 @@ class _TransferMenuState extends State<TransferMenu> {
                                             labelText: "ฐานเงินเดือนใหม่",
                                             hintText: "",
                                             validatorless:
-                                                Validatorless.multiple([
-                                              Validatorless.number(
-                                                  "กรอกได้เฉพาะตัวเลข"),
-                                              Validatorless.required(
-                                                  "โปรดระบุเงินเดือนใหม่")
-                                            ]),
+                                                Validatorless.required(
+                                                    "โปรดระบุเงินเดือนใหม่"),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(r'[0-9.0-9/]'))
+                                            ],
                                             enabled: true),
                                         Expanded(child: Container()),
                                         MySaveButtons(

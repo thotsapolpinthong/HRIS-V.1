@@ -131,7 +131,12 @@ class _PromoteMenuState extends State<PromoteMenu> {
 
     setState(() {
       if (position != null) {
-        positionOrgList = position.positionOrganizationData;
+        positionOrgList = position.positionOrganizationData
+            .where((element) =>
+                element.employeeData.employeeId == "" ||
+                element.employeeData.employeeId ==
+                    widget.employeeData.employeeId)
+            .toList();
         staffTypeList;
         staffTypeId =
             widget.employeeData.positionData.positionTypeData.positionTypeId;
@@ -323,8 +328,8 @@ class _PromoteMenuState extends State<PromoteMenu> {
                                                     constraints:
                                                         const BoxConstraints(
                                                             minWidth: 145),
-                                                    child: Text(e.positionData
-                                                        .positionNameTh)),
+                                                    child: Text(
+                                                        "${e.positionOrganizationId} : ${e.positionData.positionNameTh}")),
                                               );
                                             }).toList(),
                                             onChanged: (newValue) {

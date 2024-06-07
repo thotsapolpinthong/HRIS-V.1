@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/payroll/1_lot/create_edit_lot.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
-import 'package:hris_app_prototype/src/model/lotnumber/get_lotnumber_dropdown_model.dart';
+import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 
 class LotManagement extends StatefulWidget {
@@ -23,25 +23,10 @@ class _LotManagementState extends State<LotManagement> {
 
   GetLotNumberDropdownModel? lotNumberData;
   List<LotNumberDatum> filterLotList = [];
-  List<Year> yearList = [
-    Year(id: "2024", year: "2024"),
-    Year(id: "2025", year: "2025"),
-    Year(id: "2026", year: "2026"),
-    Year(id: "2027", year: "2027"),
-    Year(id: "2028", year: "2028"),
-    Year(id: "2029", year: "2029"),
-    Year(id: "2030", year: "2030"),
-    Year(id: "2031", year: "2031"),
-    Year(id: "2032", year: "2032"),
-    Year(id: "2033", year: "2033"),
-    Year(id: "2034", year: "2034"),
-    Year(id: "2035", year: "2035"),
-    Year(id: "2036", year: "2036"),
-    Year(id: "2037", year: "2037"),
-    Year(id: "2038", year: "2038"),
-    Year(id: "2039", year: "2039"),
-    Year(id: "2040", year: "2040"),
-  ];
+  List<Year> yearList = List.generate(27, (index) {
+    int year = 2024 + index;
+    return Year(id: year.toString(), year: year.toString());
+  });
   String? lotNumberId;
   String? yearId;
   bool isLoading = true;
@@ -55,6 +40,7 @@ class _LotManagementState extends State<LotManagement> {
     //lotnumber data-------------
     lotNumberData = await ApiEmployeeSelfService.getLotNumberDropdown();
     setState(() {
+      isLoading = true;
       lotNumberData;
       yearId = DateTime.now().year.toString();
       //เงื่อนไขหาเดือนล่าสุด
@@ -77,6 +63,41 @@ class _LotManagementState extends State<LotManagement> {
     });
   }
 
+  void createAndEditLotNumber(bool onEdit, LotNumberDatum? onLotNumber) {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: mygreycolors,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: TitleDialog(
+              title: "Create Lot Number",
+              onPressed: () {
+                Navigator.pop(context);
+                // fetchData();
+              },
+            ),
+            content: SizedBox(
+              width: 400,
+              height: 450,
+              child: onEdit == false
+                  ? EditLotNumber(
+                      onEdit: false,
+                      onYearList: yearList,
+                      fetchData: fetchData,
+                    )
+                  : EditLotNumber(
+                      onEdit: true,
+                      onYearList: yearList,
+                      fetchData: fetchData,
+                      onLotNumber: onLotNumber),
+            ),
+          );
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,7 +112,9 @@ class _LotManagementState extends State<LotManagement> {
       child: Scaffold(
         floatingActionButton: MyFloatingButton(
           icon: const Icon(Icons.add),
-          onPressed: () {},
+          onPressed: () {
+            createAndEditLotNumber(false, null);
+          },
         ),
         body: isLoading == true
             ? myLoadingScreen
@@ -107,6 +130,7 @@ class _LotManagementState extends State<LotManagement> {
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Card(
+                        elevation: 4,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                         child: Padding(
@@ -243,7 +267,16 @@ class _LotManagementState extends State<LotManagement> {
                                         shape: RoundedRectangleBorder(
                                             borderRadius:
                                                 BorderRadius.circular(8))),
-                                    onPressed: () {},
+                                    onPressed: lotNumberId == null
+                                        ? null
+                                        : () {
+                                            LotNumberDatum data = lotNumberData!
+                                                .lotNumberData
+                                                .firstWhere((element) =>
+                                                    element.lotNumberId ==
+                                                    lotNumberId);
+                                            createAndEditLotNumber(true, data);
+                                          },
                                     child: const Icon(
                                       Icons.edit,
                                     )),

@@ -451,7 +451,7 @@ class DataTableRowSource extends DataTableSource {
         leaveRequestId: requestId,
         rejectBy: employeeId!,
         comment: "Reject by HR");
-    bool success = await ApiEmployeeSelfService.leaveReject(leaveModel);
+    bool success = await ApiEmployeeSelfService.leaveManualReject(leaveModel);
     alertDialog(success, 2);
   }
 
