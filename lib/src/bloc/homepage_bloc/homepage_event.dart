@@ -27,12 +27,17 @@ class SubPayroll1PageEvent extends HomepageEvent {}
 class SubPayrollPage2Event extends HomepageEvent {}
 //end payroll
 
-class TimePageEvent extends HomepageEvent {}
+class TripPageEvent extends HomepageEvent {}
 
 class ReportPageEvent extends HomepageEvent {}
 
 class DashboardPageEvent extends HomepageEvent {}
 
+// time attendance
 class CalendarPageEvent extends HomepageEvent {}
 
 class ShiftPageEvent extends HomepageEvent {}
+
+class WorkSpPageEvent extends HomepageEvent {}
+
+class HalfHlbPageEvent extends HomepageEvent {}

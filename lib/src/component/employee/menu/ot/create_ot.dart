@@ -209,7 +209,7 @@ class _CreateOtState extends State<CreateOt> {
         hour: int.parse(checkOut.text.split(':')[0]),
         minute: int.parse(checkOut.text.split(':')[1]));
 //ot type  H = Holiday, N = OT-normal , S = OT-holiday, SP = OT-Special
-//check type 0 = no check , 1 = fingerprint , 2 = manual time , 3 = trip *อยาคต, 4 = empty
+//check type 0 = no check , 1 = fingerprint , 2 = manual time , 3 = trip *อนาคต, 4 = empty
 // OT Normal | Ot holiday (มีเวลาสแกนนิ้ว ปกติ)
 //เงื่อนไข เวลาเริ่ม จะต้องมากกว่าเวลาสแกนเข้า และน้อยกว่าสแกนออก
 //เวลาสิ้นสุด จะต้องมากกว่าเวลาที่เลือกจะต้องน้อยกว่าเวลาสแกนออก
@@ -384,7 +384,75 @@ class _CreateOtState extends State<CreateOt> {
         }
         //end time textfield
       }
-    } //----------------------------------------------------------------
+    } else if ((otTypeId == "N" ||
+            otTypeId == "S") && // หากช่อง เวลาสแกนออก ไม่ได้มาจากเครื่องสแกน
+        (checkInIcon == 2 && checkOutIcon == 2)) {
+      //manual & manual
+      // Check OUT Request
+      if (from == true) {
+        //start time textfield
+        switch (otRequestTypeId) {
+          case "A": // ot ก่อนเริ่มงาน
+            if (selectedTime!.hour < timeIn.hour ||
+                selectedTime.hour == timeIn.hour &&
+                    selectedTime.minute < timeIn.minute) {
+              startTime.text = selectedStartTime!.format(context).toString();
+            } else {
+              // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาก่อนเวลาจาก Manualworkdate");
+              startTime.text = "";
+            }
+            break;
+
+          case "B": // ot หลังเลิกงาน
+            if (selectedTime!.hour > timeOut.hour ||
+                selectedTime.hour == timeOut.hour &&
+                    selectedTime.minute >= timeOut.minute) {
+              startTime.text = selectedStartTime!.format(context).toString();
+            } else {
+              // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาก่อนเวลาแสกนนิ้ว");
+              startTime.text = "";
+            }
+            break;
+        }
+      } else {
+        //end time textfield
+        TimeOfDay timeStart = TimeOfDay(
+            hour: int.parse(startTime.text.split(':')[0]),
+            minute: int.parse(startTime.text.split(':')[1]));
+        switch (otRequestTypeId) {
+          case "A": // ot ก่อนเริ่มงาน
+            if ((selectedTime!.hour > timeStart.hour ||
+                    selectedTime.hour == timeStart.hour &&
+                        selectedTime.minute > timeStart.minute) &&
+                (selectedTime.hour < timeIn.hour ||
+                    selectedTime.hour == timeIn.hour &&
+                        selectedTime.minute <= timeIn.minute)) {
+              endTime.text = selectedStartTime!.format(context).toString();
+            } else {
+              // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError("โปรดระบุเวลาหลังจากเวลา Manualworkdate");
+              endTime.text = "";
+            }
+            break;
+          case "B": // ot หลังเลิกงาน
+            if (selectedTime!.hour > timeStart.hour ||
+                selectedTime.hour == timeStart.hour &&
+                    selectedTime.minute > timeStart.minute) {
+              endTime.text = selectedStartTime!.format(context).toString();
+            } else {
+              // เตือนข้อความอะไรบางอย่าง
+              alertDialogInfoError(
+                  "*โปรดระบุเวลาหลังจากเวลา Manualworkdate\nและหลังจากเวลา  Start Time");
+              endTime.text = "";
+            }
+            break;
+        }
+        //end time textfield
+      }
+    }
+    //----------------------------------------------------------------
     else {
       if (from == true) {
         //start time textfield

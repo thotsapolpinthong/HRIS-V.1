@@ -27,6 +27,7 @@ var mythemecolor = const Color.fromARGB(255, 9, 47, 105);
 var mytextcolors = Colors.grey[350];
 var myambercolors = Colors.amber[600];
 var myredcolors = Colors.red[700];
+var headerbluecolors = const Color.fromARGB(255, 0, 57, 143);
 
 var myLoadingScreen = SizedBox(
     height: 600,
@@ -151,11 +152,13 @@ class TitleDialog extends StatelessWidget {
   final String title;
   final void Function()? onPressed;
   final double? size;
+  final Color? color;
   const TitleDialog({
     Key? key,
     required this.title,
     this.onPressed,
     this.size = 18,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -167,7 +170,8 @@ class TitleDialog extends StatelessWidget {
         children: [
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: size),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: size, color: color),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700]),

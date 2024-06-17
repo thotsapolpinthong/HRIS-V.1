@@ -34,33 +34,13 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             alignment: AlignmentDirectional.centerEnd,
             children: <Widget>[
-              Container(
+              SizedBox(
                       width: double.infinity,
                       height: double.infinity,
-                      // decoration: BoxDecoration(
-                      //      color: Color.fromRGBO(217, 217, 217, 1),
-                      //     borderRadius: BorderRadius.circular(30)),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 430),
                         child: Image.asset('assets/stec2.png'),
-                      )
-                      // const Padding(
-                      //   padding: EdgeInsets.fromLTRB(30, 10, 20, 30),
-                      //   child: Column(
-                      //       mainAxisAlignment: MainAxisAlignment.start,
-                      //       crossAxisAlignment: CrossAxisAlignment.center,
-                      //       children: [
-                      //         Expanded(
-                      //           flex: 2,
-                      //           child: Row(
-                      //             mainAxisAlignment: MainAxisAlignment.start,
-                      //             crossAxisAlignment: CrossAxisAlignment.start,
-                      //             children: <Widget>[],
-                      //           ),
-                      //         ),
-                      //       ]),
-                      // ),
-                      )
+                      ))
                   .animate()
                   .fade(
                     // delay: 300.ms,
@@ -106,17 +86,21 @@ class _LoginPageState extends State<LoginPage> {
                           )),
                       const SizedBox(height: 5),
                       SizedBox(
+                        height: 50,
                         child: TextFormField(
                           controller: _usernameController,
                           decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(10.0),
                             border: OutlineInputBorder(),
                             enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
                               borderSide: BorderSide(color: Colors.white),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(color: Colors.white),
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            fillColor: mygreycolors,
+                            fillColor: mytextcolors,
                             filled: true,
                           ),
                         ),
@@ -129,21 +113,27 @@ class _LoginPageState extends State<LoginPage> {
                             style: TextStyle(color: mytextcolors),
                           )),
                       const SizedBox(height: 5),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
+                      SizedBox(
+                        height: 50,
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(10.0),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(6),
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            fillColor: mytextcolors,
+                            filled: true,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          fillColor: mygreycolors,
-                          filled: true,
                         ),
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
                       BlocBuilder<LoginBloc, LoginState>(
                         builder: (context, state) {
                           return SizedBox(

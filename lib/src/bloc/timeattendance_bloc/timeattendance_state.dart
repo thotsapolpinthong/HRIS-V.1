@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'timeattendance_bloc.dart';
 
 class TimeattendanceState extends Equatable {
@@ -7,6 +8,7 @@ class TimeattendanceState extends Equatable {
   final List<EmployeeDatum>? selectedTemp;
   final bool isDataLoading;
   final bool onSearchData;
+  final WorkdateSpaecialModel? workSpData;
   const TimeattendanceState({
     this.holidayData,
     this.shiftData,
@@ -14,6 +16,7 @@ class TimeattendanceState extends Equatable {
     this.selectedTemp,
     this.isDataLoading = true,
     this.onSearchData = false,
+    this.workSpData,
   });
 
   TimeattendanceState copyWith({
@@ -23,15 +26,16 @@ class TimeattendanceState extends Equatable {
     List<EmployeeDatum>? selectedTemp,
     bool? isDataLoading,
     bool? onSearchData,
+    WorkdateSpaecialModel? workSpData,
   }) {
     return TimeattendanceState(
-      holidayData: holidayData ?? this.holidayData,
-      shiftData: shiftData ?? this.shiftData,
-      isDataLoading: isDataLoading ?? this.isDataLoading,
-      onSearchData: onSearchData ?? this.onSearchData,
-      selectedemployeeData: selectedemployeeData ?? this.selectedemployeeData,
-      selectedTemp:selectedTemp??this.selectedTemp,
-    );
+        holidayData: holidayData ?? this.holidayData,
+        shiftData: shiftData ?? this.shiftData,
+        isDataLoading: isDataLoading ?? this.isDataLoading,
+        onSearchData: onSearchData ?? this.onSearchData,
+        selectedemployeeData: selectedemployeeData ?? this.selectedemployeeData,
+        selectedTemp: selectedTemp ?? this.selectedTemp,
+        workSpData: workSpData);
   }
 
   @override
@@ -40,6 +44,8 @@ class TimeattendanceState extends Equatable {
         shiftData,
         selectedemployeeData,
         isDataLoading,
-        onSearchData,selectedTemp,
+        onSearchData,
+        selectedTemp,
+        workSpData,
       ];
 }

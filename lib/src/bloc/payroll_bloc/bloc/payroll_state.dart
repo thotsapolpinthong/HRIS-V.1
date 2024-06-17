@@ -3,6 +3,7 @@ part of 'payroll_bloc.dart';
 
 @immutable
 class PayrollState extends Equatable {
+  //to payroll
   final TimeRecordModel? timeRecordData;
   final bool isToPayrollLoading;
   const PayrollState({

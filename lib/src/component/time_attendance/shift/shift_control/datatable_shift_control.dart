@@ -608,7 +608,7 @@ class _ShiftControlDataTableState extends State<ShiftControlDataTable> {
                                     value: e.shiftId.toString(),
                                     child: Container(
                                         constraints:
-                                            const BoxConstraints(maxWidth: 260),
+                                            const BoxConstraints(maxWidth: 300),
                                         child: Text(
                                             "${e.shiftName} : ${e.startTime} - ${e.endTime}")),
                                     onTap: () {

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/get_holiday_data_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/get_shift_all_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/wd_sp_model.dart';
 import 'package:hris_app_prototype/src/services/api_time_attendance_service.dart';
 part 'timeattendance_event.dart';
 part 'timeattendance_state.dart';
@@ -33,17 +34,26 @@ class TimeattendanceBloc
       (event, emit) {
         emit(state.copyWith(isDataLoading: true));
         emit(state.copyWith(
-            selectedTemp: event.selectedemployeeData,isDataLoading: false));
+            selectedTemp: event.selectedemployeeData, isDataLoading: false));
       },
     );
- on<DissSelectedEvent>((event, emit) {
+    on<DissSelectedEvent>((event, emit) {
       emit(state.copyWith(selectedemployeeData: null));
     });
-   
-   
-   on<SubmitSelectedEvent>((event, emit) {
+
+    on<SubmitSelectedEvent>((event, emit) {
       emit(state.copyWith(selectedemployeeData: state.selectedTemp));
     });
+
+    on<FetchWorkdateSpacialEvent>(
+      (event, emit) async {
+        emit(state.copyWith(isDataLoading: true));
+        emit(state.copyWith(
+            workSpData: await ApiTimeAtendanceService.getDataWorkSp(
+                event.startDate, event.endDate),
+            isDataLoading: false));
+      },
+    );
     // on<OnSelectedAddEvent>((event, emit) {
     //   // สร้างรายการใหม่ที่เป็นสำเนาของ selectedemployeeData
     //   List<EmployeeDatum> updatedList = [];
@@ -53,7 +63,5 @@ class TimeattendanceBloc
 
     //   emit(state.copyWith(selectedemployeeData: updatedList));
     // });
-
-   
   }
 }

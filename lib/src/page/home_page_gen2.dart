@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -7,6 +8,7 @@ import 'package:hris_app_prototype/src/component/employee/datatable_employee.dar
 import 'package:hris_app_prototype/src/component/homepage/SlideBar.dart';
 import 'package:hris_app_prototype/src/component/payroll/1_lot/lot_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/to_payroll_menu.dart';
+import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/workdate_sp_table.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
 import 'package:hris_app_prototype/src/page/employee_self_sevice/employee_self_service_layout.dart';
 import 'package:hris_app_prototype/src/page/organization/organization_layout.dart';
@@ -99,6 +101,20 @@ class _MyHomepageState extends State<MyHomepage> {
                       flex: state.expandMenu == false ? 19 : 5,
                       child: const MenuExpand(
                         child: ShiftLayout(),
+                      ),
+                    ),
+                  if (state.pageNumber == 63)
+                    Expanded(
+                      flex: state.expandMenu == false ? 19 : 5,
+                      child: const MenuExpand(
+                        child: WorkSPTable(),
+                      ),
+                    ),
+                  if (state.pageNumber == 64)
+                    Expanded(
+                      flex: state.expandMenu == false ? 19 : 5,
+                      child: MenuExpand(
+                        child: Container(),
                       ),
                     ),
                   if (state.pageNumber >= 5 && state.pageNumber < 6)

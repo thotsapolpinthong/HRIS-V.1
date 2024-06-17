@@ -183,8 +183,10 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
       ),
       btnOkColor: success == true ? Colors.greenAccent : Colors.red,
       btnOkOnPress: () {
-        fetchData();
-        Navigator.pop(context);
+        if (success == true) {
+          fetchData();
+          Navigator.pop(context);
+        }
       },
     ).show();
   }

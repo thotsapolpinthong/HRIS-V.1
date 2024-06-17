@@ -540,7 +540,7 @@ class TextFormFieldGlobal extends StatelessWidget {
 class TextFormFieldGlobalWithOutLine extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
-  final String hintText;
+  final String? hintText;
   final String? Function(String?)? validatorless;
   final bool enabled;
   final Widget? suffixIcon;
@@ -550,8 +550,8 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.labelText,
-    required this.hintText,
-    required this.validatorless,
+    this.hintText,
+    this.validatorless,
     required this.enabled,
     this.suffixIcon,
     this.readOnly = false,
@@ -765,6 +765,7 @@ class TextFormFieldTimepickGlobal extends StatelessWidget {
           autovalidateMode: AutovalidateMode.always,
           validator: validatorless,
           decoration: InputDecoration(
+            contentPadding: const EdgeInsets.all(10.0),
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.black),
             filled: true,
@@ -772,9 +773,12 @@ class TextFormFieldTimepickGlobal extends StatelessWidget {
             suffixIcon: const Icon(
               Icons.watch_later_outlined,
             ),
-            border: const OutlineInputBorder(),
-            enabledBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black54),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: const BorderSide(color: Colors.black87),
             ),
           ),
           enabled: enabled,

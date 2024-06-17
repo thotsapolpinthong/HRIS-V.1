@@ -13,6 +13,10 @@ import 'package:hris_app_prototype/src/model/time_attendance/shift/shift_control
 import 'package:hris_app_prototype/src/model/time_attendance/shift/shift_control/get_shift_control.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/update_shift_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/update_holiday_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/create_wd_sp.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/response_wd_sp.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/update_wd_sp.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/wd_sp_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -249,7 +253,7 @@ class ApiTimeAtendanceService {
     }
   }
 
-   //delete shift control
+  //delete shift control
   static Future deleteShiftControl(DeleteShiftControlModel? deleteModel) async {
     bool isdel = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -270,5 +274,76 @@ class ApiTimeAtendanceService {
     }
   }
 
-  
+  //work spacial
+  //get
+  static Future<WorkdateSpaecialModel?> getDataWorkSp(
+      String startDate, String endDate) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse(
+          "$baseUrl/GetWorkDateSpecialAll?startDate=$startDate&endDate=$endDate"),
+      headers: {
+        "Authorization": "Bearer $sharedToken",
+      },
+    );
+    if (response.statusCode == 200) {
+      WorkdateSpaecialModel data = workdateSpaecialModelFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      }
+    }
+    return null;
+  }
+
+  //create WorkSp
+  static Future createWorkSp(CreateWorkdateSpModel? createModel) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.post(
+      Uri.parse("$baseUrl/NewWorkDateSpecial"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(createModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseWorkdateSpModel data =
+          responseWorkdateSpModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
+    }
+  }
+
+  static Future updateWorkSp(UpdateWorkdateSpModel updateModel) async {
+    bool isUpdate = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.put(
+      Uri.parse("$baseUrl/EditWorkDateSpecial"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(updateModel.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseWorkdateSpModel data =
+          responseWorkdateSpModelFromJson(response.body);
+      if (data.status == true) {
+        return isUpdate = true;
+      } else {
+        return isUpdate;
+      }
+    } else {
+      return isUpdate;
+    }
+  }
 }

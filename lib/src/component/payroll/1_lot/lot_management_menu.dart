@@ -5,7 +5,7 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/1_lot/create_edit_lot.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
-import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
+import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
 
 class LotManagement extends StatefulWidget {
   const LotManagement({super.key});
@@ -30,7 +30,7 @@ class _LotManagementState extends State<LotManagement> {
   String? lotNumberId;
   String? yearId;
   bool isLoading = true;
-  bool lockHr = true;
+  bool lockHr = false;
   bool lockAcc = false;
   bool lockAccLabor = false;
   bool lockHrLabor = false;
@@ -38,7 +38,7 @@ class _LotManagementState extends State<LotManagement> {
 
   fetchData() async {
     //lotnumber data-------------
-    lotNumberData = await ApiEmployeeSelfService.getLotNumberDropdown();
+    lotNumberData = await ApiPayrollService.getLotNumberAll();
     setState(() {
       isLoading = true;
       lotNumberData;
@@ -56,6 +56,10 @@ class _LotManagementState extends State<LotManagement> {
             salaryPaidDate.text = e.salaryPaidDate;
             otPaidDate.text = e.otPaidDate;
             lotNumberId = e.lotNumberId;
+            lockHr = e.lockHr == "No data" ? false : true;
+            lockAcc = e.lockAcc == "No data" ? false : true;
+            lockAccLabor = e.lockAccLabor == "No data" ? false : true;
+            lockHrLabor = e.lockHrLabor == "No data" ? false : true;
             isLoading = false;
           }
         }
@@ -205,18 +209,22 @@ class _LotManagementState extends State<LotManagement> {
                                           otPaidDate.text = result
                                               .first.otPaidDate
                                               .toString();
-                                          lockHr = result.first.lockHr == ""
-                                              ? false
-                                              : true;
-                                          lockAcc = result.first.lockAcc == ""
-                                              ? false
-                                              : true;
+                                          lockHr =
+                                              result.first.lockHr == "No data"
+                                                  ? false
+                                                  : true;
+                                          lockAcc =
+                                              result.first.lockAcc == "No data"
+                                                  ? false
+                                                  : true;
                                           lockAccLabor =
-                                              result.first.lockAccLabor == ""
+                                              result.first.lockAccLabor ==
+                                                      "No data"
                                                   ? false
                                                   : true;
                                           lockHrLabor =
-                                              result.first.lockHrLabor == ""
+                                              result.first.lockHrLabor ==
+                                                      "No data"
                                                   ? false
                                                   : true;
                                         }
@@ -228,7 +236,7 @@ class _LotManagementState extends State<LotManagement> {
                                 width: 160,
                                 child: TextFormFieldDatepickGlobal(
                                     controller: startDate,
-                                    labelText: "วันที่เริ่มต้น",
+                                    labelText: "Start Date",
                                     validatorless: null,
                                     ontap: () {}),
                               ),
@@ -236,7 +244,7 @@ class _LotManagementState extends State<LotManagement> {
                                 width: 160,
                                 child: TextFormFieldDatepickGlobal(
                                     controller: finishDate,
-                                    labelText: "วันที่สิ้นสุด",
+                                    labelText: "Finish Date",
                                     validatorless: null,
                                     ontap: () {}),
                               ),

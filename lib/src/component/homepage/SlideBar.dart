@@ -273,7 +273,7 @@ class _SlideBarState extends State<SlideBar> {
                                           onTap: () {
                                             context
                                                 .read<HomepageBloc>()
-                                                .add(TimePageEvent());
+                                                .add(TripPageEvent());
                                           })
                                       .animate()
                                       .fadeIn(delay: 1000.ms)
@@ -640,6 +640,30 @@ class _SlideBarState extends State<SlideBar> {
                           title: "2. กะการทำงาน (Shift)",
                           onTap: () {
                             context.read<HomepageBloc>().add(ShiftPageEvent());
+                          }),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 63
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 63
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "3. บันทึกวันทำงานพิเศษ",
+                          onTap: () {
+                            context.read<HomepageBloc>().add(WorkSpPageEvent());
+                          }),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 64
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 64
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "4. บันทึกพนักงานพักครึ่งชั่วโมง",
+                          onTap: () {
+                            context
+                                .read<HomepageBloc>()
+                                .add(HalfHlbPageEvent());
                           }),
                     ],
                   ),
