@@ -294,11 +294,9 @@ class _PositionDataTableState extends State<PositionDataTable> {
                                       }
                                     });
                                   }),
+                              const DataColumn(label: Text('     Status')),
                               const DataColumn(
-                                  numeric: true, label: Text('Status      ')),
-                              const DataColumn(
-                                  numeric: true,
-                                  label: Text('Edit/Remove  ',
+                                  label: Text('Edit/Remove',
                                       style: TextStyle(fontSize: 16))),
                             ],
                             source: PersonDataTableSource(

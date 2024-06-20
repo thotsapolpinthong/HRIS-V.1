@@ -1,7 +1,4 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -259,15 +256,15 @@ class _SlideBarState extends State<SlideBar> {
                                         .slideY(begin: 1, duration: 200.ms),
                                   ),
                                   DrawerTitle(
-                                          color: state.pageNumber == 6
+                                          color: state.pageNumber == 9
                                               ? mygreycolors
                                               : mythemecolor,
                                           icon: Icons.time_to_leave_sharp,
-                                          iconcolor: state.pageNumber == 6
+                                          iconcolor: state.pageNumber == 9
                                               ? Colors.black87
                                               : mytextcolors,
                                           title: "OFF-Side WORKING",
-                                          textColor: state.pageNumber == 6
+                                          textColor: state.pageNumber == 9
                                               ? Colors.black87
                                               : mytextcolors,
                                           onTap: () {
@@ -290,8 +287,8 @@ class _SlideBarState extends State<SlideBar> {
                                       });
                                     },
                                     child: DrawerTitle(
-                                            color: state.pageNumber == 61 ||
-                                                    state.pageNumber == 62
+                                            color: state.pageNumber > 6 &&
+                                                    state.pageNumber < 7
                                                 ? mygreycolors
                                                 : isHoveredTimeattendance ==
                                                             true ||
@@ -301,9 +298,9 @@ class _SlideBarState extends State<SlideBar> {
                                                     : mythemecolor,
                                             icon: Icons.calendar_month_rounded,
                                             iconcolor: state
-                                                            .pageNumber ==
-                                                        61 ||
-                                                    state.pageNumber == 62
+                                                            .pageNumber >
+                                                        6 &&
+                                                    state.pageNumber < 7
                                                 ? Colors.black87
                                                 : isHoveredTimeattendance ==
                                                             true ||
@@ -313,9 +310,9 @@ class _SlideBarState extends State<SlideBar> {
                                                     : mytextcolors,
                                             title: "TIME ATTENDANCE",
                                             textColor: state
-                                                            .pageNumber ==
-                                                        61 ||
-                                                    state.pageNumber == 62
+                                                            .pageNumber >
+                                                        6 &&
+                                                    state.pageNumber < 7
                                                 ? Colors.black87
                                                 : isHoveredTimeattendance ==
                                                             true ||
@@ -480,7 +477,7 @@ class _SlideBarState extends State<SlideBar> {
                         "Payroll Menu.",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
+                      ).animate().fadeIn(),
                       const Gap(10),
                       DrawerTitleSubmenu(
                           color: state.pageNumber == 5.1
@@ -615,13 +612,13 @@ class _SlideBarState extends State<SlideBar> {
                         "Time Attendance Menu.",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
+                      ).animate().fadeIn(),
                       const Gap(10),
                       DrawerTitleSubmenu(
-                          color: state.pageNumber == 61
+                          color: state.pageNumber == 6.1
                               ? mythemecolor
                               : Colors.white,
-                          textColor: state.pageNumber == 61
+                          textColor: state.pageNumber == 6.1
                               ? Colors.white
                               : Colors.black87,
                           title: "1. บันทึกข้อมูลวันหยุดประจำปี",
@@ -631,10 +628,10 @@ class _SlideBarState extends State<SlideBar> {
                                 .add(CalendarPageEvent());
                           }),
                       DrawerTitleSubmenu(
-                          color: state.pageNumber == 62
+                          color: state.pageNumber == 6.2
                               ? mythemecolor
                               : Colors.white,
-                          textColor: state.pageNumber == 62
+                          textColor: state.pageNumber == 6.2
                               ? Colors.white
                               : Colors.black87,
                           title: "2. กะการทำงาน (Shift)",
@@ -642,10 +639,10 @@ class _SlideBarState extends State<SlideBar> {
                             context.read<HomepageBloc>().add(ShiftPageEvent());
                           }),
                       DrawerTitleSubmenu(
-                          color: state.pageNumber == 63
+                          color: state.pageNumber == 6.3
                               ? mythemecolor
                               : Colors.white,
-                          textColor: state.pageNumber == 63
+                          textColor: state.pageNumber == 6.3
                               ? Colors.white
                               : Colors.black87,
                           title: "3. บันทึกวันทำงานพิเศษ",
@@ -653,10 +650,10 @@ class _SlideBarState extends State<SlideBar> {
                             context.read<HomepageBloc>().add(WorkSpPageEvent());
                           }),
                       DrawerTitleSubmenu(
-                          color: state.pageNumber == 64
+                          color: state.pageNumber == 6.4
                               ? mythemecolor
                               : Colors.white,
-                          textColor: state.pageNumber == 64
+                          textColor: state.pageNumber == 6.4
                               ? Colors.white
                               : Colors.black87,
                           title: "4. บันทึกพนักงานพักครึ่งชั่วโมง",
@@ -788,7 +785,7 @@ class _DrawerTitleSubmenuState extends State<DrawerTitleSubmenu> {
                     textStyle: TextStyle(
                         color: isHovered ? Colors.white : widget.textColor,
                         fontSize: 14),
-                  ).animate().fadeIn(),
+                  ).animate().fadeIn(delay: 0.2.ms),
             onTap: widget.onTap,
           ),
         );

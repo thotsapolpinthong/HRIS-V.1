@@ -9,6 +9,7 @@ class TimeattendanceState extends Equatable {
   final bool isDataLoading;
   final bool onSearchData;
   final WorkdateSpaecialModel? workSpData;
+  final GetLunchBreakModel? lunchBreakData;
   const TimeattendanceState({
     this.holidayData,
     this.shiftData,
@@ -17,6 +18,7 @@ class TimeattendanceState extends Equatable {
     this.isDataLoading = true,
     this.onSearchData = false,
     this.workSpData,
+    this.lunchBreakData,
   });
 
   TimeattendanceState copyWith({
@@ -27,15 +29,17 @@ class TimeattendanceState extends Equatable {
     bool? isDataLoading,
     bool? onSearchData,
     WorkdateSpaecialModel? workSpData,
+    GetLunchBreakModel? lunchBreakData,
   }) {
     return TimeattendanceState(
         holidayData: holidayData ?? this.holidayData,
         shiftData: shiftData ?? this.shiftData,
         isDataLoading: isDataLoading ?? this.isDataLoading,
         onSearchData: onSearchData ?? this.onSearchData,
-        selectedemployeeData: selectedemployeeData ?? this.selectedemployeeData,
+        selectedemployeeData: selectedemployeeData,
         selectedTemp: selectedTemp ?? this.selectedTemp,
-        workSpData: workSpData);
+        workSpData: workSpData,
+        lunchBreakData: lunchBreakData);
   }
 
   @override
@@ -47,5 +51,6 @@ class TimeattendanceState extends Equatable {
         onSearchData,
         selectedTemp,
         workSpData,
+        lunchBreakData,
       ];
 }

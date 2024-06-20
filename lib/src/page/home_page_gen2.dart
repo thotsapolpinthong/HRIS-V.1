@@ -8,6 +8,7 @@ import 'package:hris_app_prototype/src/component/employee/datatable_employee.dar
 import 'package:hris_app_prototype/src/component/homepage/SlideBar.dart';
 import 'package:hris_app_prototype/src/component/payroll/1_lot/lot_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/to_payroll_menu.dart';
+import 'package:hris_app_prototype/src/component/time_attendance/half_break/lunch_break_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/workdate_sp_table.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
 import 'package:hris_app_prototype/src/page/employee_self_sevice/employee_self_service_layout.dart';
@@ -25,6 +26,36 @@ class MyHomepage extends StatefulWidget {
 }
 
 class _MyHomepageState extends State<MyHomepage> {
+  Widget mainMenuPage(double page) {
+    switch (page) {
+      case 0:
+        return const PersonalPage();
+      case 1:
+        return const OrganizationLayout();
+      case 2:
+        return const DatatableEmployee(
+          isSelected: false,
+          isSelectedOne: false,
+        );
+      case 3:
+        return const EmployeeSelfServiceLayout();
+      case 4: //welfare
+        return Container();
+      case >= 5 && < 6:
+        return payrollPage(page);
+      case >= 6 && < 7:
+        return timeAttendancePage(page);
+      case 7: // report
+        return Container();
+      case 8:
+        return const MyDashboard();
+      case 9:
+        return const OffSideLayout();
+      default:
+        throw Container();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,87 +74,92 @@ class _MyHomepageState extends State<MyHomepage> {
                     width: state.expandMenu == false ? 70 : width / 6,
                   ),
                   //Main Body
-                  if (state.pageNumber == 8)
-                    Expanded(
-                        flex: state.expandMenu == false ? 19 : 5,
-                        child: const MenuExpand(
-                          child: MyDashboard(),
-                        )),
-                  if (state.pageNumber == 0)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: PersonalPage(),
-                      ),
-                    ),
-                  if (state.pageNumber == 1)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: OrganizationLayout(),
-                      ),
-                    ),
-                  if (state.pageNumber == 2)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: DatatableEmployee(
-                          isSelected: false,
-                          isSelectedOne: false,
-                        ),
-                      ),
-                    ),
-                  if (state.pageNumber == 3)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: EmployeeSelfServiceLayout(),
-                      ),
-                    ),
-                  if (state.pageNumber == 6)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: OffSideLayout(),
-                      ),
-                    ),
-                  if (state.pageNumber == 61)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: TimeAttendancePageLayout(
-                          dashboard: false,
-                        ),
-                      ),
-                    ),
-                  if (state.pageNumber == 62)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: ShiftLayout(),
-                      ),
-                    ),
-                  if (state.pageNumber == 63)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: const MenuExpand(
-                        child: WorkSPTable(),
-                      ),
-                    ),
-                  if (state.pageNumber == 64)
-                    Expanded(
+                  Expanded(
                       flex: state.expandMenu == false ? 19 : 5,
                       child: MenuExpand(
-                        child: Container(),
-                      ),
-                    ),
-                  if (state.pageNumber >= 5 && state.pageNumber < 6)
-                    Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: MenuExpand(
-                        child: payrollPage(state.pageNumber),
-                      ),
-                    ),
+                        child: mainMenuPage(state.pageNumber),
+                      )),
+                  // if (state.pageNumber == 8)
+                  //   Expanded(
+                  //       flex: state.expandMenu == false ? 19 : 5,
+                  //       child: const MenuExpand(
+                  //         child: MyDashboard(),
+                  //       )),
+                  // if (state.pageNumber == 0)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: PersonalPage(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 1)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: OrganizationLayout(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 2)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: DatatableEmployee(
+                  //         isSelected: false,
+                  //         isSelectedOne: false,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 3)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: EmployeeSelfServiceLayout(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 6)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: OffSideLayout(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 6.1)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: TimeAttendancePageLayout(
+                  //         dashboard: false,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 6.2)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: ShiftLayout(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 6.3)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: WorkSPTable(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber == 6.4)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: const MenuExpand(
+                  //       child: LunchBreakTable(),
+                  //     ),
+                  //   ),
+                  // if (state.pageNumber >= 5 && state.pageNumber < 6)
+                  //   Expanded(
+                  //     flex: state.expandMenu == false ? 19 : 5,
+                  //     child: MenuExpand(
+                  //       child: payrollPage(state.pageNumber),
+                  //     ),
+                  //   ),
                 ],
               ),
               //Side Menu
@@ -141,6 +177,23 @@ class _MyHomepageState extends State<MyHomepage> {
         return const LotManagement();
       case 5.2:
         return const ToPayroll();
+      default:
+        throw Container();
+    }
+  }
+
+  Widget timeAttendancePage(double page) {
+    switch (page) {
+      case 6.1:
+        return const TimeAttendancePageLayout(
+          dashboard: false,
+        );
+      case 6.2:
+        return const ShiftLayout();
+      case 6.3:
+        return const WorkSPTable();
+      case 6.4:
+        return const LunchBreakTable();
       default:
         throw Container();
     }

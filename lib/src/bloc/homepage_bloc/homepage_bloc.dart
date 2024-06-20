@@ -16,16 +16,17 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     on<EssPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 3)));
     on<WelfarePageEvent>((event, emit) => emit(state.copyWith(pageNumber: 4)));
     on<PayrollPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 5)));
-    on<TripPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 6)));
     //time attendance
     on<CalendarPageEvent>(
-        (event, emit) => emit(state.copyWith(pageNumber: 61)));
-    on<ShiftPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 62)));
-    on<WorkSpPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 63)));
-    on<HalfHlbPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 64)));
-
+        (event, emit) => emit(state.copyWith(pageNumber: 6.1)));
+    on<ShiftPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 6.2)));
+    on<WorkSpPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 6.3)));
+    on<HalfHlbPageEvent>(
+        (event, emit) => emit(state.copyWith(pageNumber: 6.4)));
+//
     on<DashboardPageEvent>(
         (event, emit) => emit(state.copyWith(pageNumber: 8)));
+    on<TripPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 9)));
     //Lot management
     on<SubPayroll1PageEvent>(
         (event, emit) => emit(state.copyWith(pageNumber: 5.1)));

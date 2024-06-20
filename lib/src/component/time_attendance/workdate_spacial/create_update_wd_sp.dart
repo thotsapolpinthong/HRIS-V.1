@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/dropdown_shift_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/create_wd_sp.dart';
@@ -38,6 +37,7 @@ class _EditWorkdateSpState extends State<EditWorkdateSp> {
   TextEditingController date = TextEditingController();
   TextEditingController time = TextEditingController();
   TimeOfDay? selectedStartTime;
+  bool? dataStatus;
 //Shift Dropdown Data
   List<ShiftDatum>? shiftList;
   String? shiftDataId;
@@ -88,26 +88,6 @@ class _EditWorkdateSpState extends State<EditWorkdateSp> {
     }
   }
 
-  showDialogCreate() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              backgroundColor: mygreycolors,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              content: SafeArea(
-                child: SizedBox(
-                    width: 1200,
-                    height: MediaQuery.of(context).size.height - 20,
-                    child: const DatatableEmployee(
-                      isSelected: true,
-                      isSelectedOne: false,
-                    )),
-              ));
-        });
-  }
-
   Future onCreate() async {
     String employeeId = "";
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -132,7 +112,7 @@ class _EditWorkdateSpState extends State<EditWorkdateSp> {
         date: date.text,
         shiftId: int.parse(shiftDataId!),
         endTime: "${time.text}:00",
-        status: true,
+        status: dataStatus!,
         modifyBy: employeeId,
         comment: comment.text);
     bool success = await ApiTimeAtendanceService.updateWorkSp(updateModel);
@@ -196,6 +176,7 @@ class _EditWorkdateSpState extends State<EditWorkdateSp> {
       shiftDataId = widget.data!.shiftId.toString();
       date.text = widget.data!.date.toIso8601String().split('T')[0];
       time.text = widget.data!.endTime;
+      dataStatus = widget.data!.status;
     }
   }
 
@@ -262,25 +243,83 @@ class _EditWorkdateSpState extends State<EditWorkdateSp> {
             ),
           ),
         ),
-        widget.onEdit
-            ? MySaveButtons(
-                text: "Update",
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      onUpdate();
-                    });
-                  } else {}
-                },
-              )
-            : MySaveButtons(
-                text: "Create",
-                onPressed: () {
-                  setState(() {
-                    onCreate();
-                  });
-                },
-              )
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            widget.onEdit
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: dataStatus == true ? 2 : 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        left: Radius.circular(8))),
+                                backgroundColor: dataStatus == true
+                                    ? Colors.greenAccent
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  dataStatus = true;
+                                });
+                              },
+                              child: const Text(
+                                "Active",
+                                style: TextStyle(color: Colors.black87),
+                              )),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: dataStatus == false ? 2 : 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        right: Radius.circular(8))),
+                                backgroundColor: dataStatus == false
+                                    ? Colors.redAccent
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  dataStatus = false;
+                                });
+                              },
+                              child: const Text(
+                                "InActive",
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        ),
+                      ],
+                    ),
+                  )
+                : Container(),
+            widget.onEdit
+                ? MySaveButtons(
+                    text: "Update",
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          onUpdate();
+                        });
+                      } else {}
+                    },
+                  )
+                : MySaveButtons(
+                    text: "Create",
+                    onPressed: () {
+                      setState(() {
+                        onCreate();
+                      });
+                    },
+                  )
+          ],
+        )
       ],
     );
   }

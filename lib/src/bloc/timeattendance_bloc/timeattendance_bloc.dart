@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/get_holiday_data_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/lunch_break_half/get_lbh_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/get_shift_all_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/wd_sp_model.dart';
 import 'package:hris_app_prototype/src/services/api_time_attendance_service.dart';
@@ -38,7 +39,7 @@ class TimeattendanceBloc
       },
     );
     on<DissSelectedEvent>((event, emit) {
-      emit(state.copyWith(selectedemployeeData: null));
+      emit(state.copyWith(selectedemployeeData: []));
     });
 
     on<SubmitSelectedEvent>((event, emit) {
@@ -50,6 +51,16 @@ class TimeattendanceBloc
         emit(state.copyWith(isDataLoading: true));
         emit(state.copyWith(
             workSpData: await ApiTimeAtendanceService.getDataWorkSp(
+                event.startDate, event.endDate),
+            isDataLoading: false));
+      },
+    );
+
+    on<FetchLunchBreakHalfEvent>(
+      (event, emit) async {
+        emit(state.copyWith(isDataLoading: true));
+        emit(state.copyWith(
+            lunchBreakData: await ApiTimeAtendanceService.getDataLunchBreakHalf(
                 event.startDate, event.endDate),
             isDataLoading: false));
       },

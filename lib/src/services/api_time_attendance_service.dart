@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'package:hris_app_prototype/src/model/time_attendance/create_holiday_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/delete_holiday_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/get_holiday_data_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/lunch_break_half/create_lbh_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/lunch_break_half/get_lbh_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/lunch_break_half/update_lbh_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/create_shift_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/delete_shift_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/dropdown_shift_model.dart';
@@ -345,5 +348,76 @@ class ApiTimeAtendanceService {
     } else {
       return isUpdate;
     }
+  }
+
+  //create lunch break
+  static Future createLbh(CreateLunchBreakModel? createModel) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.post(
+      Uri.parse("$baseUrl/NewHalfHourLunchBreak"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(createModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseWorkdateSpModel data =
+          responseWorkdateSpModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
+    }
+  }
+
+  static Future updateLbh(UpdateLunchBreakModel updateModel) async {
+    bool isUpdate = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.put(
+      Uri.parse("$baseUrl/EditHalfHourLunchBreak"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(updateModel.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseWorkdateSpModel data =
+          responseWorkdateSpModelFromJson(response.body);
+      if (data.status == true) {
+        return isUpdate = true;
+      } else {
+        return isUpdate;
+      }
+    } else {
+      return isUpdate;
+    }
+  }
+
+  static Future<GetLunchBreakModel?> getDataLunchBreakHalf(
+      String startDate, String endDate) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    var response = await http.get(
+      Uri.parse(
+          "$baseUrl/GetHalfHourLunchBreakAll?startDate=$startDate&endDate=$endDate"),
+      headers: {
+        "Authorization": "Bearer $sharedToken",
+      },
+    );
+    if (response.statusCode == 200) {
+      GetLunchBreakModel data = getLunchBreakModelFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      }
+    }
+    return null;
   }
 }

@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/payroll_bloc/bloc/payroll_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/employee_detials_table.dart';
+import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/pdf_work_hour_employee.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/printing_page.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
@@ -16,6 +17,7 @@ import 'package:hris_app_prototype/src/model/payroll/to_payroll/time_record_mode
 import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
 import 'package:lottie/lottie.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class ToPayroll extends StatefulWidget {
   const ToPayroll({super.key});
@@ -216,13 +218,27 @@ class _ToPayrollState extends State<ToPayroll> {
               height: MediaQuery.of(context).size.height,
               child: Column(
                 children: [
-                  TitleDialog(
-                    title: "",
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8),
+                    child: TitleDialog(
+                      title: "",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
-                  Container()
+                  Expanded(
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SfPdfViewer.network(
+                            "http://192.168.0.215/RPTHR014.pdf"),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -556,7 +572,9 @@ class _ToPayrollState extends State<ToPayroll> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PrintingPDF()));
+                                builder: (context) => WorkHourPdfPage()
+                                //  PrintingPDF()
+                                ));
                       },
                       child: Icon(
                         Icons.print_rounded,

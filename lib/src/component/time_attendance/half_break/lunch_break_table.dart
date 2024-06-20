@@ -1,59 +1,68 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
-import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/create_update_wd_sp.dart';
+import 'package:hris_app_prototype/src/component/time_attendance/half_break/create_update_lb.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
-import 'package:hris_app_prototype/src/model/time_attendance/shift/dropdown_shift_model.dart';
-import 'package:hris_app_prototype/src/model/time_attendance/workdate_spacial/wd_sp_model.dart';
+import 'package:hris_app_prototype/src/model/time_attendance/lunch_break_half/get_lbh_model.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
-import 'package:hris_app_prototype/src/services/api_time_attendance_service.dart';
 
-class WorkSPTable extends StatefulWidget {
-  const WorkSPTable({super.key});
+class LunchBreakTable extends StatefulWidget {
+  const LunchBreakTable({super.key});
 
   @override
-  State<WorkSPTable> createState() => _WorkSPTableState();
+  State<LunchBreakTable> createState() => _LunchBreakTableState();
 }
 
-class _WorkSPTableState extends State<WorkSPTable> {
-  bool isLoading = false;
-  //lot
+class _LunchBreakTableState extends State<LunchBreakTable> {
+//lot
   String? lotNumberId;
   GetLotNumberDropdownModel? lotNumberData;
   TextEditingController startDate = TextEditingController();
   TextEditingController endDate = TextEditingController();
-  //table
+//table
   int rowIndex = 10;
   int? sortColumnIndex;
   bool sort = true;
   TextEditingController search = TextEditingController();
   bool onSearch = false;
-  List<WorkDateSpecialDatum> mainData = [];
-//Shift Dropdown Data
-  List<ShiftDatum>? shiftList;
-
-  Future fetchDataTable() async {
-    WorkdateSpaecialModel? data = await ApiTimeAtendanceService.getDataWorkSp(
-        startDate.text, endDate.text);
-
-    setState(() {
-      mainData = data?.workDateSpecialData ?? [];
-      isLoading = false;
-    });
+  List<HalfHourLunchBreakDatum> mainData = [];
+  createHb() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: mygreycolors,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: TitleDialog(
+              title: "Create Lunch Break",
+              onPressed: () {
+                context.read<TimeattendanceBloc>().add(FetchLunchBreakHalfEvent(
+                    startDate: startDate.text, endDate: endDate.text));
+                Navigator.pop(context);
+              },
+            ),
+            content: SizedBox(
+                width: 400,
+                height: 380,
+                child: EditLunchBreak(
+                  onEdit: false,
+                  startDate: startDate.text,
+                  endDate: endDate.text,
+                )),
+          );
+        });
   }
 
   Future fetchLotData() async {
     //lotnumber data-------------
     lotNumberData = await ApiPayrollService.getLotNumberAll();
-    shiftList = await ApiTimeAtendanceService.getShiftDropdown();
     setState(() {
       lotNumberData;
-      shiftList;
       //เงื่อนไขหาเดือนล่าสุด
       if (lotNumberData != null) {
         String maxLotMonth = '';
@@ -67,36 +76,8 @@ class _WorkSPTableState extends State<WorkSPTable> {
       }
     });
     // ignore: use_build_context_synchronously
-    context.read<TimeattendanceBloc>().add(FetchWorkdateSpacialEvent(
+    context.read<TimeattendanceBloc>().add(FetchLunchBreakHalfEvent(
         startDate: startDate.text, endDate: endDate.text));
-    // fetchDataTable();
-  }
-
-  createSp() {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            backgroundColor: mygreycolors,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            title: TitleDialog(
-              title: "Create Workdate Spacial",
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            content: SizedBox(
-                width: 400,
-                height: 300,
-                child: EditWorkdateSp(
-                  onEdit: false,
-                  startDate: startDate.text,
-                  endDate: endDate.text,
-                )),
-          );
-        });
   }
 
   @override
@@ -120,72 +101,58 @@ class _WorkSPTableState extends State<WorkSPTable> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12))),
               onPressed: () {
-                createSp();
+                createHb();
               },
               child: const Icon(Icons.add_rounded)),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Center(
-                child: Text("Workdate Spacial Management",
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              lotMenu(),
-              BlocBuilder<TimeattendanceBloc, TimeattendanceState>(
-                builder: (context, state) {
-                  mainData = state.workSpData?.workDateSpecialData ?? [];
-                  return state.isDataLoading
-                      ? myLoadingScreen
-                      : SizedBox(
-                          width: double.infinity,
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: PaginatedDataTable(
-                                  // header: Row(
-                                  //   mainAxisAlignment:
-                                  //       MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text("Workdate Spacial Management",
-                                  //         style: TextStyle(
-                                  //             fontSize: 20,
-                                  //             fontWeight: FontWeight.bold)),
-                                  //     lotMenu(),
-                                  //   ],
-                                  // ),
-                                  columnSpacing: 10,
-                                  showFirstLastButtons: true,
-                                  rowsPerPage: rowIndex,
-                                  availableRowsPerPage: const [5, 10, 20],
-                                  sortColumnIndex: sortColumnIndex,
-                                  sortAscending: sort,
-                                  onRowsPerPageChanged: (value) {
-                                    setState(() {
-                                      rowIndex = value!;
-                                    });
-                                  },
-                                  columns: const [
-                                    DataColumn(label: Text("Date")),
-                                    DataColumn(label: Text("Shift")),
-                                    DataColumn(label: Text("Time Out Spacial")),
-                                    DataColumn(label: Text("Status")),
-                                    DataColumn(label: Text("Edit")),
-                                  ],
-                                  source: MainDataTableSource(context, mainData,
-                                      shiftList, startDate.text, endDate.text)),
+        body: Column(
+          children: [
+            const Center(
+              child: Text("Lunch Break Management",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            ),
+            lotMenu(),
+            BlocBuilder<TimeattendanceBloc, TimeattendanceState>(
+              builder: (context, state) {
+                mainData = state.lunchBreakData?.halfHourLunchBreakData ?? [];
+                return state.isDataLoading
+                    ? myLoadingScreen
+                    : SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: PaginatedDataTable(
+                              columnSpacing: 10,
+                              showFirstLastButtons: true,
+                              rowsPerPage: rowIndex,
+                              availableRowsPerPage: const [5, 10, 20],
+                              sortColumnIndex: sortColumnIndex,
+                              sortAscending: sort,
+                              onRowsPerPageChanged: (value) {
+                                setState(() {
+                                  rowIndex = value!;
+                                });
+                              },
+                              columns: const [
+                                DataColumn(label: Text("Employee Id")),
+                                DataColumn(label: Text("Start Date")),
+                                DataColumn(label: Text("End Date")),
+                                DataColumn(label: Text("Status")),
+                                DataColumn(label: Text("Edit")),
+                              ],
+                              source: MainDataTableSource(context, mainData,
+                                  startDate.text, endDate.text),
                             ),
                           ),
-                        );
-                },
-              )
-            ],
-          ),
+                        ),
+                      );
+              },
+            )
+          ],
         ),
       ),
     );
@@ -222,7 +189,7 @@ class _WorkSPTableState extends State<WorkSPTable> {
                       }).toList(),
                       onChanged: (newValue) async {
                         setState(() {
-                          isLoading = true;
+                          // isLoading = true;
                           lotNumberId = newValue.toString();
                           Iterable<LotNumberDatum> result =
                               lotNumberData!.lotNumberData.where(
@@ -234,7 +201,7 @@ class _WorkSPTableState extends State<WorkSPTable> {
                           if (mainData != []) {
                             // fetchDataTable();
                             context.read<TimeattendanceBloc>().add(
-                                FetchWorkdateSpacialEvent(
+                                FetchLunchBreakHalfEvent(
                                     startDate: startDate.text,
                                     endDate: endDate.text));
                           }
@@ -268,9 +235,8 @@ class _WorkSPTableState extends State<WorkSPTable> {
                               borderRadius: BorderRadius.circular(8)),
                           padding: const EdgeInsets.all(0)),
                       onPressed: () {
-                        // fetchDataTable();
                         context.read<TimeattendanceBloc>().add(
-                            FetchWorkdateSpacialEvent(
+                            FetchLunchBreakHalfEvent(
                                 startDate: startDate.text,
                                 endDate: endDate.text));
                       },
@@ -292,19 +258,17 @@ class _WorkSPTableState extends State<WorkSPTable> {
 
 class MainDataTableSource extends DataTableSource {
   final BuildContext context;
-  final List<WorkDateSpecialDatum>? data;
-  final List<ShiftDatum>? shiftList;
+  final List<HalfHourLunchBreakDatum>? data;
   final String startDate;
   final String endDate;
   MainDataTableSource(
     this.context,
     this.data,
-    this.shiftList,
     this.startDate,
     this.endDate,
   );
 
-  editSp(var data) {
+  editHb(var data) {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -314,19 +278,22 @@ class MainDataTableSource extends DataTableSource {
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             title: TitleDialog(
-              title: "Edit Workdate Spacial",
+              title: "Edit Lunch Break",
               onPressed: () {
+                context.read<TimeattendanceBloc>().add(FetchLunchBreakHalfEvent(
+                    startDate: startDate, endDate: endDate));
                 Navigator.pop(context);
               },
             ),
             content: SizedBox(
                 width: 400,
-                height: 300,
-                child: EditWorkdateSp(
-                    onEdit: true,
-                    data: data,
-                    startDate: startDate,
-                    endDate: endDate)),
+                height: 380,
+                child: EditLunchBreak(
+                  onEdit: true,
+                  startDate: startDate,
+                  endDate: endDate,
+                  data: data,
+                )),
           );
         });
   }
@@ -334,18 +301,15 @@ class MainDataTableSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final d = data![index];
-    ShiftDatum? e = shiftList
-        ?.firstWhere((element) => element.shiftId == d.shiftId.toString());
     return DataRow(
         color: MaterialStateProperty.resolveWith<Color>(
             (Set<MaterialState> states) {
           return index % 2 == 0 ? Colors.white : Colors.grey[50]!;
         }),
         cells: [
-          DataCell(Text(d.date.toIso8601String().split('T')[0])),
-          DataCell(Text(
-              "${e?.shiftName ?? ""} ${e?.startTime ?? ""} - ${e?.endTime ?? ""}")),
-          DataCell(Text(d.endTime)),
+          DataCell(Text(d.employeeId)),
+          DataCell(Text(d.startDate.split('T')[0])),
+          DataCell(Text(d.endDate.split('T')[0])),
           DataCell(SizedBox(
               width: 92,
               child: Card(
@@ -379,7 +343,7 @@ class MainDataTableSource extends DataTableSource {
                       backgroundColor: Colors.amber[700],
                       padding: const EdgeInsets.all(1)),
                   onPressed: () {
-                    editSp(d);
+                    editHb(d);
                   },
                   child: const Icon(Icons.edit)),
             ),

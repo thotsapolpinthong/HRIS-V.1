@@ -40,3 +40,12 @@ class FetchWorkdateSpacialEvent extends TimeattendanceEvent {
     required this.endDate,
   });
 }
+
+class FetchLunchBreakHalfEvent extends TimeattendanceEvent {
+  final String startDate;
+  final String endDate;
+  FetchLunchBreakHalfEvent({
+    required this.startDate,
+    required this.endDate,
+  });
+}

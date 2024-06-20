@@ -180,14 +180,14 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                 ))
                                             : const Gap(3),
                                         if (widget.isSelected == true)
-                                          const Icon(CupertinoIcons
-                                              .exclamationmark_circle_fill),
+                                          const Icon(
+                                              Icons.account_tree_rounded),
                                         const Gap(3),
                                         if (widget.isSelected == true)
                                           Expanded(
                                             flex: 1,
                                             child: DropdownGlobal(
-                                              labeltext: 'สามารถเลือกแผนก',
+                                              labeltext: 'Select Department',
                                               value: orgData,
                                               validator: null,
                                               items: orgList?.map((e) {

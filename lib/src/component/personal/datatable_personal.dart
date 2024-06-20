@@ -499,7 +499,7 @@ class _DataTablePersonState extends State<DataTablePerson> {
 
                                     if (widget.employee == false)
                                       const DataColumn(
-                                          label: Text('     Edit/Remove',
+                                          label: Text('     Info/Remove',
                                               style: TextStyle(fontSize: 15))),
                                     if (widget.employee == true)
                                       const DataColumn(
@@ -601,13 +601,12 @@ class PersonDataTableSource extends DataTableSource {
             width: 40,
             height: 38,
             child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: myambercolors,
-                    padding: const EdgeInsets.all(1)),
+                style:
+                    ElevatedButton.styleFrom(padding: const EdgeInsets.all(1)),
                 onPressed: () {
                   showEditDialog(person.personId);
                 },
-                child: const Icon(Icons.edit)),
+                child: const Icon(Icons.edit_document)),
           ),
           const Gap(5),
           SizedBox(
@@ -622,30 +621,6 @@ class PersonDataTableSource extends DataTableSource {
                 },
                 child: const Icon(Icons.delete_rounded)),
           ),
-          // Card(
-          //     elevation: 4,
-          //     child: IconButton(
-          //         splashRadius: 25,
-          //         hoverColor: Colors.yellow[100],
-          //         color: Colors.yellow[800],
-          //         icon: const Icon(Icons.edit),
-          //         onPressed: () {
-          //           showEditDialog(person.personId);
-          //         })),
-          // Card(
-          //     elevation: 4,
-          //     child: IconButton(
-          //         splashRadius: 30,
-          //         hoverColor: Colors.red[100],
-          //         color: Colors.red,
-          //         icon: Container(
-          //           decoration:
-          //               BoxDecoration(borderRadius: BorderRadius.circular(8)),
-          //           child: const Icon(Icons.delete),
-          //         ),
-          //         onPressed: () {
-          //           showdialogDeletePerson(person.personId);
-          //         }))
         ])),
       if (employee == true)
         DataCell(ElevatedButton(

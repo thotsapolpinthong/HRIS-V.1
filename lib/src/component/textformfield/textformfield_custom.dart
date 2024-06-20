@@ -492,6 +492,8 @@ class TextFormFieldGlobal extends StatelessWidget {
   final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
   final Function(String)? onChanged;
+  final Function()? onTap;
+  final Widget? suffixIcon;
   const TextFormFieldGlobal({
     Key? key,
     required this.controller,
@@ -501,6 +503,8 @@ class TextFormFieldGlobal extends StatelessWidget {
     required this.enabled,
     this.inputFormatters,
     this.onChanged,
+    this.onTap,
+    this.suffixIcon,
   }) : super(key: key);
 
   @override
@@ -513,6 +517,7 @@ class TextFormFieldGlobal extends StatelessWidget {
         inputFormatters: inputFormatters,
         controller: controller,
         onChanged: onChanged,
+        onTap: onTap,
         minLines: 1,
         maxLines: 4,
         enabled: enabled,
@@ -520,6 +525,7 @@ class TextFormFieldGlobal extends StatelessWidget {
             contentPadding: const EdgeInsets.all(10.0),
             hintText: hintText,
             labelText: labelText,
+            suffixIcon: suffixIcon,
             labelStyle: const TextStyle(color: Colors.black87),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
             enabledBorder: OutlineInputBorder(
@@ -601,6 +607,7 @@ class TextFormFieldDatepickGlobal extends StatelessWidget {
   final String? Function(String?)? validatorless;
   final Function()? ontap;
   final Function(String)? onChanged;
+  final bool? enabled;
   const TextFormFieldDatepickGlobal({
     Key? key,
     required this.controller,
@@ -608,6 +615,7 @@ class TextFormFieldDatepickGlobal extends StatelessWidget {
     required this.validatorless,
     required this.ontap,
     this.onChanged,
+    this.enabled,
   }) : super(key: key);
 
   @override
@@ -633,6 +641,7 @@ class TextFormFieldDatepickGlobal extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             borderSide: const BorderSide(color: Colors.black87),
           ),
+          enabled: enabled ?? true,
         ),
         readOnly: true,
         onChanged: onChanged,
