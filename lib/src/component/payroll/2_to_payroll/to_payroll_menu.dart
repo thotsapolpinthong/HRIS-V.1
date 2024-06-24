@@ -280,57 +280,56 @@ class _ToPayrollState extends State<ToPayroll> {
                               size: 28,
                               color: Colors.grey[600],
                             ),
-                      SizedBox(
-                        width: 340,
-                        child: timeRecordData == null
-                            ? null
-                            : TextFormFieldGlobal(
-                                controller: search,
-                                onChanged: (value) {
-                                  if (value == '') {
-                                    setState(() {
-                                      onSearch = false;
-                                      filterData =
-                                          timeRecordData?.timeRecordData ?? [];
-                                    });
-                                  } else {
-                                    setState(() {
-                                      onSearch = true;
-                                      filterData = filterData.where((e) {
-                                        final eId = e.employeeId
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase());
-                                        final dep = e.departmentName
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase());
-                                        final fname = e.firstName
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase());
-                                        final lname = e.lastName
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase());
-                                        final pname = e.positionName
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase());
-                                        final type = e.staffType
-                                            .toLowerCase()
-                                            .contains(value.toLowerCase());
+                      if (timeRecordData != null)
+                        SizedBox(
+                          width: 340,
+                          child: TextFormFieldGlobal(
+                            controller: search,
+                            onChanged: (value) {
+                              if (value == '') {
+                                setState(() {
+                                  onSearch = false;
+                                  filterData =
+                                      timeRecordData?.timeRecordData ?? [];
+                                });
+                              } else {
+                                setState(() {
+                                  onSearch = true;
+                                  filterData = filterData.where((e) {
+                                    final eId = e.employeeId
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final dep = e.departmentName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final fname = e.firstName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final lname = e.lastName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final pname = e.positionName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final type = e.staffType
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
 
-                                        return eId ||
-                                            dep ||
-                                            fname ||
-                                            lname ||
-                                            pname ||
-                                            type;
-                                      }).toList();
-                                    });
-                                  }
-                                },
-                                labelText: "Search (TH/EN)",
-                                hintText: "ค้นหาข้อมูลในตาราง",
-                                enabled: true,
-                              ),
-                      ),
+                                    return eId ||
+                                        dep ||
+                                        fname ||
+                                        lname ||
+                                        pname ||
+                                        type;
+                                  }).toList();
+                                });
+                              }
+                            },
+                            labelText: "Search (TH/EN)",
+                            hintText: "ค้นหาข้อมูลในตาราง",
+                            enabled: true,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -559,28 +558,35 @@ class _ToPayrollState extends State<ToPayroll> {
                       )),
                 ),
                 const Gap(4),
-                SizedBox(
-                  width: 45,
-                  height: 45,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          padding: const EdgeInsets.all(0)),
-                      onPressed: () {
-                        // toTestPage();
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => WorkHourPdfPage()
-                                //  PrintingPDF()
-                                ));
-                      },
-                      child: Icon(
-                        Icons.print_rounded,
-                        size: 30,
-                        color: mygreycolors,
-                      )),
+                Tooltip(
+                  message: "พิมพ์ใบสรุปวันทำงาน",
+                  child: SizedBox(
+                    width: 45,
+                    height: 45,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.all(0)),
+                        onPressed: () {
+                          // toTestPage();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WorkHourPdfPage(
+                                        startDate: startDate.text,
+                                        endDate: finishDate.text,
+                                        type: "Worktime",
+                                      )
+                                  //  PrintingPDF()
+                                  ));
+                        },
+                        child: Icon(
+                          Icons.print_rounded,
+                          size: 30,
+                          color: mygreycolors,
+                        )),
+                  ),
                 ),
               ],
             ),

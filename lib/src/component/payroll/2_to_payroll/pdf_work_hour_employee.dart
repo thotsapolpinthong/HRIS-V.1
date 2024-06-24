@@ -1,17 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:gap/gap.dart';
+import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/test_pdf.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:printing/printing.dart';
 import 'package:http/http.dart' as http;
 import 'package:pdf/pdf.dart';
-import 'dart:io';
-import 'dart:convert';
+import 'package:printing/printing.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class WorkHourPdfPage extends StatefulWidget {
-  const WorkHourPdfPage({super.key});
+  final String startDate;
+  final String endDate;
+  final String type;
+  const WorkHourPdfPage({
+    Key? key,
+    required this.startDate,
+    required this.endDate,
+    required this.type,
+  }) : super(key: key);
 
   @override
   State<WorkHourPdfPage> createState() => _WorkHourPdfPageState();
@@ -58,60 +66,83 @@ class _WorkHourPdfPageState extends State<WorkHourPdfPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("PDF Viewer"),
-        actions: [],
-      ),
-      floatingActionButton: SizedBox(
-        width: 50,
-        height: 50,
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.all(1),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-            onPressed: () {
-              _printPdf();
-            },
-            child: Icon(Icons.print_rounded)),
-      ),
-      body: Column(
-        children: [
-          DropdownGlobal(
-            labeltext: 'Department',
-            value: orgCode,
-            validator: null,
-            items: orgList.map((e) {
-              return DropdownMenuItem<String>(
-                value: e.organizationCode.toString(),
-                child: Container(
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    child: Text(
-                        "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                orgCode = newValue.toString();
-              });
-            },
-          ),
-          if (orgCode != null)
-            Expanded(
-              child: Card(
-                margin: EdgeInsets.all(0),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child:
-                      SfPdfViewer.network("http://192.168.0.215/RPTHR014.pdf"),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
+    return TestPdf();
+    // Scaffold(
+    //   appBar: AppBar(
+    //     title: Text("PDF Viewer : 'Report Name'"),
+    //     actions: [],
+    //   ),
+    //   floatingActionButton: SizedBox(
+    //     width: 50,
+    //     height: 50,
+    //     child: ElevatedButton(
+    //         style: ElevatedButton.styleFrom(
+    //             padding: const EdgeInsets.all(1),
+    //             shape: RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.circular(12))),
+    //         onPressed: () {
+    //           _printPdf();
+    //         },
+    //         child: const Icon(Icons.print_rounded)),
+    //   ),
+    //   body: Column(
+    //     children: [
+    //       const Gap(10),
+    //       Row(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [
+    //           SizedBox(
+    //             width: 420,
+    //             child: DropdownGlobal(
+    //               labeltext: 'Department',
+    //               value: orgCode,
+    //               validator: null,
+    //               items: orgList.map((e) {
+    //                 return DropdownMenuItem<String>(
+    //                   value: e.organizationCode.toString(),
+    //                   child: Container(
+    //                       constraints: const BoxConstraints(maxWidth: 400),
+    //                       child: Text(
+    //                           "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
+    //                 );
+    //               }).toList(),
+    //               onChanged: (newValue) {
+    //                 setState(() {
+    //                   orgCode = newValue.toString();
+    //                 });
+    //               },
+    //             ),
+    //           ),
+    //           SizedBox(
+    //             width: 48,
+    //             height: 48,
+    //             child: ElevatedButton(
+    //                 style: ElevatedButton.styleFrom(
+    //                     padding: const EdgeInsets.all(1),
+    //                     shape: RoundedRectangleBorder(
+    //                         borderRadius: BorderRadius.circular(8))),
+    //                 onPressed: () {
+    //                   _printPdf();
+    //                 },
+    //                 child: const Icon(Icons.print_rounded)),
+    //           ),
+    //         ],
+    //       ),
+    //       if (orgCode != null)
+    //         Expanded(
+    //           child: Card(
+    //             margin: const EdgeInsets.all(0),
+    //             shape: RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.circular(12)),
+    //             child: Padding(
+    //               padding: const EdgeInsets.all(12.0),
+    //               child:
+    //                   SfPdfViewer.network("http://192.168.0.215/RPTHR014.pdf"),
+    //             ),
+    //           ),
+    //         ),
+    //     ],
+    //   ),
+    // );
   }
 }

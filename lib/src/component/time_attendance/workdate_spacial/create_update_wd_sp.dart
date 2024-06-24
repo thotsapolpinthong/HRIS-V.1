@@ -111,7 +111,8 @@ class _EditWorkdateSpState extends State<EditWorkdateSp> {
         id: widget.data!.id,
         date: date.text,
         shiftId: int.parse(shiftDataId!),
-        endTime: "${time.text}:00",
+        endTime:
+            widget.data!.endTime == time.text ? time.text : "${time.text}:00",
         status: dataStatus!,
         modifyBy: employeeId,
         comment: comment.text);

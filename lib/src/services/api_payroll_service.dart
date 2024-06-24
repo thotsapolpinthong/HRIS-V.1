@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:hris_app_prototype/src/model/payroll/lot_management/create_lot_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
@@ -6,6 +7,7 @@ import 'package:hris_app_prototype/src/model/payroll/lot_management/response_lot
 import 'package:hris_app_prototype/src/model/payroll/lot_management/update_lot_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/to_payroll/time_record_emp_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/to_payroll/time_record_model.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -141,6 +143,93 @@ class ApiPayrollService {
       return data;
     } else {
       return null;
+    }
+  }
+
+  //report
+  static getWorkTimePdf(String start, String end, String code) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.get(
+      Uri.parse(
+          "$baseUrl/Times/HrDownloadWorkTimeReport?startDate=$start&endDate=$end&organizationCode=$code"),
+      headers: <String, String>{
+        'Content-Type': 'application/pdf ',
+        "Authorization": "Bearer $sharedToken"
+      },
+      // body: jsonEncode(updateModel!.toJson()),
+    );
+    if (response.statusCode == 200) {}
+  }
+}
+
+// class PdfDownloader {
+//   static Future<void> getWorkTimePdf(
+//       String start, String end, String code) async {
+//     SharedPreferences preferences = await SharedPreferences.getInstance();
+//     String? sharedToken = preferences.getString("token");
+//     if (sharedToken == null) {
+//       throw Exception("Token not found in SharedPreferences");
+//     }
+
+//     final response = await http.get(
+//       Uri.parse(
+//           "http://192.168.0.205/StecApi/Times/HrDownloadWorkTimeReport?startDate=$start&endDate=$end&organizationCode=$code"),
+//       headers: <String, String>{
+//         'Content-Type': 'application/pdf',
+//         "Authorization": "Bearer $sharedToken"
+//       },
+//     );
+
+//     if (response.statusCode == 200) {
+//       // Get the directory to save the PDF
+//       Directory directory = await getApplicationDocumentsDirectory();
+//       String filePath = '${directory.path}/work_time_report.pdf';
+
+//       // Write the PDF to the file
+//       File file = File(filePath);
+//       await file.writeAsBytes(response.bodyBytes);
+
+//       print("PDF saved to $filePath");
+//     } else {
+//       throw Exception(
+//           "Failed to download PDF. Status code: ${response.statusCode}");
+//     }
+//   }
+// }
+
+class PdfDownloader {
+  static Future<String> getWorkTimePdf(
+      String start, String end, String code) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? sharedToken = preferences.getString("token");
+    if (sharedToken == null) {
+      throw Exception("Token not found in SharedPreferences");
+    }
+
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/Times/HrDownloadWorkTimeReport?startDate=$start&endDate=$end&organizationCode=$code"),
+      headers: <String, String>{
+        'Content-Type': 'application/pdf',
+        "Authorization": "Bearer $sharedToken"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Get the directory to save the PDF
+      Directory directory = await getApplicationDocumentsDirectory();
+      String filePath = '${directory.path}/work_time_report.pdf';
+
+      // Write the PDF to the file
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      return filePath;
+    } else {
+      throw Exception(
+          "Failed to download PDF. Status code: ${response.statusCode}");
     }
   }
 }
