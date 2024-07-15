@@ -8,6 +8,8 @@ import 'package:hris_app_prototype/src/component/employee/datatable_employee.dar
 import 'package:hris_app_prototype/src/component/homepage/SlideBar.dart';
 import 'package:hris_app_prototype/src/component/payroll/1_lot/lot_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/to_payroll_menu.dart';
+import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
+import 'package:hris_app_prototype/src/component/payroll/4_tax_deduction/tax_deduction_menu.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/half_break/lunch_break_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/workdate_sp_table.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
@@ -177,6 +179,10 @@ class _MyHomepageState extends State<MyHomepage> {
         return const LotManagement();
       case 5.2:
         return const ToPayroll();
+      case 5.3:
+        return const SalaryManagement();
+      case 5.4:
+        return const TaxDeductionManagement();
       default:
         throw Container();
     }

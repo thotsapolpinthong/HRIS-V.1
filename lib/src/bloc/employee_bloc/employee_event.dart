@@ -29,3 +29,9 @@ class FetchDataOtEmployeeEvent extends EmployeeEvent {
 class ClearStateOtEvent extends EmployeeEvent {}
 
 class ClearStateLeaveEvent extends EmployeeEvent {}
+
+class SelectOneEmployeeEvent extends EmployeeEvent {
+  final EmployeeDatum employeeData;
+
+  SelectOneEmployeeEvent({required this.employeeData});
+}

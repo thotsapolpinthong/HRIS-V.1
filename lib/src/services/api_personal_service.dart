@@ -80,6 +80,24 @@ class ApiService {
       return null;
     }
   }
+
+  static Future<LoginModel?> postApiLoginn(
+      String username, String password) async {
+    final response = await http.post(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/Login?userName=$username&password=$password"),
+      headers: {"accept": "text/plain"},
+      // body: {
+      //   'userName': username,
+      //   'password': password,
+      // },
+    );
+    if (response.statusCode == 200) {
+      return loginModelFromJson(response.body);
+    } else {
+      return null;
+    }
+  }
   //end login----------------------------------------------------------------
 
 //personalData----------------------------------------------------------------

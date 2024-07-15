@@ -23,7 +23,7 @@ class _LotManagementState extends State<LotManagement> {
 
   GetLotNumberDropdownModel? lotNumberData;
   List<LotNumberDatum> filterLotList = [];
-  List<Year> yearList = List.generate(27, (index) {
+  List<Year> yearList = List.generate(77, (index) {
     int year = 2024 + index;
     return Year(id: year.toString(), year: year.toString());
   });

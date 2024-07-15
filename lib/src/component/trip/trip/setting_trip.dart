@@ -242,6 +242,7 @@ class _SettingTripState extends State<SettingTrip> {
                     child: const DatatableEmployee(
                       isSelected: true,
                       isSelectedOne: true,
+                      typeSelected: "trip",
                     )),
               ));
         });

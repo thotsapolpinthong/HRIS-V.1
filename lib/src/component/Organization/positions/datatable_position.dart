@@ -434,7 +434,7 @@ class PersonDataTableSource extends DataTableSource {
                                   textStyle: const TextStyle(fontSize: 18)),
                             ),
                             const TextSpan(
-                              text: ' ( Edit Position.)',
+                              text: ' (Edit Position.)',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,

@@ -278,13 +278,13 @@ class _EditOrganizationState extends State<EditOrganization> {
                               return DropdownMenuEntry(
                                   value: e.deptCode,
                                   label:
-                                      "${e.deptNameEn} : ${e.deptNameTh == "NULL" ? '-' : e.deptNameTh}",
+                                      "${e.deptCode.split('0')[0]} : ${e.deptNameEn} ${e.deptNameTh == "NULL" ? '-' : e.deptNameTh}",
                                   style: MenuItemButton.styleFrom());
                             }).toList()),
                         // DropdownGlobal(
                         //   labeltext: 'Department',
                         //   value: department,
-                        //   validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                        //   validator: Validatorless.required('required'),
                         //   items: departmentList?.map((e) {
                         //     return DropdownMenuItem<String>(
                         //       value: e.deptCode.toString(),
@@ -314,13 +314,13 @@ class _EditOrganizationState extends State<EditOrganization> {
                               return DropdownMenuEntry(
                                   value: e.organizationCode,
                                   label:
-                                      "${e.organizationCode} : ${e.organizationName}",
+                                      "${e.organizationCode.split('0')[0]} : ${e.organizationName}",
                                   style: MenuItemButton.styleFrom());
                             }).toList()),
                         // DropdownGlobal(
                         //   labeltext: 'อยู่ภายใต้',
                         //   value: parentOrg,
-                        //   validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                        //   validator: Validatorless.required('required'),
                         //   items: parentOrgList?.map((e) {
                         //     return DropdownMenuItem<String>(
                         //       value: e.organizationCode.toString(),
@@ -338,9 +338,9 @@ class _EditOrganizationState extends State<EditOrganization> {
                         // ),
                         const Gap(5),
                         DropdownGlobal(
-                          labeltext: 'ประเภท',
+                          labeltext: 'Type',
                           value: orgType,
-                          validator: Validatorless.required('*กรุณากรอกข้อมูล'),
+                          validator: Validatorless.required('required'),
                           items: orgTypeList.map((e) {
                             return DropdownMenuItem<String>(
                               value: e.organizationTypeId.toString(),
@@ -358,18 +358,16 @@ class _EditOrganizationState extends State<EditOrganization> {
                         const Gap(5),
                         TextFormFieldDatepickGlobal(
                             controller: validFrom,
-                            labelText: 'มีผลตั้งแต่',
-                            validatorless:
-                                Validatorless.required('*กรุณากรอกข้อมูล'),
+                            labelText: 'Start Date',
+                            validatorless: Validatorless.required('required'),
                             ontap: () {
                               selectvalidFromDate();
                             }),
                         const Gap(5),
                         TextFormFieldDatepickGlobal(
                             controller: expFrom,
-                            labelText: 'สิ้นสุดเมื่อ',
-                            validatorless:
-                                Validatorless.required('*กรุณากรอกข้อมูล'),
+                            labelText: 'End Date',
+                            validatorless: Validatorless.required('required'),
                             ontap: () {
                               selectexpDate();
                             }),

@@ -217,8 +217,8 @@ class PersonDataTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final d = data![index];
     return DataRow(
-        color: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
           return index % 2 == 0 ? Colors.white : Colors.grey[50]!;
         }),
         cells: [

@@ -16,8 +16,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
     on<LoginEventLogin>((event, emit) async {
       emit(state.copyWith(isAutlhened: false));
-      final LoginModel? data =
-          await ApiService.postApiLogin(event.username, event.password);
+      LoginModel? data;
+      try {
+        data = await ApiService.postApiLoginn(event.username, event.password);
+      } catch (e) {
+        print("login error $e");
+        return;
+      }
+
       if (data!.status == true) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.setString("token", data.loginData.token);

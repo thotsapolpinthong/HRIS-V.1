@@ -9,20 +9,25 @@ import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_b
 import 'package:hris_app_prototype/src/bloc/trip_bloc/trip_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/employee_menu_layout.dart';
+import 'package:hris_app_prototype/src/component/payroll/3_salary/create_update_salary.dart';
 import 'package:hris_app_prototype/src/component/personal/datatable_personal.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
-import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
+import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 
 class DatatableEmployee extends StatefulWidget {
   final bool isSelected;
   final bool isSelectedOne;
+  final String? typeSelected;
+  final Function()? fetchDataTemp;
   const DatatableEmployee({
     Key? key,
     required this.isSelected,
     required this.isSelectedOne,
+    this.typeSelected,
+    this.fetchDataTemp,
   }) : super(key: key);
 
   @override
@@ -39,7 +44,7 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
   int? sortColumnIndex;
   bool sort = true;
 
-  List<OrganizationDatum>? orgList;
+  List<OrganizationDataam>? orgList;
   String? orgData;
 
   @override
@@ -65,11 +70,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
     //   GetEmployeeAllDataModel? data =
     //       await ApiEmployeeService.fetchDataTableEmployee("1");
 
-    GetOrganizationAllModel? og =
-        await ApiOrgService.fetchDataTableOrganization();
+    orgList = await ApiOrgService.getParentOrgDropdown();
 
     setState(() {
-      orgList = og?.organizationData;
+      orgList;
       // data;
       // employeeData = data?.employeeData;
       // filterData = data?.employeeData;
@@ -146,7 +150,7 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                   //         // }
                                   //       },
                                   showCheckboxColumn: true,
-                                  columnSpacing: 5,
+                                  columnSpacing: 20,
                                   showFirstLastButtons: true,
                                   rowsPerPage: rowIndex,
                                   availableRowsPerPage: const [5, 10, 20],
@@ -187,7 +191,7 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           Expanded(
                                             flex: 1,
                                             child: DropdownGlobal(
-                                              labeltext: 'Select Department',
+                                              labeltext: 'Department',
                                               value: orgData,
                                               validator: null,
                                               items: orgList?.map((e) {
@@ -197,9 +201,9 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                   child: Container(
                                                       constraints:
                                                           const BoxConstraints(
-                                                              maxWidth: 180),
+                                                              maxWidth: 220),
                                                       child: Text(
-                                                          "${e.departMentData.deptCode} : ${e.departMentData.deptNameTh}")),
+                                                          "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -345,176 +349,61 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                   fontWeight:
                                                       FontWeight.bold))),
                                     DataColumn(
-                                        //numeric: true,
-                                        label: const TextThai(
-                                            text: 'รหัสพนักงาน',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        numeric: true,
+                                        label: const Text("Employee Id"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 0;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        //  numeric: true,
-                                        label: const TextThai(
-                                            text: 'รหัสประจำตัว',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Dept."),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 0;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const TextThai(
-                                            text: 'ชื่อ',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Firstname"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const TextThai(
-                                            text: 'นามสกุล',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Lastname"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const TextThai(
-                                            text: 'ประเภทพนักงาน',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Type"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const TextThai(
-                                            text: 'แผนก',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Position"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const TextThai(
-                                            text: 'ตำแหน่งงาน',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Startdate"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const TextThai(
-                                            text: 'วันที่เริ่มงาน',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
+                                        label: const Text("Enddate"),
                                         onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
-                                        }),
-                                    DataColumn(
-                                        label: const TextThai(
-                                            text: 'สิ้นสุด',
-                                            textStyle: TextStyle(
-                                                fontWeight: FontWeight.w500)),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            // sort = !sort;
-                                            // sortColumnIndex = 2;
-                                            // if (state.onSearchData == true) {
-                                            //   onSortSearchColumn(
-                                            //       columnIndex, ascending);
-                                            // } else {
-                                            //   onSortColumn(columnIndex, ascending);
-                                            // }
-                                          });
+                                          setState(() {});
                                         }),
                                     const DataColumn(
-                                      label: Text('status',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold)),
+                                      label: Text('status'),
                                     ),
                                     if (widget.isSelected == true &&
                                         widget.isSelectedOne == true)
-                                      const DataColumn(
-                                          label: Text('เลือกพนักงาน')),
+                                      const DataColumn(label: Text('')),
                                   ],
                                   source: PersonDataTableSource(
-                                      employeeData,
                                       context,
+                                      employeeData,
                                       fetchData,
                                       widget.isSelected,
-                                      widget.isSelectedOne
+                                      widget.isSelectedOne,
+                                      widget.typeSelected,
+                                      widget.fetchDataTemp
                                       // deleteData,
                                       ),
                                 ),
@@ -580,14 +469,17 @@ class PersonDataTableSource extends DataTableSource {
   final Function fetchFunction;
   final bool isSelected;
   final bool isSelectedOne;
+  final String? typeSelected;
+  final Function()? fetchDataTemp;
 
   PersonDataTableSource(
-    this.data,
-    this.context,
-    this.fetchFunction,
-    this.isSelected,
-    this.isSelectedOne,
-  );
+      this.context,
+      this.data,
+      this.fetchFunction,
+      this.isSelected,
+      this.isSelectedOne,
+      this.typeSelected,
+      this.fetchDataTemp);
   TextEditingController comment = TextEditingController();
   List<EmployeeDatum> selectedemployeeData = [];
   List<int> selectedRows = [];
@@ -626,14 +518,14 @@ class PersonDataTableSource extends DataTableSource {
                 },
                 child: const Icon(CupertinoIcons.square_list))),
           DataCell(Text(employeeData.employeeId)),
-          DataCell(Text(employeeData.personData.personId)),
+          DataCell(Text(employeeData
+              .positionData.organizationData.departMentData.deptCode)),
           DataCell(Text(employeeData.personData.fisrtNameTh)),
           DataCell(Text(employeeData.personData.lastNameTh)),
           DataCell(Text(
               employeeData.positionData.positionTypeData.positionTypeNameTh ??
                   "")),
-          DataCell(Text(employeeData
-              .positionData.organizationData.departMentData.deptNameTh)),
+
           DataCell(Text(employeeData.positionData.positionData.positionNameTh)),
           DataCell(Text(employeeData.startDate)),
           DataCell(Text(employeeData.endDate)),
@@ -643,10 +535,21 @@ class PersonDataTableSource extends DataTableSource {
           if (isSelected == true && isSelectedOne == true)
             DataCell(ElevatedButton(
                 onPressed: () {
-                  context
-                      .read<TripBloc>()
-                      .add(SelectEmployeeEvent(employeeData: employeeData));
-                  Navigator.pop(context);
+                  if (typeSelected == "trip") {
+                    context
+                        .read<TripBloc>()
+                        .add(SelectEmployeeEvent(employeeData: employeeData));
+                    Navigator.pop(context);
+                  } else if (typeSelected == "salary") {
+                    context.read<EmployeeBloc>().add(
+                        SelectOneEmployeeEvent(employeeData: employeeData));
+                    Navigator.pop(context);
+                    functionCreateSalary();
+                  } else if (typeSelected == "tax") {
+                    context.read<EmployeeBloc>().add(
+                        SelectOneEmployeeEvent(employeeData: employeeData));
+                    Navigator.pop(context);
+                  } else {}
                 },
                 child: const Text("Select"))),
         ]);
@@ -689,6 +592,7 @@ class PersonDataTableSource extends DataTableSource {
 
   @override
   int get selectedRowCount => 0;
+
   editPositionOranization(EmployeeDatum employeeData) {
     showGeneralDialog(
         context: context,
@@ -710,70 +614,30 @@ class PersonDataTableSource extends DataTableSource {
           );
         });
   }
-  // showdialogDeletePerson(id) {
-  //   showDialog(
-  //       barrierDismissible: false,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //             icon: IconButton(
-  //               color: Colors.red[600],
-  //               icon: const Icon(
-  //                 Icons.cancel,
-  //               ),
-  //               onPressed: () {
-  //                 fetchFunction;
-  //                 Navigator.pop(context);
-  //                 comment.text = '';
-  //               },
-  //             ),
-  //             content: SizedBox(
-  //               width: 300,
-  //               height: 200,
-  //               child: Column(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 children: [
-  //                   const Expanded(flex: 2, child: Text('หมายเหตุ (โปรดระบุ)')),
-  //                   Expanded(
-  //                     flex: 12,
-  //                     child: Center(
-  //                       child: Card(
-  //                         elevation: 2,
-  //                         child: TextFormField(
-  //                           validator: Validatorless.required('กรอกข้อความ'),
-  //                           controller: comment,
-  //                           minLines: 1,
-  //                           maxLines: 4,
-  //                           decoration: const InputDecoration(
-  //                               labelStyle: TextStyle(color: Colors.black),
-  //                               border: OutlineInputBorder(
-  //                                   borderSide:
-  //                                       BorderSide(color: Colors.black)),
-  //                               filled: true,
-  //                               fillColor: Colors.white),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Padding(
-  //                     padding: const EdgeInsets.all(4.0),
-  //                     child: Row(
-  //                       mainAxisAlignment: MainAxisAlignment.end,
-  //                       children: [
-  //                         ElevatedButton(
-  //                             onPressed: () {
-  //                               deleteFunction(id, comment.text);
-  //                               fetchFunction;
-  //                               Navigator.pop(context);
-  //                               comment.text = '';
-  //                             },
-  //                             child: const Text("OK"))
-  //                       ],
-  //                     ),
-  //                   )
-  //                 ],
-  //               ),
-  //             ));
-  //       });
-  // }
+
+  functionCreateSalary() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: mygreycolors,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: TitleDialog(
+              title: "Create Employee Salary.",
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            content: SizedBox(
+                width: 400,
+                height: 350,
+                child: EditEmployeeSalary(
+                  fetchData: fetchDataTemp!,
+                  onEdit: false,
+                )),
+          );
+        });
+  }
 }

@@ -400,13 +400,18 @@ class DropdownGlobal extends StatelessWidget {
   final List<DropdownMenuItem<String>>? items;
   final Function(Object?)? onChanged;
   final String? Function(String?)? validator;
-  const DropdownGlobal(
-      {super.key,
-      required this.labeltext,
-      required this.value,
-      required this.items,
-      required this.onChanged,
-      required this.validator});
+  final Color? outlineColor;
+  final Widget? suffixIcon;
+  const DropdownGlobal({
+    super.key,
+    required this.labeltext,
+    required this.value,
+    required this.items,
+    required this.onChanged,
+    this.validator,
+    this.outlineColor,
+    this.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -423,8 +428,12 @@ class DropdownGlobal extends StatelessWidget {
               filled: true,
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(6),
-                  borderSide: const BorderSide(color: Colors.black87)),
-              fillColor: Colors.white),
+                  borderSide: BorderSide(
+                      color: outlineColor == null
+                          ? Colors.black87
+                          : outlineColor!)),
+              fillColor: Colors.white,
+              suffixIcon: suffixIcon),
           autovalidateMode: AutovalidateMode.always,
           validator: validator,
           borderRadius: BorderRadius.circular(8),
@@ -494,18 +503,22 @@ class TextFormFieldGlobal extends StatelessWidget {
   final Function(String)? onChanged;
   final Function()? onTap;
   final Widget? suffixIcon;
-  const TextFormFieldGlobal({
-    Key? key,
-    required this.controller,
-    required this.labelText,
-    this.hintText,
-    this.validatorless,
-    required this.enabled,
-    this.inputFormatters,
-    this.onChanged,
-    this.onTap,
-    this.suffixIcon,
-  }) : super(key: key);
+  final String? suffixText;
+  final Color? outlineColor;
+  const TextFormFieldGlobal(
+      {Key? key,
+      required this.controller,
+      required this.labelText,
+      this.hintText,
+      this.validatorless,
+      required this.enabled,
+      this.inputFormatters,
+      this.onChanged,
+      this.onTap,
+      this.suffixIcon,
+      this.suffixText,
+      this.outlineColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -526,11 +539,13 @@ class TextFormFieldGlobal extends StatelessWidget {
             hintText: hintText,
             labelText: labelText,
             suffixIcon: suffixIcon,
+            suffixText: suffixText,
             labelStyle: const TextStyle(color: Colors.black87),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6),
-              borderSide: const BorderSide(color: Colors.black87),
+              borderSide: BorderSide(
+                  color: outlineColor == null ? Colors.black87 : outlineColor!),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6),

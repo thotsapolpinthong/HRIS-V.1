@@ -329,7 +329,6 @@ class _SlideBarState extends State<SlideBar> {
                                         .fadeIn(delay: 900.ms)
                                         .slideY(begin: 1, duration: 200.ms),
                                   ),
-
                                   DrawerTitle(
                                           color: state.pageNumber == 7
                                               ? mygreycolors
@@ -504,65 +503,81 @@ class _SlideBarState extends State<SlideBar> {
                               .read<HomepageBloc>()
                               .add(SubPayrollPage2Event())),
                       DrawerTitleSubmenu(
+                          color: state.pageNumber == 5.3
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 5.3
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "3. บันทึกข้อมูลปรับอัตราเงินเดือน",
+                          onTap: () => context
+                              .read<HomepageBloc>()
+                              .add(SubPayrollPage3Event())),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 5.4
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 5.4
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "4. บันทึกข้อมูลลดหย่อนภาษีประจำปี",
+                          onTap: () => context
+                              .read<HomepageBloc>()
+                              .add(SubPayrollPage4Event())),
+                      DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "3. ประมวลผลข้อมูลการจ่ายเงินเดือน (Payroll)",
+                          title: "- ประมวลผลข้อมูลการจ่ายเงินเดือน (Payroll)",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "4. พิมพ์สลิปเงินเดือน",
+                          title: "- พิมพ์สลิปเงินเดือน",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "5. บันทึกข้อมูลการชำระเงินกู้ กยศ.",
+                          title: "- บันทึกข้อมูลการชำระเงินกู้ กยศ.",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "6. บันทึกการปรับอัตราเงินเดือน",
+                          title: "- สรุปการจ่ายเงินพนักงานรายบุคคล",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "7. สรุปการจ่ายเงินพนักงานรายบุคคล",
+                          title: "- สรุปการจ่ายเงินพนักงานรายแผนก",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "8. สรุปการจ่ายเงินพนักงานรายแผนก",
+                          title: "- รายงานข้อมูลเงินเดือนพนักงาน",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "9. รายงานข้อมูลเงินเดือนพนักงาน",
+                          title: "- สรุปการจ่ายเงินเดือนพนักงาน",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "10. สรุปการจ่ายเงินเดือนพนักงาน",
+                          title: "- พิมพ์เอกสารทวิ 50",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "11. พิมพ์เอกสารทวิ 50",
+                          title: "- ออกใบกำกับภาษี/หนังสือรับรองเงินเดือน",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title: "12. ออกใบกำกับภาษี/หนังสือรับรองเงินเดือน",
+                          title: "- Export ข้อมูล ภงด.1/ ภงด.1ก. (ส่งสรรพากร)",
                           onTap: () {}),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
-                          title:
-                              "13. Export ข้อมูล ภงด.1/ ภงด.1ก. (ส่งสรรพากร)",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "14. Export ข้อมูลประกันสังคม SSO",
+                          title: "- Export ข้อมูลประกันสังคม SSO",
                           onTap: () {}),
                     ],
                   ),

@@ -53,5 +53,14 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
         (event, emit) => emit(state.copyWith(otRequestData: null)));
     on<ClearStateLeaveEvent>(
         (event, emit) => emit(state.copyWith(leaveDataEmployee: null)));
+
+    // select
+    on<SelectOneEmployeeEvent>((event, emit) {
+      emit(state.copyWith(employeeData: event.employeeData));
+    });
+
+    // on<SelectOneEmployeeEvent>((event, emit) {
+    //   emit(state.copyWith(employeeData: null));
+    // });
   }
 }

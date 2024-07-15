@@ -10,6 +10,7 @@ class EmployeeState extends Equatable {
   final bool isleaveLoading;
   final LeaveRequestAmountModel? leaveAmount;
   final LeaveQuotaByEmployeeModel? quotaData;
+  final EmployeeDatum? employeeData;
 // ot menu Employee
   final OtRequestModel? otRequestData;
   final bool isOtLoading;
@@ -22,6 +23,7 @@ class EmployeeState extends Equatable {
     this.isleaveLoading = true,
     this.leaveAmount,
     this.quotaData,
+    this.employeeData,
     this.otRequestData,
     this.isOtLoading = true,
   });
@@ -36,18 +38,19 @@ class EmployeeState extends Equatable {
     LeaveQuotaByEmployeeModel? quotaData,
     OtRequestModel? otRequestData,
     bool? isOtLoading,
+    EmployeeDatum? employeeData,
   }) {
     return EmployeeState(
-      employeeAllDataModel: employeeAllDataModel ?? this.employeeAllDataModel,
-      isDataLoading: isDataLoading ?? this.isDataLoading,
-      onSearchData: onSearchData ?? this.onSearchData,
-      leaveDataEmployee: leaveDataEmployee,
-      isleaveLoading: isleaveLoading ?? this.isleaveLoading,
-      leaveAmount: leaveAmount ?? this.leaveAmount,
-      quotaData: quotaData ?? this.quotaData,
-      otRequestData: otRequestData,
-      isOtLoading: isOtLoading ?? this.isOtLoading,
-    );
+        employeeAllDataModel: employeeAllDataModel ?? this.employeeAllDataModel,
+        isDataLoading: isDataLoading ?? this.isDataLoading,
+        onSearchData: onSearchData ?? this.onSearchData,
+        leaveDataEmployee: leaveDataEmployee,
+        isleaveLoading: isleaveLoading ?? this.isleaveLoading,
+        leaveAmount: leaveAmount ?? this.leaveAmount,
+        quotaData: quotaData ?? this.quotaData,
+        otRequestData: otRequestData,
+        isOtLoading: isOtLoading ?? this.isOtLoading,
+        employeeData: employeeData);
   }
 
   @override
@@ -60,6 +63,7 @@ class EmployeeState extends Equatable {
         leaveAmount,
         quotaData,
         otRequestData,
-        isOtLoading
+        isOtLoading,
+        employeeData,
       ];
 }

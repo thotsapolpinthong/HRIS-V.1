@@ -1,15 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:validatorless/validatorless.dart';
 
 var myDefaultBackground = Colors.grey[350];
-
 var mysecondaryBackground = const Color.fromRGBO(147, 179, 239, 1);
-
 var colorstone1fontwhite1 = const Color.fromRGBO(0, 129, 167, 1);
 var colorstone1fontwhite2 = const Color.fromRGBO(0, 175, 185, 1);
 var colorstone1fontblack1 = const Color.fromRGBO(254, 217, 183, 1);
@@ -18,11 +18,8 @@ var colorstone1fontwhite3 = const Color.fromRGBO(240, 113, 103, 1);
 
 var titleUpdateColors = Colors.grey[200];
 var subtitleUpdateColors = Colors.grey[100];
-
 var mygreycolors = Colors.grey[200];
-var myAppBar = AppBar(
-  backgroundColor: Colors.grey[300],
-);
+var myAppBar = AppBar(backgroundColor: Colors.grey[300]);
 var mythemecolor = const Color.fromARGB(255, 9, 47, 105);
 var mytextcolors = Colors.grey[350];
 var myambercolors = Colors.amber[600];
@@ -39,10 +36,12 @@ var myLoadingScreen = SizedBox(
 class MyFloatingButton extends StatefulWidget {
   final void Function()? onPressed;
   final Widget? icon;
+  final Color? backgroundColor;
   const MyFloatingButton({
     Key? key,
     this.onPressed,
     this.icon,
+    this.backgroundColor,
   }) : super(key: key);
 
   @override
@@ -69,12 +68,76 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
           height: isHovered ? 55 : 50,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(
+                  backgroundColor: widget.backgroundColor,
                   padding: const EdgeInsets.all(1),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12))),
               onPressed: widget.onPressed,
               child: widget.icon),
-        ).animate().shake());
+        ).animate().fade());
+  }
+}
+
+class MyFloatingUpload extends StatefulWidget {
+  final void Function()? onPressed;
+
+  final Color? backgroundColor;
+  const MyFloatingUpload({
+    Key? key,
+    this.onPressed,
+    this.backgroundColor,
+  }) : super(key: key);
+
+  @override
+  State<MyFloatingUpload> createState() => _MyFloatingUploadState();
+}
+
+class _MyFloatingUploadState extends State<MyFloatingUpload> {
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+        onEnter: (detail) {
+          setState(() {
+            isHovered = true;
+          });
+        },
+        onExit: (detail) {
+          setState(() {
+            isHovered = false;
+          });
+        },
+        child: SizedBox(
+          height: isHovered ? 53 : 48,
+          width: isHovered ? 154 : 147,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: widget.backgroundColor,
+                padding: const EdgeInsets.all(0),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+            onPressed: widget.onPressed,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Gap(10),
+                const Text("Upload file"),
+                const Gap(10),
+                Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 24, 114, 29),
+                        borderRadius: BorderRadius.circular(11)),
+                    height: isHovered ? 52 : 50,
+                    width: isHovered ? 48 : 45,
+                    child: Icon(
+                      Icons.upload_file_rounded,
+                      size: isHovered ? 33 : 30,
+                    )),
+              ],
+            ),
+          ),
+        ).animate().fade());
   }
 }
 
@@ -122,10 +185,12 @@ class TextThai extends StatelessWidget {
 class MySaveButtons extends StatelessWidget {
   final String text;
   final void Function()? onPressed;
+  final double? height;
   const MySaveButtons({
     Key? key,
     required this.text,
     this.onPressed,
+    this.height,
   }) : super(key: key);
 
   @override
@@ -134,15 +199,18 @@ class MySaveButtons extends StatelessWidget {
       alignment: Alignment.bottomRight,
       child: Padding(
           padding: const EdgeInsets.all(4.0),
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.greenAccent,
-              ),
-              onPressed: onPressed,
-              child: Text(
-                text,
-                style: const TextStyle(color: Colors.black87),
-              ))),
+          child: SizedBox(
+            height: height,
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.greenAccent,
+                ),
+                onPressed: onPressed,
+                child: Text(
+                  text,
+                  style: const TextStyle(color: Colors.black87),
+                )),
+          )),
     );
   }
 }
@@ -164,7 +232,7 @@ class TitleDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -293,106 +361,50 @@ class MyContainerShadows extends StatelessWidget {
   }
 }
 
-// var myDrawer = SizedBox(
-//   width: 280,
-//   child: Drawer(
-//     backgroundColor: Colors.blue[200],
-//     child: ListView(
-//         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-//         children: [
-//           DrawerHeader(
-//               child: Card(
-//                   child: Image.network(
-//                       "https://www.siamtobacco.com/STEC-logoLandScape.png"))),
-//           const UserAccountsDrawerHeader(
-//             decoration: BoxDecoration(
-//                 image: DecorationImage(
-//                     image: NetworkImage(
-//                         "https://s.isanook.com/tr/0/ud/201/1009004/222.jpg"),
-//                     fit: BoxFit.fill)),
-//             accountName: Text("Thotsapol Pinthong"),
-//             accountEmail: Text("thotsapol@siamtobacco.com"),
-//             currentAccountPicture: CircleAvatar(
-//               backgroundImage: NetworkImage(
-//                   "https://pbs.twimg.com/profile_images/794107415876747264/g5fWe6Oh_400x400.jpg"),
-//             ),
-//             otherAccountsPictures: [
-//               CircleAvatar(
-//                   backgroundImage: NetworkImage(
-//                       "https://pbs.twimg.com/profile_images/794107415876747264/g5fWe6Oh_400x400.jpg")),
-//               CircleAvatar(
-//                   backgroundImage: NetworkImage(
-//                       "https://pbs.twimg.com/profile_images/794107415876747264/g5fWe6Oh_400x400.jpg")),
-//             ],
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.home),
-//             title: const Text('H O M E P A G E'),
-//             onTap: () {},
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.person_search_rounded),
-//             title: const Text('E m p l o y e e'),
-//             onTap: () {},
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.attach_money_rounded),
-//             title: const Text('S A L A R Y'),
-//             onTap: () {},
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.calendar_today_outlined),
-//             title: const Text('C A L E N D A R'),
-//             onTap: () {},
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.settings),
-//             title: const Text('S E T T I N G'),
-//             onTap: () {},
-//           ),
-//           ListTile(
-//             leading: const Icon(Icons.logout),
-//             title: const Text('L O G O U T'),
-//             onTap: () {
-//               // SharedPreferences preferences =
-//               //     await SharedPreferences.getInstance();
-//               // preferences.clear();
-//               // // Navigator.popAndPushNamed(
-//               // //     navigatorState.currentContext!, AppRoute.login);
-//               // Navigator.of(navigatorState.currentContext!).pushAndRemoveUntil(
-//               //     MaterialPageRoute(builder: (context) => const LoginPage()),
-//               //     (Route route) => false);
-//             },
-//           ),
-//           // BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-//           //   return ListTile(
-//           //     leading: const Icon(Icons.logout),
-//           //     title: const Text('L O G O U T B L O C'),
-//           //     onTap: () {
-//           //       context.read<LoginBloc>().add(LoginEventLogout());
-//           //     },
-//           //   );
-//           // }),
-//           const ListTile(
-//             leading: Icon(Icons.logout),
-//             title: Text('L O G O U T'),
-//           ),
-//           const ListTile(
-//             leading: Icon(Icons.logout),
-//             title: Text('L O G O U T'),
-//           ),
-//           const ListTile(
-//             leading: Icon(Icons.logout),
-//             title: Text('L O G O U T'),
-//           ),
-//           const ListTile(
-//             leading: Icon(Icons.logout),
-//             title: Text('L O G O U T'),
-//           ),
-//           const ListTile(
-//             leading: Icon(Icons.logout),
-//             title: Text('L O G O U T'),
-//           ),
-//         ]),
-//   ),
-// );
+class MyDialogSuccess {
+  static void alertDialog(
+      BuildContext context, bool success, bool onEdit, String messageEN) {
+    AwesomeDialog(
+      dismissOnTouchOutside: false,
+      width: 500,
+      context: context,
+      animType: AnimType.topSlide,
+      dialogType: success == true ? DialogType.success : DialogType.error,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                success == true
+                    ? onEdit == false
+                        ? 'Created $messageEN Success.'
+                        : 'Edit $messageEN Success.'
+                    : onEdit == false
+                        ? 'Created $messageEN Fail.'
+                        : 'Edit $messageEN Fail.',
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+              Text(
+                success == true
+                    ? onEdit == false
+                        ? 'เพิ่มข้อมูลสำเร็จ'
+                        : 'แก้ไขข้อมูลสำเร็จ'
+                    : onEdit == false
+                        ? 'เพิ่มข้อมูลไม่สำเร็จ'
+                        : 'แก้ไขข้อมูลไม่สำเร็จ',
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ],
+          ),
+        ),
+      ),
+      btnOkColor: success == true ? Colors.greenAccent : Colors.red,
+      btnOkOnPress: () {
+        if (success) {
+          Navigator.pop(context);
+        }
+      },
+    ).show();
+  }
+}

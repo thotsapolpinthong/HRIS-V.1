@@ -36,7 +36,7 @@ class _MyPositionsLayoutState extends State<MyPositionsLayout> {
                                   textStyle: const TextStyle(fontSize: 18)),
                             ),
                             const TextSpan(
-                              text: ' ( Create Position.)',
+                              text: ' (Create Position.)',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
