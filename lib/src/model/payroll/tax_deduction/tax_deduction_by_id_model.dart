@@ -475,7 +475,9 @@ class SupportData {
         momSupport: json["momSupport"],
         spouseDadSupport: json["spouseDadSupport"],
         spouseMomSupport: json["spouseMomSupport"],
-        amountForDeduction: json["amountForDeduction"],
+        amountForDeduction: (json["amountForDeduction"] is int)
+            ? (json["amountForDeduction"] as int).toDouble()
+            : json["amountForDeduction"],
       );
 
   Map<String, dynamic> toJson() => {

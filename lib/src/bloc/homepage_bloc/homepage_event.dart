@@ -29,6 +29,8 @@ class SubPayrollPage2Event extends HomepageEvent {}
 class SubPayrollPage3Event extends HomepageEvent {}
 
 class SubPayrollPage4Event extends HomepageEvent {}
+
+class SubPayrollPage5Event extends HomepageEvent {}
 //end payroll
 
 class TripPageEvent extends HomepageEvent {}

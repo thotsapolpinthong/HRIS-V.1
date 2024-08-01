@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -14,13 +16,15 @@ class TaxDeductionManagement extends StatefulWidget {
 }
 
 class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
+  Timer? _timer;
 //table
-  bool isDataLoading = false;
+  bool isDataLoading = true;
   int rowIndex = 10;
   int? sortColumnIndex;
   bool sort = true;
   TextEditingController search = TextEditingController();
   bool onSearch = false;
+  List<TaxDeductionDatum> filterData = [];
   // dropdown year
   final int currentYear = DateTime.now().year;
   List<int> yearList = [];
@@ -31,9 +35,15 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
   Future fetchData() async {
     TaxDeductionModel? data =
         await ApiPayrollService.getTaxDeductionAll(yearId!);
-    setState(() {
-      taxDeductionData = data?.taxDeductionData ?? [];
-      isDataLoading = false;
+    _timer = Timer.periodic(const Duration(microseconds: 1000), (timer) {
+      //ตรวจสอบว่า widget ยังคงติดตั้งอยู่ก่อนเรียกใช้ setState()
+      if (mounted) {
+        setState(() {
+          taxDeductionData = data?.taxDeductionData ?? [];
+          filterData = taxDeductionData;
+          isDataLoading = false;
+        });
+      }
     });
   }
 
@@ -55,7 +65,8 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                     borderRadius: BorderRadius.circular(20)),
                 child: Stack(
                   children: [
-                    EditTaxDeduction(onEdit: false, fetchData: fetchData),
+                    EditTaxDeduction(
+                        onEdit: false, fetchData: fetchData, yearId: yearId!),
                     Positioned(
                         top: 5,
                         right: 5,
@@ -77,63 +88,15 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    yearList = [for (int i = currentYear - 10; i <= currentYear + 50; i++) i];
+    yearList = [for (int i = currentYear - 20; i <= currentYear + 5; i++) i];
     fetchData();
   }
 
   @override
-  Widget build(BuildContext context) {
-    yearList;
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: floating(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                width: double.infinity,
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: PaginatedDataTable(
-                      columnSpacing: 10,
-                      showFirstLastButtons: true,
-                      rowsPerPage: rowIndex,
-                      availableRowsPerPage: const [5, 10, 20],
-                      sortColumnIndex: sortColumnIndex,
-                      sortAscending: sort,
-                      onRowsPerPageChanged: (value) {
-                        setState(() {
-                          rowIndex = value!;
-                        });
-                      },
-                      header: header(),
-                      columns: const [
-                        DataColumn(label: Text("Year")),
-                        DataColumn(label: Text("Tax identification")),
-                        DataColumn(label: Text("Employee ID")),
-                        DataColumn(label: Text("FirstName")),
-                        DataColumn(label: Text("LastName")),
-                        DataColumn(label: Text("Edit")),
-                      ],
-                      source: SubDataTableSource(
-                          context, taxDeductionData, fetchData),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
   }
 
   Widget floating() {
@@ -193,6 +156,7 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                         onChanged: (newValue) {
                           setState(() {
                             yearId = newValue.toString();
+                            isDataLoading = true;
                             fetchData();
                           });
                         },
@@ -208,8 +172,30 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                         controller: search,
                         onChanged: (value) {
                           if (value == '') {
+                            setState(() {
+                              onSearch = false;
+                              filterData = taxDeductionData;
+                            });
                           } else {
-                            setState(() {});
+                            setState(() {
+                              onSearch = true;
+                              filterData = taxDeductionData.where((e) {
+                                final taxId = e.taxNumber
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final empId = e.employeeId
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final fName = e.firstName
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final lName = e.lastName
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                return taxId || empId || fName || lName;
+                              }).toList();
+                            });
                           }
                         },
                         decoration: InputDecoration(
@@ -226,18 +212,70 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    yearList;
+    return isDataLoading
+        ? myLoadingScreen
+        : Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Scaffold(
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endDocked,
+              floatingActionButton: floating(),
+              body: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: PaginatedDataTable(
+                            columnSpacing: 10,
+                            showFirstLastButtons: true,
+                            rowsPerPage: rowIndex,
+                            availableRowsPerPage: const [5, 10, 20],
+                            sortColumnIndex: sortColumnIndex,
+                            sortAscending: sort,
+                            onRowsPerPageChanged: (value) {
+                              setState(() {
+                                rowIndex = value!;
+                              });
+                            },
+                            header: header(),
+                            columns: const [
+                              DataColumn(label: Text("Year")),
+                              DataColumn(label: Text("Tax identification")),
+                              DataColumn(label: Text("Employee ID")),
+                              DataColumn(label: Text("FirstName")),
+                              DataColumn(label: Text("LastName")),
+                              DataColumn(label: Text("Edit")),
+                            ],
+                            source: SubDataTableSource(
+                                context, filterData, fetchData, yearId!),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+  }
 }
 
 class SubDataTableSource extends DataTableSource {
   final BuildContext context;
   final List<TaxDeductionDatum>? data;
   final Function()? fetchData;
-
-  SubDataTableSource(
-    this.context,
-    this.data,
-    this.fetchData,
-  );
+  final String yearId;
+  SubDataTableSource(this.context, this.data, this.fetchData, this.yearId);
   TextEditingController comment = TextEditingController();
 
   functionUpdate(var data) {
@@ -259,7 +297,10 @@ class SubDataTableSource extends DataTableSource {
                 child: Stack(
                   children: [
                     EditTaxDeduction(
-                        onEdit: true, data: data, fetchData: fetchData!),
+                        onEdit: true,
+                        data: data,
+                        fetchData: fetchData!,
+                        yearId: yearId),
                     Positioned(
                         top: 5,
                         right: 5,
@@ -268,11 +309,8 @@ class SubDataTableSource extends DataTableSource {
                             onTap: () => Navigator.pop(context),
                             child: Transform.rotate(
                                 angle: (45 * 22 / 7) / 180,
-                                child: Icon(
-                                  Icons.add_rounded,
-                                  size: 32,
-                                  color: Colors.grey[700],
-                                )))),
+                                child: Icon(Icons.add_rounded,
+                                    size: 32, color: Colors.grey[700])))),
                   ],
                 )),
           );
@@ -309,7 +347,7 @@ class SubDataTableSource extends DataTableSource {
               height: 38,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
+                      backgroundColor: mygreencolors,
                       padding: const EdgeInsets.all(1)),
                   onPressed: () {
                     functionUpdate(d);

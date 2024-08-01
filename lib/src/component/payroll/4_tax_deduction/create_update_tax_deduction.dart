@@ -21,11 +21,13 @@ class EditTaxDeduction extends StatefulWidget {
   final bool onEdit;
   final TaxDeductionDatum? data;
   final Function() fetchData;
+  final String yearId;
   const EditTaxDeduction({
     Key? key,
     required this.onEdit,
     this.data,
     required this.fetchData,
+    required this.yearId,
   }) : super(key: key);
 
   @override
@@ -340,7 +342,8 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
   @override
   void initState() {
     super.initState();
-    yearList = [for (int i = currentYear - 10; i <= currentYear + 50; i++) i];
+    yearList = [for (int i = currentYear - 20; i <= currentYear + 5; i++) i];
+    yearId = widget.yearId;
     fetchData();
   }
 
@@ -377,7 +380,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
                                   amount.text = e.amount.toString();
                                   return Container(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius: BorderRadius.circular(16),
                                       color: Colors.white,
                                     ),
                                     margin: const EdgeInsets.all(4),
@@ -390,7 +393,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
                                               borderRadius:
                                                   const BorderRadius.horizontal(
                                                       left:
-                                                          Radius.circular(12)),
+                                                          Radius.circular(16)),
                                               color: mythemecolor,
                                             ),
                                             width: 80,
@@ -488,7 +491,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
   Widget firstTaxDetails() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
         color: Colors.white,
       ),
       margin: const EdgeInsets.all(4),
@@ -499,7 +502,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
           Container(
               decoration: BoxDecoration(
                 borderRadius:
-                    const BorderRadius.horizontal(left: Radius.circular(12)),
+                    const BorderRadius.horizontal(left: Radius.circular(16)),
                 color: mythemecolor,
               ),
               width: 80,

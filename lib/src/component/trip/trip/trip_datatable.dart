@@ -390,7 +390,8 @@ class _TripDatatableState extends State<TripDatatable> {
                                   DataColumn(label: textThai("จุดหมาย")),
                                   DataColumn(label: textThai("วันเริ่มต้น")),
                                   DataColumn(label: textThai("วันสิ้นสุด")),
-                                  DataColumn(label: textThai("ทะเบียนรถ")),
+                                  DataColumn(
+                                      label: textThai("ทะเบียนรถ - รุ่น")),
                                   DataColumn(
                                       numeric: true,
                                       label: textThai("เลขไมล์ปัจจุบัน")),

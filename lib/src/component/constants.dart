@@ -25,6 +25,8 @@ var mytextcolors = Colors.grey[350];
 var myambercolors = Colors.amber[600];
 var myredcolors = Colors.red[700];
 var headerbluecolors = const Color.fromARGB(255, 0, 57, 143);
+var mygreenxls = const Color.fromARGB(255, 13, 114, 57);
+var mygreencolors = Color.fromARGB(255, 50, 163, 99);
 
 var myLoadingScreen = SizedBox(
     height: 600,
@@ -112,7 +114,9 @@ class _MyFloatingUploadState extends State<MyFloatingUpload> {
           width: isHovered ? 154 : 147,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: widget.backgroundColor,
+                backgroundColor:
+                    // ignore: prefer_const_constructors
+                    Color.fromARGB(255, 13, 114, 57), // widget.backgroundColor,
                 padding: const EdgeInsets.all(0),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
@@ -126,18 +130,128 @@ class _MyFloatingUploadState extends State<MyFloatingUpload> {
                 Container(
                     padding: const EdgeInsets.symmetric(horizontal: 5),
                     decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 24, 114, 29),
+                        color: Colors.green[100],
                         borderRadius: BorderRadius.circular(11)),
-                    height: isHovered ? 52 : 50,
+                    height: isHovered ? 53 : 50,
                     width: isHovered ? 48 : 45,
-                    child: Icon(
-                      Icons.upload_file_rounded,
-                      size: isHovered ? 33 : 30,
-                    )),
+                    child: Image.asset(
+                      'assets/xls.png',
+                    )
+                    //  Icon(
+                    //   Icons.upload_file_rounded,
+                    //   size: isHovered ? 33 : 30,
+                    // )
+                    ),
               ],
             ),
           ),
         ).animate().fade());
+  }
+}
+
+class UploadButton extends StatelessWidget {
+  final double width;
+  final double height;
+  final String text;
+  final bool? isUploaded;
+  final Color? iconColor;
+  final void Function()? onPressed;
+  const UploadButton(
+      {Key? key,
+      required this.width,
+      required this.height,
+      required this.text,
+      required this.isUploaded,
+      this.iconColor,
+      required this.onPressed})
+      : super(key: key);
+
+// UploadButton(
+  // width: 120,
+  // height: 40,
+  // text: "อัพโหลดไฟล์ กยศ.",
+  // isUploaded: true,
+  // onPressed: () {})
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width + 32,
+      height: height + 5,
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mygreycolors, // widget.backgroundColor,
+              padding: const EdgeInsets.all(0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18))),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconTheme(
+                  data: IconThemeData(color: iconColor ?? mygreencolors),
+                  child: Icon(isUploaded ?? false
+                      ? Icons.check_circle_outlined
+                      : Icons.upload_rounded)),
+              TextThai(
+                  text: text, textStyle: const TextStyle(color: Colors.black)),
+            ],
+          ),
+        ),
+      ).animate().fade(),
+    );
+  }
+}
+
+class ButtonTableMenu extends StatelessWidget {
+  final double width;
+  final double height;
+  final String text;
+  final bool? isUploaded;
+  final Color? iconColor;
+  final Widget child;
+  final void Function()? onPressed;
+  const ButtonTableMenu(
+      {Key? key,
+      required this.width,
+      required this.height,
+      required this.text,
+      required this.isUploaded,
+      required this.child,
+      this.iconColor,
+      required this.onPressed})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width + 32,
+      height: height + 5,
+      child: SizedBox(
+        height: height,
+        width: width,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: mygreycolors, // widget.backgroundColor,
+              padding: const EdgeInsets.all(0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18))),
+          onPressed: onPressed,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              IconTheme(
+                  data: IconThemeData(color: iconColor ?? mygreencolors),
+                  child: child),
+              TextThai(
+                  text: text, textStyle: const TextStyle(color: Colors.black)),
+            ],
+          ),
+        ),
+      ).animate().fade(),
+    );
   }
 }
 
@@ -241,14 +355,16 @@ class TitleDialog extends StatelessWidget {
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: size, color: color),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[700]),
-            onPressed: onPressed,
-            child: const Text(
-              'X',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
+          InkWell(
+              borderRadius: BorderRadius.circular(50),
+              onTap: () => Navigator.pop(context),
+              child: Transform.rotate(
+                  angle: (45 * 22 / 7) / 180,
+                  child: Icon(
+                    Icons.add_rounded,
+                    size: 32,
+                    color: Colors.grey[700],
+                  )))
         ],
       ),
     );

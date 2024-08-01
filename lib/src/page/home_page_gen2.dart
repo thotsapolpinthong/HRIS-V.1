@@ -10,6 +10,7 @@ import 'package:hris_app_prototype/src/component/payroll/1_lot/lot_management_me
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/to_payroll_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/4_tax_deduction/tax_deduction_menu.dart';
+import 'package:hris_app_prototype/src/component/payroll/5_payroll/payroll_menu.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/half_break/lunch_break_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/workdate_sp_table.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
@@ -183,6 +184,8 @@ class _MyHomepageState extends State<MyHomepage> {
         return const SalaryManagement();
       case 5.4:
         return const TaxDeductionManagement();
+      case 5.5:
+        return const Payrollmanagement();
       default:
         throw Container();
     }
@@ -222,7 +225,19 @@ class MenuExpand extends StatelessWidget {
         height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
             color: mygreycolors,
-            borderRadius: const BorderRadius.all(Radius.circular(40))),
+            borderRadius: const BorderRadius.all(Radius.circular(40)),
+            boxShadow: const [
+              BoxShadow(
+                  color: Colors.black45,
+                  offset: Offset(10.0, 10.0),
+                  blurRadius: 10,
+                  spreadRadius: 2.0),
+              BoxShadow(
+                  color: Colors.white,
+                  offset: Offset(0.0, 0.0),
+                  blurRadius: 0,
+                  spreadRadius: 0.0)
+            ]),
         child: child,
       ),
     );

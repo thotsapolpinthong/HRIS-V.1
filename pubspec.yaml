@@ -59,6 +59,7 @@ dependencies:
   pdf: ^3.10.8
   webview_flutter: ^4.8.0
   path_provider: ^2.1.3
+  file_picker: ^8.0.6
 
 dev_dependencies:
   flutter_test:
@@ -99,7 +100,8 @@ flutter:
     - assets/logoaoi.png
     - assets/topayroll.json
     - assets/lock.json
-
+    - assets/xls.png
+    - assets/excel.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

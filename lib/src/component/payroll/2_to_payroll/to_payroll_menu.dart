@@ -252,225 +252,6 @@ class _ToPayrollState extends State<ToPayroll> {
     fetchData();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Center(
-                  child: TextThai(
-                    text: "ส่งข้อมูลการทำงานถึงฝ่ายบัญชี (To Payroll)",
-                    textStyle: TextStyle(fontSize: 18),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Expanded(child: lotMenu()),
-                      timeRecordData == null
-                          ? Container()
-                          : Icon(
-                              Icons.search_rounded,
-                              size: 28,
-                              color: Colors.grey[600],
-                            ),
-                      if (timeRecordData != null)
-                        SizedBox(
-                          width: 340,
-                          child: TextFormFieldGlobal(
-                            controller: search,
-                            onChanged: (value) {
-                              if (value == '') {
-                                setState(() {
-                                  onSearch = false;
-                                  filterData =
-                                      timeRecordData?.timeRecordData ?? [];
-                                });
-                              } else {
-                                setState(() {
-                                  onSearch = true;
-                                  filterData = filterData.where((e) {
-                                    final eId = e.employeeId
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final dep = e.departmentName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final fname = e.firstName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final lname = e.lastName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final pname = e.positionName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final type = e.staffType
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-
-                                    return eId ||
-                                        dep ||
-                                        fname ||
-                                        lname ||
-                                        pname ||
-                                        type;
-                                  }).toList();
-                                });
-                              }
-                            },
-                            labelText: "Search (TH/EN)",
-                            hintText: "ค้นหาข้อมูลในตาราง",
-                            enabled: true,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: BlocBuilder<PayrollBloc, PayrollState>(
-                    builder: (context, state) {
-                      return
-                          //  state.isToPayrollLoading == true
-                          isDataLoading
-                              ? myLoadingScreen
-                              : timeRecordData == null
-                                  ? SizedBox(
-                                      width: 878,
-                                      child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Column(
-                                            children: [
-                                              const Gap(4),
-                                              Transform.rotate(
-                                                  angle: (3.14159 / 2) * 3,
-                                                  child: Icon(
-                                                    Icons.double_arrow_rounded,
-                                                    color: Colors.grey[600],
-                                                  )),
-                                              const TextThai(
-                                                  text: "เรียกดูข้อมูลพนักงาน"),
-                                            ],
-                                          )))
-                                  : Card(
-                                      elevation: 4,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          child: PaginatedDataTable(
-                                            columnSpacing: 15,
-                                            showFirstLastButtons: true,
-                                            rowsPerPage: rowIndex,
-                                            availableRowsPerPage: const [
-                                              5,
-                                              10,
-                                              20
-                                            ],
-                                            sortColumnIndex: sortColumnIndex,
-                                            sortAscending: sort,
-                                            onRowsPerPageChanged: (value) {
-                                              setState(() {
-                                                rowIndex = value!;
-                                              });
-                                            },
-                                            columns: [
-                                              DataColumn(
-                                                  numeric: true,
-                                                  label: const Text("Emp. ID"),
-                                                  onSort:
-                                                      (columnIndex, ascending) {
-                                                    onSearchColumn(
-                                                        columnIndex, ascending);
-                                                  }),
-                                              DataColumn(
-                                                  label: const Text("Dept."),
-                                                  onSort:
-                                                      (columnIndex, ascending) {
-                                                    onSearchColumn(
-                                                        columnIndex, ascending);
-                                                  }),
-                                              DataColumn(
-                                                  label:
-                                                      const Text("Firstname"),
-                                                  onSort:
-                                                      (columnIndex, ascending) {
-                                                    onSearchColumn(
-                                                        columnIndex, ascending);
-                                                  }),
-                                              const DataColumn(
-                                                  label: Text("Lastname")),
-                                              const DataColumn(
-                                                  label: Text("Position")),
-                                              DataColumn(
-                                                  label: const Text("Type"),
-                                                  onSort:
-                                                      (columnIndex, ascending) {
-                                                    onSearchColumn(
-                                                        columnIndex, ascending);
-                                                  }),
-                                              const DataColumn(
-                                                  numeric: true,
-                                                  label: Text("Workdate")),
-                                              const DataColumn(
-                                                  numeric: true,
-                                                  label: Text("Holiday")),
-                                              const DataColumn(
-                                                  numeric: true,
-                                                  label: Text("OT normal")),
-                                              const DataColumn(
-                                                  numeric: true,
-                                                  label: Text("OT holiday")),
-                                              const DataColumn(
-                                                  numeric: true,
-                                                  label: Text("Foodallowance")),
-                                              const DataColumn(
-                                                  numeric: false,
-                                                  label: Text("Details")),
-                                            ],
-                                            source: PersonDataTableSource(
-                                              filterData,
-                                              context,
-                                              startDate.text,
-                                              finishDate.text,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                    },
-                  ),
-                ),
-                BlocBuilder<PayrollBloc, PayrollState>(
-                  builder: (context, state) {
-                    return isDataLoading
-                        ? Container()
-                        : timeRecordData == null
-                            ? Container()
-                            : menuCount(timeRecordData?.timeRecordData ?? []);
-                  },
-                ),
-                const Gap(20)
-              ],
-            ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          // floatingActionButton: menuCounttest(),
-        ),
-      ),
-    );
-  }
-
   Widget lotMenu() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -706,7 +487,7 @@ class _ToPayrollState extends State<ToPayroll> {
                         //     isSendData = 2;
                         //   });
                         // });
-                        Future.delayed(const Duration(seconds: 3), () {
+                        Future.delayed(3.seconds, () {
                           setState(() {
                             if (success) {
                               fetchData();
@@ -830,6 +611,225 @@ class _ToPayrollState extends State<ToPayroll> {
                     icon: const Icon(Icons.open_in_new_rounded)),
           ),
         ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Center(
+                  child: TextThai(
+                    text: "ส่งข้อมูลการทำงานถึงฝ่ายบัญชี (To Payroll)",
+                    textStyle: TextStyle(fontSize: 18),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    children: [
+                      Expanded(child: lotMenu()),
+                      timeRecordData == null
+                          ? Container()
+                          : Icon(
+                              Icons.search_rounded,
+                              size: 28,
+                              color: Colors.grey[600],
+                            ),
+                      if (timeRecordData != null)
+                        SizedBox(
+                          width: 340,
+                          child: TextFormFieldGlobal(
+                            controller: search,
+                            onChanged: (value) {
+                              if (value == '') {
+                                setState(() {
+                                  onSearch = false;
+                                  filterData =
+                                      timeRecordData?.timeRecordData ?? [];
+                                });
+                              } else {
+                                setState(() {
+                                  onSearch = true;
+                                  filterData = filterData.where((e) {
+                                    final eId = e.employeeId
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final dep = e.departmentName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final fname = e.firstName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final lname = e.lastName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final pname = e.positionName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final type = e.staffType
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+
+                                    return eId ||
+                                        dep ||
+                                        fname ||
+                                        lname ||
+                                        pname ||
+                                        type;
+                                  }).toList();
+                                });
+                              }
+                            },
+                            labelText: "Search (TH/EN)",
+                            hintText: "ค้นหาข้อมูลในตาราง",
+                            enabled: true,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: BlocBuilder<PayrollBloc, PayrollState>(
+                    builder: (context, state) {
+                      return
+                          //  state.isToPayrollLoading == true
+                          isDataLoading
+                              ? myLoadingScreen
+                              : timeRecordData == null
+                                  ? SizedBox(
+                                      width: 878,
+                                      child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Column(
+                                            children: [
+                                              const Gap(4),
+                                              Transform.rotate(
+                                                  angle: (3.14159 / 2) * 3,
+                                                  child: Icon(
+                                                    Icons.double_arrow_rounded,
+                                                    color: Colors.grey[600],
+                                                  )),
+                                              const TextThai(
+                                                  text: "เรียกดูข้อมูลพนักงาน"),
+                                            ],
+                                          )))
+                                  : Card(
+                                      elevation: 4,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: SizedBox(
+                                          width: double.infinity,
+                                          child: PaginatedDataTable(
+                                            columnSpacing: 15,
+                                            showFirstLastButtons: true,
+                                            rowsPerPage: rowIndex,
+                                            availableRowsPerPage: const [
+                                              5,
+                                              10,
+                                              20
+                                            ],
+                                            sortColumnIndex: sortColumnIndex,
+                                            sortAscending: sort,
+                                            onRowsPerPageChanged: (value) {
+                                              setState(() {
+                                                rowIndex = value!;
+                                              });
+                                            },
+                                            columns: [
+                                              DataColumn(
+                                                  numeric: true,
+                                                  label: const Text("Emp. ID"),
+                                                  onSort:
+                                                      (columnIndex, ascending) {
+                                                    onSearchColumn(
+                                                        columnIndex, ascending);
+                                                  }),
+                                              DataColumn(
+                                                  label: const Text("Dept."),
+                                                  onSort:
+                                                      (columnIndex, ascending) {
+                                                    onSearchColumn(
+                                                        columnIndex, ascending);
+                                                  }),
+                                              DataColumn(
+                                                  label:
+                                                      const Text("Firstname"),
+                                                  onSort:
+                                                      (columnIndex, ascending) {
+                                                    onSearchColumn(
+                                                        columnIndex, ascending);
+                                                  }),
+                                              const DataColumn(
+                                                  label: Text("Lastname")),
+                                              const DataColumn(
+                                                  label: Text("Position")),
+                                              DataColumn(
+                                                  label: const Text("Type"),
+                                                  onSort:
+                                                      (columnIndex, ascending) {
+                                                    onSearchColumn(
+                                                        columnIndex, ascending);
+                                                  }),
+                                              const DataColumn(
+                                                  numeric: true,
+                                                  label: Text("Workdate")),
+                                              const DataColumn(
+                                                  numeric: true,
+                                                  label: Text("Holiday")),
+                                              const DataColumn(
+                                                  numeric: true,
+                                                  label: Text("OT normal")),
+                                              const DataColumn(
+                                                  numeric: true,
+                                                  label: Text("OT holiday")),
+                                              const DataColumn(
+                                                  numeric: true,
+                                                  label: Text("Foodallowance")),
+                                              const DataColumn(
+                                                  numeric: false,
+                                                  label: Text("Details")),
+                                            ],
+                                            source: PersonDataTableSource(
+                                              filterData,
+                                              context,
+                                              startDate.text,
+                                              finishDate.text,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                    },
+                  ),
+                ),
+                BlocBuilder<PayrollBloc, PayrollState>(
+                  builder: (context, state) {
+                    return isDataLoading
+                        ? Container()
+                        : timeRecordData == null
+                            ? Container()
+                            : menuCount(timeRecordData?.timeRecordData ?? []);
+                  },
+                ),
+                const Gap(20)
+              ],
+            ),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          // floatingActionButton: menuCounttest(),
+        ),
       ),
     );
   }

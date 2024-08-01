@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
-import 'package:hris_app_prototype/src/model/payroll/tax_deduction/create_tax_detail_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_detail_all_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/update_tax_detail_model.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';

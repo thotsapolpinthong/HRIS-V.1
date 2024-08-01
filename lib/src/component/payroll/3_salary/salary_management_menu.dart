@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -23,6 +24,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
   bool sort = true;
   TextEditingController search = TextEditingController();
   bool onSearch = false;
+  List<EmployeeSalaryDatum> filterData = [];
   //data
   List<EmployeeSalaryDatum> salaryData = [];
   String roleType = "admin";
@@ -31,6 +33,21 @@ class _SalaryManagementState extends State<SalaryManagement> {
     Item(id: 2, name: "พนักงานรายวัน"),
   ];
   String? staffId;
+
+  String? _filePath;
+
+  Future<void> _pickFile() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['xlsx', 'xls'],
+    );
+
+    if (result != null) {
+      setState(() {
+        _filePath = result.files.single.path;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -43,6 +60,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
         await ApiPayrollService.getEmpSalaryAll(int.parse(staffId!));
     setState(() {
       salaryData = data?.employeeSalaryData ?? [];
+      filterData = salaryData;
       isDataLoading = false;
     });
   }
@@ -130,7 +148,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
                               DataColumn(label: Text("Edit")),
                             ],
                             source: SubDataTableSource(
-                                context, salaryData, fetchData),
+                                context, filterData, fetchData),
                           ),
                         ),
                       ),
@@ -150,7 +168,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
         children: [
           const Expanded(
               flex: 1,
-              child: Text('Employee Salary Menegement.',
+              child: Text('Employee Salary Management.',
                   style: TextStyle(fontWeight: FontWeight.w800))),
           Expanded(
               flex: 1,
@@ -193,8 +211,42 @@ class _SalaryManagementState extends State<SalaryManagement> {
                         controller: search,
                         onChanged: (value) {
                           if (value == '') {
+                            setState(() {
+                              onSearch = true;
+                              filterData = salaryData;
+                            });
                           } else {
-                            setState(() {});
+                            setState(() {
+                              filterData = salaryData.where((e) {
+                                final eId = e.employeeId
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final type = e.employeeTypeName
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final fname = e.firstName
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final lname = e.lastName
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final salary = e.salary
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+                                final wage = e.wage
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(value.toLowerCase());
+
+                                return eId ||
+                                    salary ||
+                                    fname ||
+                                    lname ||
+                                    wage ||
+                                    type;
+                              }).toList();
+                            });
                           }
                         },
                         decoration: InputDecoration(
@@ -218,10 +270,13 @@ class _SalaryManagementState extends State<SalaryManagement> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         MyFloatingUpload(
-          backgroundColor: Colors.green[500],
-          onPressed: () {},
+          // backgroundColor: Colors.green[500],
+          onPressed: () {
+            _pickFile();
+          },
         ),
         const Gap(10),
+        _filePath != null ? Text('File path: $_filePath') : const Text(""),
         MyFloatingButton(
           icon: const Icon(Icons.add_rounded, size: 30),
           onPressed: () => showDialogCreate(),

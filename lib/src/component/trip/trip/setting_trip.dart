@@ -697,6 +697,7 @@ class _SettingTripState extends State<SettingTrip> {
                                     suffixIcon: destination.text == ""
                                         ? null
                                         : IconButton(
+                                            splashRadius: 5,
                                             onPressed: () {
                                               setState(() {
                                                 destination.text = "";

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/payroll/1_lot/lot_management_menu.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/create_lot_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
@@ -16,7 +15,7 @@ import 'package:validatorless/validatorless.dart';
 class EditLotNumber extends StatefulWidget {
   final bool onEdit;
   final LotNumberDatum? onLotNumber;
-  final List<Year> onYearList;
+  final List<int> onYearList;
   final Function() fetchData;
   const EditLotNumber({
     Key? key,
@@ -39,7 +38,12 @@ class _EditLotNumberState extends State<EditLotNumber> {
   TextEditingController finishDate = TextEditingController();
   TextEditingController salaryPaidDate = TextEditingController();
   TextEditingController otPaidDate = TextEditingController();
-
+  //sso
+  TextEditingController ssoPercent = TextEditingController();
+  TextEditingController ssoMin = TextEditingController();
+  TextEditingController ssoMax = TextEditingController();
+  TextEditingController ssoMinSalary = TextEditingController();
+  TextEditingController ssoMaxSalary = TextEditingController();
   Future<void> selectvalidFromDate(int formFeild) async {
     DateTime? picker = await showDatePicker(
       context: context,
@@ -76,6 +80,11 @@ class _EditLotNumberState extends State<EditLotNumber> {
         lotYear: yearId!,
         startDate: startDate.text,
         finishDate: finishDate.text,
+        ssoPercent: int.parse(ssoPercent.text),
+        ssoMin: double.parse(ssoMin.text),
+        ssoMax: double.parse(ssoMax.text),
+        ssoMinSalary: double.parse(ssoMinSalary.text),
+        ssoMaxSalary: double.parse(ssoMaxSalary.text),
         salaryPaidDate: salaryPaidDate.text,
         otPaidDate: otPaidDate.text,
         createBy: employeeId);
@@ -93,6 +102,11 @@ class _EditLotNumberState extends State<EditLotNumber> {
         lotYear: yearId!,
         startDate: startDate.text,
         finishDate: finishDate.text,
+        ssoPercent: int.parse(ssoPercent.text),
+        ssoMin: double.parse(ssoMin.text),
+        ssoMax: double.parse(ssoMax.text),
+        ssoMinSalary: double.parse(ssoMinSalary.text),
+        ssoMaxSalary: double.parse(ssoMaxSalary.text),
         salaryPaidDate: salaryPaidDate.text,
         otPaidDate: otPaidDate.text,
         modifyBy: employeeId);
@@ -150,10 +164,21 @@ class _EditLotNumberState extends State<EditLotNumber> {
     if (widget.onEdit == true) {
       lotMonth.text = widget.onLotNumber!.lotMonth;
       yearId = widget.onLotNumber!.lotYear;
-      startDate.text = widget.onLotNumber!.startDate;
-      finishDate.text = widget.onLotNumber!.finishDate;
-      salaryPaidDate.text = widget.onLotNumber!.salaryPaidDate;
-      otPaidDate.text = widget.onLotNumber!.otPaidDate;
+      startDate.text = widget.onLotNumber!.startDate.substring(0, 10);
+      finishDate.text = widget.onLotNumber!.finishDate.substring(0, 10);
+      salaryPaidDate.text = widget.onLotNumber!.salaryPaidDate.substring(0, 10);
+      otPaidDate.text = widget.onLotNumber!.otPaidDate.substring(0, 10);
+      ssoPercent.text = widget.onLotNumber!.ssoPercent.toString();
+      ssoMin.text = widget.onLotNumber!.ssoMin.toString();
+      ssoMax.text = widget.onLotNumber!.ssoMax.toString();
+      ssoMinSalary.text = widget.onLotNumber!.ssoMinSalary.toString();
+      ssoMaxSalary.text = widget.onLotNumber!.ssoMaxSalary.toString();
+    } else {
+      ssoPercent.text = "5";
+      ssoMin.text = "83";
+      ssoMax.text = "750";
+      ssoMinSalary.text = "1650";
+      ssoMaxSalary.text = "15000";
     }
   }
 
@@ -165,97 +190,171 @@ class _EditLotNumberState extends State<EditLotNumber> {
       child: Column(
         children: [
           Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
+            children: [
+              Expanded(
+                child: Column(
                   children: [
-                    Expanded(
-                      child: DropdownGlobal(
-                          labeltext: 'Lot year',
-                          value: yearId,
-                          items: widget.onYearList.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: e.id,
-                              child: SizedBox(width: 58, child: Text(e.year)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) async {
-                            setState(() {
-                              yearId = newValue.toString();
-                            });
-                          },
-                          validator: Validatorless.required("โปรดระบุ")),
+                    const Text("LOT",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Gap(5),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: DropdownGlobal(
+                              labeltext: 'Lot year',
+                              value: yearId,
+                              items: widget.onYearList.map((e) {
+                                return DropdownMenuItem<String>(
+                                  value: e.toString(),
+                                  child: SizedBox(
+                                      width: 58, child: Text(e.toString())),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) async {
+                                setState(() {
+                                  yearId = newValue.toString();
+                                });
+                              },
+                              validator: Validatorless.required("โปรดระบุ")),
+                        ),
+                        Expanded(
+                          child: TextFormFieldGlobal(
+                              controller: lotMonth,
+                              labelText: "Lot number",
+                              hintText: "Ex* 00",
+                              validatorless: Validatorless.required("โปรดระบุ"),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'[0-9.0-9/]')),
+                                LengthLimitingTextInputFormatter(4),
+                              ],
+                              enabled: true),
+                        )
+                      ],
                     ),
-                    Expanded(
-                      child: TextFormFieldGlobal(
-                          controller: lotMonth,
-                          labelText: "Lot number",
-                          hintText: "Ex* 00",
-                          validatorless: Validatorless.required("โปรดระบุ"),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9.0-9/]')),
-                            LengthLimitingTextInputFormatter(4),
-                          ],
-                          enabled: true),
-                    )
+                    const Gap(3),
+                    TextFormFieldDatepickGlobal(
+                        controller: startDate,
+                        labelText: "วันที่เริ่มต้น",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        ontap: () {
+                          selectvalidFromDate(0);
+                        }),
+                    const Gap(3),
+                    TextFormFieldDatepickGlobal(
+                        controller: finishDate,
+                        labelText: "วันที่สิ้นสุด",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        ontap: () {
+                          selectvalidFromDate(1);
+                        }),
+                    const Gap(3),
+                    TextFormFieldDatepickGlobal(
+                        controller: salaryPaidDate,
+                        labelText: "Salary paid date",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        ontap: () {
+                          selectvalidFromDate(2);
+                        }),
+                    const Gap(3),
+                    TextFormFieldDatepickGlobal(
+                        controller: otPaidDate,
+                        labelText: "Ot paid date",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        ontap: () {
+                          selectvalidFromDate(3);
+                        }),
                   ],
                 ),
-                const Gap(5),
-                TextFormFieldDatepickGlobal(
-                    controller: startDate,
-                    labelText: "วันที่เริ่มต้น",
-                    validatorless: Validatorless.required("โปรดระบุ"),
-                    ontap: () {
-                      selectvalidFromDate(0);
-                    }),
-                const Gap(5),
-                TextFormFieldDatepickGlobal(
-                    controller: finishDate,
-                    labelText: "วันที่สิ้นสุด",
-                    validatorless: Validatorless.required("โปรดระบุ"),
-                    ontap: () {
-                      selectvalidFromDate(1);
-                    }),
-                const Gap(5),
-                TextFormFieldDatepickGlobal(
-                    controller: salaryPaidDate,
-                    labelText: "Salary paid date",
-                    validatorless: Validatorless.required("โปรดระบุ"),
-                    ontap: () {
-                      selectvalidFromDate(2);
-                    }),
-                const Gap(5),
-                TextFormFieldDatepickGlobal(
-                    controller: otPaidDate,
-                    labelText: "Ot paid date",
-                    validatorless: Validatorless.required("โปรดระบุ"),
-                    ontap: () {
-                      selectvalidFromDate(3);
-                    }),
-              ],
-            ),
+              ),
+              const Gap(5),
+              const VerticalDivider(
+                thickness: 2,
+                color: Colors.grey,
+              ),
+              const Gap(5),
+              Expanded(
+                child: Column(
+                  children: [
+                    const Text("SSO",
+                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Gap(5),
+                    TextFormFieldGlobal(
+                        controller: ssoPercent,
+                        labelText: "ssoPercent",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        suffixText: "%",
+                        onChanged: (p0) => setState(() {}),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
+                        ],
+                        enabled: true),
+                    const Gap(3),
+                    TextFormFieldGlobal(
+                        controller: ssoMin,
+                        labelText: "ssoMin",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        suffixText: "บาท",
+                        onChanged: (p0) => setState(() {}),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
+                        ],
+                        enabled: true),
+                    const Gap(3),
+                    TextFormFieldGlobal(
+                        controller: ssoMax,
+                        labelText: "ssoMax",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        suffixText: "บาท",
+                        onChanged: (p0) => setState(() {}),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
+                        ],
+                        enabled: true),
+                    const Gap(3),
+                    TextFormFieldGlobal(
+                        controller: ssoMinSalary,
+                        labelText: "ssoMinSalary",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        suffixText: "บาท",
+                        onChanged: (p0) => setState(() {}),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
+                        ],
+                        enabled: true),
+                    const Gap(3),
+                    TextFormFieldGlobal(
+                        controller: ssoMaxSalary,
+                        labelText: "ssoMaxSalary",
+                        validatorless: Validatorless.required("โปรดระบุ"),
+                        suffixText: "บาท",
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
+                        ],
+                        onChanged: (p0) => setState(() {}),
+                        enabled: true),
+                  ],
+                ),
+              ),
+            ],
           )),
           MySaveButtons(
             text: widget.onEdit == false ? "Create" : "Update",
-            onPressed: () {
-              if (_formKey.currentState!.validate() == true) {
-                setState(() {
-                  if (widget.onEdit == true) {
-                    //function update
-                    updateLot();
-                  } else {
-                    //function create
-                    createLot();
-                    print("success");
-                  }
-                });
-              } else {
-                print("fail");
-              }
-            },
+            onPressed: _formKey.currentState?.validate() != true
+                ? null
+                : () {
+                    setState(() {
+                      if (widget.onEdit == true) {
+                        //function update
+                        updateLot();
+                      } else {
+                        //function create
+                        createLot();
+                      }
+                    });
+                  },
           )
         ],
       ),

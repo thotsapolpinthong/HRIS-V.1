@@ -525,10 +525,17 @@ class _SlideBarState extends State<SlideBar> {
                               .read<HomepageBloc>()
                               .add(SubPayrollPage4Event())),
                       DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- ประมวลผลข้อมูลการจ่ายเงินเดือน (Payroll)",
-                          onTap: () {}),
+                          color: state.pageNumber == 5.5
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 5.5
+                              ? Colors.white
+                              : Colors.black87,
+                          title:
+                              "5. ประมวลผลข้อมูลการจ่ายเงินเดือน ( PAYROLL )",
+                          onTap: () => context
+                              .read<HomepageBloc>()
+                              .add(SubPayrollPage5Event())),
                       DrawerTitleSubmenu(
                           color: Colors.white,
                           textColor: Colors.black87,
