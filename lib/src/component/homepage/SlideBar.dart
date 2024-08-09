@@ -263,7 +263,7 @@ class _SlideBarState extends State<SlideBar> {
                                           iconcolor: state.pageNumber == 9
                                               ? Colors.black87
                                               : mytextcolors,
-                                          title: "OFF-Side WORKING",
+                                          title: "OFF-Site WORKING",
                                           textColor: state.pageNumber == 9
                                               ? Colors.black87
                                               : mytextcolors,

@@ -12,8 +12,10 @@ import 'package:hris_app_prototype/src/model/payroll/lot_management/response_lot
 import 'package:hris_app_prototype/src/model/payroll/lot_management/update_lot_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/payroll/insert_extrawage_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/payroll/payroll_data_model.dart';
+import 'package:hris_app_prototype/src/model/payroll/tax_deduction/copy_data_tax_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/create_tax_deduction_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/create_tax_detail_model.dart';
+import 'package:hris_app_prototype/src/model/payroll/tax_deduction/get_employee_Idcard_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_all_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_by_id_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_detail_all_model.dart';
@@ -111,6 +113,56 @@ class ApiPayrollService {
     );
     if (response.statusCode == 200) {
       TimeRecordEmpModel? data = timeRecordEmpModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
+    }
+  }
+
+  static accLock(String start, String end, String by) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.put(
+      Uri.parse(
+          "$baseUrl/Acc/AccLockLot?startDate=$start&endDate=$end&lockBy=$by"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      // body: jsonEncode(updateModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseCreateModel? data = responseCreateModelFromJson(response.body);
+      if (data.status == true) {
+        return create = true;
+      } else {
+        return create;
+      }
+    } else {
+      return create;
+    }
+  }
+
+  static accLaborLock(String start, String end, String by) async {
+    bool create = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.put(
+      Uri.parse(
+          "$baseUrl/Acc/AccLaborLockLot?startDate=$start&endDate=$end&lockBy=$by"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      // body: jsonEncode(updateModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseCreateModel? data = responseCreateModelFromJson(response.body);
       if (data.status == true) {
         return create = true;
       } else {
@@ -245,6 +297,25 @@ class ApiPayrollService {
       TaxPersonalStatusModel? data =
           taxPersonalStatusModelFromJson(response.body);
       if (data.status == true) {
+        return data;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  static Future<EmployeeIdcardModel?> getIdcardDropdown() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.get(
+      Uri.parse("$baseUrl/Acc/GetEmployeeDropdown"),
+      headers: {"Authorization": "Bearer $sharedToken"},
+    );
+    if (response.statusCode == 200) {
+      EmployeeIdcardModel? data = employeeIdcardModelFromJson(response.body);
+      if (data.employeeData.isNotEmpty) {
         return data;
       } else {
         return null;
@@ -390,6 +461,31 @@ class ApiPayrollService {
     sharedToken = preferences.getString("token")!;
     final response = await http.put(
       Uri.parse("$baseUrl/Acc/EditTaxDetail"),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        "Authorization": "Bearer $sharedToken"
+      },
+      body: jsonEncode(updateModel!.toJson()),
+    );
+    if (response.statusCode == 200) {
+      ResponseCreateModel data = responseCreateModelFromJson(response.body);
+      if (data.status == true) {
+        return update = true;
+      } else {
+        return update;
+      }
+    } else {
+      return update;
+    }
+  }
+
+  //copy data tax
+  static Future copyDataTax(CopyDataTaxModel? updateModel) async {
+    bool update = false;
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    sharedToken = preferences.getString("token")!;
+    final response = await http.put(
+      Uri.parse("$baseUrl/Acc/CoppyTaxDeducction"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
@@ -557,6 +653,74 @@ class PdfDownloader {
       // Get the directory to save the PDF
       Directory directory = await getApplicationDocumentsDirectory();
       String filePath = '${directory.path}/work_time_report.pdf';
+
+      // Write the PDF to the file
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      return filePath;
+    } else {
+      throw Exception(
+          "Failed to download PDF. Status code: ${response.statusCode}");
+    }
+  }
+}
+
+class AccReport {
+  static Future<String> employeeSalarySlip(
+      String startDate, String endDate, String empCode) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? sharedToken = preferences.getString("token");
+    if (sharedToken == null) {
+      throw Exception("Token not found in SharedPreferences");
+    }
+
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/ACC/SalarySlip?startDate=$startDate&endDate=$endDate&employeeId=$empCode"),
+      headers: <String, String>{
+        'Content-Type': 'application/pdf',
+        "Authorization": "Bearer $sharedToken"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Get the directory to save the PDF
+      Directory directory = await getApplicationDocumentsDirectory();
+      String filePath = '${directory.path}/$empCode.pdf';
+
+      // Write the PDF to the file
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+
+      return filePath;
+    } else {
+      throw Exception(
+          "Failed to download PDF. Status code: ${response.statusCode}");
+    }
+  }
+
+  static Future<String> departmentSalarySlip(
+      String startDate, String endDate, String orgCode) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String? sharedToken = preferences.getString("token");
+    if (sharedToken == null) {
+      throw Exception("Token not found in SharedPreferences");
+    }
+
+    final response = await http.get(
+      Uri.parse(
+          "http://192.168.0.205/StecApi/ACC/SalarySlipForDept?startDate=$startDate&endDate=$endDate&deptCode=$orgCode"),
+      headers: <String, String>{
+        'Content-Type': 'application/pdf',
+        "Authorization": "Bearer $sharedToken"
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Get the directory to save the PDF
+      Directory directory = await getApplicationDocumentsDirectory();
+      String filePath = '${directory.path}/$orgCode.pdf';
 
       // Write the PDF to the file
       File file = File(filePath);

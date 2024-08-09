@@ -142,102 +142,121 @@ class _LotManagementState extends State<LotManagement> {
             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)),
         const Gap(10),
         Expanded(
+            flex: 2,
+            child: Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Gap(10),
+                      DropdownGlobal(
+                          labeltext: 'Lot year',
+                          value: yearId,
+                          items: yearList.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.toString(),
+                              child: SizedBox(
+                                  width: 58, child: Text(e.toString())),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) async {
+                            setState(() {
+                              yearId = newValue.toString();
+                              if (lotNumberData != null) {
+                                filterLotList = lotNumberData!.lotNumberData
+                                    .where((element) {
+                                  return element.lotYear == yearId;
+                                }).toList();
+
+                                lotNumberId = null;
+                                startDate.text = "";
+                                finishDate.text = "";
+                                salaryPaidDate.text = "";
+                                otPaidDate.text = "";
+                              }
+                            });
+                          },
+                          validator: null),
+                      const Gap(2),
+                      DropdownGlobal(
+                          outlineColor: mythemecolor,
+                          labeltext: 'Lot Number',
+                          value: lotNumberId,
+                          items: filterLotList.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.lotNumberId,
+                              child: Container(
+                                  width: 58,
+                                  constraints: const BoxConstraints(
+                                      maxWidth: 150, minWidth: 100),
+                                  child: Text("${e.lotYear} / ${e.lotMonth}")),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) async {
+                            setState(() {
+                              lotNumberId = newValue.toString();
+                              isLoading = true;
+                            });
+                            lotNumberData =
+                                await ApiPayrollService.getLotNumberAll();
+
+                            Iterable<LotNumberDatum> result =
+                                filterLotList.where((element) =>
+                                    element.lotNumberId == newValue);
+                            if (result.isNotEmpty) {
+                              setState(() {
+                                startDate.text = result.first.startDate;
+                                finishDate.text = result.first.finishDate;
+                                salaryPaidDate.text = result
+                                    .first.salaryPaidDate
+                                    .substring(0, 10);
+                                otPaidDate.text =
+                                    result.first.otPaidDate.substring(0, 10);
+                                lockHr = result.first.lockHr == "No data"
+                                    ? false
+                                    : true;
+                                lockAcc = result.first.lockAcc == "No data"
+                                    ? false
+                                    : true;
+                                lockAccLabor =
+                                    result.first.lockAccLabor == "No data"
+                                        ? false
+                                        : true;
+                                lockHrLabor =
+                                    result.first.lockHrLabor == "No data"
+                                        ? false
+                                        : true;
+                                ssoPercent = result.first.ssoPercent;
+                                ssoMin = result.first.ssoMin;
+                                ssoMax = result.first.ssoMax;
+                                ssoMinSalary = result.first.ssoMinSalary;
+                                ssoMaxSalary = result.first.ssoMaxSalary;
+                                isLoading = false;
+                              });
+                            }
+                          },
+                          validator: null),
+                    ],
+                  ),
+                ),
+              ),
+            )),
+        Expanded(
+          flex: 5,
           child: Card(
             elevation: 2,
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SingleChildScrollView(
                 child: Column(
                   children: [
                     const Gap(10),
-                    DropdownGlobal(
-                        labeltext: 'Lot year',
-                        value: yearId,
-                        items: yearList.map((e) {
-                          return DropdownMenuItem<String>(
-                            value: e.toString(),
-                            child:
-                                SizedBox(width: 58, child: Text(e.toString())),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) async {
-                          setState(() {
-                            yearId = newValue.toString();
-                            if (lotNumberData != null) {
-                              filterLotList =
-                                  lotNumberData!.lotNumberData.where((element) {
-                                return element.lotYear == yearId;
-                              }).toList();
-
-                              lotNumberId = null;
-                              startDate.text = "";
-                              finishDate.text = "";
-                              salaryPaidDate.text = "";
-                              otPaidDate.text = "";
-                            }
-                          });
-                        },
-                        validator: null),
-                    const Gap(2),
-                    DropdownGlobal(
-                        outlineColor: mythemecolor,
-                        labeltext: 'Lot Number',
-                        value: lotNumberId,
-                        items: filterLotList.map((e) {
-                          return DropdownMenuItem<String>(
-                            value: e.lotNumberId,
-                            child: Container(
-                                width: 58,
-                                constraints: const BoxConstraints(
-                                    maxWidth: 150, minWidth: 100),
-                                child: Text("${e.lotYear} / ${e.lotMonth}")),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) async {
-                          setState(() {
-                            lotNumberId = newValue.toString();
-                            isLoading = true;
-                          });
-                          lotNumberData =
-                              await ApiPayrollService.getLotNumberAll();
-
-                          Iterable<LotNumberDatum> result = filterLotList.where(
-                              (element) => element.lotNumberId == newValue);
-                          if (result.isNotEmpty) {
-                            setState(() {
-                              startDate.text = result.first.startDate;
-                              finishDate.text = result.first.finishDate;
-                              salaryPaidDate.text =
-                                  result.first.salaryPaidDate.substring(0, 10);
-                              otPaidDate.text =
-                                  result.first.otPaidDate.substring(0, 10);
-                              lockHr = result.first.lockHr == "No data"
-                                  ? false
-                                  : true;
-                              lockAcc = result.first.lockAcc == "No data"
-                                  ? false
-                                  : true;
-                              lockAccLabor =
-                                  result.first.lockAccLabor == "No data"
-                                      ? false
-                                      : true;
-                              lockHrLabor =
-                                  result.first.lockHrLabor == "No data"
-                                      ? false
-                                      : true;
-                              ssoPercent = result.first.ssoPercent;
-                              ssoMin = result.first.ssoMin;
-                              ssoMax = result.first.ssoMax;
-                              ssoMinSalary = result.first.ssoMinSalary;
-                              ssoMaxSalary = result.first.ssoMaxSalary;
-                              isLoading = false;
-                            });
-                          }
-                        },
-                        validator: null),
-                    const Gap(2),
                     TextFormFieldDatepickGlobal(
                         controller: startDate,
                         labelText: "Start Date",
@@ -267,7 +286,7 @@ class _LotManagementState extends State<LotManagement> {
             ),
           ),
         ),
-        const Gap(80)
+        // const Gap(80)
       ],
     );
   }
@@ -287,7 +306,7 @@ class _LotManagementState extends State<LotManagement> {
           child: Card(
               elevation: 2,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                  borderRadius: BorderRadius.circular(16)),
               child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SingleChildScrollView(
@@ -326,8 +345,32 @@ class _LotManagementState extends State<LotManagement> {
                     ),
                   ))),
         ),
-        const Gap(80)
+        // const Gap(80)
       ],
+    );
+  }
+
+  Widget editButton() {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(1),
+          backgroundColor: myambercolors,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+      onPressed: lotNumberId == null
+          ? null
+          : () {
+              LotNumberDatum data = lotNumberData!.lotNumberData
+                  .firstWhere((element) => element.lotNumberId == lotNumberId);
+              createAndEditLotNumber(true, data);
+            },
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Text('Edit Lot Number
+          Icon(Icons.edit_rounded),
+        ],
+      ),
     );
   }
 
@@ -353,8 +396,8 @@ class _LotManagementState extends State<LotManagement> {
                         child: Icon(
                       status == false
                           ? CupertinoIcons.doc_text_search
-                          : Icons.lock_outline_rounded,
-                      size: 140,
+                          : Icons.lock_rounded,
+                      size: 130,
                       color: status == false ? Colors.black45 : mygreycolors,
                     )),
                     Text(
@@ -383,7 +426,7 @@ class _LotManagementState extends State<LotManagement> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8))),
               onPressed: onPressed,
-              child: Text(status == false ? "Lock" : "Unlock")),
+              child: const Text("Unlock")),
         ),
       ],
     );
@@ -407,22 +450,26 @@ class _LotManagementState extends State<LotManagement> {
                       "HR Lock",
                       lotNumberId == null
                           ? null
-                          : () {
-                              setState(() {
-                                lockHr = !lockHr;
-                              });
-                            }),
+                          : !lockHr
+                              ? null
+                              : () {
+                                  setState(() {
+                                    lockHr = !lockHr;
+                                  });
+                                }),
                   const Gap(10),
                   containerStatus(
                       lockHrLabor,
                       "HR Labor Lock",
                       lotNumberId == null
                           ? null
-                          : () {
-                              setState(() {
-                                lockHrLabor = !lockHrLabor;
-                              });
-                            }),
+                          : !lockHrLabor
+                              ? null
+                              : () {
+                                  setState(() {
+                                    lockHrLabor = !lockHrLabor;
+                                  });
+                                }),
                 ]),
               ),
               const Gap(5),
@@ -436,22 +483,26 @@ class _LotManagementState extends State<LotManagement> {
                         "ACC Lock",
                         lotNumberId == null
                             ? null
-                            : () {
-                                setState(() {
-                                  lockAcc = !lockAcc;
-                                });
-                              }),
+                            : !lockAcc
+                                ? null
+                                : () {
+                                    setState(() {
+                                      lockAcc = !lockAcc;
+                                    });
+                                  }),
                     const Gap(10),
                     containerStatus(
                         lockAccLabor,
                         "ACC Labor Lock",
                         lotNumberId == null
                             ? null
-                            : () {
-                                setState(() {
-                                  lockAccLabor = !lockAccLabor;
-                                });
-                              })
+                            : !lockAccLabor
+                                ? null
+                                : () {
+                                    setState(() {
+                                      lockAccLabor = !lockAccLabor;
+                                    });
+                                  })
                   ],
                 ),
               )
@@ -476,29 +527,11 @@ class _LotManagementState extends State<LotManagement> {
         child: Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            MyFloatingButton(
-              icon: const Icon(Icons.edit_rounded),
-              backgroundColor: myambercolors,
-              onPressed: lotNumberId == null
-                  ? null
-                  : () {
-                      LotNumberDatum data = lotNumberData!.lotNumberData
-                          .firstWhere(
-                              (element) => element.lotNumberId == lotNumberId);
-                      createAndEditLotNumber(true, data);
-                    },
-            ),
-            const Gap(5),
-            MyFloatingButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                createAndEditLotNumber(false, null);
-              },
-            ),
-          ],
+        floatingActionButton: MyFloatingButton(
+          icon: const Icon(Icons.add),
+          onPressed: () {
+            createAndEditLotNumber(false, null);
+          },
         ),
         body: isLoading == true
             ? myLoadingScreen
@@ -515,13 +548,36 @@ class _LotManagementState extends State<LotManagement> {
                       scrollDirection: Axis.horizontal,
                       child: Row(children: [
                         SizedBox(
-                            height: MediaQuery.of(context).size.height / 1.2,
-                            width: MediaQuery.of(context).size.width / 5,
-                            child: lotMenu()),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height / 1.2,
-                            width: MediaQuery.of(context).size.width / 5,
-                            child: ssoBar()),
+                          height: MediaQuery.of(context).size.height / 1.2,
+                          width: MediaQuery.of(context).size.width / 2.5,
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                5,
+                                        child: lotMenu()),
+                                    SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                5,
+                                        child: ssoBar()),
+                                  ],
+                                ),
+                              ),
+                              const Gap(5),
+                              SizedBox(
+                                  height: 34,
+                                  width:
+                                      MediaQuery.of(context).size.width / 2.54,
+                                  child: editButton()),
+                              const Gap(44)
+                            ],
+                          ),
+                        ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height / 1.2,
                             width: MediaQuery.of(context).size.width / 3,

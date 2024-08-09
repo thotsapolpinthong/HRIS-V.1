@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:io';
 
@@ -6,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/pdf_work_hour_employee.dart';
 import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/5_payroll/payroll_details.dart';
+import 'package:hris_app_prototype/src/component/payroll/5_payroll/print_slip.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
@@ -15,6 +18,8 @@ import 'package:hris_app_prototype/src/model/payroll/payroll/payroll_data_model.
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
 import 'package:intl/intl.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Payrollmanagement extends StatefulWidget {
@@ -40,11 +45,15 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
   List<PayrollDatum> mainData = [];
   //upload file
   bool isuploadDSL = false;
+// print
+  bool isPrinting = false;
   //Lot
   TextEditingController startDate = TextEditingController();
   TextEditingController finishDate = TextEditingController();
   GetLotNumberDropdownModel? lotNumberData;
   String? lotNumberId;
+  bool accLock = false;
+  bool accLaborLock = false;
   //department
   List<OrganizationDataam> orgList = [];
   String? orgCode;
@@ -53,11 +62,12 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
   List<Item> positionTypeList = [
     Item(id: 0, name: "พนักงานทั้งหมด"),
     Item(id: 1, name: "พนักงานประจำ"),
-    Item(id: 2, name: "พนักงานรายวัน/รายวันประจำ"),
+    Item(id: 2, name: "พนักงานรายวันฯ"),
   ];
   String? positionTypeId;
   //employee type
-  int isSendData = 0; //0 defualt 1 send  2 completelock
+  // int isSendData = 0; //0 defualt 1 send  2 completelock
+
   //sso
   int ssoPercent = 0;
   double ssoMin = 0;
@@ -76,12 +86,34 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       userEmployeeId = preferences.getString("employeeId")!;
       // _filePath = result.files.single.path;
-      isuploadDSL = await ApiPayrollService.uploadDSL(userEmployeeId,
-          startDate.text, finishDate.text, File(result.files.single.path!));
+      try {
+        isuploadDSL = await ApiPayrollService.uploadDSL(userEmployeeId,
+            startDate.text, finishDate.text, File(result.files.single.path!));
 
-      setState(() {
-        isuploadDSL;
-      });
+        setState(() {
+          isuploadDSL;
+          if (isuploadDSL) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Success to upload file"),
+                backgroundColor: mygreencolors,
+              ),
+            );
+            fetchPayrollData();
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Failed to upload file"),
+                backgroundColor: myredcolors,
+              ),
+            );
+          }
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to upload file: $e")),
+        );
+      }
     }
   }
 
@@ -105,15 +137,17 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
       String maxLotMonth = '';
       for (var e in lotNumberData!.lotNumberData) {
         if (e.lotMonth.compareTo(maxLotMonth) > 0) {
-          startDate.text = e.startDate;
-          finishDate.text = e.finishDate;
+          startDate.text = e.startDate.substring(0, 10);
+          finishDate.text = e.finishDate.substring(0, 10);
           lotNumberId = e.lotNumberId;
           ssoPercent = e.ssoPercent;
           ssoMin = e.ssoMin;
           ssoMax = e.ssoMax;
           ssoMinSalary = e.ssoMinSalary;
           ssoMaxSalary = e.ssoMaxSalary;
-          isSendData = int.parse(e.lockHr == "No data" ? "0" : e.lockHr);
+          // isSendData = int.parse(e.lockHr == "No data" ? "0" : e.lockHr);
+          accLock = e.lockAcc == "No data" ? false : true;
+          accLaborLock = e.lockAccLabor == "No data" ? false : true;
         }
       }
     }
@@ -123,6 +157,30 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
       //ตรวจสอบว่า widget ยังคงติดตั้งอยู่ก่อนเรียกใช้ setState()
       if (mounted) {}
     });
+  }
+
+  Future subFetchData() async {
+    lotNumberData = await ApiPayrollService.getLotNumberAll();
+    if (lotNumberData != null) {
+      LotNumberDatum? data = lotNumberData?.lotNumberData
+          .firstWhere((e) => e.lotNumberId == lotNumberId);
+      if (data != null) {
+        setState(() {
+          startDate.text = data.startDate.substring(0, 10);
+          finishDate.text = data.finishDate.substring(0, 10);
+          lotNumberId = data.lotNumberId;
+          ssoPercent = data.ssoPercent;
+          ssoMin = data.ssoMin;
+          ssoMax = data.ssoMax;
+          ssoMinSalary = data.ssoMinSalary;
+          ssoMaxSalary = data.ssoMaxSalary;
+          accLock = data.lockAcc == "No data" ? false : true;
+          accLaborLock = data.lockAccLabor == "No data" ? false : true;
+        });
+      }
+    }
+
+    fetchPayrollData();
   }
 
   Future fetchPayrollData() async {
@@ -154,6 +212,35 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
     _timer?.cancel();
   }
 
+  Future printSlip(String startDate, String finishDate, String orgCode) async {
+    String filePathSlip = "";
+    try {
+      setState(() {
+        isPrinting = true;
+      });
+      filePathSlip =
+          await AccReport.departmentSalarySlip(startDate, finishDate, orgCode);
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async {
+          final file = File(filePathSlip); // Set the format to landscape
+          final bytes = await file.readAsBytes();
+
+          return bytes;
+        },
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            backgroundColor: myredcolors,
+            content: Text("Failed to download PDF: $e")),
+      );
+    }
+
+    setState(() {
+      isPrinting = false;
+    });
+  }
+
   Widget lotMenu() {
     return SizedBox(
       height: 58,
@@ -165,6 +252,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
             Expanded(
               flex: 3,
               child: DropdownGlobal(
+                  outlineColor: mythemecolor,
                   labeltext: 'Lot Number',
                   value: lotNumberId,
                   items: lotNumberData?.lotNumberData.map((e) {
@@ -182,13 +270,20 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                           .lotNumberData
                           .where((element) => element.lotNumberId == newValue);
                       if (result.isNotEmpty) {
-                        startDate.text = result.first.startDate.toString();
-                        finishDate.text = result.first.finishDate.toString();
+                        startDate.text =
+                            result.first.startDate.substring(0, 10);
+                        finishDate.text =
+                            result.first.finishDate.substring(0, 10);
                         ssoPercent = result.first.ssoPercent;
                         ssoMin = result.first.ssoMin;
                         ssoMax = result.first.ssoMax;
                         ssoMinSalary = result.first.ssoMinSalary;
                         ssoMaxSalary = result.first.ssoMaxSalary;
+                        accLock =
+                            result.first.lockAcc == "No data" ? false : true;
+                        accLaborLock = result.first.lockAccLabor == "No data"
+                            ? false
+                            : true;
                       }
                       isDataLoading = true;
                       fetchPayrollData();
@@ -224,7 +319,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                       value: e.id.toString(),
                       child: Container(
                           constraints: const BoxConstraints(
-                            maxWidth: 100,
+                            maxWidth: 120,
                           ),
                           child: Text(e.name)),
                     );
@@ -257,6 +352,17 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                       fetchPayrollData();
                     });
                   },
+                  suffixIcon: orgCode == null
+                      ? null
+                      : IconButton(
+                          splashRadius: 1,
+                          onPressed: () {
+                            setState(() {
+                              orgCode = null;
+                            });
+                          },
+                          icon: const Icon(Icons.cancel_rounded),
+                        ),
                   validator: null),
             ),
           ],
@@ -302,14 +408,63 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              ButtonTableMenu(
-                  width: 100,
-                  height: 32,
-                  text: "พิมพ์สลิป",
-                  iconColor: mythemecolor,
-                  isUploaded: true,
-                  onPressed: () {},
-                  child: const Icon(Icons.print_rounded)),
+              if (positionTypeId == "0" || positionTypeId == "1")
+                ButtonTableMenu(
+                    width: 115,
+                    height: 32,
+                    text: "สลิปรายเดือน",
+                    iconColor:
+                        orgCode == null ? Colors.grey[500] : mythemecolor,
+                    fontColor: orgCode == null ? Colors.grey[600] : null,
+                    isUploaded: true,
+                    onPressed: !accLock
+                        ? null
+                        : orgCode == null
+                            ? null
+                            : () {
+                                printSlip(
+                                    startDate.text, finishDate.text, orgCode!);
+                              },
+                    child: isPrinting
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: myambercolors,
+                              strokeWidth: 3,
+                              strokeCap: StrokeCap.round,
+                            ),
+                          )
+                        : const Icon(Icons.print_rounded)),
+              const Gap(5),
+              if (positionTypeId == "0" || positionTypeId == "2")
+                ButtonTableMenu(
+                    width: 115,
+                    height: 32,
+                    text: "พิมพ์สลิปรายวัน",
+                    iconColor:
+                        orgCode == null ? Colors.grey[500] : mythemecolor,
+                    fontColor: orgCode == null ? Colors.grey[600] : null,
+                    isUploaded: true,
+                    onPressed: !accLaborLock
+                        ? null
+                        : orgCode == null
+                            ? null
+                            : () {
+                                printSlip(
+                                    startDate.text, finishDate.text, orgCode!);
+                              },
+                    child: isPrinting
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: myambercolors,
+                              strokeWidth: 3,
+                              strokeCap: StrokeCap.round,
+                            ),
+                          )
+                        : const Icon(Icons.print_rounded)),
             ],
           ),
         ),
@@ -541,25 +696,73 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
               bottom: 1,
               child: Row(
                 children: [
-                  SizedBox(
-                      height: 40,
-                      width: 120,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            backgroundColor: Colors.greenAccent,
-                          ),
-                          onPressed: () {},
-                          child: const Text(
-                            "Submit",
-                            style: TextStyle(color: Colors.black87),
-                          ))).animate().fade(delay: 250.ms),
-                  // const Icon(
-                  //   Icons.lock_rounded,
-                  //   color: Colors.grey,
-                  //   size: 25,
-                  // ).animate().shake(delay: 250.ms),
+                  if (positionTypeId == "0" || positionTypeId == "1")
+                    SizedBox(
+                        height: 80,
+                        width: 120,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              backgroundColor: Colors.greenAccent,
+                            ),
+                            onPressed: accLock
+                                ? null
+                                : () {
+                                    setState(() {
+                                      accLocking(false);
+                                    });
+                                  },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  accLock
+                                      ? Icons.lock_rounded
+                                      : Icons.lock_open_rounded,
+                                  color: Colors.grey[600],
+                                ),
+                                const Gap(6),
+                                const Text(
+                                  "ACC LOCK",
+                                  style: TextStyle(color: Colors.black87),
+                                ),
+                              ],
+                            ))).animate().fade(delay: 250.ms),
+                  const Gap(10),
+                  if (positionTypeId == "0" || positionTypeId == "2")
+                    SizedBox(
+                        height: 80,
+                        width: 120,
+                        child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8)),
+                              backgroundColor: Colors.greenAccent,
+                            ),
+                            onPressed: accLaborLock
+                                ? null
+                                : () {
+                                    setState(() {
+                                      accLocking(true);
+                                    });
+                                  },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  accLaborLock
+                                      ? Icons.lock_rounded
+                                      : Icons.lock_open_rounded,
+                                  color: Colors.grey[600],
+                                ),
+                                const Gap(6),
+                                const Text(
+                                  "LABOR LOCK",
+                                  style: TextStyle(color: Colors.black87),
+                                ),
+                              ],
+                            ))).animate().fade(delay: 250.ms),
                 ],
               )),
           Positioned(
@@ -649,6 +852,26 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
     );
   }
 
+  Future accLocking(bool labor) async {
+    bool success = false;
+    String userEmployeeId = "";
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    userEmployeeId = preferences.getString("employeeId")!;
+    if (labor) {
+      success = await ApiPayrollService.accLaborLock(
+          startDate.text, finishDate.text, userEmployeeId);
+    } else {
+      success = await ApiPayrollService.accLock(
+          startDate.text, finishDate.text, userEmployeeId);
+    }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: success ? mygreencolors : myredcolors,
+        content: Text(success
+            ? "Locking Lot ${startDate.text} - ${finishDate.text} Success"
+            : "Locking Lot ${startDate.text} - ${finishDate.text} Fail")));
+    if (success) subFetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return isDataLoading
@@ -733,8 +956,8 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                               DataColumn(
                                   numeric: true, label: Text("Net Salary")),
                             ],
-                            source: SubDataTableSource(
-                                context, filterData, fetchData),
+                            source: SubDataTableSource(context, filterData,
+                                startDate.text, finishDate.text, fetchData),
                           ),
                         ),
                       ),
@@ -743,6 +966,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: SizedBox(
+                          height: 50,
                           width: MediaQuery.of(context).size.width / 1.8,
                           child: ssoBar()),
                     ),
@@ -757,15 +981,20 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
 class SubDataTableSource extends DataTableSource {
   final BuildContext context;
   final List<PayrollDatum>? data;
+  final String startDate;
+  final String endDate;
+
   final Function()? fetchData;
 
   SubDataTableSource(
     this.context,
     this.data,
+    this.startDate,
+    this.endDate,
     this.fetchData,
   );
   TextEditingController comment = TextEditingController();
-
+  bool loadPDF = false;
   employeeDetail(PayrollDatum data) {
     showGeneralDialog(
         context: context,
@@ -807,20 +1036,76 @@ class SubDataTableSource extends DataTableSource {
         });
   }
 
+  Future printSlip(String startDate, String finishDate, String empId) async {
+    String filePathSlip = "";
+    try {
+      loadPDF = true;
+      notifyListeners();
+      filePathSlip =
+          await AccReport.employeeSalarySlip(startDate, finishDate, empId);
+      await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async {
+          final file = File(filePathSlip); // Set the format to landscape
+          final bytes = await file.readAsBytes();
+
+          // Set the format to landscape
+          // final PdfPageFormat landscapeFormat = PdfPageFormat(
+          //   format.width,
+          //   format.height,
+          // );
+
+          // Do the necessary operations with the landscape format if needed
+          return bytes;
+        },
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            backgroundColor: myredcolors,
+            content: Text("Failed to download PDF: $e")),
+      );
+    }
+    loadPDF = false;
+    notifyListeners();
+  }
+
   @override
   DataRow getRow(int index) {
     final d = data![index];
     return DataRow(onLongPress: () => employeeDetail(d), cells: [
-      DataCell(Center(
-          child: SizedBox(
+      DataCell(Row(
+        children: [
+          SizedBox(
               height: 35,
-              width: 45,
+              width: 42,
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.all(0),
                       backgroundColor: mygreycolors),
                   onPressed: () => employeeDetail(d),
-                  child: Icon(Icons.assignment, color: mythemecolor))))),
+                  child: Icon(Icons.assignment, color: mythemecolor))),
+          const Gap(5),
+          SizedBox(
+              height: 35,
+              width: 42,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.all(0),
+                      backgroundColor: mygreycolors),
+                  onPressed: () => printSlip(startDate, endDate, d.employeeId),
+                  child: loadPDF
+                      ? SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            color: myambercolors,
+                            strokeWidth: 3,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        )
+                      : Icon(Icons.print_rounded, color: mythemecolor))),
+        ],
+      )),
       DataCell(Text(d.employeeId)),
       DataCell(Text(d.staffType)),
       DataCell(Text("${d.firstName} ${d.lastName}")),

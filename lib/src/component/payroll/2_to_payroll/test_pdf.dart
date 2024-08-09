@@ -15,32 +15,39 @@ class TestPdf extends StatefulWidget {
 }
 
 class _TestPdfState extends State<TestPdf> {
+  String filePath = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Download PDF Example"),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            try {
-              String filePath = await PdfDownloader.getWorkTimePdf(
-                  "2024-04-26", "2024-05-25", "ITC000");
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PdfViewerPage(path: filePath)),
-              );
-            } catch (e) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Failed to download PDF: $e")),
-              );
-            }
-          },
-          child: Text("Download PDF"),
+        title: Text(
+          "Download PDF Example",
+          style: TextStyle(fontSize: 20),
         ),
       ),
+      body: filePath != ""
+          ? PdfViewerPage(path: filePath)
+          : Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  try {
+                    filePath = await PdfDownloader.getWorkTimePdf(
+                        "2024-04-26", "2024-05-25", "ITC000");
+                    setState(() {});
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => PdfViewerPage(path: filePath)),
+                    // );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Failed to download PDF: $e")),
+                    );
+                  }
+                },
+                child: Text("Download PDF"),
+              ),
+            ),
     );
   }
 }

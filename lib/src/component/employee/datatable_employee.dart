@@ -545,11 +545,13 @@ class PersonDataTableSource extends DataTableSource {
                         SelectOneEmployeeEvent(employeeData: employeeData));
                     Navigator.pop(context);
                     functionCreateSalary();
-                  } else if (typeSelected == "tax") {
-                    context.read<EmployeeBloc>().add(
-                        SelectOneEmployeeEvent(employeeData: employeeData));
-                    Navigator.pop(context);
-                  } else {}
+                  }
+                  // else if (typeSelected == "tax") {
+                  //   context.read<EmployeeBloc>().add(
+                  //       SelectOneEmployeeEvent(employeeData: employeeData));
+                  //   Navigator.pop(context);
+                  // }
+                  else {}
                 },
                 child: const Text("Select"))),
         ]);

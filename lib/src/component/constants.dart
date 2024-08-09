@@ -28,11 +28,9 @@ var headerbluecolors = const Color.fromARGB(255, 0, 57, 143);
 var mygreenxls = const Color.fromARGB(255, 13, 114, 57);
 var mygreencolors = Color.fromARGB(255, 50, 163, 99);
 
-var myLoadingScreen = SizedBox(
-    height: 600,
-    child: Center(
-        child: Lottie.asset('assets/loading.json',
-            width: 500, height: 250, frameRate: FrameRate(60))));
+var myLoadingScreen = Center(
+    child: Lottie.asset('assets/loading.json',
+        width: 500, height: 250, frameRate: FrameRate(60)));
 
 //floatingButtons
 class MyFloatingButton extends StatefulWidget {
@@ -155,6 +153,9 @@ class UploadButton extends StatelessWidget {
   final String text;
   final bool? isUploaded;
   final Color? iconColor;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final IconData? icon;
   final void Function()? onPressed;
   const UploadButton(
       {Key? key,
@@ -163,6 +164,9 @@ class UploadButton extends StatelessWidget {
       required this.text,
       required this.isUploaded,
       this.iconColor,
+      this.backgroundColor,
+      this.textColor,
+      this.icon,
       required this.onPressed})
       : super(key: key);
 
@@ -175,17 +179,18 @@ class UploadButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width + 32,
+      width: width + 24,
       height: height + 5,
       child: SizedBox(
         height: height,
         width: width,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: mygreycolors, // widget.backgroundColor,
+              backgroundColor:
+                  backgroundColor ?? mygreycolors, // widget.backgroundColor,
               padding: const EdgeInsets.all(0),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18))),
+                  borderRadius: BorderRadius.circular(25))),
           onPressed: onPressed,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -194,9 +199,10 @@ class UploadButton extends StatelessWidget {
                   data: IconThemeData(color: iconColor ?? mygreencolors),
                   child: Icon(isUploaded ?? false
                       ? Icons.check_circle_outlined
-                      : Icons.upload_rounded)),
+                      : icon ?? Icons.upload_rounded)),
               TextThai(
-                  text: text, textStyle: const TextStyle(color: Colors.black)),
+                  text: text,
+                  textStyle: TextStyle(color: textColor ?? Colors.black)),
             ],
           ),
         ),
@@ -211,6 +217,7 @@ class ButtonTableMenu extends StatelessWidget {
   final String text;
   final bool? isUploaded;
   final Color? iconColor;
+  final Color? fontColor;
   final Widget child;
   final void Function()? onPressed;
   const ButtonTableMenu(
@@ -221,6 +228,7 @@ class ButtonTableMenu extends StatelessWidget {
       required this.isUploaded,
       required this.child,
       this.iconColor,
+      this.fontColor,
       required this.onPressed})
       : super(key: key);
 
@@ -246,7 +254,8 @@ class ButtonTableMenu extends StatelessWidget {
                   data: IconThemeData(color: iconColor ?? mygreencolors),
                   child: child),
               TextThai(
-                  text: text, textStyle: const TextStyle(color: Colors.black)),
+                  text: text,
+                  textStyle: TextStyle(color: fontColor ?? Colors.black)),
             ],
           ),
         ),
@@ -317,6 +326,8 @@ class MySaveButtons extends StatelessWidget {
             height: height,
             child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   backgroundColor: Colors.greenAccent,
                 ),
                 onPressed: onPressed,
@@ -522,5 +533,33 @@ class MyDialogSuccess {
         }
       },
     ).show();
+  }
+}
+
+class MainDialog {
+  static alertDialog(BuildContext context, String messageEN, Widget child,
+      double width, double height) {
+    AlertDialog(
+        contentPadding: const EdgeInsets.all(8),
+        backgroundColor: mygreycolors,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        content: Stack(
+          children: [
+            SizedBox(width: width, height: height, child: child),
+            Positioned(
+                right: 0,
+                top: -5,
+                child: InkWell(
+                    borderRadius: BorderRadius.circular(50),
+                    onTap: () => Navigator.pop(context),
+                    child: Transform.rotate(
+                        angle: (45 * 22 / 7) / 180,
+                        child: Icon(
+                          Icons.add_rounded,
+                          size: 32,
+                          color: Colors.grey[700],
+                        )))),
+          ],
+        ));
   }
 }

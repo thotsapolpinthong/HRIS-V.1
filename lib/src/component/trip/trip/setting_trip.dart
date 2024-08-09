@@ -498,7 +498,7 @@ class _SettingTripState extends State<SettingTrip> {
         comment: "Edit trip");
     updateModel;
     bool success = await ApiTripService.updateTrip(updateModel);
-    alertDialog(success, 1);
+    alertDialog(success);
     convertedTriperList = [];
   }
 
@@ -520,54 +520,12 @@ class _SettingTripState extends State<SettingTrip> {
         condition: "new");
     createModel;
     bool success = await ApiTripService.createTrip(createModel);
-    alertDialog(success, 0);
+    alertDialog(success);
   }
 
-  alertDialog(bool success, int type) {
-    AwesomeDialog(
-      dismissOnTouchOutside: false,
-      width: 400,
-      context: context,
-      animType: AnimType.topSlide,
-      dialogType: success == true ? DialogType.success : DialogType.error,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        child: Center(
-          child: Column(
-            children: [
-              Text(
-                success == true
-                    ? type == 0
-                        ? 'Created Success.'
-                        : 'Updated Success.'
-                    : type == 0
-                        ? 'Created Fail.'
-                        : 'Updated Fail.',
-                style: const TextStyle(fontStyle: FontStyle.italic),
-              ),
-              TextThai(
-                text: success == true
-                    ? type == 0
-                        ? 'เพิ่มข้อมูล สำเร็จ'
-                        : 'แก้ไขข้อมูล สำเร็จ'
-                    : type == 0
-                        ? 'เพิ่มข้อมูล ไม่สำเร็จ'
-                        : 'แก้ไขข้อมูล ไม่สำเร็จ',
-                textStyle: const TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ],
-          ),
-        ),
-      ),
-      btnOkColor: success == true ? Colors.greenAccent : Colors.red,
-      btnOkOnPress: () {
-        if (success == true) {
-          context.read<TripBloc>().add(GetAllTripDataEvents(
-              startDate: widget.startDate, endDate: widget.endDate));
-          Navigator.pop(context);
-        } else {}
-      },
-    ).show();
+  alertDialog(bool success) {
+    MyDialogSuccess.alertDialog(
+        context, success, widget.type == 1 ? true : false, "");
   }
 
   Future getDropdown() async {
@@ -641,6 +599,202 @@ class _SettingTripState extends State<SettingTrip> {
     super.dispose();
   }
 
+  Widget tripDetails() {
+    return Card(
+      color: mygreycolors,
+      elevation: 0,
+      shape: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.black26, width: 2)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                const Gap(18),
+                DropdownGlobalOutline(
+                    labeltext: 'ประเภททริป',
+                    value: tripTypesId,
+                    items: tripTypeList.map((e) {
+                      return DropdownMenuItem<String>(
+                        value: e.tripTypeId.toString(),
+                        child: Container(
+                            width: 58,
+                            constraints: const BoxConstraints(
+                                maxWidth: 150, minWidth: 100),
+                            child: Text(e.tripTypeName)),
+                      );
+                    }).toList(),
+                    onChanged: isExpandedTriper == true
+                        ? null
+                        : (newValue) {
+                            setState(() {
+                              tripTypesId = newValue.toString();
+                            });
+                          },
+                    validator: null),
+                const Gap(5),
+                TextFormFieldGlobalWithOutLine(
+                    controller: destination,
+                    labelText: "จุดหมาย",
+                    hintText: "จุดหมาย",
+                    validatorless: null,
+                    suffixIcon: destination.text == ""
+                        ? null
+                        : IconButton(
+                            splashRadius: 5,
+                            onPressed: () {
+                              setState(() {
+                                destination.text = "";
+                                destinationList = [];
+                              });
+                            },
+                            icon: const Icon(Icons.cancel)),
+                    readOnly: true,
+                    enabled: !isExpandedTriper),
+                DropdownGlobalOutline(
+                    labeltext: 'เลือกจุดหมาย',
+                    value: provinceId,
+                    items: provinceList.map((e) {
+                      return DropdownMenuItem<String>(
+                        value: e.provinceId.toString(),
+                        child: Container(
+                            width: 58,
+                            constraints: const BoxConstraints(
+                                maxWidth: 150, minWidth: 100),
+                            child: Text(e.provinceNameTh)),
+                        onTap: () {
+                          setState(() {
+                            if (destination.text == "") {
+                              destination.text = e.provinceNameTh;
+                            } else {
+                              destination.text =
+                                  "${destination.text}, ${e.provinceNameTh}";
+                            }
+                          });
+                        },
+                      );
+                    }).toList(),
+                    onChanged: isExpandedTriper == true
+                        ? null
+                        : (newValue) async {
+                            setState(() {
+                              destinationList.add(newValue.toString());
+                            });
+                          },
+                    validator: null),
+                const Gap(18),
+                TextFormFieldDatepickGlobalWithoutLine(
+                    controller: startDate,
+                    labelText: "วันเริ่มต้น",
+                    validatorless: null,
+                    enable: !isExpandedTriper,
+                    ontap: isExpandedTriper == true
+                        ? null
+                        : () {
+                            selectvalidFromDate(0);
+                          }),
+                const Gap(18),
+                TextFormFieldDatepickGlobalWithoutLine(
+                    controller: endDate,
+                    labelText: "วันสิ้นสุด",
+                    validatorless: null,
+                    enable: !isExpandedTriper,
+                    ontap: isExpandedTriper == true
+                        ? null
+                        : () {
+                            selectvalidFromDate(1);
+                          }),
+                const Gap(18),
+                DropdownGlobalOutline(
+                    labeltext: 'เลือกรถ',
+                    value: carId,
+                    items: carData.map((e) {
+                      return DropdownMenuItem<String>(
+                        value: e.carId.toString(),
+                        child: Container(
+                            width: 58,
+                            constraints: const BoxConstraints(
+                                maxWidth: 250, minWidth: 200),
+                            child: Text("${e.carRegistation} ${e.carModel}")),
+                        onTap: () {
+                          setState(() {
+                            carMileage = e.mileageNumber;
+                          });
+                        },
+                      );
+                    }).toList(),
+                    onChanged: isExpandedTriper == true
+                        ? null
+                        : (newValue) {
+                            setState(() {
+                              carId = newValue.toString();
+                            });
+                          },
+                    validator: null),
+                const Gap(18),
+                TextFormFieldGlobalWithOutLine(
+                    controller: description,
+                    labelText: "Description",
+                    hintText: "รายละเอียดทริป",
+                    validatorless: null,
+                    enabled: !isExpandedTriper),
+                Expanded(child: Container()),
+                SizedBox(
+                  height: 34,
+                  width: 80,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: isExpandedTriper
+                              ? Colors.greenAccent
+                              : mythemecolor,
+                          padding: const EdgeInsets.all(1),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8))),
+                      onPressed: carId == null || tripTypesId == null
+                          ? null
+                          : widget.statusType == "on-trip"
+                              ? null
+                              : () {
+                                  setState(() {
+                                    if (isExpandedTriper == false) {
+                                      if (widget.statusType == "prepare" &&
+                                          carId == checkcarId) {
+                                        isExpandedTriper = !isExpandedTriper;
+                                      } else {
+                                        checkCar(carId!, startDate.text,
+                                            endDate.text);
+                                      }
+                                    } else {
+                                      isExpandedTriper = !isExpandedTriper;
+                                    }
+                                  });
+                                },
+                      child: isExpandedTriper
+                          ? Transform.flip(
+                              flipX: true,
+                              child: const Icon(Icons.redo_sharp,
+                                  color: Colors.black87),
+                            )
+                          : const Text("Submit")),
+                ),
+                const Gap(18),
+              ],
+            ),
+            if (isExpandedTriper)
+              const Center(
+                  child: Icon(
+                Icons.lock,
+                color: Color.fromARGB(195, 158, 158, 158),
+                size: 200,
+              ))
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -650,244 +804,7 @@ class _SettingTripState extends State<SettingTrip> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //trip details
-                  Expanded(
-                    flex: 2,
-                    child: Card(
-                      color: mygreycolors,
-                      elevation: 0,
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: const BorderSide(
-                              color: Colors.black26, width: 2)),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 20),
-                        child: Stack(
-                          children: [
-                            Column(
-                              children: [
-                                const Gap(18),
-                                DropdownGlobalOutline(
-                                    labeltext: 'ประเภททริป',
-                                    value: tripTypesId,
-                                    items: tripTypeList.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        value: e.tripTypeId.toString(),
-                                        child: Container(
-                                            width: 58,
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 150, minWidth: 100),
-                                            child: Text(e.tripTypeName)),
-                                      );
-                                    }).toList(),
-                                    onChanged: isExpandedTriper == true
-                                        ? null
-                                        : (newValue) {
-                                            setState(() {
-                                              tripTypesId = newValue.toString();
-                                            });
-                                          },
-                                    validator: null),
-                                const Gap(5),
-                                TextFormFieldGlobalWithOutLine(
-                                    controller: destination,
-                                    labelText: "จุดหมาย",
-                                    hintText: "จุดหมาย",
-                                    validatorless: null,
-                                    suffixIcon: destination.text == ""
-                                        ? null
-                                        : IconButton(
-                                            splashRadius: 5,
-                                            onPressed: () {
-                                              setState(() {
-                                                destination.text = "";
-                                                destinationList = [];
-                                              });
-                                            },
-                                            icon: const Icon(Icons.cancel)),
-                                    readOnly: true,
-                                    enabled: !isExpandedTriper),
-                                DropdownGlobalOutline(
-                                    labeltext: 'เลือกจุดหมาย',
-                                    value: provinceId,
-                                    items: provinceList.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        value: e.provinceId.toString(),
-                                        child: Container(
-                                            width: 58,
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 150, minWidth: 100),
-                                            child: Text(e.provinceNameTh)),
-                                        onTap: () {
-                                          setState(() {
-                                            if (destination.text == "") {
-                                              destination.text =
-                                                  e.provinceNameTh;
-                                            } else {
-                                              destination.text =
-                                                  "${destination.text}, ${e.provinceNameTh}";
-                                            }
-                                          });
-                                        },
-                                      );
-                                    }).toList(),
-                                    onChanged: isExpandedTriper == true
-                                        ? null
-                                        : (newValue) async {
-                                            setState(() {
-                                              destinationList
-                                                  .add(newValue.toString());
-                                            });
-                                          },
-                                    validator: null),
-
-                                const Gap(18),
-                                TextFormFieldDatepickGlobalWithoutLine(
-                                    controller: startDate,
-                                    labelText: "วันเริ่มต้น",
-                                    validatorless: null,
-                                    enable: !isExpandedTriper,
-                                    ontap: isExpandedTriper == true
-                                        ? null
-                                        : () {
-                                            selectvalidFromDate(0);
-                                          }),
-                                const Gap(18),
-                                TextFormFieldDatepickGlobalWithoutLine(
-                                    controller: endDate,
-                                    labelText: "วันสิ้นสุด",
-                                    validatorless: null,
-                                    enable: !isExpandedTriper,
-                                    ontap: isExpandedTriper == true
-                                        ? null
-                                        : () {
-                                            selectvalidFromDate(1);
-                                          }),
-                                const Gap(18),
-                                DropdownGlobalOutline(
-                                    labeltext: 'เลือกรถ',
-                                    value: carId,
-                                    items: carData.map((e) {
-                                      return DropdownMenuItem<String>(
-                                        value: e.carId.toString(),
-                                        child: Container(
-                                            width: 58,
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 250, minWidth: 200),
-                                            child: Text(
-                                                "${e.carRegistation} ${e.carModel}")),
-                                        onTap: () {
-                                          setState(() {
-                                            carMileage = e.mileageNumber;
-                                          });
-                                        },
-                                      );
-                                    }).toList(),
-                                    onChanged: isExpandedTriper == true
-                                        ? null
-                                        : (newValue) {
-                                            setState(() {
-                                              carId = newValue.toString();
-                                            });
-                                          },
-                                    validator: null),
-                                const Gap(18),
-                                TextFormFieldGlobalWithOutLine(
-                                    controller: description,
-                                    labelText: "Description",
-                                    hintText: "รายละเอียดทริป",
-                                    validatorless: null,
-                                    enabled: !isExpandedTriper),
-                                // DropdownMenu<ColorLabel>(
-                                //   initialSelection: ColorLabel.green,
-                                //   controller: colorController,
-                                //   // requestFocusOnTap is enabled/disabled by platforms when it is null.
-                                //   // On mobile platforms, this is false by default. Setting this to true will
-                                //   // trigger focus request on the text field and virtual keyboard will appear
-                                //   // afterward. On desktop platforms however, this defaults to true.
-                                //   requestFocusOnTap: true,
-                                //   label: const Text('Color'),
-                                //   onSelected: (ColorLabel? color) {
-                                //     setState(() {
-                                //       selectedColor = color;
-                                //     });
-                                //   },
-                                //   dropdownMenuEntries: ColorLabel.values
-                                //       .map<DropdownMenuEntry<ColorLabel>>(
-                                //           (ColorLabel color) {
-                                //     return DropdownMenuEntry<ColorLabel>(
-                                //       value: color,
-                                //       label: color.label,
-                                //       enabled: color.label != 'Grey',
-                                //       style: MenuItemButton.styleFrom(
-                                //         foregroundColor: color.color,
-                                //       ),
-                                //     );
-                                //   }).toList(),
-                                // ),
-                                Expanded(child: Container()),
-                                SizedBox(
-                                  height: 34,
-                                  width: 80,
-                                  child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          backgroundColor: isExpandedTriper
-                                              ? Colors.greenAccent
-                                              : mythemecolor,
-                                          padding: const EdgeInsets.all(1),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8))),
-                                      onPressed: carId == null ||
-                                              tripTypesId == null
-                                          ? null
-                                          : widget.statusType == "on-trip"
-                                              ? null
-                                              : () {
-                                                  setState(() {
-                                                    if (isExpandedTriper ==
-                                                        false) {
-                                                      if (widget.statusType ==
-                                                              "prepare" &&
-                                                          carId == checkcarId) {
-                                                        isExpandedTriper =
-                                                            !isExpandedTriper;
-                                                      } else {
-                                                        checkCar(
-                                                            carId!,
-                                                            startDate.text,
-                                                            endDate.text);
-                                                      }
-                                                    } else {
-                                                      isExpandedTriper =
-                                                          !isExpandedTriper;
-                                                    }
-                                                  });
-                                                },
-                                      child: isExpandedTriper
-                                          ? Transform.flip(
-                                              flipX: true,
-                                              child: const Icon(
-                                                  Icons.redo_sharp,
-                                                  color: Colors.black87),
-                                            )
-                                          : const Text("Submit")),
-                                ),
-                                const Gap(18),
-                              ],
-                            ),
-                            if (isExpandedTriper)
-                              const Center(
-                                  child: Icon(
-                                Icons.lock,
-                                color: Color.fromARGB(195, 158, 158, 158),
-                                size: 200,
-                              ))
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  Expanded(flex: 2, child: tripDetails()),
                   //triper details
                   Expanded(
                     flex: 8,

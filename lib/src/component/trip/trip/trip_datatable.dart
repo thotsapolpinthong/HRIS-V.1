@@ -374,7 +374,7 @@ class _TripDatatableState extends State<TripDatatable> {
                                     )
                                   ],
                                 ),
-                                columnSpacing: 10,
+                                columnSpacing: 18,
                                 showFirstLastButtons: true,
                                 rowsPerPage: rowIndex,
                                 availableRowsPerPage: const [5, 10, 20],

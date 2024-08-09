@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
+import 'package:hris_app_prototype/src/bloc/payroll_bloc/bloc/payroll_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/4_tax_deduction/create_update_tax_deduction.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
+import 'package:hris_app_prototype/src/model/payroll/tax_deduction/copy_data_tax_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_all_model.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TaxDeductionManagement extends StatefulWidget {
   const TaxDeductionManagement({super.key});
@@ -16,7 +20,7 @@ class TaxDeductionManagement extends StatefulWidget {
 }
 
 class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
-  Timer? _timer;
+  // Timer? _timer;
 //table
   bool isDataLoading = true;
   int rowIndex = 10;
@@ -31,20 +35,21 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
   String? yearId = DateTime.now().year.toString();
   //main data
   List<TaxDeductionDatum> taxDeductionData = [];
-
+  List<int>? taxDeductionList = [];
   Future fetchData() async {
     TaxDeductionModel? data =
         await ApiPayrollService.getTaxDeductionAll(yearId!);
-    _timer = Timer.periodic(const Duration(microseconds: 1000), (timer) {
-      //ตรวจสอบว่า widget ยังคงติดตั้งอยู่ก่อนเรียกใช้ setState()
-      if (mounted) {
-        setState(() {
-          taxDeductionData = data?.taxDeductionData ?? [];
-          filterData = taxDeductionData;
-          isDataLoading = false;
-        });
-      }
+    setState(() {
+      taxDeductionData = data?.taxDeductionData ?? [];
+      filterData = taxDeductionData;
+      isDataLoading = false;
     });
+    // _timer = Timer.periodic(const Duration(microseconds: 1000), (timer) {
+    //   //ตรวจสอบว่า widget ยังคงติดตั้งอยู่ก่อนเรียกใช้ setState()
+    //   if (mounted) {
+
+    //   }
+    // });
   }
 
   createFormTaxDeduction() {
@@ -86,6 +91,115 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
         });
   }
 
+  showDialogCopy() {
+    String? _yearId = yearId;
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              contentPadding: const EdgeInsets.all(8),
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: StatefulBuilder(builder: (context, setState) {
+                return Stack(
+                  children: [
+                    SizedBox(
+                        width: 260,
+                        height: 180,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              const Gap(15),
+                              DropdownGlobal(
+                                  labeltext: 'Year',
+                                  value: _yearId,
+                                  items: yearList.map((e) {
+                                    return DropdownMenuItem<String>(
+                                      value: e.toString(),
+                                      child: SizedBox(
+                                          width: 50, child: Text(e.toString())),
+                                    );
+                                  }).toList(),
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      _yearId = newValue.toString();
+                                    });
+                                  },
+                                  validator: null,
+                                  outlineColor: mythemecolor),
+                              const Gap(5),
+                              MySaveButtons(
+                                text: "Submit",
+                                onPressed: _yearId == null
+                                    ? null
+                                    : () async {
+                                        String userEmployeeId = "";
+                                        SharedPreferences preferences =
+                                            await SharedPreferences
+                                                .getInstance();
+                                        userEmployeeId = preferences
+                                            .getString("employeeId")!;
+                                        try {
+                                          CopyDataTaxModel updateModel =
+                                              CopyDataTaxModel(
+                                                  year: _yearId!,
+                                                  id: taxDeductionList ?? [],
+                                                  coppyBy: userEmployeeId);
+                                          bool success = await ApiPayrollService
+                                              .copyDataTax(updateModel);
+                                          if (success) {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        mygreencolors,
+                                                    content: const Text(
+                                                        "Copy Data complete")));
+                                            Navigator.pop(context);
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    backgroundColor:
+                                                        myredcolors,
+                                                    content: const Text(
+                                                        "Copy Data Fail")));
+                                          }
+                                        } catch (e) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  backgroundColor: myredcolors,
+                                                  content: const Text(
+                                                      "Copy Data Fail")));
+                                        }
+                                      },
+                              )
+                            ],
+                          ),
+                        )),
+                    Positioned(
+                        right: 0,
+                        top: -5,
+                        child: InkWell(
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: () => Navigator.pop(context),
+                            child: Transform.rotate(
+                                angle: (45 * 22 / 7) / 180,
+                                child: Icon(
+                                  Icons.add_rounded,
+                                  size: 32,
+                                  color: Colors.grey[700],
+                                )))),
+                    const Positioned(
+                        left: 15, top: 0, child: Text('Transfer Data')),
+                  ],
+                );
+              }));
+        });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -94,9 +208,18 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
   }
 
   @override
+  void deactivate() {
+    super.deactivate();
+    context
+        .read<PayrollBloc>()
+        .add(SelectTaxDeductionListEvent(taxDeductionList: const []));
+  }
+
+  @override
   void dispose() {
     super.dispose();
-    _timer?.cancel();
+
+    // _timer?.cancel();
   }
 
   Widget floating() {
@@ -125,44 +248,57 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
       height: 50,
       child: Row(
         children: [
-          const Expanded(
-              flex: 3,
-              child: Text('Tax Deduction Management.',
-                  style: TextStyle(fontWeight: FontWeight.w800))),
+          const Text('Tax Deduction Management.',
+              style: TextStyle(fontWeight: FontWeight.w800)),
+          const Gap(10),
+          SizedBox(
+            width: 110,
+            child: DropdownGlobal(
+                labeltext: 'Year',
+                value: yearId,
+                items: yearList.map((e) {
+                  return DropdownMenuItem<String>(
+                    value: e.toString(),
+                    child: SizedBox(width: 50, child: Text(e.toString())),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState(() {
+                    yearId = newValue.toString();
+                    isDataLoading = true;
+                    fetchData();
+                  });
+                },
+                validator: null,
+                outlineColor: mythemecolor),
+          ),
+          Expanded(child: Container()),
           Expanded(
               flex: 2,
               child: Row(
                 children: [
-                  if (yearId == null)
-                    Tooltip(
-                      message: "Please Select",
-                      child: Icon(
-                        Icons.error_outline_rounded,
-                        color: myredcolors,
-                      ),
-                    ),
-                  Expanded(
-                    flex: 1,
-                    child: DropdownGlobal(
-                        labeltext: 'Year',
-                        value: yearId,
-                        items: yearList.map((e) {
-                          return DropdownMenuItem<String>(
-                            value: e.toString(),
-                            child:
-                                SizedBox(width: 50, child: Text(e.toString())),
-                          );
-                        }).toList(),
-                        onChanged: (newValue) {
-                          setState(() {
-                            yearId = newValue.toString();
-                            isDataLoading = true;
-                            fetchData();
-                          });
-                        },
-                        validator: null,
-                        outlineColor: yearId == null ? myredcolors : null),
+                  BlocBuilder<PayrollBloc, PayrollState>(
+                    builder: (context, state) {
+                      taxDeductionList = state.taxDeductionList ?? [];
+                      return UploadButton(
+                          width: 110,
+                          height: 32,
+                          text: "Copy data",
+                          isUploaded: false,
+                          backgroundColor: mygreencolors,
+                          icon: Icons.copy,
+                          iconColor: taxDeductionList!.isEmpty
+                              ? Colors.grey[500]
+                              : mygreycolors,
+                          textColor: taxDeductionList!.isEmpty
+                              ? Colors.grey[600]
+                              : mygreycolors,
+                          onPressed: taxDeductionList!.isEmpty
+                              ? null
+                              : () => showDialogCopy());
+                    },
                   ),
+                  const Gap(5),
                   const Icon(Icons.search_rounded),
                   Expanded(
                     flex: 3,
@@ -236,6 +372,8 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: PaginatedDataTable(
+                            checkboxHorizontalMargin: 0,
+                            showCheckboxColumn: true,
                             columnSpacing: 10,
                             showFirstLastButtons: true,
                             rowsPerPage: rowIndex,
@@ -276,7 +414,9 @@ class SubDataTableSource extends DataTableSource {
   final Function()? fetchData;
   final String yearId;
   SubDataTableSource(this.context, this.data, this.fetchData, this.yearId);
+
   TextEditingController comment = TextEditingController();
+  List<int> selectedRows = [];
 
   functionUpdate(var data) {
     showGeneralDialog(
@@ -317,47 +457,81 @@ class SubDataTableSource extends DataTableSource {
         });
   }
 
+  // เมธอดตรวจสอบว่าแถวที่กำหนด index นั้นถูกเลือกหรือไม่
+  bool getRowSelected(int index) {
+    // ตรวจสอบว่าแถวที่กำหนด index นั้นถูกเลือกหรือไม่
+    return selectedRows.contains(index);
+  }
+
+  // เมธอดที่ใช้ในการเลือก/ยกเลิกการเลือกแถว
+  toggleRowSelection(int index) {
+    if (selectedRows.contains(index)) {
+      selectedRows.remove(index);
+    } else {
+      selectedRows.add(index);
+    }
+  }
+
+  List<int> taxDeductionList = [];
   @override
   DataRow getRow(int index) {
     final d = data![index];
-    return DataRow(cells: [
-      DataCell(Text(d.year)),
-      DataCell(Text(d.taxNumber)),
-      DataCell(Text(d.employeeId)),
-      DataCell(Text(d.firstName)),
-      DataCell(Text(d.lastName)),
-      DataCell(
-        Row(
-          children: [
-            SizedBox(
-              width: 40,
-              height: 38,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amber[700],
-                      padding: const EdgeInsets.all(1)),
-                  onPressed: () {
-                    functionUpdate(d);
-                  },
-                  child: const Icon(Icons.edit)),
+    return DataRow(
+        selected: getRowSelected(index),
+        onSelectChanged: (isSelected) {
+          final isAdding = isSelected != null && isSelected;
+          if (isAdding == true) {
+            //
+            // print("add");
+            taxDeductionList.add(d.id);
+            //
+          } else {
+            // print("del");
+            taxDeductionList.remove(d.id);
+          }
+          toggleRowSelection(index);
+          context.read<PayrollBloc>().add(
+              SelectTaxDeductionListEvent(taxDeductionList: taxDeductionList));
+          notifyListeners();
+        },
+        cells: [
+          DataCell(Text(d.year)),
+          DataCell(Text(d.taxNumber)),
+          DataCell(Text(d.employeeId)),
+          DataCell(Text(d.firstName)),
+          DataCell(Text(d.lastName)),
+          DataCell(
+            Row(
+              children: [
+                SizedBox(
+                  width: 40,
+                  height: 38,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber[700],
+                          padding: const EdgeInsets.all(1)),
+                      onPressed: () {
+                        functionUpdate(d);
+                      },
+                      child: const Icon(Icons.edit)),
+                ),
+                // const Gap(5),
+                // SizedBox(
+                //   width: 40,
+                //   height: 38,
+                //   child: ElevatedButton(
+                //       style: ElevatedButton.styleFrom(
+                //           backgroundColor: mygreencolors,
+                //           padding: const EdgeInsets.all(1)),
+                //       onPressed: () {
+                //         functionUpdate(d);
+                //       },
+                //       child: const Icon(Icons.copy_rounded)),
+                // ),
+              ],
             ),
-            const Gap(5),
-            SizedBox(
-              width: 40,
-              height: 38,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: mygreencolors,
-                      padding: const EdgeInsets.all(1)),
-                  onPressed: () {
-                    functionUpdate(d);
-                  },
-                  child: const Icon(Icons.copy_rounded)),
-            ),
-          ],
-        ),
-      ),
-    ]);
+          ),
+        ]);
   }
 
   @override

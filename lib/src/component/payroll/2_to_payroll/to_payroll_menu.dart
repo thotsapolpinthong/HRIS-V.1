@@ -68,8 +68,8 @@ class _ToPayrollState extends State<ToPayroll> {
         String maxLotMonth = '';
         for (var e in lotNumberData!.lotNumberData) {
           if (e.lotMonth.compareTo(maxLotMonth) > 0) {
-            startDate.text = e.startDate;
-            finishDate.text = e.finishDate;
+            startDate.text = e.startDate.substring(0, 10);
+            finishDate.text = e.finishDate.substring(0, 10);
             lotNumberId = e.lotNumberId;
             isSendData = int.parse(e.lockHr == "No data" ? "0" : e.lockHr);
           }

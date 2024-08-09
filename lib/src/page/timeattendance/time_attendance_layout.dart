@@ -99,7 +99,9 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
     // } else {}
     if (data != null) {
       for (var e in data.holidayData) {
-        DateTime dateTime = DateTime.parse(e.date);
+        String formattedDate = DateFormat("yyyy-MM-dd")
+            .format(DateFormat("d/M/yyyy").parse(e.date));
+        DateTime dateTime = DateFormat("yyyy-MM-dd").parse(formattedDate);
         if (selectedEvents[dateTime] != null) {
           // selectedEvents[dateTime]?.add(
           //   HolidayDatum(

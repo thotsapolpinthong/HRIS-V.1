@@ -15,3 +15,10 @@ class FetchTimeRecordDataEvent extends PayrollEvent {
     required this.endDate,
   });
 }
+
+class SelectTaxDeductionListEvent extends PayrollEvent {
+  final List<int> taxDeductionList;
+  SelectTaxDeductionListEvent({
+    required this.taxDeductionList,
+  });
+}

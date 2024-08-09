@@ -323,6 +323,7 @@ class DropdownMenuGlobal extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(4.0),
       child: DropdownMenu(
+          requestFocusOnTap: true,
           controller: controller,
           width: width,
           trailingIcon: const Icon(Icons.content_paste_search_rounded),

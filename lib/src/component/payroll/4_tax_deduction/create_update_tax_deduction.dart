@@ -9,6 +9,7 @@ import 'package:hris_app_prototype/src/component/employee/datatable_employee.dar
 import 'package:hris_app_prototype/src/component/payroll/4_tax_deduction/create_update_tax_detail.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/create_tax_deduction_model.dart';
+import 'package:hris_app_prototype/src/model/payroll/tax_deduction/get_employee_Idcard_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_all_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_by_id_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_detail_all_model.dart';
@@ -37,6 +38,7 @@ class EditTaxDeduction extends StatefulWidget {
 class _EditTaxDeductionState extends State<EditTaxDeduction> {
   bool isDataLoading = true;
   TextEditingController comment = TextEditingController();
+
   //deduction
 //ข้อมูลผู้มีเงินได้
   List<TaxPersonalStatusDatum> personalStatusList = [];
@@ -83,8 +85,11 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
   List<int> yearList = [];
   String? yearId = DateTime.now().year.toString();
 
+//id card
+  List<EmployeeIdcardDatum> employeeIdcardList = [];
   TextEditingController employeeId = TextEditingController();
   TextEditingController taxNumber = TextEditingController();
+  TextEditingController empInfo = TextEditingController();
 //details
   List<TaxDetailDatum> taxDetailData = [];
 
@@ -92,10 +97,11 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
     isDataLoading = true;
     TaxDetailModel? data = await ApiPayrollService.getTaxDetailsAll();
     TaxPersonalStatusModel? d = await ApiPayrollService.getTaxPersonalStatus();
+    EmployeeIdcardModel? id = await ApiPayrollService.getIdcardDropdown();
     setState(() {
       taxDetailData = data?.taxDetailData ?? [];
       personalStatusList = d?.taxPersonalStatusData ?? [];
-
+      employeeIdcardList = id?.employeeData ?? [];
       if (!widget.onEdit) {
         isDataLoading = false;
       } else {
@@ -121,6 +127,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
     if (data != null) {
       d = data.taxDeductionData;
       yearId = d.year;
+      empInfo.text = "${d.firstName} ${d.lastName}";
       employeeId.text = d.employeeId;
       taxNumber.text = d.taxNumber.toString();
       personalStatus = d.personalStatus.id.toString();
@@ -165,34 +172,34 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
         builder: (BuildContext context) {
           return AlertDialog(
               contentPadding: const EdgeInsets.all(8),
-              backgroundColor: mygreycolors,
+              // backgroundColor: mygreycolors,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              content: Stack(
-                children: [
-                  SizedBox(
-                      width: 1200,
-                      height: MediaQuery.of(context).size.height - 20,
-                      child: DatatableEmployee(
-                        isSelected: true,
-                        isSelectedOne: true,
-                        typeSelected: "tax",
-                        fetchDataTemp: fetchData,
-                      )),
-                  Positioned(
-                      right: 0,
-                      top: -5,
-                      child: InkWell(
-                          borderRadius: BorderRadius.circular(50),
-                          onTap: () => Navigator.pop(context),
-                          child: Transform.rotate(
-                              angle: (45 * 22 / 7) / 180,
-                              child: Icon(
-                                Icons.add_rounded,
-                                size: 32,
-                                color: Colors.grey[700],
-                              )))),
-                ],
+              content: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: 408,
+                  child: DropdownMenuGlobal(
+                      label: "เลือกพนักงาน",
+                      width: 400,
+                      controller: empInfo,
+                      onSelected: (value) {
+                        setState(() {
+                          empInfo.text =
+                              "${value.firstNameTh} ${value.lastNameTh}";
+                          employeeId.text = value.employeeId.toString();
+                          taxNumber.text = value.idCard.toString();
+                          Navigator.pop(context);
+                        });
+                      },
+                      dropdownMenuEntries: employeeIdcardList.map((e) {
+                        return DropdownMenuEntry(
+                            value: e,
+                            label:
+                                "${e.employeeId} : ${e.firstNameTh} ${e.lastNameTh}",
+                            style: MenuItemButton.styleFrom());
+                      }).toList()),
+                ),
               ));
         });
   }
@@ -347,147 +354,6 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
     fetchData();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return isDataLoading
-        ? myLoadingScreen
-        : Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Column(
-                    children: [
-                      const Gap(5),
-                      const TextThai(
-                          text: "รายการหักลดหย่อนภาษี",
-                          textStyle: TextStyle(fontSize: 16)),
-                      Expanded(
-                        child: Container(
-                          color: mygreycolors,
-                          child: ListView.builder(
-                              // padding: const EdgeInsets.all(8),
-                              itemCount: taxDetailData.length + 1,
-                              itemBuilder: (BuildContext context, int index) {
-                                int number = index + 1;
-                                if (index == 0) {
-                                  return firstTaxDetails();
-                                } else {
-                                  TaxDetailDatum e = taxDetailData[index - 1];
-                                  TextEditingController amount =
-                                      TextEditingController();
-                                  amount.text = e.amount.toString();
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      color: Colors.white,
-                                    ),
-                                    margin: const EdgeInsets.all(4),
-                                    height: 130,
-                                    width: double.infinity,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  const BorderRadius.horizontal(
-                                                      left:
-                                                          Radius.circular(16)),
-                                              color: mythemecolor,
-                                            ),
-                                            width: 80,
-                                            child: Center(
-                                                child: Text(
-                                              number.toString(),
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: mygreycolors),
-                                            ))),
-                                        const VerticalDivider(
-                                          width: 0,
-                                          thickness: 1.5,
-                                        ),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                    child:
-                                                        SingleChildScrollView(
-                                                            child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: TextThai(
-                                                    text: e.topic,
-                                                    textStyle: TextStyle(
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                                ))),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    Row(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 130,
-                                                          height: 50,
-                                                          child:
-                                                              TextFormFieldGlobal(
-                                                            controller: amount,
-                                                            labelText:
-                                                                "ลดหย่อนสูงสุด",
-                                                            enabled: false,
-                                                            suffixText: "บ.",
-                                                          ),
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () {
-                                                            functionUpdateDetails(
-                                                                e);
-                                                          },
-                                                          child: const Icon(
-                                                            Icons.edit,
-                                                            size: 20,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    deductionDetail(e.id)
-                                                  ],
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(flex: 2, child: document())
-              ],
-            ),
-          );
-  }
-
   Widget firstTaxDetails() {
     return Container(
       decoration: BoxDecoration(
@@ -495,7 +361,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
         color: Colors.white,
       ),
       margin: const EdgeInsets.all(4),
-      height: 230,
+      height: 240,
       width: double.infinity,
       child: Row(
         children: [
@@ -524,9 +390,38 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(6.0),
-                    child: TextThai(
-                      text: "ข้อมูลผู้มีเงินได้",
-                      textStyle: TextStyle(color: Colors.grey[600]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextThai(
+                          text: "ข้อมูลผู้มีเงินได้",
+                          textStyle: TextStyle(color: Colors.grey[600]),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.person_search_rounded,
+                              size: 30,
+                              color: Colors.grey,
+                            ),
+                            const Gap(5),
+                            SizedBox(
+                              // width: 40,
+                              height: 40,
+                              child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      padding: const EdgeInsets.all(8)),
+                                  onPressed: widget.onEdit
+                                      ? null
+                                      : () => showDialogCreate(),
+                                  child: const TextThai(text: 'ค้นหาพนักงาน')),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -545,66 +440,58 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
                                         width: 50, child: Text(e.toString())),
                                   );
                                 }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    yearId = newValue.toString();
-                                  });
-                                },
+                                onChanged: null,
+                                // (newValue) {
+                                //   setState(() {
+                                //     yearId = newValue.toString();
+                                //   });
+                                // },
                                 outlineColor:
                                     (yearId == null) ? myredcolors : null)),
                         Expanded(
-                          flex: 2,
-                          child: TextFormFieldGlobal(
-                              controller: employeeId,
-                              labelText: "EmployeeId",
+                            flex: 2,
+                            child: TextFormFieldGlobal(
+                              controller: empInfo,
+                              labelText: "Name",
                               onChanged: (value) {
                                 setState(() {});
                               },
                               enabled: true,
-                              outlineColor:
-                                  employeeId.text == "" ? myredcolors : null,
-                              suffixIcon: employeeId.text == ""
-                                  ? Icon(
-                                      Icons.error_outline_rounded,
-                                      color: myredcolors,
-                                    )
-                                  : null),
-                        ),
-                        SizedBox(
-                          width: 40,
-                          height: 40,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  padding: const EdgeInsets.all(0)),
-                              onPressed: () => showDialogCreate(),
-                              child: Icon(
-                                Icons.person_search_rounded,
-                                size: 28,
-                                color: mygreycolors,
-                              )),
-                        ),
+                              readOnly: true,
+                            )),
                       ],
                     ),
                   ),
                   const Gap(3),
                   SizedBox(
                     height: 50,
-                    child: TextFormFieldGlobal(
-                        controller: taxNumber,
-                        labelText: "Tax identification number",
-                        onChanged: (value) {
-                          setState(() {});
-                        },
-                        enabled: true,
-                        outlineColor: taxNumber.text == "" ? myredcolors : null,
-                        suffixIcon: taxNumber.text == ""
-                            ? Icon(
-                                Icons.error_outline_rounded,
-                                color: myredcolors,
-                              )
-                            : null),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            flex: 1,
+                            child: TextFormFieldGlobal(
+                              controller: employeeId,
+                              labelText: "EmployeeId",
+                              onChanged: (value) {
+                                setState(() {});
+                              },
+                              enabled: true,
+                              readOnly: true,
+                            )),
+                        Expanded(
+                          flex: 2,
+                          child: TextFormFieldGlobal(
+                            controller: taxNumber,
+                            labelText: "Tax identification number",
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+                            enabled: true,
+                            readOnly: true,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     children: [
@@ -1261,7 +1148,8 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
                           if (yearId != null)
                             Text("ลดหย่อนภาษีประจำปี $yearId"),
                           if (employeeId.text != "")
-                            Text("รหัสพนักงาน ${employeeId.text}"),
+                            Text(
+                                "รหัสพนักงาน ${employeeId.text} ชื่อ ${empInfo.text}"),
                           if (taxNumber.text != "")
                             Text("เลขประจำตัวผู้เสียภาษี ${taxNumber.text}"),
                           if (personalStatusName != null)
@@ -1572,7 +1460,7 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
                         )
                       : Container(),
                 ),
-                const Gap(20),
+                const Gap(8),
                 MySaveButtons(
                   height: 38,
                   text: "Submit",
@@ -1595,6 +1483,147 @@ class _EditTaxDeductionState extends State<EditTaxDeduction> {
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isDataLoading
+        ? myLoadingScreen
+        : Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: Column(
+                    children: [
+                      const Gap(5),
+                      const TextThai(
+                          text: "รายการหักลดหย่อนภาษี",
+                          textStyle: TextStyle(fontSize: 16)),
+                      Expanded(
+                        child: Container(
+                          color: mygreycolors,
+                          child: ListView.builder(
+                              // padding: const EdgeInsets.all(8),
+                              itemCount: taxDetailData.length + 1,
+                              itemBuilder: (BuildContext context, int index) {
+                                int number = index + 1;
+                                if (index == 0) {
+                                  return firstTaxDetails();
+                                } else {
+                                  TaxDetailDatum e = taxDetailData[index - 1];
+                                  TextEditingController amount =
+                                      TextEditingController();
+                                  amount.text = e.amount.toString();
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      color: Colors.white,
+                                    ),
+                                    margin: const EdgeInsets.all(4),
+                                    height: 130,
+                                    width: double.infinity,
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  const BorderRadius.horizontal(
+                                                      left:
+                                                          Radius.circular(16)),
+                                              color: mythemecolor,
+                                            ),
+                                            width: 80,
+                                            child: Center(
+                                                child: Text(
+                                              number.toString(),
+                                              style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: mygreycolors),
+                                            ))),
+                                        const VerticalDivider(
+                                          width: 0,
+                                          thickness: 1.5,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                    child:
+                                                        SingleChildScrollView(
+                                                            child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: TextThai(
+                                                    text: e.topic,
+                                                    textStyle: TextStyle(
+                                                        color:
+                                                            Colors.grey[600]),
+                                                  ),
+                                                ))),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 130,
+                                                          height: 50,
+                                                          child:
+                                                              TextFormFieldGlobal(
+                                                            controller: amount,
+                                                            labelText:
+                                                                "ลดหย่อนสูงสุด",
+                                                            enabled: false,
+                                                            suffixText: "บ.",
+                                                          ),
+                                                        ),
+                                                        InkWell(
+                                                          onTap: () {
+                                                            functionUpdateDetails(
+                                                                e);
+                                                          },
+                                                          child: const Icon(
+                                                            Icons.edit,
+                                                            size: 20,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    deductionDetail(e.id)
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(flex: 2, child: document())
+              ],
+            ),
+          );
   }
 }
 

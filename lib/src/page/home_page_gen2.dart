@@ -80,7 +80,20 @@ class _MyHomepageState extends State<MyHomepage> {
                   Expanded(
                       flex: state.expandMenu == false ? 19 : 5,
                       child: MenuExpand(
-                        child: mainMenuPage(state.pageNumber),
+                        child: Stack(children: [
+                          mainMenuPage(state.pageNumber),
+                          // Center(
+                          //   child: Container(
+                          //     width: 100,
+                          //     height: 100,
+                          //     child: CircularProgressIndicator(
+                          //       color: mythemecolor,
+                          //       strokeWidth: 10,
+                          //       strokeCap: StrokeCap.round,
+                          //     ),
+                          //   ),
+                          // )
+                        ]),
                       )),
                   // if (state.pageNumber == 8)
                   //   Expanded(

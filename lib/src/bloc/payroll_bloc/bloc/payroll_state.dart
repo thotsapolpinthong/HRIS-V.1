@@ -6,21 +6,33 @@ class PayrollState extends Equatable {
   //to payroll
   final TimeRecordModel? timeRecordData;
   final bool isToPayrollLoading;
+  final bool enabled;
+
+  //tax deduction
+  final List<int>? taxDeductionList;
+
   const PayrollState({
     this.timeRecordData,
     this.isToPayrollLoading = false,
+    this.enabled = false,
+    this.taxDeductionList,
   });
 
   PayrollState copyWith({
     TimeRecordModel? timeRecordData,
     bool? isToPayrollLoading,
+    List<int>? taxDeductionList,
+    bool? enabled,
   }) {
     return PayrollState(
-      timeRecordData: timeRecordData,
+      timeRecordData: timeRecordData ?? this.timeRecordData,
       isToPayrollLoading: isToPayrollLoading ?? this.isToPayrollLoading,
+      taxDeductionList: taxDeductionList ?? this.taxDeductionList,
+      enabled: enabled ?? this.enabled,
     );
   }
 
   @override
-  List<Object?> get props => [timeRecordData, isToPayrollLoading];
+  List<Object?> get props =>
+      [timeRecordData, isToPayrollLoading, taxDeductionList, enabled];
 }
