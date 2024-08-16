@@ -69,7 +69,7 @@ class _CarDatatableState extends State<CarDatatable> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         child: Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: MyFloatingButton(
@@ -303,12 +303,13 @@ class DataTable extends DataTableSource {
       DataCell(datacar.carStatus == "" //
           ? Container()
           : SizedBox(
-              height: 34,
+              height: 32,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
+                    backgroundColor: myambercolors,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8))),
-                child: const Icon(Icons.edit),
+                child: const Icon(Icons.edit_rounded),
                 onPressed: () {
                   showDialogCar(1, datacar);
                 },

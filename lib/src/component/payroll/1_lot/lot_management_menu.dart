@@ -154,6 +154,7 @@ class _LotManagementState extends State<LotManagement> {
                     children: [
                       const Gap(10),
                       DropdownGlobal(
+                          outlineColor: mythemecolor,
                           labeltext: 'Lot year',
                           value: yearId,
                           items: yearList.map((e) {
@@ -209,8 +210,10 @@ class _LotManagementState extends State<LotManagement> {
                                     element.lotNumberId == newValue);
                             if (result.isNotEmpty) {
                               setState(() {
-                                startDate.text = result.first.startDate;
-                                finishDate.text = result.first.finishDate;
+                                startDate.text =
+                                    result.first.startDate.substring(0, 10);
+                                finishDate.text =
+                                    result.first.finishDate.substring(0, 10);
                                 salaryPaidDate.text = result
                                     .first.salaryPaidDate
                                     .substring(0, 10);
@@ -351,25 +354,29 @@ class _LotManagementState extends State<LotManagement> {
   }
 
   Widget editButton() {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(1),
-          backgroundColor: myambercolors,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-      onPressed: lotNumberId == null
-          ? null
-          : () {
-              LotNumberDatum data = lotNumberData!.lotNumberData
-                  .firstWhere((element) => element.lotNumberId == lotNumberId);
-              createAndEditLotNumber(true, data);
-            },
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Text('Edit Lot Number
-          Icon(Icons.edit_rounded),
-        ],
+    return Tooltip(
+      message: 'Edit Lot number',
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.all(1),
+            backgroundColor: myambercolors,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+        onPressed: lotNumberId == null
+            ? null
+            : () {
+                LotNumberDatum data = lotNumberData!.lotNumberData.firstWhere(
+                    (element) => element.lotNumberId == lotNumberId);
+                createAndEditLotNumber(true, data);
+              },
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.edit_rounded,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -447,27 +454,33 @@ class _LotManagementState extends State<LotManagement> {
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   containerStatus(
                       lockHr,
-                      "HR Lock",
+                      "HR ${lockHr ? 'Lock' : 'Processing'}",
                       lotNumberId == null
                           ? null
                           : !lockHr
                               ? null
                               : () {
-                                  setState(() {
-                                    lockHr = !lockHr;
+                                  MyDialogChoice.alertDialog(
+                                      context, 'Confirm ?', () {
+                                    setState(() {
+                                      lockHr = !lockHr;
+                                    });
                                   });
                                 }),
                   const Gap(10),
                   containerStatus(
                       lockHrLabor,
-                      "HR Labor Lock",
+                      "HR Labor ${lockHrLabor ? 'Lock' : 'Processing'}",
                       lotNumberId == null
                           ? null
                           : !lockHrLabor
                               ? null
                               : () {
-                                  setState(() {
-                                    lockHrLabor = !lockHrLabor;
+                                  MyDialogChoice.alertDialog(
+                                      context, 'Confirm ?', () {
+                                    setState(() {
+                                      lockHrLabor = !lockHrLabor;
+                                    });
                                   });
                                 }),
                 ]),
@@ -480,27 +493,33 @@ class _LotManagementState extends State<LotManagement> {
                   children: [
                     containerStatus(
                         lockAcc,
-                        "ACC Lock",
+                        "ACC ${lockAcc ? 'Lock' : 'Processing'}",
                         lotNumberId == null
                             ? null
                             : !lockAcc
                                 ? null
                                 : () {
-                                    setState(() {
-                                      lockAcc = !lockAcc;
+                                    MyDialogChoice.alertDialog(
+                                        context, 'Confirm ?', () {
+                                      setState(() {
+                                        lockAcc = !lockAcc;
+                                      });
                                     });
                                   }),
                     const Gap(10),
                     containerStatus(
                         lockAccLabor,
-                        "ACC Labor Lock",
+                        "ACC Labor ${lockAccLabor ? 'Lock' : 'Processing'}",
                         lotNumberId == null
                             ? null
                             : !lockAccLabor
                                 ? null
                                 : () {
-                                    setState(() {
-                                      lockAccLabor = !lockAccLabor;
+                                    MyDialogChoice.alertDialog(
+                                        context, 'Confirm ?', () {
+                                      setState(() {
+                                        lockAccLabor = !lockAccLabor;
+                                      });
                                     });
                                   })
                   ],

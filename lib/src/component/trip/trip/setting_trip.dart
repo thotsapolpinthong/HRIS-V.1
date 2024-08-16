@@ -457,6 +457,7 @@ class _SettingTripState extends State<SettingTrip> {
     descGasoline.text = "";
     costAllowance.text = "";
     membercost = [];
+    triperTypeId = null;
     context.read<TripBloc>().add(ClearSelectEmployeeEvent());
   }
 
@@ -500,6 +501,10 @@ class _SettingTripState extends State<SettingTrip> {
     bool success = await ApiTripService.updateTrip(updateModel);
     alertDialog(success);
     convertedTriperList = [];
+    if (success) {
+      context.read<TripBloc>().add(GetAllTripDataEvents(
+          startDate: widget.startDate, endDate: widget.endDate));
+    }
   }
 
   Future createmodel() async {
@@ -521,6 +526,10 @@ class _SettingTripState extends State<SettingTrip> {
     createModel;
     bool success = await ApiTripService.createTrip(createModel);
     alertDialog(success);
+    if (success) {
+      context.read<TripBloc>().add(GetAllTripDataEvents(
+          startDate: widget.startDate, endDate: widget.endDate));
+    }
   }
 
   alertDialog(bool success) {
@@ -585,6 +594,8 @@ class _SettingTripState extends State<SettingTrip> {
     super.initState();
     if (widget.type == 1) {
       getTripData();
+    } else {
+      tripTypesId = '001';
     }
     getDropdown();
   }
@@ -684,6 +695,22 @@ class _SettingTripState extends State<SettingTrip> {
                             });
                           },
                     validator: null),
+                //  DropdownMenuGlobal(
+                // label: "Parent Organization",
+                // width: 442,
+                // controller: parentOrgMenu,
+                // onSelected: (value) {
+                //   setState(() {
+                //     parentOrg = value.toString();
+                //   });
+                // },
+                // dropdownMenuEntries: parentOrgList.map((e) {
+                //   return DropdownMenuEntry(
+                //       value: e.organizationCode,
+                //       label:
+                //           "${e.organizationCode.split('0')[0]} : ${e.organizationName}",
+                //       style: MenuItemButton.styleFrom());
+                // }).toList()),
                 const Gap(18),
                 TextFormFieldDatepickGlobalWithoutLine(
                     controller: startDate,
@@ -964,6 +991,7 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                         triperTypeId = newValue.toString();
                                                                                       });
                                                                                     },
+                                                                                    outlineColor: triperTypeId == null ? myredcolors : null,
                                                                                     validator: null),
                                                                               ),
                                                                               const Gap(12),
@@ -1288,8 +1316,14 @@ class _SettingTripState extends State<SettingTrip> {
                                                             const EdgeInsets
                                                                 .all(4.0),
                                                         child: ExpansionTile(
-                                                          // leading: Icon(Icons
-                                                          //     .personal_injury_outlined),
+                                                          leading: Icon(members[
+                                                                          index]
+                                                                      .triptypeName ==
+                                                                  "คนขับรถ"
+                                                              ? Icons
+                                                                  .drive_eta_rounded
+                                                              : Icons
+                                                                  .person_rounded),
                                                           title: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -1319,8 +1353,17 @@ class _SettingTripState extends State<SettingTrip> {
                                                           ),
                                                           children: [
                                                             Container(
-                                                              color:
-                                                                  mygreycolors,
+                                                              decoration: BoxDecoration(
+                                                                  color: const Color
+                                                                      .fromARGB(
+                                                                      172,
+                                                                      210,
+                                                                      226,
+                                                                      255),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              8)),
                                                               child: ListTile(
                                                                 leading:
                                                                     const TextThai(
@@ -1364,8 +1407,15 @@ class _SettingTripState extends State<SettingTrip> {
                                                             const EdgeInsets
                                                                 .all(4.0),
                                                         child: ExpansionTile(
-                                                          // leading: Icon(Icons
-                                                          //     .personal_injury_outlined),
+                                                          leading: Icon(editTriperList[
+                                                                          index]
+                                                                      .triperTypeData
+                                                                      .triperTypeName ==
+                                                                  "คนขับรถ"
+                                                              ? Icons
+                                                                  .drive_eta_rounded
+                                                              : Icons
+                                                                  .person_rounded),
                                                           title: Row(
                                                             mainAxisAlignment:
                                                                 MainAxisAlignment
@@ -1380,29 +1430,32 @@ class _SettingTripState extends State<SettingTrip> {
                                                                   if (widget
                                                                           .statusType ==
                                                                       "on-trip")
-                                                                    SizedBox(
-                                                                      width: 40,
-                                                                      height:
-                                                                          38,
+                                                                    Tooltip(
+                                                                      message:
+                                                                          'ย้ายทริปพนักงาน',
                                                                       child:
-                                                                          ElevatedButton(
-                                                                        style: ElevatedButton.styleFrom(
-                                                                            backgroundColor:
-                                                                                Colors.lightBlue,
-                                                                            padding: const EdgeInsets.all(1)),
-                                                                        onPressed:
-                                                                            () {
-                                                                          setState(
-                                                                              () {
-                                                                            moveTriperDialog(editTriperList[index]);
-                                                                          });
-                                                                        },
+                                                                          SizedBox(
+                                                                        width:
+                                                                            40,
+                                                                        height:
+                                                                            38,
                                                                         child:
-                                                                            const Icon(
-                                                                          Icons
-                                                                              .repeat_rounded,
-                                                                          size:
-                                                                              22,
+                                                                            ElevatedButton(
+                                                                          style: ElevatedButton.styleFrom(
+                                                                              backgroundColor: Colors.lightBlue,
+                                                                              padding: const EdgeInsets.all(1)),
+                                                                          onPressed:
+                                                                              () {
+                                                                            setState(() {
+                                                                              moveTriperDialog(editTriperList[index]);
+                                                                            });
+                                                                          },
+                                                                          child:
+                                                                              const Icon(
+                                                                            Icons.move_up_rounded,
+                                                                            size:
+                                                                                22,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),

@@ -180,7 +180,7 @@ class _ChangeCarOnTripState extends State<ChangeCarOnTrip> {
                               constraints: const BoxConstraints(
                                   maxWidth: 400, minWidth: 100),
                               child: Text(
-                                  "${e.startDate} - ${e.endDate}  $destination")),
+                                  "${e.startDate} - ${e.endDate}  $destination ${e.carData.carModel} ${e.carData.carRegistation}")),
                         );
                       }).toList(),
                       onChanged: null,
@@ -248,7 +248,7 @@ class _ChangeCarOnTripState extends State<ChangeCarOnTrip> {
                               constraints: const BoxConstraints(
                                   maxWidth: 400, minWidth: 100),
                               child: Text(
-                                  "${e.startDate} - ${e.endDate}  $destination")),
+                                  "${e.startDate} - ${e.endDate}  $destination ${e.carData.carModel} ${e.carData.carRegistation}")),
                           onTap: () {
                             setState(() {
                               carId2 = e.carData.carId;

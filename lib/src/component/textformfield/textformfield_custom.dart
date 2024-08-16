@@ -458,6 +458,7 @@ class DropdownGlobalOutline extends StatelessWidget {
   final Function(Object?)? onChanged;
   final String? Function(String?)? validator;
   final bool enable;
+  final Color? outlineColor;
   const DropdownGlobalOutline(
       {super.key,
       required this.labeltext,
@@ -465,6 +466,7 @@ class DropdownGlobalOutline extends StatelessWidget {
       required this.items,
       required this.onChanged,
       required this.validator,
+      this.outlineColor,
       this.enable = true});
 
   @override
@@ -480,9 +482,12 @@ class DropdownGlobalOutline extends StatelessWidget {
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(color: Colors.black12),
-              ),
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(
+                      // width: outlineColor == null ? 1 : 2,
+                      color: outlineColor == null
+                          ? Colors.black12
+                          : outlineColor!)),
               disabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: const BorderSide(color: Colors.black12),

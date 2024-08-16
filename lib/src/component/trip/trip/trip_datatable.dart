@@ -225,17 +225,20 @@ class _TripDatatableState extends State<TripDatatable> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         child: Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-          floatingActionButton: MyFloatingButton(
-            icon: const Icon(
-              Icons.add,
-              size: 30,
+          floatingActionButton: Tooltip(
+            message: 'Create Trip',
+            child: MyFloatingButton(
+              icon: const Icon(
+                Icons.add_rounded,
+                size: 30,
+              ),
+              onPressed: () {
+                showCreateTrip(0);
+              },
             ),
-            onPressed: () {
-              showCreateTrip(0);
-            },
           ),
           body: BlocBuilder<TripBloc, TripState>(
             builder: (context, state) {
@@ -266,110 +269,114 @@ class _TripDatatableState extends State<TripDatatable> {
                                           fontWeight: FontWeight.w800),
                                     ),
                                     Expanded(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "ระหว่างวันที่",
-                                            style: GoogleFonts.kanit(
-                                                textStyle: const TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.w500)),
-                                          ),
-                                          const Gap(10),
-                                          SizedBox(
-                                            width: 150,
-                                            child: TextFormFieldSearch(
-                                              controller: startDate,
-                                              labelText: "ตั้งแต่วันที่",
-                                              ontap: () {
-                                                selectvalidFromDate(0);
-                                              },
-                                              enabled: true,
-                                              suffixIcon: const Icon(
-                                                  Icons.calendar_today_rounded),
+                                      child: SizedBox(
+                                        height: 40,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              "ระหว่างวันที่",
+                                              style: GoogleFonts.kanit(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
                                             ),
-                                          ),
-                                          const Gap(10),
-                                          SizedBox(
-                                            width: 150,
-                                            child: TextFormFieldSearch(
-                                              controller: endDate,
-                                              labelText: "ถึงวันที่",
-                                              ontap: () {
-                                                selectvalidFromDate(1);
-                                              },
-                                              enabled: true,
-                                              suffixIcon: const Icon(
-                                                  Icons.calendar_today_rounded),
+                                            const Gap(10),
+                                            SizedBox(
+                                              width: 150,
+                                              child: TextFormFieldSearch(
+                                                controller: startDate,
+                                                labelText: "ตั้งแต่วันที่",
+                                                ontap: () {
+                                                  selectvalidFromDate(0);
+                                                },
+                                                enabled: true,
+                                                suffixIcon: const Icon(Icons
+                                                    .calendar_today_rounded),
+                                              ),
                                             ),
-                                          ),
-                                          const Gap(10),
-                                          SizedBox(
-                                            width: 300,
-                                            child: TextFormFieldSearch(
-                                              controller: search,
-                                              hintText: "Search(EN/TH)",
-                                              onChanged: (value) {
-                                                if (value == '') {
-                                                  context.read<TripBloc>().add(
-                                                      DissSearchTripEvent());
-                                                } else {
-                                                  setState(() {
-                                                    context
-                                                        .read<TripBloc>()
-                                                        .add(SearchTripEvent());
-                                                    dataTripModel = filterData
-                                                        .where((element) {
-                                                      final destination = element
-                                                          .destination
-                                                          .map((e) => e
-                                                              .provinceNameTh
-                                                              .toString())
-                                                          .join(', ')
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final startDate = element
-                                                          .startDate
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final endDate = element
-                                                          .endDate
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final carId = element
-                                                          .carData
-                                                          .carRegistation
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final description = element
-                                                          .tripDescription
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
+                                            const Gap(10),
+                                            SizedBox(
+                                              width: 150,
+                                              child: TextFormFieldSearch(
+                                                controller: endDate,
+                                                labelText: "ถึงวันที่",
+                                                ontap: () {
+                                                  selectvalidFromDate(1);
+                                                },
+                                                enabled: true,
+                                                suffixIcon: const Icon(Icons
+                                                    .calendar_today_rounded),
+                                              ),
+                                            ),
+                                            const Gap(10),
+                                            SizedBox(
+                                              width: 300,
+                                              child: TextFormFieldSearch(
+                                                controller: search,
+                                                hintText: "Search(EN/TH)",
+                                                onChanged: (value) {
+                                                  if (value == '') {
+                                                    context.read<TripBloc>().add(
+                                                        DissSearchTripEvent());
+                                                  } else {
+                                                    setState(() {
+                                                      context
+                                                          .read<TripBloc>()
+                                                          .add(
+                                                              SearchTripEvent());
+                                                      dataTripModel = filterData
+                                                          .where((element) {
+                                                        final destination = element
+                                                            .destination
+                                                            .map((e) => e
+                                                                .provinceNameTh
+                                                                .toString())
+                                                            .join(', ')
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final startDate = element
+                                                            .startDate
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final endDate = element
+                                                            .endDate
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final carId = element
+                                                            .carData
+                                                            .carRegistation
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final description = element
+                                                            .tripDescription
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
 
-                                                      return destination ||
-                                                          startDate ||
-                                                          endDate ||
-                                                          carId ||
-                                                          description;
-                                                    }).toList();
-                                                  });
-                                                }
-                                              },
-                                              enabled: true,
-                                              readOnly: false,
-                                              suffixIcon: const Icon(
-                                                  Icons.search_rounded),
+                                                        return destination ||
+                                                            startDate ||
+                                                            endDate ||
+                                                            carId ||
+                                                            description;
+                                                      }).toList();
+                                                    });
+                                                  }
+                                                },
+                                                enabled: true,
+                                                readOnly: false,
+                                                suffixIcon: const Icon(
+                                                    Icons.search_rounded),
+                                              ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     )
                                   ],
@@ -386,7 +393,8 @@ class _TripDatatableState extends State<TripDatatable> {
                                   });
                                 },
                                 columns: [
-                                  // DataColumn(label: textThai("ID")),
+                                  DataColumn(label: textThai("สถานะ")),
+                                  DataColumn(label: textThai("การจัดการ")),
                                   DataColumn(label: textThai("จุดหมาย")),
                                   DataColumn(label: textThai("วันเริ่มต้น")),
                                   DataColumn(label: textThai("วันสิ้นสุด")),
@@ -400,8 +408,6 @@ class _TripDatatableState extends State<TripDatatable> {
                                       label: textThai("เลขไมล์สิ้นสุดทริป")),
                                   // DataColumn(label: textThai("ผู้ขับขี่")),
                                   DataColumn(label: textThai("รายละเอียดทริป")),
-                                  DataColumn(label: textThai("สถานะ")),
-                                  DataColumn(label: textThai("การจัดการ")),
                                 ],
                                 source: DataTable(
                                   startDate.text,
@@ -702,124 +708,139 @@ class DataTable extends DataTableSource {
     final datarow = tripData?[index];
     String destination =
         datarow!.destination.map((e) => e.provinceNameTh.toString()).join(', ');
-    return DataRow(cells: [
-      // DataCell(Text(datarow.tripId)),
-      DataCell(Text(destination)),
-      DataCell(Text(datarow.startDate)),
-      DataCell(Text(datarow.endDate)),
-      DataCell(Text(
-          "${datarow.carData.carRegistation} - ${datarow.carData.carModel}")),
-      DataCell(Text(datarow.startMileageNumber)),
-      DataCell(Text(datarow.endMileageNumber)),
-      // DataCell(Text("")),
-      DataCell(Text(datarow.tripDescription)),
-      DataCell(
-        Row(
-          children: [
-            SizedBox(
-              width: 80,
-              height: 40,
-              child: Card(
-                  elevation: 2,
-                  color: datarow.tripStatus == "on-trip"
-                      ? Colors.greenAccent
-                      : datarow.tripStatus == "prepare"
-                          ? Colors.amberAccent
-                          : datarow.tripStatus == "finish"
-                              ? mythemecolor
-                              : Colors.red[700],
-                  child: Center(
-                    child: Text(
-                      datarow.tripStatus,
-                      style: TextStyle(
-                          color: datarow.tripStatus == "cancel" ||
-                                  datarow.tripStatus == "finish"
-                              ? Colors.white
-                              : Colors.grey[800]),
-                    ),
-                  )),
-            ),
-            if (datarow.oldTripId != "" && datarow.oldTripId != "No data")
-              const Tooltip(
-                  message: "มีการสลับรถระหว่างทริป",
-                  child: Icon(Icons.autorenew_rounded))
-          ],
-        ),
-      ),
-      DataCell(datarow.tripStatus == "cancel" || datarow.tripStatus == "finish"
-          ? Container()
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : Colors.grey[100]!;
+        }),
+        cells: [
+          DataCell(
+            Row(
               children: [
-                if (datarow.tripStatus == "on-trip") const Gap(5),
-                if (datarow.tripStatus == "on-trip")
-                  SizedBox(
-                    height: 34,
-                    width: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.lightBlue,
-                          padding: const EdgeInsets.all(1),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8))),
-                      child: const Icon(Icons.directions_car_rounded),
-                      onPressed: () {
-                        changeCarDialog(datarow);
-                      },
-                    ),
-                  ),
-                if (datarow.tripStatus == "on-trip") const Gap(5),
-                if (datarow.tripStatus == "on-trip")
-                  SizedBox(
-                    height: 34,
-                    width: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.greenAccent[700],
-                          padding: const EdgeInsets.all(1),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8))),
-                      child: const Icon(Icons.check),
-                      onPressed: () {
-                        finishTripDialog(datarow.tripId);
-                      },
-                    ),
-                  ),
-                if (datarow.tripStatus != "on-trip") const Gap(5),
-                if (datarow.tripStatus != "on-trip")
-                  SizedBox(
-                    height: 34,
-                    width: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[700],
-                          padding: const EdgeInsets.all(1),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8))),
-                      child: const Icon(Icons.cancel),
-                      onPressed: () {
-                        cancelDialog(datarow.tripId);
-                      },
-                    ),
-                  ),
-                const Gap(5),
                 SizedBox(
-                  height: 34,
-                  width: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(1),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8))),
-                    child: const Icon(Icons.settings),
-                    onPressed: () {
-                      showEditTrip(1, datarow.tripId, datarow.tripStatus);
-                    },
-                  ),
+                  width: 80,
+                  height: 40,
+                  child: Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                      elevation: 2,
+                      color: datarow.tripStatus == "on-trip"
+                          ? Colors.greenAccent
+                          : datarow.tripStatus == "prepare"
+                              ? Colors.amberAccent
+                              : datarow.tripStatus == "finish"
+                                  ? mythemecolor
+                                  : Colors.red[700],
+                      child: Center(
+                        child: Text(
+                          datarow.tripStatus,
+                          style: TextStyle(
+                              color: datarow.tripStatus == "cancel" ||
+                                      datarow.tripStatus == "finish"
+                                  ? Colors.white
+                                  : Colors.grey[800]),
+                        ),
+                      )),
                 ),
+                if (datarow.oldTripId != "" && datarow.oldTripId != "No data")
+                  const Tooltip(
+                      message: "มีการสลับรถระหว่างทริป",
+                      child: Icon(Icons.autorenew_rounded))
               ],
-            )),
-    ]);
+            ),
+          ),
+          DataCell(datarow.tripStatus == "cancel" ||
+                  datarow.tripStatus == "finish"
+              ? Container()
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    if (datarow.tripStatus == "on-trip") const Gap(2),
+                    if (datarow.tripStatus == "on-trip")
+                      Tooltip(
+                        message: 'change car on-trip',
+                        child: SizedBox(
+                          height: 34,
+                          width: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.lightBlue[600],
+                                padding: const EdgeInsets.all(1),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6))),
+                            child: const Icon(Icons.drive_eta_rounded),
+                            onPressed: () {
+                              changeCarDialog(datarow);
+                            },
+                          ),
+                        ),
+                      ),
+                    if (datarow.tripStatus == "on-trip") const Gap(3),
+                    if (datarow.tripStatus == "on-trip")
+                      Tooltip(
+                        message: "finish trip.",
+                        child: SizedBox(
+                          height: 34,
+                          width: 40,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: mygreencolors,
+                                padding: const EdgeInsets.all(1),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(6))),
+                            child: const Icon(Icons.check_circle_rounded),
+                            onPressed: () {
+                              finishTripDialog(datarow.tripId);
+                            },
+                          ),
+                        ),
+                      ),
+                    if (datarow.tripStatus != "on-trip") const Gap(3),
+                    if (datarow.tripStatus != "on-trip")
+                      SizedBox(
+                        height: 34,
+                        width: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red[700],
+                              padding: const EdgeInsets.all(1),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6))),
+                          child: const Icon(Icons.cancel),
+                          onPressed: () {
+                            cancelDialog(datarow.tripId);
+                          },
+                        ),
+                      ),
+                    const Gap(3),
+                    SizedBox(
+                      height: 34,
+                      width: 40,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(1),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6))),
+                        child: const Icon(Icons.settings_rounded),
+                        onPressed: () {
+                          showEditTrip(1, datarow.tripId, datarow.tripStatus);
+                        },
+                      ),
+                    ),
+                  ],
+                )),
+
+          // DataCell(Text(datarow.tripId)),
+          DataCell(Text(destination)),
+          DataCell(Text(datarow.startDate)),
+          DataCell(Text(datarow.endDate)),
+          DataCell(Text(
+              "${datarow.carData.carRegistation} - ${datarow.carData.carModel}")),
+          DataCell(Text(datarow.startMileageNumber)),
+          DataCell(Text(datarow.endMileageNumber)),
+          // DataCell(Text("")),
+          DataCell(Text(datarow.tripDescription)),
+        ]);
   }
 
   @override

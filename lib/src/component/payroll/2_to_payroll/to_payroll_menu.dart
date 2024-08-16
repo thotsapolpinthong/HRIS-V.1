@@ -10,11 +10,9 @@ import 'package:hris_app_prototype/src/bloc/payroll_bloc/bloc/payroll_bloc.dart'
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/employee_detials_table.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/pdf_work_hour_employee.dart';
-import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/printing_page.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/to_payroll/time_record_model.dart';
-import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -75,6 +73,7 @@ class _ToPayrollState extends State<ToPayroll> {
           }
         }
       }
+      fetchTimeRecord();
     });
   }
 
@@ -289,9 +288,10 @@ class _ToPayrollState extends State<ToPayroll> {
                               lotNumberData!.lotNumberData.where(
                                   (element) => element.lotNumberId == newValue);
                           if (result.isNotEmpty) {
-                            startDate.text = result.first.startDate.toString();
+                            startDate.text =
+                                result.first.startDate.substring(0, 10);
                             finishDate.text =
-                                result.first.finishDate.toString();
+                                result.first.finishDate.substring(0, 10);
                           }
                           if (timeRecordData != null) {
                             fetchTimeRecord();

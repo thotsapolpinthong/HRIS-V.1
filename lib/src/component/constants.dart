@@ -536,6 +536,31 @@ class MyDialogSuccess {
   }
 }
 
+class MyDialogChoice {
+  static void alertDialog(
+      BuildContext context, String message, Function()? btnOkOnPress) {
+    AwesomeDialog(
+            dismissOnTouchOutside: false,
+            width: 400,
+            context: context,
+            animType: AnimType.topSlide,
+            dialogType: DialogType.infoReverse,
+            body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Center(
+                child: Text(
+                  message,
+                  style: const TextStyle(),
+                ),
+              ),
+            ),
+            btnOkColor: mythemecolor,
+            btnOkOnPress: btnOkOnPress,
+            btnCancelOnPress: () {})
+        .show();
+  }
+}
+
 class MainDialog {
   static alertDialog(BuildContext context, String messageEN, Widget child,
       double width, double height) {

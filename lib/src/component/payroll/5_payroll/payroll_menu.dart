@@ -221,6 +221,10 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
       filePathSlip =
           await AccReport.departmentSalarySlip(startDate, finishDate, orgCode);
       await Printing.layoutPdf(
+        format: const PdfPageFormat(
+          13.97 * PdfPageFormat.cm, // Height in cm
+          20.30 * PdfPageFormat.cm, // Width in cm
+        ),
         onLayout: (PdfPageFormat format) async {
           final file = File(filePathSlip); // Set the format to landscape
           final bytes = await file.readAsBytes();
@@ -310,7 +314,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                   ontap: null),
             ),
             Expanded(
-              flex: 4,
+              flex: 3,
               child: DropdownGlobal(
                   labeltext: 'Employee Type',
                   value: positionTypeId,
@@ -333,7 +337,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                   validator: null),
             ),
             Expanded(
-              flex: 5,
+              flex: 6,
               child: DropdownGlobal(
                   labeltext: 'Department',
                   value: orgCode,
@@ -341,7 +345,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                     return DropdownMenuItem<String>(
                       value: e.organizationCode,
                       child: Container(
-                          constraints: const BoxConstraints(maxWidth: 180),
+                          constraints: const BoxConstraints(maxWidth: 240),
                           child: Text(
                               "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
                     );
@@ -384,18 +388,18 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             UploadButton(
-                width: 100,
+                width: 120,
                 height: 32,
                 text: "ไฟล์ กยศ.",
                 isUploaded: isuploadDSL,
                 onPressed: () => _pickFile()),
-            const Gap(5),
-            UploadButton(
-                width: 200,
-                height: 32,
-                text: "ไฟล์ โบนัส / ปรับเงินเดือน",
-                isUploaded: false,
-                onPressed: () => _pickFile()),
+            // const Gap(5),
+            // UploadButton(
+            //     width: 200,
+            //     height: 32,
+            //     text: "ไฟล์ โบนัส / ปรับเงินเดือน",
+            //     isUploaded: false,
+            //     onPressed: () => _pickFile()),
           ],
         ),
         const Gap(10),
@@ -410,12 +414,19 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
             children: [
               if (positionTypeId == "0" || positionTypeId == "1")
                 ButtonTableMenu(
-                    width: 115,
+                    width: 145,
                     height: 32,
-                    text: "สลิปรายเดือน",
-                    iconColor:
-                        orgCode == null ? Colors.grey[500] : mythemecolor,
-                    fontColor: orgCode == null ? Colors.grey[600] : null,
+                    text: "สลิปพนักงานรายเดือน",
+                    iconColor: !accLock
+                        ? Colors.grey[400]
+                        : orgCode == null
+                            ? Colors.grey[400]
+                            : mythemecolor,
+                    fontColor: !accLock
+                        ? Colors.grey[500]
+                        : orgCode == null
+                            ? Colors.grey[500]
+                            : null,
                     isUploaded: true,
                     onPressed: !accLock
                         ? null
@@ -439,12 +450,19 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
               const Gap(5),
               if (positionTypeId == "0" || positionTypeId == "2")
                 ButtonTableMenu(
-                    width: 115,
+                    width: 135,
                     height: 32,
-                    text: "พิมพ์สลิปรายวัน",
-                    iconColor:
-                        orgCode == null ? Colors.grey[500] : mythemecolor,
-                    fontColor: orgCode == null ? Colors.grey[600] : null,
+                    text: "สลิปพนักงานรายวัน",
+                    iconColor: !accLaborLock
+                        ? Colors.grey[400]
+                        : orgCode == null
+                            ? Colors.grey[400]
+                            : mythemecolor,
+                    fontColor: !accLaborLock
+                        ? Colors.grey[500]
+                        : orgCode == null
+                            ? Colors.grey[500]
+                            : null,
                     isUploaded: true,
                     onPressed: !accLaborLock
                         ? null
@@ -710,7 +728,8 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                                 ? null
                                 : () {
                                     setState(() {
-                                      accLocking(false);
+                                      questionDialog(false);
+                                      // accLocking(false);
                                     });
                                   },
                             child: Column(
@@ -744,7 +763,8 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                                 ? null
                                 : () {
                                     setState(() {
-                                      accLocking(true);
+                                      questionDialog(true);
+                                      // accLocking(true);
                                     });
                                   },
                             child: Column(
@@ -867,9 +887,15 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: success ? mygreencolors : myredcolors,
         content: Text(success
-            ? "Locking Lot ${startDate.text} - ${finishDate.text} Success"
-            : "Locking Lot ${startDate.text} - ${finishDate.text} Fail")));
+            ? "ACC Locking Lot ${startDate.text} - ${finishDate.text} Success"
+            : "ACC Locking Lot ${startDate.text} - ${finishDate.text} Fail")));
     if (success) subFetchData();
+  }
+
+  questionDialog(bool type) {
+    MyDialogChoice.alertDialog(context, 'Confirm', () {
+      accLocking(type);
+    });
   }
 
   @override
@@ -925,7 +951,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                               });
                             },
                             columns: const [
-                              DataColumn(label: Text("Details")),
+                              DataColumn(label: Text("Menu")),
                               DataColumn(numeric: true, label: Text("Emp. ID")),
                               DataColumn(label: Text("Type")),
                               DataColumn(label: Text("Name")),
@@ -1044,15 +1070,13 @@ class SubDataTableSource extends DataTableSource {
       filePathSlip =
           await AccReport.employeeSalarySlip(startDate, finishDate, empId);
       await Printing.layoutPdf(
+        format: const PdfPageFormat(
+          20.30 * PdfPageFormat.cm, // Width in cm
+          13.97 * PdfPageFormat.cm, // Height in cm
+        ),
         onLayout: (PdfPageFormat format) async {
           final file = File(filePathSlip); // Set the format to landscape
           final bytes = await file.readAsBytes();
-
-          // Set the format to landscape
-          // final PdfPageFormat landscapeFormat = PdfPageFormat(
-          //   format.width,
-          //   format.height,
-          // );
 
           // Do the necessary operations with the landscape format if needed
           return bytes;
