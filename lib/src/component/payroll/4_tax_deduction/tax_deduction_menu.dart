@@ -251,27 +251,6 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
           const Text('Tax Deduction Management.',
               style: TextStyle(fontWeight: FontWeight.w800)),
           const Gap(10),
-          SizedBox(
-            width: 110,
-            child: DropdownGlobal(
-                labeltext: 'Year',
-                value: yearId,
-                items: yearList.map((e) {
-                  return DropdownMenuItem<String>(
-                    value: e.toString(),
-                    child: SizedBox(width: 50, child: Text(e.toString())),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    yearId = newValue.toString();
-                    isDataLoading = true;
-                    fetchData();
-                  });
-                },
-                validator: null,
-                outlineColor: mythemecolor),
-          ),
           Expanded(child: Container()),
           Expanded(
               flex: 2,
@@ -299,47 +278,64 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                     },
                   ),
                   const Gap(5),
-                  const Icon(Icons.search_rounded),
+                  SizedBox(
+                    width: 110,
+                    child: DropdownGlobal(
+                        labeltext: 'Year',
+                        value: yearId,
+                        items: yearList.map((e) {
+                          return DropdownMenuItem<String>(
+                            value: e.toString(),
+                            child:
+                                SizedBox(width: 50, child: Text(e.toString())),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            yearId = newValue.toString();
+                            isDataLoading = true;
+                            fetchData();
+                          });
+                        },
+                        validator: null,
+                        outlineColor: mythemecolor),
+                  ),
+                  const Gap(5),
                   Expanded(
                     flex: 3,
                     child: Padding(
                       padding: const EdgeInsets.all(4.0),
-                      child: TextFormField(
-                        controller: search,
-                        onChanged: (value) {
-                          if (value == '') {
-                            setState(() {
-                              onSearch = false;
-                              filterData = taxDeductionData;
-                            });
-                          } else {
-                            setState(() {
-                              onSearch = true;
-                              filterData = taxDeductionData.where((e) {
-                                final taxId = e.taxNumber
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase());
-                                final empId = e.employeeId
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase());
-                                final fName = e.firstName
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase());
-                                final lName = e.lastName
-                                    .toLowerCase()
-                                    .contains(value.toLowerCase());
-                                return taxId || empId || fName || lName;
-                              }).toList();
-                            });
-                          }
-                        },
-                        decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(10.0),
-                            hintText: 'Search (EN/TH)',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8))),
-                      ),
+                      child: TextFormFieldSearch(
+                          controller: search,
+                          enabled: true,
+                          onChanged: (value) {
+                            if (value == '') {
+                              setState(() {
+                                onSearch = false;
+                                filterData = taxDeductionData;
+                              });
+                            } else {
+                              setState(() {
+                                onSearch = true;
+                                filterData = taxDeductionData.where((e) {
+                                  final taxId = e.taxNumber
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final empId = e.employeeId
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final fName = e.firstName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final lName = e.lastName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  return taxId || empId || fName || lName;
+                                }).toList();
+                              });
+                            }
+                          }),
                     ),
                   ),
                 ],

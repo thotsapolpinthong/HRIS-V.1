@@ -187,123 +187,130 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           const Icon(
                                               Icons.account_tree_rounded),
                                         const Gap(3),
-                                        if (widget.isSelected == true)
-                                          Expanded(
-                                            flex: 1,
-                                            child: DropdownGlobal(
-                                              labeltext: 'Department',
-                                              value: orgData,
-                                              validator: null,
-                                              items: orgList?.map((e) {
-                                                return DropdownMenuItem<String>(
-                                                  value: e.organizationCode
-                                                      .toString(),
-                                                  child: Container(
-                                                      constraints:
-                                                          const BoxConstraints(
-                                                              maxWidth: 220),
-                                                      child: Text(
-                                                          "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
-                                                );
-                                              }).toList(),
-                                              onChanged: (newValue) {
-                                                if (newValue == '') {
+                                        // if (widget.isSelected == true)
+                                        Expanded(
+                                          flex: 1,
+                                          child: DropdownGlobal(
+                                            labeltext: 'Department',
+                                            value: orgData,
+                                            items: orgList?.map((e) {
+                                              return DropdownMenuItem<String>(
+                                                value: e.organizationCode
+                                                    .toString(),
+                                                child: Container(
+                                                    constraints:
+                                                        const BoxConstraints(
+                                                            maxWidth: 190),
+                                                    child: Text(
+                                                        "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
+                                              );
+                                            }).toList(),
+                                            onChanged: (newValue) {
+                                              if (newValue == '') {
+                                                context
+                                                    .read<EmployeeBloc>()
+                                                    .add(DissSearchEmpEvent());
+                                              } else {
+                                                setState(() {
+                                                  orgData = newValue.toString();
                                                   context
                                                       .read<EmployeeBloc>()
-                                                      .add(
-                                                          DissSearchEmpEvent());
-                                                } else {
-                                                  setState(() {
-                                                    orgData =
-                                                        newValue.toString();
-                                                    context
-                                                        .read<EmployeeBloc>()
-                                                        .add(SearchEmpEvent());
-                                                    employeeData = filterData!
-                                                        .where((element) {
-                                                      final organizationId =
-                                                          element
-                                                              .positionData
-                                                              .organizationData
-                                                              .organizationCode
-                                                              .toLowerCase()
-                                                              .contains(newValue
-                                                                  .toString()
-                                                                  .toLowerCase());
-                                                      return organizationId;
-                                                    }).toList();
-                                                    employeeData;
-                                                  });
-                                                }
-                                              },
-                                            ),
+                                                      .add(SearchEmpEvent());
+                                                  employeeData = filterData!
+                                                      .where((element) {
+                                                    final organizationId =
+                                                        element
+                                                            .positionData
+                                                            .organizationData
+                                                            .organizationCode
+                                                            .toLowerCase()
+                                                            .contains(newValue
+                                                                .toString()
+                                                                .toLowerCase());
+                                                    return organizationId;
+                                                  }).toList();
+                                                  employeeData;
+                                                });
+                                              }
+                                            },
+                                            suffixIcon: orgData == null
+                                                ? null
+                                                : IconButton(
+                                                    splashRadius: 1,
+                                                    onPressed: () =>
+                                                        setState(() {
+                                                      orgData = null;
+                                                      context
+                                                          .read<EmployeeBloc>()
+                                                          .add(
+                                                              DissSearchEmpEvent());
+                                                    }),
+                                                    icon: const Icon(
+                                                        Icons.cancel_rounded),
+                                                  ),
                                           ),
+                                        ),
                                         Expanded(
                                             flex: 1,
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                    Icons.search_rounded),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: TextFormField(
-                                                      controller: search,
-                                                      onChanged: (value) {
-                                                        if (value == '') {
-                                                          context
-                                                              .read<
-                                                                  EmployeeBloc>()
-                                                              .add(
-                                                                  DissSearchEmpEvent());
-                                                        } else {
-                                                          setState(() {
-                                                            context
-                                                                .read<
-                                                                    EmployeeBloc>()
-                                                                .add(
-                                                                    SearchEmpEvent());
-                                                            employeeData =
-                                                                filterData!.where(
-                                                                    (element) {
-                                                              final employeeId = element
-                                                                  .employeeId
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final personId = element
-                                                                  .personData
-                                                                  .personId
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final fisrtNameTh = element
-                                                                  .personData
-                                                                  .fisrtNameTh
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final lastNameTh = element
-                                                                  .personData
-                                                                  .lastNameTh
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final description = element
-                                                                  .staffTypeData
-                                                                  .description
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final positionOrganizationId = element
-                                                                  .positionData
-                                                                  .positionOrganizationId
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final positionNameTh = element
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: TextFormFieldSearch(
+                                                  controller: search,
+                                                  enabled: true,
+                                                  onChanged: (value) {
+                                                    if (value == '') {
+                                                      context
+                                                          .read<EmployeeBloc>()
+                                                          .add(
+                                                              DissSearchEmpEvent());
+                                                    } else {
+                                                      setState(() {
+                                                        context
+                                                            .read<
+                                                                EmployeeBloc>()
+                                                            .add(
+                                                                SearchEmpEvent());
+                                                        employeeData =
+                                                            filterData!.where(
+                                                                (element) {
+                                                          final employeeId = element
+                                                              .employeeId
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final personId = element
+                                                              .personData
+                                                              .personId
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final fisrtNameTh = element
+                                                              .personData
+                                                              .fisrtNameTh
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final lastNameTh = element
+                                                              .personData
+                                                              .lastNameTh
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final description = element
+                                                              .staffTypeData
+                                                              .description
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final positionOrganizationId = element
+                                                              .positionData
+                                                              .positionOrganizationId
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final positionNameTh =
+                                                              element
                                                                   .positionData
                                                                   .positionData
                                                                   .positionNameTh
@@ -311,32 +318,17 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                                   .contains(value
                                                                       .toLowerCase());
 
-                                                              return employeeId ||
-                                                                  personId ||
-                                                                  fisrtNameTh ||
-                                                                  lastNameTh ||
-                                                                  description ||
-                                                                  positionOrganizationId ||
-                                                                  positionNameTh;
-                                                            }).toList();
-                                                          });
-                                                        }
-                                                      },
-                                                      decoration: InputDecoration(
-                                                          contentPadding:
-                                                              const EdgeInsets
-                                                                  .all(10.0),
-                                                          hintText:
-                                                              'Search (EN/TH)',
-                                                          border: OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8))),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                                          return employeeId ||
+                                                              personId ||
+                                                              fisrtNameTh ||
+                                                              lastNameTh ||
+                                                              description ||
+                                                              positionOrganizationId ||
+                                                              positionNameTh;
+                                                        }).toList();
+                                                      });
+                                                    }
+                                                  }),
                                             )),
                                       ],
                                     ),

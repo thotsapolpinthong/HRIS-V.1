@@ -76,68 +76,65 @@ class _HotelDatatableState extends State<HotelDatatable> {
                 hotelData = state.hotelDataModel?.hotelData ?? [];
                 filterData = state.hotelDataModel?.hotelData ?? [];
               } else {}
-              return SizedBox(
-                height: double.infinity,
-                width: double.infinity,
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: state.isHotelDataLoading == true
-                          ? myLoadingScreen
-                          : PaginatedDataTable(
-                              header: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Hotel Table.",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w800),
-                                  ),
-                                  SizedBox(
-                                    width: 300,
-                                    child: TextFormFieldSearch(
-                                      controller: search,
-                                      hintText: "Search(EN/TH)",
-                                      onChanged: (value) {},
-                                      enabled: true,
-                                      readOnly: false,
-                                      suffixIcon:
-                                          const Icon(Icons.search_rounded),
+              return state.isHotelDataLoading == true
+                  ? myLoadingScreen
+                  : SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: PaginatedDataTable(
+                                header: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Hotel Table.",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800),
                                     ),
-                                  )
+                                    SizedBox(
+                                      width: 300,
+                                      height: 42,
+                                      child: TextFormFieldSearch(
+                                        controller: search,
+                                        onChanged: (value) {},
+                                        enabled: true,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                columnSpacing: 30,
+                                showFirstLastButtons: true,
+                                rowsPerPage: rowIndex,
+                                availableRowsPerPage: const [5, 10, 20],
+                                sortColumnIndex: sortColumnIndex,
+                                sortAscending: sort,
+                                onRowsPerPageChanged: (value) {
+                                  setState(() {
+                                    rowIndex = value!;
+                                  });
+                                },
+                                columns: [
+                                  DataColumn(label: textThai("ประเภทที่พัก")),
+                                  DataColumn(label: textThai("ชื่อที่พัก")),
+                                  DataColumn(label: textThai("ราคาห้องพัก")),
+                                  DataColumn(label: textThai("ที่อยู่")),
+                                  DataColumn(label: textThai("รายละเอียด")),
+                                  DataColumn(label: textThai("สถานะ")),
+                                  DataColumn(label: textThai("การจัดการ")),
                                 ],
-                              ),
-                              columnSpacing: 30,
-                              showFirstLastButtons: true,
-                              rowsPerPage: rowIndex,
-                              availableRowsPerPage: const [5, 10, 20],
-                              sortColumnIndex: sortColumnIndex,
-                              sortAscending: sort,
-                              onRowsPerPageChanged: (value) {
-                                setState(() {
-                                  rowIndex = value!;
-                                });
-                              },
-                              columns: [
-                                DataColumn(label: textThai("ประเภทที่พัก")),
-                                DataColumn(label: textThai("ชื่อที่พัก")),
-                                DataColumn(label: textThai("ราคาห้องพัก")),
-                                DataColumn(label: textThai("ที่อยู่")),
-                                DataColumn(label: textThai("รายละเอียด")),
-                                DataColumn(label: textThai("สถานะ")),
-                                DataColumn(label: textThai("การจัดการ")),
-                              ],
-                              source: DataTable(
-                                  context: context, hotelData: hotelData)),
-                    ),
-                  ),
-                ),
-              );
+                                source: DataTable(
+                                    context: context, hotelData: hotelData)),
+                          ),
+                        ),
+                      ),
+                    );
             },
           ),
         ));

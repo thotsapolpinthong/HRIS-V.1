@@ -8,9 +8,7 @@ part 'position_org_state.dart';
 
 class PositionOrgBloc extends Bloc<PositionOrgEvent, PositionOrgState> {
   PositionOrgBloc() : super(const PositionOrgState()) {
-    on<PositionOrgEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<PositionOrgEvent>((event, emit) {});
     on<FetchDataPositionOrgEvent>((event, emit) async {
       emit(state.copyWith(isDataLoading: true));
       emit(state.copyWith(

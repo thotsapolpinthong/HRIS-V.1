@@ -1000,6 +1000,7 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                     controller: memberStartDate,
                                                                                     labelText: "วันเริ่มต้น",
                                                                                     validatorless: null,
+                                                                                    outlineColor: memberStartDate.text == '' ? myredcolors : null,
                                                                                     ontap: () {
                                                                                       if (widget.type == 1) {
                                                                                         setState(() {
@@ -1014,6 +1015,7 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                     controller: memberEndDate,
                                                                                     labelText: "วันสิ้นสุด",
                                                                                     validatorless: null,
+                                                                                    outlineColor: memberEndDate.text == '' ? myredcolors : null,
                                                                                     ontap: () {
                                                                                       if (widget.type == 1) {
                                                                                         setState(() {
@@ -1250,11 +1252,13 @@ class _SettingTripState extends State<SettingTrip> {
                                                                                 style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
                                                                                 onPressed: widget.statusType == "on-trip"
                                                                                     ? null
-                                                                                    : () {
-                                                                                        setState(() {
-                                                                                          editCostMembertrip();
-                                                                                        });
-                                                                                      },
+                                                                                    : memberStartDate.text == '' || memberEndDate.text == '' || triperTypeId == null
+                                                                                        ? null
+                                                                                        : () {
+                                                                                            setState(() {
+                                                                                              editCostMembertrip();
+                                                                                            });
+                                                                                          },
                                                                                 child: const TextThai(text: "เพิ่ม / แก้ไข", textStyle: TextStyle(color: Colors.black)),
                                                                               ),
                                                                             ),
@@ -1442,7 +1446,8 @@ class _SettingTripState extends State<SettingTrip> {
                                                                         child:
                                                                             ElevatedButton(
                                                                           style: ElevatedButton.styleFrom(
-                                                                              backgroundColor: Colors.lightBlue,
+                                                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                                                                              backgroundColor: mybluecolors,
                                                                               padding: const EdgeInsets.all(1)),
                                                                           onPressed:
                                                                               () {
@@ -1470,8 +1475,9 @@ class _SettingTripState extends State<SettingTrip> {
                                                                       child:
                                                                           ElevatedButton(
                                                                         style: ElevatedButton.styleFrom(
-                                                                            padding:
-                                                                                const EdgeInsets.all(1)),
+                                                                            shape:
+                                                                                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                                                                            padding: const EdgeInsets.all(1)),
                                                                         child: const Icon(
                                                                             Icons.edit),
                                                                         onPressed:

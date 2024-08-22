@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +29,7 @@ class EditEmployeeSalary extends StatefulWidget {
 }
 
 class _EditEmployeeSalaryState extends State<EditEmployeeSalary> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController employeeId = TextEditingController();
   TextEditingController name = TextEditingController();
   TextEditingController typeName = TextEditingController();
@@ -101,158 +101,169 @@ class _EditEmployeeSalaryState extends State<EditEmployeeSalary> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(child: SingleChildScrollView(
-          child: BlocBuilder<EmployeeBloc, EmployeeState>(
-            builder: (context, state) {
-              if (!widget.onEdit && employeeId.text == "") {
-                employeeId.text = state.employeeData?.employeeId ?? "";
-                name.text =
-                    "${state.employeeData?.personData.titleName.titleNameTh} ${state.employeeData?.personData.fisrtNameTh} ${state.employeeData?.personData.lastNameTh}";
-                typeId = state
-                    .employeeData?.positionData.positionTypeData.positionTypeId;
-                typeName.text = state.employeeData?.positionData
-                        .positionTypeData.positionTypeNameTh ??
-                    "";
-              }
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: TextFormFieldGlobal(
-                            controller: employeeId,
-                            labelText: "Employee Id",
-                            enabled: false),
-                      ),
-                      Expanded(
-                        child: TextFormFieldGlobal(
-                            controller: typeName,
-                            labelText: "Position Type",
-                            enabled: false),
-                      ),
-                    ],
-                  ),
-                  const Gap(4),
-                  TextFormFieldGlobal(
-                      controller: name,
-                      labelText: "Employee Name",
-                      enabled: false),
-                  const Gap(4),
-                  TextFormFieldGlobal(
-                    controller: bookBank,
-                    labelText: "Bank account",
-                    enabled: true,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
-                    ],
-                    validatorless: Validatorless.multiple([
-                      Validatorless.required("required"),
-                      Validatorless.min(10, "required Specify 10 digits")
-                    ]),
-                  ),
-                  const Gap(4),
-                  typeId == "1"
-                      ? TextFormFieldGlobal(
-                          controller: salary,
-                          labelText: "Salary",
-                          enabled: true,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
-                          ],
-                          validatorless: Validatorless.required("required"),
-                        )
-                      : TextFormFieldGlobal(
-                          controller: wage,
-                          labelText: "Wage",
-                          enabled: true,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
-                          ],
-                          validatorless: Validatorless.required("required"),
-                        ),
-                  if (widget.onEdit)
-                    TextFormFieldGlobal(
-                      controller: comment,
-                      labelText: "Comment",
-                      enabled: true,
-                      validatorless: Validatorless.required("required"),
-                    ),
-                ],
-              );
-            },
-          ),
-        )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            widget.onEdit
-                ? Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: Row(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Expanded(child: SingleChildScrollView(
+            child: BlocBuilder<EmployeeBloc, EmployeeState>(
+              builder: (context, state) {
+                if (!widget.onEdit && employeeId.text == "") {
+                  employeeId.text = state.employeeData?.employeeId ?? "";
+                  name.text =
+                      "${state.employeeData?.personData.titleName.titleNameTh} ${state.employeeData?.personData.fisrtNameTh} ${state.employeeData?.personData.lastNameTh}";
+                  typeId = state.employeeData?.positionData.positionTypeData
+                      .positionTypeId;
+                  typeName.text = state.employeeData?.positionData
+                          .positionTypeData.positionTypeNameTh ??
+                      "";
+                }
+                return Column(
+                  children: [
+                    Row(
                       children: [
-                        SizedBox(
-                          width: 100,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: dataStatus == true ? 2 : 0,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                        left: Radius.circular(8))),
-                                backgroundColor: dataStatus == true
-                                    ? Colors.greenAccent
-                                    : Colors.grey[300],
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  dataStatus = true;
-                                });
-                              },
-                              child: const Text(
-                                "Active",
-                                style: TextStyle(color: Colors.black87),
-                              )),
+                        Expanded(
+                          child: TextFormFieldGlobal(
+                              controller: employeeId,
+                              labelText: "Employee Id",
+                              enabled: false),
                         ),
-                        SizedBox(
-                          width: 100,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: dataStatus == false ? 2 : 0,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(
-                                        right: Radius.circular(8))),
-                                backgroundColor: dataStatus == false
-                                    ? Colors.redAccent
-                                    : Colors.grey[300],
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  dataStatus = false;
-                                });
-                              },
-                              child: const Text(
-                                "Inactive",
-                                style: TextStyle(color: Colors.white),
-                              )),
+                        Expanded(
+                          child: TextFormFieldGlobal(
+                              controller: typeName,
+                              labelText: "Position Type",
+                              enabled: false),
                         ),
                       ],
                     ),
-                  )
-                : Container(),
-            MySaveButtons(
-              text: widget.onEdit ? "Update" : "Create",
-              onPressed: () {
-                if (widget.onEdit) {
-                  updateSalary();
-                } else {
-                  createSalary();
-                }
+                    const Gap(4),
+                    TextFormFieldGlobal(
+                        controller: name,
+                        labelText: "Employee Name",
+                        enabled: false),
+                    const Gap(4),
+                    TextFormFieldGlobal(
+                      controller: bookBank,
+                      labelText: "Bank account",
+                      enabled: true,
+                      onChanged: (p0) => setState(() {}),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9/]'))
+                      ],
+                      validatorless: Validatorless.multiple([
+                        Validatorless.required("required"),
+                        Validatorless.min(10, "required Specify 10 digits")
+                      ]),
+                    ),
+                    const Gap(4),
+                    typeId == "1"
+                        ? TextFormFieldGlobal(
+                            controller: salary,
+                            labelText: "Salary",
+                            enabled: true,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9/]'))
+                            ],
+                            validatorless: Validatorless.required("required"),
+                            onChanged: (p0) => setState(() {}),
+                          )
+                        : TextFormFieldGlobal(
+                            controller: wage,
+                            labelText: "Wage",
+                            enabled: true,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9/]'))
+                            ],
+                            validatorless: Validatorless.required("required"),
+                            onChanged: (p0) => setState(() {}),
+                          ),
+                    if (widget.onEdit)
+                      TextFormFieldGlobal(
+                        controller: comment,
+                        labelText: "Comment",
+                        enabled: true,
+                        validatorless: Validatorless.required("required"),
+                        onChanged: (p0) => setState(() {}),
+                      ),
+                  ],
+                );
               },
-            )
-          ],
-        )
-      ],
+            ),
+          )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              widget.onEdit
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: dataStatus == true ? 2 : 0,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.horizontal(
+                                          left: Radius.circular(8))),
+                                  backgroundColor: dataStatus == true
+                                      ? Colors.greenAccent
+                                      : Colors.grey[300],
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    dataStatus = true;
+                                  });
+                                },
+                                child: const Text(
+                                  "Active",
+                                  style: TextStyle(color: Colors.black87),
+                                )),
+                          ),
+                          SizedBox(
+                            width: 100,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: dataStatus == false ? 2 : 0,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.horizontal(
+                                          right: Radius.circular(8))),
+                                  backgroundColor: dataStatus == false
+                                      ? Colors.redAccent
+                                      : Colors.grey[300],
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    dataStatus = false;
+                                  });
+                                },
+                                child: const Text(
+                                  "Inactive",
+                                  style: TextStyle(color: Colors.white),
+                                )),
+                          ),
+                        ],
+                      ),
+                    )
+                  : Container(),
+              MySaveButtons(
+                text: widget.onEdit ? "Update" : "Create",
+                onPressed: _formKey.currentState?.validate() != true
+                    ? null
+                    : () {
+                        if (widget.onEdit) {
+                          updateSalary();
+                        } else {
+                          createSalary();
+                        }
+                      },
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 }

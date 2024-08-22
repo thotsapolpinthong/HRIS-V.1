@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/pdf_work_hour_employee.dart';
 import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/5_payroll/payroll_details.dart';
-import 'package:hris_app_prototype/src/component/payroll/5_payroll/print_slip.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
@@ -222,8 +220,8 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
           await AccReport.departmentSalarySlip(startDate, finishDate, orgCode);
       await Printing.layoutPdf(
         format: const PdfPageFormat(
-          13.97 * PdfPageFormat.cm, // Height in cm
-          20.30 * PdfPageFormat.cm, // Width in cm
+          13.97 * PdfPageFormat.cm,
+          20.30 * PdfPageFormat.cm,
         ),
         onLayout: (PdfPageFormat format) async {
           final file = File(filePathSlip); // Set the format to landscape
@@ -360,11 +358,9 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                       ? null
                       : IconButton(
                           splashRadius: 1,
-                          onPressed: () {
-                            setState(() {
-                              orgCode = null;
-                            });
-                          },
+                          onPressed: () => setState(() {
+                            orgCode = null;
+                          }),
                           icon: const Icon(Icons.cancel_rounded),
                         ),
                   validator: null),
@@ -498,10 +494,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
           width: 280,
           height: 44,
           child: TextFormFieldSearch(
-            prefixIcon: const Icon(Icons.search_rounded),
-            hintText: "Search (ENG/TH)",
             controller: search,
-            readOnly: false,
             enabled: true,
             onChanged: (value) {
               if (value == '') {
@@ -1070,10 +1063,11 @@ class SubDataTableSource extends DataTableSource {
       filePathSlip =
           await AccReport.employeeSalarySlip(startDate, finishDate, empId);
       await Printing.layoutPdf(
-        format: const PdfPageFormat(
-          20.30 * PdfPageFormat.cm, // Width in cm
-          13.97 * PdfPageFormat.cm, // Height in cm
-        ),
+        format: PdfPageFormat.undefined,
+        //  const PdfPageFormat(
+        //   20.30 * PdfPageFormat.cm, // Width in cm
+        //   13.97 * PdfPageFormat.cm, // Height in cm
+        // ),
         onLayout: (PdfPageFormat format) async {
           final file = File(filePathSlip); // Set the format to landscape
           final bytes = await file.readAsBytes();

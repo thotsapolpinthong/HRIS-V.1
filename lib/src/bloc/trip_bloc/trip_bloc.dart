@@ -11,9 +11,7 @@ part 'trip_state.dart';
 
 class TripBloc extends Bloc<TripEvent, TripState> {
   TripBloc() : super(const TripState()) {
-    on<TripEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<TripEvent>((event, emit) {});
 // create trip
     on<SelectEmployeeEvent>((event, emit) {
       emit(state.copyWith(employeeData: event.employeeData));

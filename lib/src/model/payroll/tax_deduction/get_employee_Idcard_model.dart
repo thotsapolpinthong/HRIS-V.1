@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final employeeIdcardModel = employeeIdcardModelFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 EmployeeIdcardModel employeeIdcardModelFromJson(String str) =>

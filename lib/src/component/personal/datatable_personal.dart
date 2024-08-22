@@ -1,6 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +8,7 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/create_employee.dart';
 import 'package:hris_app_prototype/src/component/personal/0_add_person_layout.dart';
 import 'package:hris_app_prototype/src/component/personal/0_update_layout.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
 import 'package:hris_app_prototype/src/model/person/allperson_model.dart';
 import 'package:hris_app_prototype/src/model/person/deleteperson_madel.dart';
@@ -214,10 +214,10 @@ class _DataTablePersonState extends State<DataTablePerson> {
           personData = state.personData;
           filterData = state.personData;
         } else {}
-        return SingleChildScrollView(
-          child: state.isDataloading == true || personData == null
-              ? myLoadingScreen
-              : Padding(
+        return state.isDataloading == true || personData == null
+            ? myLoadingScreen
+            : SingleChildScrollView(
+                child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
@@ -333,83 +333,60 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                         ),
                                         Expanded(
                                             flex: 1,
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                    Icons.search_rounded),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: TextFormField(
-                                                      controller: nameEn,
-                                                      onChanged: (value) {
-                                                        if (value == '') {
-                                                          context
-                                                              .read<
-                                                                  PersonalBloc>()
-                                                              .add(
-                                                                  DissSearchEvent());
-                                                        } else {
-                                                          setState(() {
-                                                            context
-                                                                .read<
-                                                                    PersonalBloc>()
-                                                                .add(
-                                                                    SearchEvent());
-                                                            personData =
-                                                                filterData!.where(
-                                                                    (element) {
-                                                              final nameId = element
-                                                                  .personId
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final nameEn = element
-                                                                  .firstNameEn
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final nameTh = element
-                                                                  .fisrtNameTh
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final lastnameTh = element
-                                                                  .lastNameTh
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final lastNameEn = element
-                                                                  .lastNameEn
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              return nameId ||
-                                                                  nameEn ||
-                                                                  nameTh ||
-                                                                  lastnameTh ||
-                                                                  lastNameEn;
-                                                            }).toList();
-                                                          });
-                                                        }
-                                                      },
-                                                      decoration: InputDecoration(
-                                                          contentPadding:
-                                                              const EdgeInsets
-                                                                  .all(10.0),
-                                                          hintText:
-                                                              'Search (EN/TH)',
-                                                          border: OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8))),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: TextFormFieldSearch(
+                                                  controller: nameEn,
+                                                  enabled: true,
+                                                  onChanged: (value) {
+                                                    if (value == '') {
+                                                      context
+                                                          .read<PersonalBloc>()
+                                                          .add(
+                                                              DissSearchEvent());
+                                                    } else {
+                                                      setState(() {
+                                                        context
+                                                            .read<
+                                                                PersonalBloc>()
+                                                            .add(SearchEvent());
+                                                        personData = filterData!
+                                                            .where((element) {
+                                                          final nameId = element
+                                                              .personId
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final nameEn = element
+                                                              .firstNameEn
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final nameTh = element
+                                                              .fisrtNameTh
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final lastnameTh = element
+                                                              .lastNameTh
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final lastNameEn = element
+                                                              .lastNameEn
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          return nameId ||
+                                                              nameEn ||
+                                                              nameTh ||
+                                                              lastnameTh ||
+                                                              lastNameEn;
+                                                        }).toList();
+                                                      });
+                                                    }
+                                                  }),
                                             )),
                                       ],
                                     ),
@@ -499,7 +476,7 @@ class _DataTablePersonState extends State<DataTablePerson> {
 
                                     if (widget.employee == false)
                                       const DataColumn(
-                                          label: Text('     Info/Remove',
+                                          label: Text('     Details/Remove',
                                               style: TextStyle(fontSize: 15))),
                                     if (widget.employee == true)
                                       const DataColumn(
@@ -514,7 +491,7 @@ class _DataTablePersonState extends State<DataTablePerson> {
                     ],
                   ),
                 ),
-        );
+              );
       },
     );
   }

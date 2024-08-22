@@ -1,8 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -255,122 +252,116 @@ class _ToPayrollState extends State<ToPayroll> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        height: 65,
-        child: Card(
-          // color: Colors.amberAccent[100],
-          elevation: 4,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 280,
-                  child: DropdownGlobal(
-                      labeltext: 'Lot Number',
-                      value: lotNumberId,
-                      items: lotNumberData?.lotNumberData.map((e) {
-                        return DropdownMenuItem<String>(
-                          value: e.lotNumberId,
-                          child: Container(
-                              width: 58,
-                              constraints: const BoxConstraints(
-                                  maxWidth: 150, minWidth: 100),
-                              child: Text("${e.lotYear} / ${e.lotMonth}")),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) async {
-                        setState(() {
-                          lotNumberId = newValue.toString();
-                          Iterable<LotNumberDatum> result =
-                              lotNumberData!.lotNumberData.where(
-                                  (element) => element.lotNumberId == newValue);
-                          if (result.isNotEmpty) {
-                            startDate.text =
-                                result.first.startDate.substring(0, 10);
-                            finishDate.text =
-                                result.first.finishDate.substring(0, 10);
-                          }
-                          if (timeRecordData != null) {
-                            fetchTimeRecord();
-                          }
-                        });
-                      },
-                      validator: null),
-                ),
-                SizedBox(
-                  width: 240,
-                  child: TextFormFieldDatepickGlobal(
-                      controller: startDate,
-                      labelText: "Start Date",
-                      validatorless: null,
-                      ontap: () {}),
-                ),
-                SizedBox(
-                  width: 240,
-                  child: TextFormFieldDatepickGlobal(
-                      controller: finishDate,
-                      labelText: "Finish Date",
-                      validatorless: null,
-                      ontap: () {}),
-                ),
-                const Gap(4),
-                SizedBox(
-                  width: 45,
-                  height: 45,
+        height: 58,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 280,
+                child: DropdownGlobal(
+                    labeltext: 'Lot Number',
+                    value: lotNumberId,
+                    items: lotNumberData?.lotNumberData.map((e) {
+                      return DropdownMenuItem<String>(
+                        value: e.lotNumberId,
+                        child: Container(
+                            width: 58,
+                            constraints: const BoxConstraints(
+                                maxWidth: 150, minWidth: 100),
+                            child: Text("${e.lotYear} / ${e.lotMonth}")),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) async {
+                      setState(() {
+                        lotNumberId = newValue.toString();
+                        Iterable<LotNumberDatum> result =
+                            lotNumberData!.lotNumberData.where(
+                                (element) => element.lotNumberId == newValue);
+                        if (result.isNotEmpty) {
+                          startDate.text =
+                              result.first.startDate.substring(0, 10);
+                          finishDate.text =
+                              result.first.finishDate.substring(0, 10);
+                        }
+                        if (timeRecordData != null) {
+                          fetchTimeRecord();
+                        }
+                      });
+                    },
+                    validator: null),
+              ),
+              SizedBox(
+                width: 240,
+                child: TextFormFieldDatepickGlobal(
+                    controller: startDate,
+                    labelText: "Start Date",
+                    validatorless: null,
+                    ontap: () {}),
+              ),
+              SizedBox(
+                width: 240,
+                child: TextFormFieldDatepickGlobal(
+                    controller: finishDate,
+                    labelText: "Finish Date",
+                    validatorless: null,
+                    ontap: () {}),
+              ),
+              const Gap(4),
+              SizedBox(
+                width: 42,
+                height: 42,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        padding: const EdgeInsets.all(0)),
+                    onPressed: () {
+                      // context.read<PayrollBloc>().add(
+                      //     FetchTimeRecordDataEvent(
+                      //         startDate: startDate.text,
+                      //         endDate: finishDate.text));
+                      fetchTimeRecord();
+                    },
+                    child: Icon(
+                      Icons.person_search_rounded,
+                      size: 30,
+                      color: mygreycolors,
+                    )),
+              ),
+              const Gap(4),
+              Tooltip(
+                message: "พิมพ์ใบสรุปวันทำงาน",
+                child: SizedBox(
+                  width: 42,
+                  height: 42,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8)),
                           padding: const EdgeInsets.all(0)),
                       onPressed: () {
-                        // context.read<PayrollBloc>().add(
-                        //     FetchTimeRecordDataEvent(
-                        //         startDate: startDate.text,
-                        //         endDate: finishDate.text));
-                        fetchTimeRecord();
+                        // toTestPage();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WorkHourPdfPage(
+                                      startDate: startDate.text,
+                                      endDate: finishDate.text,
+                                      type: "Worktime",
+                                    )
+                                //  PrintingPDF()
+                                ));
                       },
                       child: Icon(
-                        Icons.person_search_rounded,
+                        Icons.print_rounded,
                         size: 30,
                         color: mygreycolors,
                       )),
                 ),
-                const Gap(4),
-                Tooltip(
-                  message: "พิมพ์ใบสรุปวันทำงาน",
-                  child: SizedBox(
-                    width: 45,
-                    height: 45,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            padding: const EdgeInsets.all(0)),
-                        onPressed: () {
-                          // toTestPage();
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => WorkHourPdfPage(
-                                        startDate: startDate.text,
-                                        endDate: finishDate.text,
-                                        type: "Worktime",
-                                      )
-                                  //  PrintingPDF()
-                                  ));
-                        },
-                        child: Icon(
-                          Icons.print_rounded,
-                          size: 30,
-                          color: mygreycolors,
-                        )),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -490,7 +481,6 @@ class _ToPayrollState extends State<ToPayroll> {
                         Future.delayed(3.seconds, () {
                           setState(() {
                             if (success) {
-                              fetchData();
                               fetchTimeRecord();
                             } else {
                               isSendData = 0;
@@ -636,61 +626,57 @@ class _ToPayrollState extends State<ToPayroll> {
                   child: Row(
                     children: [
                       Expanded(child: lotMenu()),
-                      timeRecordData == null
-                          ? Container()
-                          : Icon(
-                              Icons.search_rounded,
-                              size: 28,
-                              color: Colors.grey[600],
-                            ),
                       if (timeRecordData != null)
-                        SizedBox(
-                          width: 340,
-                          child: TextFormFieldGlobal(
-                            controller: search,
-                            onChanged: (value) {
-                              if (value == '') {
-                                setState(() {
-                                  onSearch = false;
-                                  filterData =
-                                      timeRecordData?.timeRecordData ?? [];
-                                });
-                              } else {
-                                setState(() {
-                                  onSearch = true;
-                                  filterData = filterData.where((e) {
-                                    final eId = e.employeeId
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final dep = e.departmentName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final fname = e.firstName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final lname = e.lastName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final pname = e.positionName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final type = e.staffType
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
+                        Card(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          child: SizedBox(
+                            width: 340,
+                            height: 42,
+                            child: TextFormFieldSearch(
+                              controller: search,
+                              enabled: true,
+                              onChanged: (value) {
+                                if (value == '') {
+                                  setState(() {
+                                    onSearch = false;
+                                    filterData =
+                                        timeRecordData?.timeRecordData ?? [];
+                                  });
+                                } else {
+                                  setState(() {
+                                    onSearch = true;
+                                    filterData = filterData.where((e) {
+                                      final eId = e.employeeId
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase());
+                                      final dep = e.departmentName
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase());
+                                      final fname = e.firstName
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase());
+                                      final lname = e.lastName
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase());
+                                      final pname = e.positionName
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase());
+                                      final type = e.staffType
+                                          .toLowerCase()
+                                          .contains(value.toLowerCase());
 
-                                    return eId ||
-                                        dep ||
-                                        fname ||
-                                        lname ||
-                                        pname ||
-                                        type;
-                                  }).toList();
-                                });
-                              }
-                            },
-                            labelText: "Search (TH/EN)",
-                            hintText: "ค้นหาข้อมูลในตาราง",
-                            enabled: true,
+                                      return eId ||
+                                          dep ||
+                                          fname ||
+                                          lname ||
+                                          pname ||
+                                          type;
+                                    }).toList();
+                                  });
+                                }
+                              },
+                            ),
                           ),
                         ),
                     ],
@@ -748,6 +734,9 @@ class _ToPayrollState extends State<ToPayroll> {
                                               });
                                             },
                                             columns: [
+                                              const DataColumn(
+                                                  numeric: false,
+                                                  label: Text("Details")),
                                               DataColumn(
                                                   numeric: true,
                                                   label: const Text("Emp. ID"),
@@ -797,9 +786,6 @@ class _ToPayrollState extends State<ToPayroll> {
                                               const DataColumn(
                                                   numeric: true,
                                                   label: Text("Foodallowance")),
-                                              const DataColumn(
-                                                  numeric: false,
-                                                  label: Text("Details")),
                                             ],
                                             source: PersonDataTableSource(
                                               filterData,
@@ -875,17 +861,6 @@ class PersonDataTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final d = data![index];
     return DataRow(cells: [
-      DataCell(Text(d.employeeId)),
-      DataCell(Text(d.departmentName)),
-      DataCell(Text(d.firstName)),
-      DataCell(Text(d.lastName)),
-      DataCell(Text(d.positionName)),
-      DataCell(Text(d.staffType)),
-      DataCell(Text(d.nWorkDate)),
-      DataCell(Text(d.workHoliday ?? "0")),
-      DataCell(Text(d.normalOt ?? "0")),
-      DataCell(Text(d.holidayOt ?? "0")),
-      DataCell(Text(d.foodAllowance)),
       DataCell(Center(
         child: SizedBox(
             height: 38,
@@ -902,6 +877,17 @@ class PersonDataTableSource extends DataTableSource {
                   color: mythemecolor,
                 ))),
       )),
+      DataCell(Text(d.employeeId)),
+      DataCell(Text(d.departmentName)),
+      DataCell(Text(d.firstName)),
+      DataCell(Text(d.lastName)),
+      DataCell(Text(d.positionName)),
+      DataCell(Text(d.staffType)),
+      DataCell(Text(d.nWorkDate)),
+      DataCell(Text(d.workHoliday ?? "0")),
+      DataCell(Text(d.normalOt ?? "0")),
+      DataCell(Text(d.holidayOt ?? "0")),
+      DataCell(Text(d.foodAllowance)),
     ]);
   }
 

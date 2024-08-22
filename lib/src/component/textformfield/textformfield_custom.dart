@@ -1,9 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:validatorless/validatorless.dart';
 
 class MyTextFormfieldAddress extends StatelessWidget {
@@ -505,6 +505,7 @@ class DropdownGlobalOutline extends StatelessWidget {
   }
 }
 
+//////////////////////////////////////////////////////////
 class TextFormFieldGlobal extends StatelessWidget {
   final TextEditingController controller;
   final String labelText;
@@ -699,7 +700,7 @@ class TextFormFieldDatepickGlobal extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.labelText,
-    required this.validatorless,
+    this.validatorless,
     required this.ontap,
     this.onChanged,
     this.enabled,
@@ -720,9 +721,11 @@ class TextFormFieldDatepickGlobal extends StatelessWidget {
           labelStyle: const TextStyle(color: Colors.black),
           filled: true,
           fillColor: Colors.white,
-          suffixIcon: const Icon(
-            Icons.calendar_today_rounded,
-          ),
+          suffixIcon: IconTheme(
+              data: IconThemeData(color: mythemecolor),
+              child: Icon(
+                Icons.calendar_today_rounded,
+              )),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(6),
           ),
@@ -747,6 +750,7 @@ class TextFormFieldDatepickGlobalWithoutLine extends StatelessWidget {
   final Function()? ontap;
   final Function(String)? onChanged;
   final bool enable;
+  final Color? outlineColor;
   const TextFormFieldDatepickGlobalWithoutLine({
     Key? key,
     required this.controller,
@@ -755,6 +759,7 @@ class TextFormFieldDatepickGlobalWithoutLine extends StatelessWidget {
     required this.ontap,
     this.onChanged,
     this.enable = true,
+    this.outlineColor,
   }) : super(key: key);
 
   @override
@@ -777,9 +782,10 @@ class TextFormFieldDatepickGlobalWithoutLine extends StatelessWidget {
           ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Colors.black12),
-          ),
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                  color:
+                      outlineColor == null ? Colors.black12 : outlineColor!)),
           disabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Colors.black12),
@@ -942,22 +948,21 @@ class TextFormFieldSearch extends StatelessWidget {
   final String? labelText;
   final Function()? ontap;
   final bool? enabled;
-  final Widget? suffixIcon;
-  final Widget? prefixIcon;
-  final String? hintText;
+  // final Widget? suffixIcon;
+  // final Widget? prefixIcon;
+  // final String? hintText;
   final Function(String)? onChanged;
-  final bool readOnly;
+
   const TextFormFieldSearch(
       {Key? key,
       required this.controller,
       this.labelText,
       this.ontap,
       required this.enabled,
-      this.suffixIcon,
-      this.prefixIcon,
-      this.hintText,
-      this.onChanged,
-      this.readOnly = true})
+      // this.suffixIcon,
+      // this.prefixIcon,
+      // this.hintText,
+      this.onChanged})
       : super(key: key);
 
   @override
@@ -969,12 +974,16 @@ class TextFormFieldSearch extends StatelessWidget {
             contentPadding: const EdgeInsets.all(10.0),
             labelText: labelText,
             labelStyle: const TextStyle(color: Colors.black),
-            hintText: hintText,
-            suffixIcon: suffixIcon,
-            prefixIcon: prefixIcon,
+            hintText: "Search (ENG/TH)",
+            fillColor: Colors.white,
+            suffixIcon: IconTheme(
+                data: IconThemeData(color: myambercolors),
+                child: Icon(
+                  Icons.search_rounded,
+                )),
+            // prefixIcon: prefixIcon,
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
         enabled: enabled,
-        readOnly: readOnly,
         onChanged: onChanged,
         onTap: ontap);
   }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:hris_app_prototype/src/model/payroll/employee_salary/create_salary_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/employee_salary/get_salary_all.dart';
 import 'package:hris_app_prototype/src/model/payroll/employee_salary/response_create_model.dart';
@@ -14,7 +13,6 @@ import 'package:hris_app_prototype/src/model/payroll/payroll/insert_extrawage_mo
 import 'package:hris_app_prototype/src/model/payroll/payroll/payroll_data_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/copy_data_tax_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/create_tax_deduction_model.dart';
-import 'package:hris_app_prototype/src/model/payroll/tax_deduction/create_tax_detail_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/get_employee_Idcard_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_all_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/tax_deduction/tax_deduction_by_id_model.dart';
@@ -27,7 +25,6 @@ import 'package:hris_app_prototype/src/model/payroll/to_payroll/time_record_mode
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 
 class ApiPayrollService {
   static String baseUrl = "http://192.168.0.205/StecApi";
@@ -615,7 +612,7 @@ class ApiPayrollService {
 
   //report
   static getWorkTimePdf(String start, String end, String code) async {
-    bool create = false;
+    // bool create = false;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
     final response = await http.get(

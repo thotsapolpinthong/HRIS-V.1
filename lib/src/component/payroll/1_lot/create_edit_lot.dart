@@ -195,8 +195,9 @@ class _EditLotNumberState extends State<EditLotNumber> {
               Expanded(
                 child: Column(
                   children: [
-                    const Text("LOT",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("LOT",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: mythemecolor)),
                     const Gap(5),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,16 +271,17 @@ class _EditLotNumberState extends State<EditLotNumber> {
                 ),
               ),
               const Gap(5),
-              const VerticalDivider(
-                thickness: 2,
-                color: Colors.grey,
+              VerticalDivider(
+                thickness: 2.5,
+                color: mythemecolor,
               ),
               const Gap(5),
               Expanded(
                 child: Column(
                   children: [
-                    const Text("SSO",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text("SSO",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: mythemecolor)),
                     const Gap(5),
                     TextFormFieldGlobal(
                         controller: ssoPercent,

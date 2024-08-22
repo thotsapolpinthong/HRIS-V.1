@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/organization_bloc/bloc/organization_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/create_edit_org.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/delete_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
 
@@ -208,80 +209,61 @@ class _OrganizationDataTableState extends State<OrganizationDataTable> {
                                             fontWeight: FontWeight.w800))),
                                 Expanded(
                                     flex: 1,
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.search_rounded),
-                                        Expanded(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: TextFormField(
-                                              controller: search,
-                                              onChanged: (value) {
-                                                if (value == '') {
-                                                  context
-                                                      .read<OrganizationBloc>()
-                                                      .add(DissSearchEvent());
-                                                } else {
-                                                  setState(() {
-                                                    context
-                                                        .read<
-                                                            OrganizationBloc>()
-                                                        .add(SearchEvent());
-                                                    orgData = filterData!
-                                                        .where((element) {
-                                                      final nameId = element
-                                                          .organizationCode
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final type = element
-                                                          .organizationTypeData
-                                                          .organizationTypeName
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final nameTH = element
-                                                          .departMentData
-                                                          .deptNameTh
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final nameEn = element
-                                                          .departMentData
-                                                          .deptNameEn
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: TextFormFieldSearch(
+                                          controller: search,
+                                          enabled: true,
+                                          onChanged: (value) {
+                                            if (value == '') {
+                                              context
+                                                  .read<OrganizationBloc>()
+                                                  .add(DissSearchEvent());
+                                            } else {
+                                              setState(() {
+                                                context
+                                                    .read<OrganizationBloc>()
+                                                    .add(SearchEvent());
+                                                orgData = filterData!
+                                                    .where((element) {
+                                                  final nameId = element
+                                                      .organizationCode
+                                                      .toLowerCase()
+                                                      .contains(
+                                                          value.toLowerCase());
+                                                  final type = element
+                                                      .organizationTypeData
+                                                      .organizationTypeName
+                                                      .toLowerCase()
+                                                      .contains(
+                                                          value.toLowerCase());
+                                                  final nameTH = element
+                                                      .departMentData.deptNameTh
+                                                      .toLowerCase()
+                                                      .contains(
+                                                          value.toLowerCase());
+                                                  final nameEn = element
+                                                      .departMentData.deptNameEn
+                                                      .toLowerCase()
+                                                      .contains(
+                                                          value.toLowerCase());
 
-                                                      return nameId ||
-                                                          nameEn ||
-                                                          type ||
-                                                          nameTH;
-                                                    }).toList();
-                                                  });
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                  contentPadding:
-                                                      const EdgeInsets.all(
-                                                          10.0),
-                                                  hintText: 'Search (EN/TH)',
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8))),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                                  return nameId ||
+                                                      nameEn ||
+                                                      type ||
+                                                      nameTH;
+                                                }).toList();
+                                              });
+                                            }
+                                          }),
                                     )),
                               ],
                             ),
                           ),
                           columns: [
                             DataColumn(
-                                numeric: true,
-                                label: const Text('Organization (Code)'),
+                                // numeric: true,
+                                label: const Text('Code'),
                                 onSort: (columnIndex, ascending) {
                                   setState(() {
                                     sort = !sort;
@@ -441,7 +423,7 @@ class PersonDataTableSource extends DataTableSource {
                     height: 38,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amber[700],
+                            backgroundColor: myambercolors,
                             padding: const EdgeInsets.all(1)),
                         onPressed: () {
                           showEditDialog(orgData);
@@ -454,7 +436,7 @@ class PersonDataTableSource extends DataTableSource {
                     height: 38,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red[700],
+                            backgroundColor: myredcolors,
                             padding: const EdgeInsets.all(1)),
                         onPressed: () {
                           showdialogDeletePerson(orgData.organizationId);

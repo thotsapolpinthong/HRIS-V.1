@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/department_bloc/bloc/department_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/department/Edit_department.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/department/delete_department_model.dart';
 import 'package:hris_app_prototype/src/model/organization/department/get_departmen_model.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
@@ -257,72 +258,51 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                                                         FontWeight.w800))),
                                         Expanded(
                                             flex: 1,
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                    Icons.search_rounded),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: TextFormField(
-                                                      controller: search,
-                                                      onChanged: (value) {
-                                                        if (value == '') {
-                                                          context
-                                                              .read<
-                                                                  DepartmentBloc>()
-                                                              .add(
-                                                                  DissSearchEvent());
-                                                        } else {
-                                                          setState(() {
-                                                            context
-                                                                .read<
-                                                                    DepartmentBloc>()
-                                                                .add(
-                                                                    SearchEvent());
-                                                            departmentData =
-                                                                filterData!.where(
-                                                                    (element) {
-                                                              final nameId = element
-                                                                  .deptCode
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final nameTH = element
-                                                                  .deptNameTh
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
-                                                              final nameEN = element
-                                                                  .deptNameEn
-                                                                  .toLowerCase()
-                                                                  .contains(value
-                                                                      .toLowerCase());
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: TextFormFieldSearch(
+                                                  controller: search,
+                                                  enabled: true,
+                                                  onChanged: (value) {
+                                                    if (value == '') {
+                                                      context
+                                                          .read<
+                                                              DepartmentBloc>()
+                                                          .add(
+                                                              DissSearchEvent());
+                                                    } else {
+                                                      setState(() {
+                                                        context
+                                                            .read<
+                                                                DepartmentBloc>()
+                                                            .add(SearchEvent());
+                                                        departmentData =
+                                                            filterData!.where(
+                                                                (element) {
+                                                          final nameId = element
+                                                              .deptCode
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final nameTH = element
+                                                              .deptNameTh
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final nameEN = element
+                                                              .deptNameEn
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
 
-                                                              return nameId ||
-                                                                  nameTH ||
-                                                                  nameEN;
-                                                            }).toList();
-                                                          });
-                                                        }
-                                                      },
-                                                      decoration: InputDecoration(
-                                                          contentPadding:
-                                                              const EdgeInsets
-                                                                  .all(10.0),
-                                                          hintText:
-                                                              'Search (EN/TH)',
-                                                          border: OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8))),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                                          return nameId ||
+                                                              nameTH ||
+                                                              nameEN;
+                                                        }).toList();
+                                                      });
+                                                    }
+                                                  }),
                                             )),
                                       ],
                                     ),
@@ -377,11 +357,11 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                                       },
                                     ),
                                     const DataColumn(
-                                        numeric: true,
-                                        label: Text('Status      ')),
+                                        // numeric: true,
+                                        label: Text('Status')),
                                     const DataColumn(
-                                        numeric: true,
-                                        label: Text('Edit/Remove      ',
+                                        // numeric: true,
+                                        label: Text('Edit/Remove',
                                             style: TextStyle(fontSize: 16))),
                                   ],
                                   source: PersonDataTableSource(departmentData,

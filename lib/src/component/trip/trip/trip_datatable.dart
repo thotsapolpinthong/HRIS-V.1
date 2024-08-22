@@ -270,7 +270,7 @@ class _TripDatatableState extends State<TripDatatable> {
                                     ),
                                     Expanded(
                                       child: SizedBox(
-                                        height: 40,
+                                        height: 50,
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
@@ -285,38 +285,36 @@ class _TripDatatableState extends State<TripDatatable> {
                                             ),
                                             const Gap(10),
                                             SizedBox(
-                                              width: 150,
-                                              child: TextFormFieldSearch(
+                                              width: 160,
+                                              child:
+                                                  TextFormFieldDatepickGlobal(
                                                 controller: startDate,
                                                 labelText: "ตั้งแต่วันที่",
                                                 ontap: () {
                                                   selectvalidFromDate(0);
                                                 },
                                                 enabled: true,
-                                                suffixIcon: const Icon(Icons
-                                                    .calendar_today_rounded),
                                               ),
                                             ),
                                             const Gap(10),
                                             SizedBox(
-                                              width: 150,
-                                              child: TextFormFieldSearch(
+                                              width: 160,
+                                              child:
+                                                  TextFormFieldDatepickGlobal(
                                                 controller: endDate,
                                                 labelText: "ถึงวันที่",
                                                 ontap: () {
                                                   selectvalidFromDate(1);
                                                 },
                                                 enabled: true,
-                                                suffixIcon: const Icon(Icons
-                                                    .calendar_today_rounded),
                                               ),
                                             ),
                                             const Gap(10),
                                             SizedBox(
                                               width: 300,
+                                              height: 42,
                                               child: TextFormFieldSearch(
                                                 controller: search,
-                                                hintText: "Search(EN/TH)",
                                                 onChanged: (value) {
                                                   if (value == '') {
                                                     context.read<TripBloc>().add(
@@ -370,9 +368,6 @@ class _TripDatatableState extends State<TripDatatable> {
                                                   }
                                                 },
                                                 enabled: true,
-                                                readOnly: false,
-                                                suffixIcon: const Icon(
-                                                    Icons.search_rounded),
                                               ),
                                             ),
                                           ],
@@ -402,7 +397,7 @@ class _TripDatatableState extends State<TripDatatable> {
                                       label: textThai("ทะเบียนรถ - รุ่น")),
                                   DataColumn(
                                       numeric: true,
-                                      label: textThai("เลขไมล์ปัจจุบัน")),
+                                      label: textThai("เลขไมล์เริ่มต้น")),
                                   DataColumn(
                                       numeric: true,
                                       label: textThai("เลขไมล์สิ้นสุดทริป")),
@@ -764,7 +759,7 @@ class DataTable extends DataTableSource {
                           width: 40,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.lightBlue[600],
+                                backgroundColor: mybluecolors,
                                 padding: const EdgeInsets.all(1),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(6))),

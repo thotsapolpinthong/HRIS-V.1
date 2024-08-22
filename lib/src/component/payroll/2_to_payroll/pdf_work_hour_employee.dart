@@ -40,7 +40,7 @@ class _WorkHourPdfPageState extends State<WorkHourPdfPage> {
     fetchData();
   }
 
-  Future<void> _printPdf() async {
+  Future<void> printPdf() async {
     try {
       // ดาวน์โหลดไฟล์ PDF
       final response = await http.get(Uri.parse(pdfUrl));

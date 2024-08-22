@@ -35,37 +35,47 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)),
-                  elevation: 4,
-                  color: Colors.white,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: const Text(
-                      'แก้ไขข้อมูลส่วนบุคคล (Edit Personal).',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                    ).animate().fade().slide(),
+                Expanded(
+                  flex: 4,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    elevation: 4,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: const TextThai(
+                        text: 'แก้ไขข้อมูลส่วนบุคคล (Edit Personal).',
+                        textAlign: TextAlign.center,
+                        textStyle: TextStyle(
+                          fontSize: 22,
+                          // fontWeight: FontWeight.bold,
+                        ),
+                      ).animate().fade().slide(),
+                    ),
                   ),
                 ),
-                Row(
-                  children: [
-                    SizedBox(
-                        height: 30,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Colors.red[700] // Background color
-                                // Text Color (Foreground color)
-                                ),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            child: const Text("X",
-                                style: TextStyle(color: Colors.white)))),
-                    const SizedBox(width: 15)
-                  ],
+                Expanded(
+                  flex: 8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      SizedBox(
+                          height: 30,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      Colors.red[700] // Background color
+                                  // Text Color (Foreground color)
+                                  ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("X",
+                                  style: TextStyle(color: Colors.white)))),
+                      const SizedBox(width: 15)
+                    ],
+                  ),
                 ),
               ],
             ),

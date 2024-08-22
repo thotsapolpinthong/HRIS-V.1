@@ -34,7 +34,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
   ];
   String? staffId;
 
-  String? _filePath;
+  String? filePath;
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -44,7 +44,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
 
     if (result != null) {
       setState(() {
-        _filePath = result.files.single.path;
+        filePath = result.files.single.path;
       });
     }
   }
@@ -209,59 +209,53 @@ class _SalaryManagementState extends State<SalaryManagement> {
                           validator: null,
                           outlineColor: staffId == null ? myredcolors : null),
                     ),
-                    const Icon(Icons.search_rounded),
                     Expanded(
                       flex: 3,
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
-                        child: TextFormField(
-                          controller: search,
-                          onChanged: (value) {
-                            if (value == '') {
-                              setState(() {
-                                onSearch = true;
-                                filterData = salaryData;
-                              });
-                            } else {
-                              setState(() {
-                                filterData = salaryData.where((e) {
-                                  final eId = e.employeeId
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
-                                  final type = e.employeeTypeName
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
-                                  final fname = e.firstName
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
-                                  final lname = e.lastName
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
-                                  final salary = e.salary
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
-                                  final wage = e.wage
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase());
+                        child: TextFormFieldSearch(
+                            controller: search,
+                            enabled: true,
+                            onChanged: (value) {
+                              if (value == '') {
+                                setState(() {
+                                  onSearch = true;
+                                  filterData = salaryData;
+                                });
+                              } else {
+                                setState(() {
+                                  filterData = salaryData.where((e) {
+                                    final eId = e.employeeId
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final type = e.employeeTypeName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final fname = e.firstName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final lname = e.lastName
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final salary = e.salary
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
+                                    final wage = e.wage
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase());
 
-                                  return eId ||
-                                      salary ||
-                                      fname ||
-                                      lname ||
-                                      wage ||
-                                      type;
-                                }).toList();
-                              });
-                            }
-                          },
-                          decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(10.0),
-                              hintText: 'Search (EN/TH)',
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8))),
-                        ),
+                                    return eId ||
+                                        salary ||
+                                        fname ||
+                                        lname ||
+                                        wage ||
+                                        type;
+                                  }).toList();
+                                });
+                              }
+                            }),
                       ),
                     ),
                   ],

@@ -87,112 +87,109 @@ class _CarDatatableState extends State<CarDatatable> {
                 carsData = state.carsDataModel?.carData ?? [];
                 filterData = state.carsDataModel?.carData ?? [];
               } else {}
-              return SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24)),
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: state.isCarDataLoading == true
-                          ? myLoadingScreen
-                          : PaginatedDataTable(
-                              header: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Car Table.",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w800),
-                                  ),
-                                  SizedBox(
-                                    width: 300,
-                                    child: TextFormFieldSearch(
-                                      controller: search,
-                                      hintText: "Search(EN/TH)",
-                                      onChanged: (value) {
-                                        if (value == '') {
-                                          context
-                                              .read<TripBloc>()
-                                              .add(DissSearchCarEvent());
-                                        } else {
-                                          setState(() {
+              return state.isCarDataLoading == true
+                  ? myLoadingScreen
+                  : SizedBox(
+                      width: double.infinity,
+                      height: double.infinity,
+                      child: Card(
+                        elevation: 2,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24)),
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: PaginatedDataTable(
+                                header: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Car Table.",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    SizedBox(
+                                      width: 300,
+                                      height: 42,
+                                      child: TextFormFieldSearch(
+                                        controller: search,
+                                        onChanged: (value) {
+                                          if (value == '') {
                                             context
                                                 .read<TripBloc>()
-                                                .add(SearchCarEvent());
-                                            carsData =
-                                                filterData.where((element) {
-                                              final number = element
-                                                  .carRegistation
-                                                  .toLowerCase()
-                                                  .contains(
-                                                      value.toLowerCase());
-                                              final brand = element.carBrand
-                                                  .toLowerCase()
-                                                  .contains(
-                                                      value.toLowerCase());
-                                              final model = element.carModel
-                                                  .toLowerCase()
-                                                  .contains(
-                                                      value.toLowerCase());
-                                              final carType = element
-                                                  .carTypeData.carName
-                                                  .toLowerCase()
-                                                  .contains(
-                                                      value.toLowerCase());
-                                              final description = element
-                                                  .carColor
-                                                  .toLowerCase()
-                                                  .contains(
-                                                      value.toLowerCase());
+                                                .add(DissSearchCarEvent());
+                                          } else {
+                                            setState(() {
+                                              context
+                                                  .read<TripBloc>()
+                                                  .add(SearchCarEvent());
+                                              carsData =
+                                                  filterData.where((element) {
+                                                final number = element
+                                                    .carRegistation
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final brand = element.carBrand
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final model = element.carModel
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final carType = element
+                                                    .carTypeData.carName
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final description = element
+                                                    .carColor
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
 
-                                              return number ||
-                                                  brand ||
-                                                  model ||
-                                                  carType ||
-                                                  description;
-                                            }).toList();
-                                          });
-                                        }
-                                      },
-                                      enabled: true,
-                                      readOnly: false,
-                                      suffixIcon:
-                                          const Icon(Icons.search_rounded),
-                                    ),
-                                  )
+                                                return number ||
+                                                    brand ||
+                                                    model ||
+                                                    carType ||
+                                                    description;
+                                              }).toList();
+                                            });
+                                          }
+                                        },
+                                        enabled: true,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                columnSpacing: 30,
+                                showFirstLastButtons: true,
+                                rowsPerPage: rowIndex,
+                                availableRowsPerPage: const [5, 10, 20],
+                                sortColumnIndex: sortColumnIndex,
+                                sortAscending: sort,
+                                onRowsPerPageChanged: (value) {
+                                  setState(() {
+                                    rowIndex = value!;
+                                  });
+                                },
+                                columns: [
+                                  DataColumn(label: textThai("ทะเบียนรถ")),
+                                  DataColumn(label: textThai("ยี่ห้อ/รุ่น")),
+                                  DataColumn(label: textThai("ประเภทรถ")),
+                                  DataColumn(label: textThai("เลขไมล์ (กม.)")),
+                                  DataColumn(label: textThai("รายละเอียดรถ")),
+                                  DataColumn(label: textThai("สถานะ")),
+                                  DataColumn(label: textThai("การจัดการ")),
                                 ],
-                              ),
-                              columnSpacing: 30,
-                              showFirstLastButtons: true,
-                              rowsPerPage: rowIndex,
-                              availableRowsPerPage: const [5, 10, 20],
-                              sortColumnIndex: sortColumnIndex,
-                              sortAscending: sort,
-                              onRowsPerPageChanged: (value) {
-                                setState(() {
-                                  rowIndex = value!;
-                                });
-                              },
-                              columns: [
-                                DataColumn(label: textThai("ทะเบียนรถ")),
-                                DataColumn(label: textThai("ยี่ห้อ/รุ่น")),
-                                DataColumn(label: textThai("ประเภทรถ")),
-                                DataColumn(label: textThai("เลขไมล์ (กม.)")),
-                                DataColumn(label: textThai("รายละเอียดรถ")),
-                                DataColumn(label: textThai("สถานะ")),
-                                DataColumn(label: textThai("การจัดการ")),
-                              ],
-                              source: DataTable(
-                                  context: context, carsData: carsData)),
-                    ),
-                  ),
-                ),
-              );
+                                source: DataTable(
+                                    context: context, carsData: carsData)),
+                          ),
+                        ),
+                      ),
+                    );
             },
           ),
         ));
@@ -274,8 +271,7 @@ class DataTable extends DataTableSource {
                           : Colors.red[800],
               shape: datacar.carStatus == "0"
                   ? OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(width: 1, color: Colors.greenAccent),
+                      borderSide: BorderSide(width: 1, color: mygreencolors),
                       borderRadius: BorderRadius.circular(6))
                   : RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(6)),

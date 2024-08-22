@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final employeeSalaryModel = employeeSalaryModelFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 EmployeeSalaryModel employeeSalaryModelFromJson(String str) =>

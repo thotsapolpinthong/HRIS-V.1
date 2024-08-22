@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final userInfoDateModel = userInfoDateModelFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 UserInfoDateModel userInfoDateModelFromJson(String str) =>

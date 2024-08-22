@@ -26,7 +26,8 @@ var myambercolors = Colors.amber[600];
 var myredcolors = Colors.red[700];
 var headerbluecolors = const Color.fromARGB(255, 0, 57, 143);
 var mygreenxls = const Color.fromARGB(255, 13, 114, 57);
-var mygreencolors = Color.fromARGB(255, 50, 163, 99);
+var mygreencolors = const Color.fromARGB(255, 50, 163, 99);
+var mybluecolors = Colors.lightBlue[600];
 
 var myLoadingScreen = Center(
     child: Lottie.asset('assets/loading.json',
@@ -276,6 +277,8 @@ class RowDeleteBox extends StatelessWidget {
       height: 38,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6)),
               backgroundColor: Colors.red[700],
               padding: const EdgeInsets.all(1)),
           onPressed: onPressed,

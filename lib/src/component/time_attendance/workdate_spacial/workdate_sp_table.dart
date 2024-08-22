@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
@@ -337,8 +336,8 @@ class MainDataTableSource extends DataTableSource {
     ShiftDatum? e = shiftList
         ?.firstWhere((element) => element.shiftId == d.shiftId.toString());
     return DataRow(
-        color: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
           return index % 2 == 0 ? Colors.white : Colors.grey[50]!;
         }),
         cells: [

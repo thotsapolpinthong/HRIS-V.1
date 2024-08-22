@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_bloc/positions_bloc.dart';
 import 'package:hris_app_prototype/src/component/Organization/positions/add/created_position.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/position/delete_position_byid_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position/getpositionall_model.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
@@ -189,63 +190,46 @@ class _PositionDataTableState extends State<PositionDataTable> {
                                               fontWeight: FontWeight.w800))),
                                   Expanded(
                                       flex: 1,
-                                      child: Row(
-                                        children: [
-                                          const Icon(Icons.search_rounded),
-                                          Expanded(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: TextFormField(
-                                                controller: search,
-                                                onChanged: (value) {
-                                                  if (value == '') {
-                                                    context
-                                                        .read<PositionsBloc>()
-                                                        .add(DissSearchEvent());
-                                                  } else {
-                                                    setState(() {
-                                                      context
-                                                          .read<PositionsBloc>()
-                                                          .add(SearchEvent());
-                                                      positionData = filterData!
-                                                          .where((element) {
-                                                        final nameId = element
-                                                            .positionId
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final nameTh = element
-                                                            .positionNameTh
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final nameEn = element
-                                                            .positionNameEn
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: TextFormFieldSearch(
+                                            controller: search,
+                                            enabled: true,
+                                            onChanged: (value) {
+                                              if (value == '') {
+                                                context
+                                                    .read<PositionsBloc>()
+                                                    .add(DissSearchEvent());
+                                              } else {
+                                                setState(() {
+                                                  context
+                                                      .read<PositionsBloc>()
+                                                      .add(SearchEvent());
+                                                  positionData = filterData!
+                                                      .where((element) {
+                                                    final nameId = element
+                                                        .positionId
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase());
+                                                    final nameTh = element
+                                                        .positionNameTh
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase());
+                                                    final nameEn = element
+                                                        .positionNameEn
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase());
 
-                                                        return nameId ||
-                                                            nameEn ||
-                                                            nameTh;
-                                                      }).toList();
-                                                    });
-                                                  }
-                                                },
-                                                decoration: InputDecoration(
-                                                    contentPadding:
-                                                        const EdgeInsets.all(
-                                                            10.0),
-                                                    hintText: 'Search (EN/TH)',
-                                                    border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8))),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                                    return nameId ||
+                                                        nameEn ||
+                                                        nameTh;
+                                                  }).toList();
+                                                });
+                                              }
+                                            }),
                                       )),
                                 ],
                               ),

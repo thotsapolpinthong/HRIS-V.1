@@ -8,9 +8,7 @@ part 'department_state.dart';
 
 class DepartmentBloc extends Bloc<DepartmentEvent, DepartmentState> {
   DepartmentBloc() : super(const DepartmentState()) {
-    on<DepartmentEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<DepartmentEvent>((event, emit) {});
 
     on<FetchDataEvent>((event, emit) async {
       emit(state.copyWith(isDataLoading: true));

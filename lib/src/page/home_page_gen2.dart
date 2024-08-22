@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';

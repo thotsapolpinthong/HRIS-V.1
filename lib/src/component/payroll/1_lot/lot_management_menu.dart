@@ -381,7 +381,8 @@ class _LotManagementState extends State<LotManagement> {
     );
   }
 
-  Widget containerStatus(bool status, String labelText, Function()? onPressed) {
+  Widget containerStatus(
+      bool status, String labelText, Function()? onPressed, bool acc) {
     return Column(
       children: [
         InkWell(
@@ -400,13 +401,17 @@ class _LotManagementState extends State<LotManagement> {
                 child: Column(
                   children: [
                     Expanded(
-                        child: Icon(
-                      status == false
-                          ? CupertinoIcons.doc_text_search
-                          : Icons.lock_rounded,
-                      size: 130,
-                      color: status == false ? Colors.black45 : mygreycolors,
-                    )),
+                        child: status == false
+                            ? Icon(
+                                CupertinoIcons.doc_text_search,
+                                size: 130,
+                                color: mythemecolor,
+                              )
+                            : Icon(
+                                Icons.lock_rounded,
+                                size: 130,
+                                color: mygreycolors,
+                              )),
                     Text(
                       labelText,
                       style: TextStyle(
@@ -423,18 +428,21 @@ class _LotManagementState extends State<LotManagement> {
           ),
         ),
         const Gap(5),
-        SizedBox(
-          height: 34,
-          width: 80,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(1),
-                  backgroundColor: status == false ? myredcolors : mythemecolor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8))),
-              onPressed: onPressed,
-              child: const Text("Unlock")),
-        ),
+        !acc
+            ? SizedBox(
+                height: 34,
+                width: 80,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(1),
+                        backgroundColor:
+                            status == false ? myredcolors : mythemecolor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
+                    onPressed: onPressed,
+                    child: const Text("Unlock")),
+              )
+            : Container(),
       ],
     );
   }
@@ -466,8 +474,9 @@ class _LotManagementState extends State<LotManagement> {
                                       lockHr = !lockHr;
                                     });
                                   });
-                                }),
-                  const Gap(10),
+                                },
+                      false),
+                  const Gap(4),
                   containerStatus(
                       lockHrLabor,
                       "HR Labor ${lockHrLabor ? 'Lock' : 'Processing'}",
@@ -482,7 +491,8 @@ class _LotManagementState extends State<LotManagement> {
                                       lockHrLabor = !lockHrLabor;
                                     });
                                   });
-                                }),
+                                },
+                      false),
                 ]),
               ),
               const Gap(5),
@@ -505,8 +515,9 @@ class _LotManagementState extends State<LotManagement> {
                                         lockAcc = !lockAcc;
                                       });
                                     });
-                                  }),
-                    const Gap(10),
+                                  },
+                        true),
+                    const Gap(4),
                     containerStatus(
                         lockAccLabor,
                         "ACC Labor ${lockAccLabor ? 'Lock' : 'Processing'}",
@@ -521,7 +532,8 @@ class _LotManagementState extends State<LotManagement> {
                                         lockAccLabor = !lockAccLabor;
                                       });
                                     });
-                                  })
+                                  },
+                        true)
                   ],
                 ),
               )

@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final workdateSpaecialModel = workdateSpaecialModelFromJson(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 WorkdateSpaecialModel workdateSpaecialModelFromJson(String str) =>
