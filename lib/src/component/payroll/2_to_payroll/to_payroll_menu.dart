@@ -38,7 +38,7 @@ class _ToPayrollState extends State<ToPayroll> {
   // List<TimeRecordDatum> timeRecordData = [];
   List<TimeRecordDatum> filterData = [];
 //menu count
-  bool isExpandCount = false;
+  bool isShowFloat = false;
   int isSendData = 0; //0 defualt 1 send  2 completelock
   TextEditingController test1 = TextEditingController();
   int eTotal = 0;
@@ -51,6 +51,8 @@ class _ToPayrollState extends State<ToPayroll> {
   double hCount = 0;
   double othCount = 0;
   double foodTotal = 0.00;
+
+  bool thLanguage = false;
 
   Future fetchData() async {
     //lotnumber data-------------
@@ -69,6 +71,7 @@ class _ToPayrollState extends State<ToPayroll> {
             isSendData = int.parse(e.lockHr == "No data" ? "0" : e.lockHr);
           }
         }
+        isShowFloat = true;
       }
       fetchTimeRecord();
     });
@@ -370,145 +373,199 @@ class _ToPayrollState extends State<ToPayroll> {
 
   Widget menuCount(List<TimeRecordDatum> timeRecordData) {
     // double workdate = double.parse(timeRecordData.)
+
     LotNumberDatum lot = lotNumberData!.lotNumberData
         .firstWhere((element) => element.lotNumberId == lotNumberId);
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Align(
-                alignment: Alignment.centerLeft,
-                child: MyContainerShadows(
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    height: MediaQuery.of(context).size.height / 2.5,
-                    mainColor: mygreycolors!,
-                    shadowColor1: Colors.grey.shade500,
-                    shadowColor2: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(4.0),
+          Column(
+            children: [
+              TextThai(
+                text: "Employee Summary '${lot.lotYear} / ${lot.lotMonth}'",
+                textStyle: const TextStyle(fontSize: 16),
+              ),
+              const Gap(5),
+              Expanded(
+                child: GridView.count(
+                  crossAxisCount: 5,
+                  children: [
+                    MyCard(
+                        typeCount: false,
+                        headerText: "Total emp.",
+                        number: eTotal.toString(),
+                        unitText: "persons"),
+                    MyCard(
+                        typeCount: false,
+                        headerText: "Full-time emp.",
+                        number: eCount.toString(),
+                        unitText: "persons"),
+                    MyCard(
+                        typeCount: false,
+                        headerText: "Regular daily emp.",
+                        number: eRegularCount.toString(),
+                        unitText: "persons"),
+                    MyCard(
+                        typeCount: false,
+                        headerText: "Daily emp.",
+                        number: eDailyCount.toString(),
+                        unitText: "persons"),
+                    MyCard(
+                        typeCount: false,
+                        headerText: "Temporary emp.",
+                        number: eTempCount.toString(),
+                        unitText: "persons"),
+                    MyCard(
+                        typeCount: false,
+                        headerText: "OT-worker",
+                        number: wOtCount.toString(),
+                        unitText: "persons"),
+                    MyCard(
+                        typeCount: true,
+                        headerText: "OT-normal",
+                        number: otnCount.toStringAsFixed(2),
+                        unitText: "hour"),
+                    MyCard(
+                        typeCount: true,
+                        headerText: "Holiday",
+                        number: hCount.toStringAsFixed(2),
+                        unitText: "hour"),
+                    MyCard(
+                        typeCount: true,
+                        headerText: "OT-holiday",
+                        number: othCount.toStringAsFixed(2),
+                        unitText: "hour"),
+                    MyCard(
+                        typeCount: true,
+                        headerText: "Food Allowance",
+                        number: foodTotal.toString(),
+                        unitText: "bath"),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+              right: 1,
+              bottom: 1,
+              child: isSendData == 2
+                  ? Container(
+                      width: 160,
+                      height: 80,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.grey[350]),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextThai(
-                            text:
-                                "Employee Summary '${lot.lotYear} / ${lot.lotMonth}'",
-                            textStyle: const TextStyle(fontSize: 16),
-                          ),
+                          Icon(Icons.lock_rounded)
+                              .animate()
+                              .fade(delay: 0.3.seconds),
                           const Gap(5),
-                          Expanded(
-                            child: GridView.count(
-                              crossAxisCount: 5,
-                              children: [
-                                MyCard(
-                                    typeCount: false,
-                                    headerText: "Total emp.",
-                                    number: eTotal.toString(),
-                                    unitText: "persons"),
-                                MyCard(
-                                    typeCount: false,
-                                    headerText: "Full-time emp.",
-                                    number: eCount.toString(),
-                                    unitText: "persons"),
-                                MyCard(
-                                    typeCount: false,
-                                    headerText: "Regular daily emp.",
-                                    number: eRegularCount.toString(),
-                                    unitText: "persons"),
-                                MyCard(
-                                    typeCount: false,
-                                    headerText: "Daily emp.",
-                                    number: eDailyCount.toString(),
-                                    unitText: "persons"),
-                                MyCard(
-                                    typeCount: false,
-                                    headerText: "Temporary emp.",
-                                    number: eTempCount.toString(),
-                                    unitText: "persons"),
-                                MyCard(
-                                    typeCount: false,
-                                    headerText: "OT-worker",
-                                    number: wOtCount.toString(),
-                                    unitText: "persons"),
-                                MyCard(
-                                    typeCount: true,
-                                    headerText: "OT-normal",
-                                    number: otnCount.toStringAsFixed(2),
-                                    unitText: "hour"),
-                                MyCard(
-                                    typeCount: true,
-                                    headerText: "Holiday",
-                                    number: hCount.toStringAsFixed(2),
-                                    unitText: "hour"),
-                                MyCard(
-                                    typeCount: true,
-                                    headerText: "OT-holiday",
-                                    number: othCount.toStringAsFixed(2),
-                                    unitText: "hour"),
-                                MyCard(
-                                    typeCount: true,
-                                    headerText: "Food Allowance",
-                                    number: foodTotal.toString(),
-                                    unitText: "bath"),
-                              ],
-                            ),
-                          ),
+                          Text("Lock Complete")
+                        ],
+                      ))
+                  : SizedBox(
+                      width: 160,
+                      height: 80,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              disabledBackgroundColor: Colors.greenAccent,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                          onPressed: isSendData == 2
+                              ? null
+                              : () async {
+                                  setState(() {
+                                    isSendData = 1;
+                                  });
+                                  bool success = await ApiPayrollService.hrLock(
+                                      startDate.text, finishDate.text, "df");
+                                  // Future.delayed(const Duration(seconds: 5), () {
+                                  //   setState(() {
+                                  //     isSendData = 2;
+                                  //   });
+                                  // });
+                                  Future.delayed(3.seconds, () {
+                                    setState(() {
+                                      if (success) {
+                                        fetchTimeRecord();
+                                      } else {
+                                        isSendData = 0;
+                                      }
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              backgroundColor: success
+                                                  ? mygreencolors
+                                                  : myredcolors,
+                                              content: Text(success
+                                                  ? "HR Locking Lot ${startDate.text} - ${finishDate.text} Success"
+                                                  : "HR Locking Lot ${startDate.text} - ${finishDate.text} Fail")));
+                                    });
+                                  });
+                                },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              isSendData == 1
+                                  ? SizedBox(
+                                      child: Lottie.asset(
+                                          'assets/topayroll.json',
+                                          width: 50,
+                                          height: 50,
+                                          frameRate: FrameRate(60)),
+                                    ).animate().fade()
+                                  : Icon(isSendData == 2
+                                          ? Icons.lock_rounded
+                                          : Icons.toll_rounded)
+                                      .animate()
+                                      .fade(delay: 0.3.seconds),
+                              const Gap(5),
+                              Text(isSendData == 0
+                                  ? "Send to Payroll"
+                                  : isSendData == 1
+                                      ? "Sending..."
+                                      : "Lock Complete")
+                            ],
+                          )),
+                    )),
+          Positioned(
+              right: 1,
+              top: 1,
+              child: Tooltip(
+                message: thLanguage ? "เปลี่ยนภาษา" : "Change language.",
+                child: InkWell(
+                    onTap: () => setState(() => thLanguage = !thLanguage),
+                    child: RichText(
+                      text: TextSpan(
+                        style: DefaultTextStyle.of(context).style,
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'ENG',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: !thLanguage ? 15 : 13,
+                                  color: !thLanguage
+                                      ? mythemecolor
+                                      : Colors.grey[500])),
+                          TextSpan(
+                              text: '|',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[600])),
+                          TextSpan(
+                              text: 'TH',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: thLanguage ? 15 : 13,
+                                  color: thLanguage
+                                      ? mythemecolor
+                                      : Colors.grey[500])),
                         ],
                       ),
-                    ))),
-          ),
-          SizedBox(
-            width: 200,
-            height: MediaQuery.of(context).size.height / 2.5,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15))),
-                onPressed: isSendData == 2
-                    ? null
-                    : () async {
-                        setState(() {
-                          isSendData = 1;
-                        });
-                        bool success = await ApiPayrollService.hrLock(
-                            startDate.text, finishDate.text, "df");
-                        // Future.delayed(const Duration(seconds: 5), () {
-                        //   setState(() {
-                        //     isSendData = 2;
-                        //   });
-                        // });
-                        Future.delayed(3.seconds, () {
-                          setState(() {
-                            if (success) {
-                              fetchTimeRecord();
-                            } else {
-                              isSendData = 0;
-                            }
-                          });
-                        });
-                      },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    isSendData == 1
-                        ? SizedBox(
-                            child: Lottie.asset('assets/topayroll.json',
-                                width: 150,
-                                height: 150,
-                                frameRate: FrameRate(60)),
-                          ).animate().fade()
-                        : Icon(isSendData == 2
-                                ? Icons.lock_rounded
-                                : Icons.toll_rounded)
-                            .animate()
-                            .fade(delay: 0.3.seconds),
-                    const Gap(5),
-                    Text(isSendData == 1 ? "Sending..." : "Send to Payroll")
-                  ],
-                )),
-          ),
-          statusState(),
+                    )),
+              ))
         ],
       ),
     );
@@ -519,90 +576,79 @@ class _ToPayrollState extends State<ToPayroll> {
       case 1:
         return Container();
       case 2:
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: MyContainerShadows(
-            width: MediaQuery.of(context).size.width / 5,
-            height: MediaQuery.of(context).size.height / 2.5,
-            mainColor: Colors.greenAccent,
-            shadowColor1: Colors.grey.shade500,
-            shadowColor2: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.check_rounded)
-                    .animate()
-                    .fade(duration: 0.5.seconds),
-                const Center(child: Text("Complete!")),
-              ],
-            ),
+        return Container(
+          width: 100,
+          height: 80,
+          decoration: BoxDecoration(
+              color: Colors.greenAccent,
+              borderRadius: BorderRadius.circular(12)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.check_rounded)
+                  .animate()
+                  .fade(duration: 0.5.seconds),
+              const Center(child: Text("Complete!")),
+            ],
           ),
         ).animate().fade();
-
-      //     Lottie.asset(
-      //   'assets/lock.json',
-      //   width: MediaQuery.of(context).size.width / 5,
-      //   height: MediaQuery.of(context).size.height / 2.5,
-      //   frameRate: FrameRate(60),
-      //   reverse: true,
-      //   repeat: true,
-      // );
       default:
         return Container();
     }
   }
 
   Widget menuCounttest() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          MyContainerShadows(
-            height:
-                isExpandCount ? MediaQuery.of(context).size.height / 2.5 : 50,
-            width: isExpandCount ? MediaQuery.of(context).size.width / 2.5 : 50,
-            mainColor: isExpandCount ? mygreycolors! : mythemecolor,
-            shadowColor1: Colors.grey.shade500,
-            shadowColor2: Colors.white,
-            child: isExpandCount
-                ? Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                            splashColor: myredcolors,
-                            onPressed: () {
-                              setState(() {
-                                isExpandCount = !isExpandCount;
-                              });
-                            },
-                            icon: const Icon(Icons.close_fullscreen_rounded)),
-                      ),
-                      Expanded(child: Container()),
-                      Align(
-                          alignment: Alignment.bottomRight,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ElevatedButton(
-                                onPressed: () {}, child: const Text("Confirm")),
-                          )),
-                    ],
+    return Stack(children: [
+      InkWell(
+        borderRadius: BorderRadius.circular(50),
+        onTap: isShowFloat ? null : () => setState(() => isShowFloat = true),
+        child: AnimatedContainer(
+          width: isShowFloat ? MediaQuery.of(context).size.width / 2 : 55,
+          height: isShowFloat ? MediaQuery.of(context).size.height / 1.8 : 55,
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+              color: isShowFloat ? mygreycolors : mythemecolor,
+              borderRadius: BorderRadius.circular(isShowFloat ? 12 : 14),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(
+                    5.0,
+                    5.0,
+                  ),
+                  blurRadius: 8.0,
+                  spreadRadius: 1.0,
+                ),
+              ]),
+          child: isShowFloat
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: menuCount(
+                      timeRecordData?.timeRecordData ?? []) // summary(),
                   )
-                : IconButton(
-                    color: mygreycolors,
-                    splashColor: myredcolors,
-                    onPressed: () {
-                      setState(() {
-                        isExpandCount = !isExpandCount;
-                      });
-                    },
-                    icon: const Icon(Icons.open_in_new_rounded)),
-          ),
-        ],
+              : Icon(
+                  Icons.article_rounded,
+                  color: mygreycolors,
+                ),
+        ),
       ),
-    );
+      Positioned(
+          top: isShowFloat ? 5 : null,
+          left: 5,
+          child: InkWell(
+              borderRadius: BorderRadius.circular(50),
+              onTap: () => setState(() => isShowFloat = false),
+              child: isShowFloat
+                  ? Transform.flip(
+                      flipY: true,
+                      child: Icon(
+                        Icons.remove_rounded,
+                        size: 32,
+                        color: Colors.grey[700],
+                      ),
+                    ).animate().fade(delay: 200.ms)
+                  : Container())),
+    ]);
   }
 
   @override
@@ -800,21 +846,21 @@ class _ToPayrollState extends State<ToPayroll> {
                     },
                   ),
                 ),
-                BlocBuilder<PayrollBloc, PayrollState>(
-                  builder: (context, state) {
-                    return isDataLoading
-                        ? Container()
-                        : timeRecordData == null
-                            ? Container()
-                            : menuCount(timeRecordData?.timeRecordData ?? []);
-                  },
-                ),
+                // BlocBuilder<PayrollBloc, PayrollState>(
+                //   builder: (context, state) {
+                //     return isDataLoading
+                //         ? Container()
+                //         : timeRecordData == null
+                //             ? Container()
+                //             : menuCount(timeRecordData?.timeRecordData ?? []);
+                //   },
+                // ),
                 const Gap(20)
               ],
             ),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          // floatingActionButton: menuCounttest(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          floatingActionButton: menuCounttest(),
         ),
       ),
     );
@@ -917,30 +963,37 @@ class MyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: 0,
+        elevation: 1,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextThai(text: headerText),
-              Expanded(
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text(
-                        number,
-                        style: TextStyle(
-                            fontSize: typeCount == true ? 18 : 22,
-                            fontWeight: FontWeight.bold),
-                      ))),
-              const Gap(5),
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: TextThai(
-                    text: unitText,
-                    textStyle: const TextStyle(color: Colors.grey),
-                  )),
-            ],
+          child: SizedBox(
+            width: 100,
+            child: Column(
+              children: [
+                TextThai(text: headerText),
+                Expanded(
+                    child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text(
+                          number,
+                          style: TextStyle(
+                              fontSize: typeCount ? 18 : 20,
+                              fontWeight: FontWeight.bold),
+                        ))),
+                Divider(
+                  color: Colors.grey[400],
+                  height: 10,
+                  thickness: 1,
+                ),
+                Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextThai(
+                      text: unitText,
+                      textStyle: const TextStyle(color: Colors.grey),
+                    )),
+              ],
+            ),
           ),
         ));
   }

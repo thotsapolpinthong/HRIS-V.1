@@ -356,47 +356,51 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endDocked,
               floatingActionButton: floating(),
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Padding(
+              body: SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
                           padding: const EdgeInsets.all(4.0),
-                          child: PaginatedDataTable(
-                            checkboxHorizontalMargin: 0,
-                            showCheckboxColumn: true,
-                            columnSpacing: 10,
-                            showFirstLastButtons: true,
-                            rowsPerPage: rowIndex,
-                            availableRowsPerPage: const [5, 10, 20],
-                            sortColumnIndex: sortColumnIndex,
-                            sortAscending: sort,
-                            onRowsPerPageChanged: (value) {
-                              setState(() {
-                                rowIndex = value!;
-                              });
-                            },
-                            header: header(),
-                            columns: const [
-                              DataColumn(label: Text("Year")),
-                              DataColumn(label: Text("Tax identification")),
-                              DataColumn(label: Text("Employee ID")),
-                              DataColumn(label: Text("FirstName")),
-                              DataColumn(label: Text("LastName")),
-                              DataColumn(label: Text("Edit")),
-                            ],
-                            source: SubDataTableSource(
-                                context, filterData, fetchData, yearId!),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: PaginatedDataTable(
+                              checkboxHorizontalMargin: 0,
+                              showCheckboxColumn: true,
+                              columnSpacing: 10,
+                              showFirstLastButtons: true,
+                              rowsPerPage: rowIndex,
+                              availableRowsPerPage: const [5, 10, 20],
+                              sortColumnIndex: sortColumnIndex,
+                              sortAscending: sort,
+                              onRowsPerPageChanged: (value) {
+                                setState(() {
+                                  rowIndex = value!;
+                                });
+                              },
+                              header: header(),
+                              columns: const [
+                                DataColumn(label: Text("Year")),
+                                DataColumn(label: Text("Tax identification")),
+                                DataColumn(label: Text("Employee ID")),
+                                DataColumn(label: Text("FirstName")),
+                                DataColumn(label: Text("LastName")),
+                                DataColumn(label: Text("Edit")),
+                              ],
+                              source: SubDataTableSource(
+                                  context, filterData, fetchData, yearId!),
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -497,34 +501,17 @@ class SubDataTableSource extends DataTableSource {
           DataCell(Text(d.firstName)),
           DataCell(Text(d.lastName)),
           DataCell(
-            Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                  height: 38,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber[700],
-                          padding: const EdgeInsets.all(1)),
-                      onPressed: () {
-                        functionUpdate(d);
-                      },
-                      child: const Icon(Icons.edit)),
-                ),
-                // const Gap(5),
-                // SizedBox(
-                //   width: 40,
-                //   height: 38,
-                //   child: ElevatedButton(
-                //       style: ElevatedButton.styleFrom(
-                //           backgroundColor: mygreencolors,
-                //           padding: const EdgeInsets.all(1)),
-                //       onPressed: () {
-                //         functionUpdate(d);
-                //       },
-                //       child: const Icon(Icons.copy_rounded)),
-                // ),
-              ],
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber[700],
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    functionUpdate(d);
+                  },
+                  child: const Icon(Icons.edit)),
             ),
           ),
         ]);

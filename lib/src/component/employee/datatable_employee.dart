@@ -14,7 +14,6 @@ import 'package:hris_app_prototype/src/component/personal/datatable_personal.dar
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
-import 'package:hris_app_prototype/src/services/api_employee_service.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 
 class DatatableEmployee extends StatefulWidget {
@@ -92,12 +91,25 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                 child: SizedBox(
                   width: 1000,
                   height: MediaQuery.of(context).size.height - 20,
-                  child: const Column(
+                  child: Stack(
                     children: [
                       Expanded(
                           child: DataTablePerson(
                         employee: true,
                       )),
+                      Positioned(
+                          right: 0,
+                          top: -5,
+                          child: InkWell(
+                              borderRadius: BorderRadius.circular(50),
+                              onTap: () => Navigator.pop(context),
+                              child: Transform.rotate(
+                                  angle: (45 * 22 / 7) / 180,
+                                  child: Icon(
+                                    Icons.add_rounded,
+                                    size: 32,
+                                    color: Colors.grey[700],
+                                  )))),
                     ],
                   ),
                 ),
@@ -341,13 +353,13 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                   fontWeight:
                                                       FontWeight.bold))),
                                     DataColumn(
-                                        numeric: true,
-                                        label: const Text("Employee Id"),
+                                        label: const Text("Dept."),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const Text("Dept."),
+                                        // numeric: true,
+                                        label: const Text("Employee ID"),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {});
                                         }),
@@ -372,17 +384,17 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           setState(() {});
                                         }),
                                     DataColumn(
-                                        label: const Text("Startdate"),
+                                        label: const Text("Work start date"),
                                         onSort: (columnIndex, ascending) {
                                           setState(() {});
                                         }),
-                                    DataColumn(
-                                        label: const Text("Enddate"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
+                                    // DataColumn(
+                                    //     label: const Text("Enddate"),
+                                    //     onSort: (columnIndex, ascending) {
+                                    //       setState(() {});
+                                    //     }),
                                     const DataColumn(
-                                      label: Text('status'),
+                                      label: Text('Status'),
                                     ),
                                     if (widget.isSelected == true &&
                                         widget.isSelectedOne == true)
@@ -509,9 +521,10 @@ class PersonDataTableSource extends DataTableSource {
                   editPositionOranization(employeeData);
                 },
                 child: const Icon(CupertinoIcons.square_list))),
-          DataCell(Text(employeeData.employeeId)),
           DataCell(Text(employeeData
               .positionData.organizationData.departMentData.deptCode)),
+          DataCell(Text(employeeData.employeeId)),
+
           DataCell(Text(employeeData.personData.fisrtNameTh)),
           DataCell(Text(employeeData.personData.lastNameTh)),
           DataCell(Text(
@@ -520,8 +533,18 @@ class PersonDataTableSource extends DataTableSource {
 
           DataCell(Text(employeeData.positionData.positionData.positionNameTh)),
           DataCell(Text(employeeData.startDate)),
-          DataCell(Text(employeeData.endDate)),
-          DataCell(Text(employeeData.staffStatusData.description)),
+          // DataCell(Text(employeeData.endDate)),
+          DataCell(Card(
+              color: employeeData.staffStatusData.description == "ทำงาน"
+                  ? Colors.greenAccent
+                  : myambercolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+                child: Text(employeeData.staffStatusData.description),
+              ))),
           // DataCell(Text(
           //     employeeData.positionData.organizationData.organizationCode)),
           if (isSelected == true && isSelectedOne == true)
@@ -603,8 +626,25 @@ class PersonDataTableSource extends DataTableSource {
                 color: mygreycolors,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
-                child: Center(
-                    child: EmployeeMenuLayout(employeeData: employeeData))),
+                child: Stack(
+                  children: [
+                    Center(
+                        child: EmployeeMenuLayout(employeeData: employeeData)),
+                    Positioned(
+                        right: 5,
+                        top: 5,
+                        child: InkWell(
+                            borderRadius: BorderRadius.circular(50),
+                            onTap: () => Navigator.pop(context),
+                            child: Transform.rotate(
+                                angle: (45 * 22 / 7) / 180,
+                                child: Icon(
+                                  Icons.add_rounded,
+                                  size: 32,
+                                  color: Colors.grey[700],
+                                )))),
+                  ],
+                )),
           );
         });
   }

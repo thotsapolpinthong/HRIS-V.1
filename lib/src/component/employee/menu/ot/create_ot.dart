@@ -704,6 +704,11 @@ class _CreateOtState extends State<CreateOt> {
                                             ? Icons.cancel
                                             : Icons.edit_document,
                                     size: 30,
+                                    color: checkInIcon == 1
+                                        ? mygreencolors
+                                        : checkInIcon == 4
+                                            ? myredcolors
+                                            : mythemecolor,
                                   ),
                                 ),
                         ),
@@ -726,6 +731,11 @@ class _CreateOtState extends State<CreateOt> {
                                             ? Icons.cancel
                                             : Icons.edit_document,
                                     size: 30,
+                                    color: checkOutIcon == 1
+                                        ? mygreencolors
+                                        : checkOutIcon == 4
+                                            ? myredcolors
+                                            : mythemecolor,
                                   ),
                                 ),
                         ),

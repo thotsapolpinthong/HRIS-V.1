@@ -10,15 +10,15 @@ import 'package:hris_app_prototype/src/component/personal/family/add/1_add_famil
 import 'package:hris_app_prototype/src/component/personal/person/add/add_person_personal.dart';
 import 'package:lottie/lottie.dart';
 
-class MyWidget extends StatefulWidget {
+class MyStepper extends StatefulWidget {
   final String personId;
-  const MyWidget({super.key, required this.personId});
+  const MyStepper({super.key, required this.personId});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<MyStepper> createState() => _MyStepperState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _MyStepperState extends State<MyStepper> {
   int currentStep = 0;
   bool isCompleted = false;
   List<Step> getSteps() => [
@@ -75,7 +75,6 @@ class _MyWidgetState extends State<MyWidget> {
                 onPressed: () {
                   Navigator.pop(context);
                   context.read<PersonalBloc>().add(StateClearEvent());
-                  context.read<PersonalBloc>().add(FetchDataList());
                 },
                 child: const Text('X')),
           ),
@@ -316,6 +315,7 @@ class _MyWidgetState extends State<MyWidget> {
                             context
                                 .read<PersonalBloc>()
                                 .add(CreatedPersonalEvent());
+                            context.read<PersonalBloc>().add(FetchDataList());
                             if (state.contactValidateState == true) {
                               context.read<PersonalBloc>().add(ContinueEvent());
                             } else {

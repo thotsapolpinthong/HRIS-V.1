@@ -25,6 +25,7 @@ class CreateUpdateHotels extends StatefulWidget {
 }
 
 class _CreateUpdateHotelsState extends State<CreateUpdateHotels> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _updateKey = GlobalKey<FormState>();
 //textformfield
   TextEditingController name = TextEditingController();
@@ -185,168 +186,175 @@ class _CreateUpdateHotelsState extends State<CreateUpdateHotels> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-            child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Expanded(
+              child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: DropdownGlobal(
+                          labeltext: 'ประเภทที่พัก',
+                          value: hotelTypeId,
+                          items: hotelTypeList.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.hotelTypeId.toString(),
+                              child: Container(
+                                  width: 58,
+                                  constraints: const BoxConstraints(
+                                      maxWidth: 150, minWidth: 100),
+                                  child: Text(e.hotelTypeName)),
+                              onTap: () {},
+                            );
+                          }).toList(),
+                          onChanged: (newValue) async {
+                            setState(() {
+                              hotelTypeId = newValue.toString();
+                            });
+                          },
+                          validator: Validatorless.required('required')),
+                    ),
+                    const Gap(5),
+                    Expanded(
+                      child: DropdownGlobal(
+                          labeltext: 'จังหวัด',
+                          value: provinceId,
+                          items: provinceList.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.provinceId.toString(),
+                              child: Container(
+                                  width: 58,
+                                  constraints: const BoxConstraints(
+                                      maxWidth: 150, minWidth: 100),
+                                  child: Text(e.provinceNameTh)),
+                              onTap: () {},
+                            );
+                          }).toList(),
+                          onChanged: (newValue) async {
+                            setState(() {
+                              provinceId = newValue.toString();
+                            });
+                          },
+                          validator: null),
+                    ),
+                  ],
+                ),
+                const Gap(10),
+                Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Expanded(
-                    child: DropdownGlobal(
-                        labeltext: 'ประเภทที่พัก',
-                        value: hotelTypeId,
-                        items: hotelTypeList.map((e) {
-                          return DropdownMenuItem<String>(
-                            value: e.hotelTypeId.toString(),
-                            child: Container(
-                                width: 58,
-                                constraints: const BoxConstraints(
-                                    maxWidth: 150, minWidth: 100),
-                                child: Text(e.hotelTypeName)),
-                            onTap: () {},
-                          );
-                        }).toList(),
-                        onChanged: (newValue) async {
-                          setState(() {
-                            hotelTypeId = newValue.toString();
-                          });
-                        },
-                        validator: null),
+                    flex: 4,
+                    child: TextFormFieldGlobal(
+                        controller: name,
+                        labelText: "ชื่อที่พัก",
+                        hintText: "",
+                        onChanged: (p0) => setState(() {}),
+                        validatorless: Validatorless.required('required'),
+                        enabled: true),
                   ),
                   const Gap(5),
                   Expanded(
-                    child: DropdownGlobal(
-                        labeltext: 'จังหวัด',
-                        value: provinceId,
-                        items: provinceList.map((e) {
-                          return DropdownMenuItem<String>(
-                            value: e.provinceId.toString(),
-                            child: Container(
-                                width: 58,
-                                constraints: const BoxConstraints(
-                                    maxWidth: 150, minWidth: 100),
-                                child: Text(e.provinceNameTh)),
-                            onTap: () {},
-                          );
-                        }).toList(),
-                        onChanged: (newValue) async {
-                          setState(() {
-                            provinceId = newValue.toString();
-                          });
-                        },
-                        validator: null),
-                  ),
-                ],
-              ),
-              const Gap(10),
-              Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Expanded(
-                  flex: 4,
-                  child: TextFormFieldGlobal(
-                      controller: name,
-                      labelText: "ชื่อที่พัก",
-                      hintText: "",
-                      validatorless: null,
-                      enabled: true),
-                ),
-                const Gap(5),
-                Expanded(
-                  flex: 2,
-                  child: TextFormFieldGlobal(
-                      controller: price,
-                      labelText: "ราคาห้องพัก(บาท)",
-                      hintText: "",
-                      validatorless: Validatorless.number("ระบุเป็นจำนวนเงิน"),
-                      enabled: true),
-                )
-              ]),
-              const Gap(10),
-              TextFormFieldGlobal(
-                  controller: description,
-                  labelText: "รายละเอียด",
-                  hintText: "",
-                  validatorless: null,
-                  enabled: true),
-            ],
-          ),
-        )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            widget.type == 0
-                ? Container()
-                : Row(
-                    children: [
-                      SizedBox(
-                        width: 100,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: status == true ? 2 : 0,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(6))),
-                              backgroundColor: status == true
-                                  ? Colors.greenAccent
-                                  : Colors.grey[300],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                status = true;
-                              });
-                            },
-                            child: Text(
-                              "Active",
-                              style: TextStyle(
-                                  color: status == true
-                                      ? Colors.black87
-                                      : Colors.black45),
-                            )),
-                      ),
-                      SizedBox(
-                        width: 100,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: status == false ? 2 : 0,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(6))),
-                              backgroundColor: status == false
-                                  ? Colors.red[800]
-                                  : Colors.grey[300],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                status = false;
-                              });
-                            },
-                            child: Text(
-                              "Inactive",
-                              style: TextStyle(
-                                  color: status == false
-                                      ? Colors.white
-                                      : Colors.black45),
-                            )),
-                      ),
-                    ],
-                  ),
-            MySaveButtons(
-              text: widget.type == 0 ? "Add" : "Update",
-              onPressed: () {
-                setState(() {
-                  if (widget.type == 0) {
-                    createCar();
-                  } else {
-                    updateDialog();
-                  }
-                });
-              },
+                    flex: 2,
+                    child: TextFormFieldGlobal(
+                        controller: price,
+                        labelText: "ราคาห้องพัก(บาท)",
+                        hintText: "",
+                        validatorless:
+                            Validatorless.number("ระบุเป็นจำนวนเงิน"),
+                        enabled: true),
+                  )
+                ]),
+                const Gap(10),
+                TextFormFieldGlobal(
+                    controller: description,
+                    labelText: "รายละเอียด",
+                    hintText: "",
+                    validatorless: null,
+                    enabled: true),
+              ],
             ),
-          ],
-        )
-      ],
+          )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              widget.type == 0
+                  ? Container()
+                  : Row(
+                      children: [
+                        SizedBox(
+                          width: 100,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: status == true ? 2 : 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        left: Radius.circular(6))),
+                                backgroundColor: status == true
+                                    ? Colors.greenAccent
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  status = true;
+                                });
+                              },
+                              child: Text(
+                                "Active",
+                                style: TextStyle(
+                                    color: status == true
+                                        ? Colors.black87
+                                        : Colors.black45),
+                              )),
+                        ),
+                        SizedBox(
+                          width: 100,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: status == false ? 2 : 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        right: Radius.circular(6))),
+                                backgroundColor: status == false
+                                    ? Colors.red[800]
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  status = false;
+                                });
+                              },
+                              child: Text(
+                                "Inactive",
+                                style: TextStyle(
+                                    color: status == false
+                                        ? Colors.white
+                                        : Colors.black45),
+                              )),
+                        ),
+                      ],
+                    ),
+              MySaveButtons(
+                text: widget.type == 0 ? "Create" : "Update",
+                onPressed: _formKey.currentState?.validate() == false
+                    ? null
+                    : () {
+                        setState(() {
+                          if (widget.type == 0) {
+                            createCar();
+                          } else {
+                            updateDialog();
+                          }
+                        });
+                      },
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

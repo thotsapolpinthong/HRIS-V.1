@@ -326,7 +326,8 @@ class DropdownMenuGlobal extends StatelessWidget {
           requestFocusOnTap: true,
           controller: controller,
           width: width,
-          trailingIcon: const Icon(Icons.content_paste_search_rounded),
+          trailingIcon:
+              Icon(Icons.content_paste_search_rounded, color: mythemecolor),
           inputDecorationTheme: InputDecorationTheme(
               contentPadding: const EdgeInsets.all(10.0),
               errorStyle: const TextStyle(height: 0.5),
@@ -875,8 +876,9 @@ class TextFormFieldTimepickGlobal extends StatelessWidget {
             labelStyle: const TextStyle(color: Colors.black),
             filled: true,
             fillColor: Colors.white,
-            suffixIcon: const Icon(
+            suffixIcon: Icon(
               Icons.watch_later_outlined,
+              color: mythemecolor,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6),
@@ -981,7 +983,11 @@ class TextFormFieldSearch extends StatelessWidget {
                 child: Icon(
                   Icons.search_rounded,
                 )),
-            // prefixIcon: prefixIcon,
+            // prefixIcon: IconTheme(
+            //     data: IconThemeData(color: myambercolors),
+            //     child: Icon(
+            //       Icons.search_rounded,
+            //     )),
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(8))),
         enabled: enabled,
         onChanged: onChanged,

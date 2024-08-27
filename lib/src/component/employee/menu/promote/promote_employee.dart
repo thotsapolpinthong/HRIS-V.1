@@ -239,13 +239,10 @@ class _PromoteMenuState extends State<PromoteMenu> {
                                 )),
                           ],
                         ),
-                        Transform.flip(
-                          flipX: true,
-                          child: Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            size: 70,
-                            color: Colors.grey[700],
-                          ),
+                        Icon(
+                          Icons.double_arrow_rounded,
+                          size: 70,
+                          color: Colors.grey[700],
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,

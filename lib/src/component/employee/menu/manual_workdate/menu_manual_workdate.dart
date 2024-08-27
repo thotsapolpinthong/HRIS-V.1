@@ -106,8 +106,8 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
         String maxLotMonth = '';
         for (var e in lotNumberData!.lotNumberData) {
           if (e.lotMonth.compareTo(maxLotMonth) > 0) {
-            startDate.text = e.startDate;
-            endDate.text = e.finishDate;
+            startDate.text = e.startDate.substring(0, 10);
+            endDate.text = e.finishDate.substring(0, 10);
             lotNumberId = e.lotMonth;
           }
         }
@@ -329,11 +329,15 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
                                                               startDate.text =
                                                                   result.first
                                                                       .startDate
-                                                                      .toString();
-                                                              endDate.text = result
-                                                                  .first
-                                                                  .finishDate
-                                                                  .toString();
+                                                                      .substring(
+                                                                          0,
+                                                                          10);
+                                                              endDate.text =
+                                                                  result.first
+                                                                      .finishDate
+                                                                      .substring(
+                                                                          0,
+                                                                          10);
                                                             }
                                                             fetchDataTimeStamp(
                                                                 startDate.text,

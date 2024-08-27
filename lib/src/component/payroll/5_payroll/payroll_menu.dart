@@ -360,6 +360,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                           splashRadius: 1,
                           onPressed: () => setState(() {
                             orgCode = null;
+                            fetchPayrollData();
                           }),
                           icon: const Icon(Icons.cancel_rounded),
                         ),
@@ -378,8 +379,9 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
           "Upload : ",
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
+
         Image.asset('assets/xls.png', width: 30),
-        const Gap(3),
+        const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -399,89 +401,89 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
           ],
         ),
         const Gap(10),
-        const Text(
-          "Print : ",
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(3.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              if (positionTypeId == "0" || positionTypeId == "1")
-                ButtonTableMenu(
-                    width: 145,
-                    height: 32,
-                    text: "สลิปพนักงานรายเดือน",
-                    iconColor: !accLock
-                        ? Colors.grey[400]
-                        : orgCode == null
-                            ? Colors.grey[400]
-                            : mythemecolor,
-                    fontColor: !accLock
-                        ? Colors.grey[500]
-                        : orgCode == null
-                            ? Colors.grey[500]
-                            : null,
-                    isUploaded: true,
-                    onPressed: !accLock
-                        ? null
-                        : orgCode == null
-                            ? null
-                            : () {
-                                printSlip(
-                                    startDate.text, finishDate.text, orgCode!);
-                              },
-                    child: isPrinting
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: myambercolors,
-                              strokeWidth: 3,
-                              strokeCap: StrokeCap.round,
-                            ),
-                          )
-                        : const Icon(Icons.print_rounded)),
-              const Gap(5),
-              if (positionTypeId == "0" || positionTypeId == "2")
-                ButtonTableMenu(
-                    width: 135,
-                    height: 32,
-                    text: "สลิปพนักงานรายวัน",
-                    iconColor: !accLaborLock
-                        ? Colors.grey[400]
-                        : orgCode == null
-                            ? Colors.grey[400]
-                            : mythemecolor,
-                    fontColor: !accLaborLock
-                        ? Colors.grey[500]
-                        : orgCode == null
-                            ? Colors.grey[500]
-                            : null,
-                    isUploaded: true,
-                    onPressed: !accLaborLock
-                        ? null
-                        : orgCode == null
-                            ? null
-                            : () {
-                                printSlip(
-                                    startDate.text, finishDate.text, orgCode!);
-                              },
-                    child: isPrinting
-                        ? SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: myambercolors,
-                              strokeWidth: 3,
-                              strokeCap: StrokeCap.round,
-                            ),
-                          )
-                        : const Icon(Icons.print_rounded)),
-            ],
-          ),
-        ),
+        // const Text(
+        //   "Print : ",
+        //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        // ),
+        // Padding(
+        //   padding: const EdgeInsets.all(3.0),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.start,
+        //     children: [
+        //       if (positionTypeId == "0" || positionTypeId == "1")
+        //         ButtonTableMenu(
+        //             width: 145,
+        //             height: 32,
+        //             text: "สลิปพนักงานรายเดือน",
+        //             iconColor: !accLock
+        //                 ? Colors.grey[400]
+        //                 : orgCode == null
+        //                     ? Colors.grey[400]
+        //                     : mythemecolor,
+        //             fontColor: !accLock
+        //                 ? Colors.grey[500]
+        //                 : orgCode == null
+        //                     ? Colors.grey[500]
+        //                     : null,
+        //             isUploaded: true,
+        //             onPressed: !accLock
+        //                 ? null
+        //                 : orgCode == null
+        //                     ? null
+        //                     : () {
+        //                         printSlip(
+        //                             startDate.text, finishDate.text, orgCode!);
+        //                       },
+        //             child: isPrinting
+        //                 ? SizedBox(
+        //                     width: 24,
+        //                     height: 24,
+        //                     child: CircularProgressIndicator(
+        //                       color: myambercolors,
+        //                       strokeWidth: 3,
+        //                       strokeCap: StrokeCap.round,
+        //                     ),
+        //                   )
+        //                 : const Icon(Icons.print_rounded)),
+        //       const Gap(5),
+        //       if (positionTypeId == "0" || positionTypeId == "2")
+        //         ButtonTableMenu(
+        //             width: 135,
+        //             height: 32,
+        //             text: "สลิปพนักงานรายวัน",
+        //             iconColor: !accLaborLock
+        //                 ? Colors.grey[400]
+        //                 : orgCode == null
+        //                     ? Colors.grey[400]
+        //                     : mythemecolor,
+        //             fontColor: !accLaborLock
+        //                 ? Colors.grey[500]
+        //                 : orgCode == null
+        //                     ? Colors.grey[500]
+        //                     : null,
+        //             isUploaded: true,
+        //             onPressed: !accLaborLock
+        //                 ? null
+        //                 : orgCode == null
+        //                     ? null
+        //                     : () {
+        //                         printSlip(
+        //                             startDate.text, finishDate.text, orgCode!);
+        //                       },
+        //             child: isPrinting
+        //                 ? SizedBox(
+        //                     width: 24,
+        //                     height: 24,
+        //                     child: CircularProgressIndicator(
+        //                       color: myambercolors,
+        //                       strokeWidth: 3,
+        //                       strokeCap: StrokeCap.round,
+        //                     ),
+        //                   )
+        //                 : const Icon(Icons.print_rounded)),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }
@@ -944,7 +946,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                               });
                             },
                             columns: const [
-                              DataColumn(label: Text("Menu")),
+                              DataColumn(label: Text("Details")),
                               DataColumn(numeric: true, label: Text("Emp. ID")),
                               DataColumn(label: Text("Type")),
                               DataColumn(label: Text("Name")),
@@ -975,8 +977,12 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                               DataColumn(
                                   numeric: true, label: Text("Net Salary")),
                             ],
-                            source: SubDataTableSource(context, filterData,
-                                startDate.text, finishDate.text, fetchData),
+                            source: SubDataTableSource(
+                                context,
+                                filterData,
+                                startDate.text,
+                                finishDate.text,
+                                fetchPayrollData),
                           ),
                         ),
                       ),
@@ -1033,7 +1039,9 @@ class SubDataTableSource extends DataTableSource {
                 child: Stack(
                   children: [
                     PayrollDetailsManagement(
-                      data: data,
+                      lotYear: data.lotYear,
+                      lotMonth: data.lotMonth,
+                      employee_id: data.employeeId,
                       fetchData: fetchData!,
                     ),
                     Positioned(
@@ -1102,26 +1110,26 @@ class SubDataTableSource extends DataTableSource {
                       backgroundColor: mygreycolors),
                   onPressed: () => employeeDetail(d),
                   child: Icon(Icons.assignment, color: mythemecolor))),
-          const Gap(5),
-          SizedBox(
-              height: 35,
-              width: 42,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                      backgroundColor: mygreycolors),
-                  onPressed: () => printSlip(startDate, endDate, d.employeeId),
-                  child: loadPDF
-                      ? SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(
-                            color: myambercolors,
-                            strokeWidth: 3,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        )
-                      : Icon(Icons.print_rounded, color: mythemecolor))),
+          // const Gap(5),
+          // SizedBox(
+          //     height: 35,
+          //     width: 42,
+          //     child: ElevatedButton(
+          //         style: ElevatedButton.styleFrom(
+          //             padding: const EdgeInsets.all(0),
+          //             backgroundColor: mygreycolors),
+          //         onPressed: () => printSlip(startDate, endDate, d.employeeId),
+          //         child: loadPDF
+          //             ? SizedBox(
+          //                 width: 24,
+          //                 height: 24,
+          //                 child: CircularProgressIndicator(
+          //                   color: myambercolors,
+          //                   strokeWidth: 3,
+          //                   strokeCap: StrokeCap.round,
+          //                 ),
+          //               )
+          //             : Icon(Icons.print_rounded, color: mythemecolor))),
         ],
       )),
       DataCell(Text(d.employeeId)),

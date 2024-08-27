@@ -47,3 +47,6 @@ class ShiftPageEvent extends HomepageEvent {}
 class WorkSpPageEvent extends HomepageEvent {}
 
 class HalfHlbPageEvent extends HomepageEvent {}
+
+//Role
+class RolePageEvent extends HomepageEvent {}

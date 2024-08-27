@@ -65,7 +65,10 @@ class _TransferMenuState extends State<TransferMenu> {
       staffTypeList;
       promoteTypeList;
       staffTypeId =
-          widget.employeeData.positionData.positionTypeData.positionTypeId;
+          widget.employeeData.positionData.positionTypeData.positionTypeId == ""
+              ? null
+              : widget
+                  .employeeData.positionData.positionTypeData.positionTypeId;
       isDataLoading = false;
     });
   }
@@ -229,13 +232,10 @@ class _TransferMenuState extends State<TransferMenu> {
                                 )),
                           ],
                         ),
-                        Transform.flip(
-                          flipX: true,
-                          child: Icon(
-                            Icons.arrow_back_ios_new_rounded,
-                            size: 70,
-                            color: Colors.grey[700],
-                          ),
+                        Icon(
+                          Icons.double_arrow_rounded,
+                          size: 70,
+                          color: Colors.grey[700],
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,

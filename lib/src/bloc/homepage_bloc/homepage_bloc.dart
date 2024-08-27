@@ -40,5 +40,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
         (event, emit) => emit(state.copyWith(pageNumber: 5.5)));
     //Report
     on<ReportPageEvent>((event, emit) => emit(state.copyWith(pageNumber: 7)));
+    //Role
+    on<RolePageEvent>((event, emit) => emit(state.copyWith(pageNumber: 10)));
   }
 }

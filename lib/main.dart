@@ -16,9 +16,19 @@ import 'package:hris_app_prototype/src/bloc/trip_bloc/trip_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/routes/routes.dart';
 import 'src/page/login_page.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 
 void main() {
   runApp(const MyApp());
+  doWhenWindowReady(() {
+    final win = appWindow;
+    const initialSize = Size(1366, 768);
+    win.minSize = initialSize;
+    win.size = initialSize;
+    // win.alignment = Alignment.center;
+    win.title = "HRIS STEC.";
+    win.show();
+  });
 }
 
 final navigatorState = GlobalKey<NavigatorState>();

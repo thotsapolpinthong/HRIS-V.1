@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/to_payroll
 import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/4_tax_deduction/tax_deduction_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/5_payroll/payroll_menu.dart';
+import 'package:hris_app_prototype/src/component/permission/permission_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/half_break/lunch_break_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/workdate_sp_table.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
@@ -53,137 +55,11 @@ class _MyHomepageState extends State<MyHomepage> {
         return const MyDashboard();
       case 9:
         return const OffSideLayout();
+      case 10:
+        return PermissionTable();
       default:
         throw Container();
     }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const SizedBox(width: 260, child: SlideBar()),
-      backgroundColor: mythemecolor,
-      body: SafeArea(child: BlocBuilder<HomepageBloc, HomepageState>(
-        builder: (context, state) {
-          double width = MediaQuery.of(context).size.width;
-          return Stack(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //Area Side Menu
-                  Container(
-                    width: state.expandMenu == false ? 70 : width / 6,
-                  ),
-                  //Main Body
-                  Expanded(
-                      flex: state.expandMenu == false ? 19 : 5,
-                      child: MenuExpand(
-                        child: Stack(children: [
-                          mainMenuPage(state.pageNumber),
-                          // Center(
-                          //   child: Container(
-                          //     width: 100,
-                          //     height: 100,
-                          //     child: CircularProgressIndicator(
-                          //       color: mythemecolor,
-                          //       strokeWidth: 10,
-                          //       strokeCap: StrokeCap.round,
-                          //     ),
-                          //   ),
-                          // )
-                        ]),
-                      )),
-                  // if (state.pageNumber == 8)
-                  //   Expanded(
-                  //       flex: state.expandMenu == false ? 19 : 5,
-                  //       child: const MenuExpand(
-                  //         child: MyDashboard(),
-                  //       )),
-                  // if (state.pageNumber == 0)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: PersonalPage(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 1)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: OrganizationLayout(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 2)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: DatatableEmployee(
-                  //         isSelected: false,
-                  //         isSelectedOne: false,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 3)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: EmployeeSelfServiceLayout(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 6)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: OffSideLayout(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 6.1)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: TimeAttendancePageLayout(
-                  //         dashboard: false,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 6.2)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: ShiftLayout(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 6.3)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: WorkSPTable(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber == 6.4)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: const MenuExpand(
-                  //       child: LunchBreakTable(),
-                  //     ),
-                  //   ),
-                  // if (state.pageNumber >= 5 && state.pageNumber < 6)
-                  //   Expanded(
-                  //     flex: state.expandMenu == false ? 19 : 5,
-                  //     child: MenuExpand(
-                  //       child: payrollPage(state.pageNumber),
-                  //     ),
-                  //   ),
-                ],
-              ),
-              //Side Menu
-              const SlideBar(),
-            ],
-          );
-        },
-      )),
-    );
   }
 
   Widget payrollPage(double page) {
@@ -219,6 +95,65 @@ class _MyHomepageState extends State<MyHomepage> {
         throw Container();
     }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      drawer: const SizedBox(width: 260, child: SlideBar()),
+      backgroundColor: mythemecolor,
+      body: BlocBuilder<HomepageBloc, HomepageState>(
+        builder: (context, state) {
+          double width = MediaQuery.of(context).size.width;
+          return Stack(
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //Area Side Menu
+                  Container(
+                    width: state.expandMenu == false ? 70 : width / 6,
+                  ),
+                  //Main Body
+                  Expanded(
+                      flex: state.expandMenu == false ? 19 : 5,
+                      child: Column(
+                        children: [
+                          WindowTitleBarBox(
+                            child: Row(
+                              children: [
+                                Expanded(child: MoveWindow()),
+                                MinimizeWindowButton(
+                                    colors: WindowButtonColors(
+                                        iconNormal: mytextcolors)),
+                                MaximizeWindowButton(
+                                  colors: WindowButtonColors(
+                                      iconNormal: mytextcolors),
+                                  animate: true,
+                                ),
+                                CloseWindowButton(
+                                    colors: WindowButtonColors(
+                                        iconNormal: mytextcolors,
+                                        mouseOver: myredcolors))
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: MenuExpand(
+                              child: mainMenuPage(state.pageNumber),
+                            ),
+                          ),
+                        ],
+                      )),
+                ],
+              ),
+              //Side Menu
+              const SlideBar(),
+            ],
+          );
+        },
+      ),
+    );
+  }
 }
 
 class MenuExpand extends StatelessWidget {
@@ -231,7 +166,7 @@ class MenuExpand extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.fromLTRB(0, 0, 5, 5),
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

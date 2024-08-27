@@ -28,7 +28,7 @@ class CreateUpdateCars extends StatefulWidget {
 }
 
 class _CreateUpdateCarsState extends State<CreateUpdateCars> {
-  // final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final GlobalKey<FormState> _updateKey = GlobalKey<FormState>();
 
   List<MockupModel> brand = [
@@ -208,228 +208,213 @@ class _CreateUpdateCarsState extends State<CreateUpdateCars> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Expanded(
+              child: SingleChildScrollView(
             child: Column(
-          children: [
-            DropdownGlobal(
-                labeltext: "ประเภทรถ",
-                value: carTypeId,
-                items: carTypeData.map((e) {
-                  return DropdownMenuItem<String>(
-                    value: e.carTypeId,
-                    child: Container(
-                        constraints:
-                            const BoxConstraints(maxWidth: 300, minWidth: 80),
-                        child: Text(e.carName)),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  setState(() {
-                    carTypeId = newValue.toString();
-                  });
-                },
-                validator: null),
-            const Gap(10),
-            Row(
               children: [
-                Expanded(
-                  child: DropdownGlobal(
-                      labeltext: "ยี่ห้อ",
-                      value: brandName,
-                      items: brand.map((e) {
-                        return DropdownMenuItem<String>(
-                          value: e.name,
-                          child: Container(
-                              constraints: const BoxConstraints(
-                                  maxWidth: 120, minWidth: 80),
-                              child: Text("${e.id} : ${e.name}")),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
+                DropdownGlobal(
+                    labeltext: "ประเภทรถ",
+                    value: carTypeId,
+                    items: carTypeData.map((e) {
+                      return DropdownMenuItem<String>(
+                        value: e.carTypeId,
+                        child: Container(
+                            constraints: const BoxConstraints(
+                                maxWidth: 300, minWidth: 80),
+                            child: Text(e.carName)),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        carTypeId = newValue.toString();
+                      });
+                    },
+                    validator: Validatorless.required('required')),
+                const Gap(10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: DropdownGlobal(
+                          labeltext: "แบรนด์รถ",
+                          value: brandName,
+                          items: brand.map((e) {
+                            return DropdownMenuItem<String>(
+                              value: e.name,
+                              child: Container(
+                                  constraints: const BoxConstraints(
+                                      maxWidth: 120, minWidth: 80),
+                                  child: Text("${e.id} : ${e.name}")),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              brandName = newValue.toString();
+                            });
+                          },
+                          validator: Validatorless.required('required')),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                      child: TextFormFieldGlobal(
+                          controller: carModel,
+                          labelText: "รุ่น",
+                          hintText: "",
+                          validatorless: null,
+                          enabled: true),
+                    )
+                  ],
+                ),
+                const Gap(10),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TextFormFieldGlobal(
+                          controller: number,
+                          labelText: "ทะเบียนรถ",
+                          hintText: "",
+                          onChanged: (p0) => setState(() {}),
+                          validatorless: Validatorless.required('required'),
+                          enabled: true),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                      child: TextFormFieldGlobal(
+                          controller: mileage,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          labelText: "เลขไมล์",
+                          hintText: "",
+                          onChanged: (p0) => setState(() {}),
+                          validatorless: Validatorless.required('required'),
+                          enabled: true),
+                    )
+                  ],
+                ),
+                const Gap(10),
+                TextFormFieldGlobal(
+                    controller: description,
+                    labelText: "รายละเอียด",
+                    hintText: "",
+                    validatorless: null,
+                    enabled: true),
+              ],
+            ),
+          )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              widget.type == 0
+                  ? Container()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: 29,
+                          width: 80,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: status == "0" ? 2 : 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        left: Radius.circular(6))),
+                                backgroundColor: status == "0"
+                                    ? Colors.greenAccent
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  status = "0";
+                                });
+                              },
+                              child: Text(
+                                "ว่าง",
+                                style: TextStyle(
+                                    color: status == "0"
+                                        ? Colors.black87
+                                        : Colors.black45),
+                              )),
+                        ),
+                        SizedBox(
+                          width: 83,
+                          height: 29,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        right: Radius.circular(0))),
+                                elevation: status == "2" ? 2 : 0,
+                                backgroundColor: status == "2"
+                                    ? Colors.amberAccent
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  status = "2";
+                                });
+                              },
+                              child: Text(
+                                "ซ่อมบำรุง",
+                                style: TextStyle(
+                                    color: status == "2"
+                                        ? Colors.black87
+                                        : Colors.black45),
+                              )),
+                        ),
+                        SizedBox(
+                          width: 80,
+                          height: 29,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: status == "3" ? 2 : 0,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.horizontal(
+                                        right: Radius.circular(6))),
+                                backgroundColor: status == "3"
+                                    ? Colors.red[800]
+                                    : Colors.grey[300],
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  status = "3";
+                                });
+                              },
+                              child: Text(
+                                "เพิกถอน",
+                                style: TextStyle(
+                                    color: status == "3"
+                                        ? Colors.white
+                                        : Colors.black45),
+                              )),
+                        ),
+                      ],
+                    ),
+              MySaveButtons(
+                text: widget.type == 0 ? "Create" : "Update",
+                onPressed: _formKey.currentState?.validate() == false
+                    ? null
+                    : () {
                         setState(() {
-                          brandName = newValue.toString();
+                          if (widget.type == 0) {
+                            //create
+                            createCar();
+                          } else {
+                            // update
+                            updateDialog();
+                          }
                         });
                       },
-                      validator: null),
-                ),
-                const Gap(10),
-                Expanded(
-                  child: TextFormFieldGlobal(
-                      controller: carModel,
-                      labelText: "รุ่น",
-                      hintText: "",
-                      validatorless: null,
-                      enabled: true),
-                )
-              ],
-            ),
-            const Gap(10),
-            Row(
-              children: [
-                Expanded(
-                  child: TextFormFieldGlobal(
-                      controller: number,
-                      labelText: "ทะเบียนรถ",
-                      hintText: "",
-                      validatorless: null,
-                      enabled: true),
-                ),
-                const Gap(10),
-                Expanded(
-                  child: TextFormFieldGlobal(
-                      controller: mileage,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                      ],
-                      labelText: "เลขไมล์",
-                      hintText: "",
-                      validatorless: null,
-                      enabled: true),
-                )
-              ],
-            ),
-            const Gap(10),
-            TextFormFieldGlobal(
-                controller: description,
-                labelText: "รายละเอียด",
-                hintText: "",
-                validatorless: null,
-                enabled: true),
-          ],
-        )),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            widget.type == 0
-                ? Container()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        height: 29,
-                        width: 80,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: status == "0" ? 2 : 0,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      left: Radius.circular(6))),
-                              backgroundColor: status == "0"
-                                  ? Colors.greenAccent
-                                  : Colors.grey[300],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                status = "0";
-                              });
-                            },
-                            child: Text(
-                              "ว่าง",
-                              style: TextStyle(
-                                  color: status == "0"
-                                      ? Colors.black87
-                                      : Colors.black45),
-                            )),
-                      ),
-                      // SizedBox(
-                      //   width: 80,
-                      //   height: 29,
-                      //   child: ElevatedButton(
-                      //       style: ElevatedButton.styleFrom(
-                      //         shape: const RoundedRectangleBorder(
-                      //             borderRadius: BorderRadius.horizontal(
-                      //                 right: Radius.circular(0))),
-                      //         elevation: status == "ใช้งาน" ? 2 : 0,
-                      //         backgroundColor: status == "ใช้งาน"
-                      //             ? mythemecolor
-                      //             : Colors.grey[300],
-                      //       ),
-                      //       onPressed: () {
-                      //         setState(() {
-                      //           status = "ใช้งาน";
-                      //         });
-                      //       },
-                      //       child: Text(
-                      //         "ใช้งาน",
-                      //         style: TextStyle(
-                      //             color: status == "ใช้งาน"
-                      //                 ? Colors.white
-                      //                 : Colors.black45),
-                      //       )),
-                      // ),
-                      SizedBox(
-                        width: 83,
-                        height: 29,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(0))),
-                              elevation: status == "2" ? 2 : 0,
-                              backgroundColor: status == "2"
-                                  ? Colors.amberAccent
-                                  : Colors.grey[300],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                status = "2";
-                              });
-                            },
-                            child: Text(
-                              "ซ่อมบำรุง",
-                              style: TextStyle(
-                                  color: status == "2"
-                                      ? Colors.black87
-                                      : Colors.black45),
-                            )),
-                      ),
-                      SizedBox(
-                        width: 80,
-                        height: 29,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: status == "3" ? 2 : 0,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(6))),
-                              backgroundColor: status == "3"
-                                  ? Colors.red[800]
-                                  : Colors.grey[300],
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                status = "3";
-                              });
-                            },
-                            child: Text(
-                              "เพิกถอน",
-                              style: TextStyle(
-                                  color: status == "3"
-                                      ? Colors.white
-                                      : Colors.black45),
-                            )),
-                      ),
-                    ],
-                  ),
-            MySaveButtons(
-              text: widget.type == 0 ? "Add" : "Update",
-              onPressed: () {
-                setState(() {
-                  if (widget.type == 0) {
-                    //create
-                    createCar();
-                  } else {
-                    // update
-                    updateDialog();
-                  }
-                });
-              },
-            ),
-          ],
-        )
-      ],
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }

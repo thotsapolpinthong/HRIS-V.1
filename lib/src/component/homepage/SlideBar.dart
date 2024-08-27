@@ -4,6 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
+import 'package:hris_app_prototype/src/services/api_employee_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SlideBar extends StatefulWidget {
   const SlideBar({super.key});
@@ -17,6 +20,137 @@ class _SlideBarState extends State<SlideBar> {
   bool expandMenuPayroll = false;
   bool isHoveredTimeattendance = false;
   bool expandMenuTimeattendance = false;
+  String? name;
+  String? position;
+  String? employeeId;
+  EmployeeDatum? data;
+
+  String truncateString(String text, int maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.substring(0, maxLength) + '...';
+    }
+  }
+
+  Future fetchData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    employeeId = preferences.getString("employeeId")!;
+    data = await ApiEmployeeService.fetchDataEmployeeId(employeeId ?? '');
+
+    setState(() {
+      name = truncateString(
+          "${data?.personData.firstNameEn ?? ''} ${data?.personData.lastNameEn ?? ''}",
+          18);
+      position = truncateString(
+          data?.positionData.positionData.positionNameTh ?? "", 20);
+    });
+  }
+
+  Widget timeattendanceSubMenu() {
+    return MouseRegion(
+      onHover: (event) {
+        setState(() {
+          expandMenuTimeattendance = true;
+        });
+      },
+      onExit: (event) {
+        setState(() {
+          expandMenuTimeattendance = false;
+        });
+      },
+      child: BlocBuilder<HomepageBloc, HomepageState>(
+        builder: (context, state) {
+          return Container(
+            width: 250,
+            height: MediaQuery.of(context).size.height - 500,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
+            ),
+            child: Card(
+              margin: const EdgeInsets.all(0),
+              elevation: 6,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.horizontal(right: Radius.circular(12))),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Gap(5),
+                      const Text(
+                        "Time Attendance Menu.",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ).animate().fadeIn(),
+                      const Gap(10),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 6.1
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 6.1
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "1. บันทึกข้อมูลวันหยุดประจำปี",
+                          onTap: () {
+                            context
+                                .read<HomepageBloc>()
+                                .add(CalendarPageEvent());
+                          }),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 6.2
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 6.2
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "2. กะการทำงาน (Shift)",
+                          onTap: () {
+                            context.read<HomepageBloc>().add(ShiftPageEvent());
+                          }),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 6.3
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 6.3
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "3. บันทึกวันทำงานพิเศษ",
+                          onTap: () {
+                            context.read<HomepageBloc>().add(WorkSpPageEvent());
+                          }),
+                      DrawerTitleSubmenu(
+                          color: state.pageNumber == 6.4
+                              ? mythemecolor
+                              : Colors.white,
+                          textColor: state.pageNumber == 6.4
+                              ? Colors.white
+                              : Colors.black87,
+                          title: "4. บันทึกพนักงานพักครึ่งชั่วโมง",
+                          onTap: () {
+                            context
+                                .read<HomepageBloc>()
+                                .add(HalfHlbPageEvent());
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -38,7 +172,7 @@ class _SlideBarState extends State<SlideBar> {
                             children: [
                               Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(10, 20, 10, 10),
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                 child: IconButton(
                                     onPressed: () {
                                       context
@@ -51,7 +185,7 @@ class _SlideBarState extends State<SlideBar> {
                                         state.expandMenu == false
                                             ? Icons.menu_rounded
                                             : Icons.menu_open_rounded,
-                                        color: mytextcolors,
+                                        color: myambercolors,
                                         size: 30,
                                       ).animate().fade(),
                                     )),
@@ -60,13 +194,22 @@ class _SlideBarState extends State<SlideBar> {
                                 Expanded(
                                   child: Container(
                                     margin:
-                                        const EdgeInsets.fromLTRB(0, 20, 20, 5),
-                                    child: Text(
-                                      "HRIS STEC.",
-                                      style: TextStyle(
-                                          color: mytextcolors,
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.bold),
+                                        const EdgeInsets.fromLTRB(0, 10, 20, 5),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "HRIS STEC.",
+                                          style: TextStyle(
+                                              color: mytextcolors,
+                                              fontSize: width <= 1380 ? 22 : 26,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Icon(
+                                          Icons.eco_rounded,
+                                          color: mygreencolors,
+                                          size: width <= 1380 ? 21 : 24,
+                                        )
+                                      ],
                                     ).animate().fadeIn(delay: 100.ms),
                                   ),
                                 ),
@@ -233,7 +376,7 @@ class _SlideBarState extends State<SlideBar> {
                                                                 true
                                                         ? Colors.black87
                                                         : mytextcolors,
-                                            title: "PAYROLL**",
+                                            title: "PAYROLL",
                                             textColor:
                                                 state
                                                                 .pageNumber >
@@ -337,7 +480,7 @@ class _SlideBarState extends State<SlideBar> {
                                           iconcolor: state.pageNumber == 7
                                               ? Colors.black87
                                               : mytextcolors,
-                                          title: "REPORT**",
+                                          title: "REPORT",
                                           textColor: state.pageNumber == 7
                                               ? Colors.black87
                                               : mytextcolors,
@@ -345,6 +488,26 @@ class _SlideBarState extends State<SlideBar> {
                                             context
                                                 .read<HomepageBloc>()
                                                 .add(ReportPageEvent());
+                                          })
+                                      .animate()
+                                      .fadeIn(delay: 1100.ms)
+                                      .slideY(begin: 1, duration: 200.ms),
+                                  DrawerTitle(
+                                          color: state.pageNumber == 10
+                                              ? mygreycolors
+                                              : mythemecolor,
+                                          icon: Icons.key_rounded,
+                                          iconcolor: state.pageNumber == 10
+                                              ? Colors.black87
+                                              : mytextcolors,
+                                          title: "PERMISSIONS",
+                                          textColor: state.pageNumber == 10
+                                              ? Colors.black87
+                                              : mytextcolors,
+                                          onTap: () {
+                                            context
+                                                .read<HomepageBloc>()
+                                                .add(RolePageEvent());
                                           })
                                       .animate()
                                       .fadeIn(delay: 1100.ms)
@@ -361,32 +524,35 @@ class _SlideBarState extends State<SlideBar> {
                                     'Hi',
                                     style: TextStyle(color: mythemecolor),
                                   ))
-                              : Card(
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.horizontal(
-                                          right: Radius.circular(12))),
-                                  color: mygreycolors,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                        radius: 25,
-                                        backgroundColor: mythemecolor,
-                                        child: const Text(
-                                          'Hi',
-                                          style: TextStyle(color: Colors.white),
-                                        )),
-                                    //  CircleAvatar(
-                                    //   radius: 25,
-                                    //   backgroundColor: mythemecolor,
-                                    //   backgroundImage: const AssetImage("assets/profile.jpg"),
-                                    //   // child: Image.asset("assets/profile.jpg"),
-                                    // ),
-                                    title: Text(
-                                      "Thotsapol Pinthong",
-                                      style: TextStyle(fontSize: 14),
+                              : Tooltip(
+                                  message:
+                                      "${data?.personData.firstNameEn ?? ''} ${data?.personData.lastNameEn ?? ''}\n${data?.positionData.positionData.positionNameTh}",
+                                  child: Card(
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.horizontal(
+                                            right: Radius.circular(12))),
+                                    color: mygreencolors,
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                          radius: 25,
+                                          backgroundColor: mythemecolor,
+                                          child: const Text(
+                                            'Hi',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          )),
+                                      title: Text(
+                                        name ?? '',
+                                        style: TextStyle(
+                                            fontSize: width <= 1366 ? 12 : 14,
+                                            color: Colors.white),
+                                      ),
+                                      subtitle: TextThai(
+                                          text: position ?? "",
+                                          textStyle: TextStyle(
+                                              fontSize: width <= 1366 ? 11 : 13,
+                                              color: Colors.white)),
                                     ),
-                                    subtitle: TextThai(
-                                        text: "โปรแกรมเมอร์",
-                                        textStyle: TextStyle(fontSize: 13)),
                                   ),
                                 ),
                           Padding(
@@ -405,7 +571,7 @@ class _SlideBarState extends State<SlideBar> {
                                                 Navigator.pop(context),
                                             icon: Icon(
                                               Icons.exit_to_app_rounded,
-                                              color: mytextcolors,
+                                              color: myambercolors,
                                               size: 30,
                                             )),
                                       )),
@@ -596,104 +762,6 @@ class _SlideBarState extends State<SlideBar> {
       ),
     );
   }
-
-  Widget timeattendanceSubMenu() {
-    return MouseRegion(
-      onHover: (event) {
-        setState(() {
-          expandMenuTimeattendance = true;
-        });
-      },
-      onExit: (event) {
-        setState(() {
-          expandMenuTimeattendance = false;
-        });
-      },
-      child: BlocBuilder<HomepageBloc, HomepageState>(
-        builder: (context, state) {
-          return Container(
-            width: 250,
-            height: MediaQuery.of(context).size.height - 500,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
-            ),
-            child: Card(
-              margin: const EdgeInsets.all(0),
-              elevation: 6,
-              shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.horizontal(right: Radius.circular(12))),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const Gap(5),
-                      const Text(
-                        "Time Attendance Menu.",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ).animate().fadeIn(),
-                      const Gap(10),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 6.1
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 6.1
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "1. บันทึกข้อมูลวันหยุดประจำปี",
-                          onTap: () {
-                            context
-                                .read<HomepageBloc>()
-                                .add(CalendarPageEvent());
-                          }),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 6.2
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 6.2
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "2. กะการทำงาน (Shift)",
-                          onTap: () {
-                            context.read<HomepageBloc>().add(ShiftPageEvent());
-                          }),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 6.3
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 6.3
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "3. บันทึกวันทำงานพิเศษ",
-                          onTap: () {
-                            context.read<HomepageBloc>().add(WorkSpPageEvent());
-                          }),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 6.4
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 6.4
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "4. บันทึกพนักงานพักครึ่งชั่วโมง",
-                          onTap: () {
-                            context
-                                .read<HomepageBloc>()
-                                .add(HalfHlbPageEvent());
-                          }),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
 }
 
 class DrawerTitle extends StatefulWidget {
@@ -737,7 +805,7 @@ class _DrawerTitleState extends State<DrawerTitle> {
           decoration: BoxDecoration(
             borderRadius:
                 const BorderRadius.horizontal(left: Radius.circular(12)),
-            color: isHovered ? Colors.grey[350] : widget.color,
+            color: isHovered ? Colors.amber[200] : widget.color,
           ),
           child: ListTile(
             leading: Tooltip(

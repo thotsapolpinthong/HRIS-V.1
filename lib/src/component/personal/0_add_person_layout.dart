@@ -21,7 +21,7 @@ class _MyAddPersonbyIDLayoutState extends State<MyAddPersonbyIDLayout> {
           width: MediaQuery.of(context).size.width - 40,
           height: MediaQuery.of(context).size.height - 20,
           padding: const EdgeInsets.all(20),
-          child: MyWidget(personId: widget.personId)),
+          child: MyStepper(personId: widget.personId)),
     );
   }
 }

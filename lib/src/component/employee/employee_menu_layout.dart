@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/resign/menu_resign.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/leave/menu_leave.dart';
 import 'package:hris_app_prototype/src/component/employee/menu/manual_workdate/menu_manual_workdate.dart';
@@ -28,23 +29,23 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
         body: Row(
           children: [
             Expanded(
-                flex: 1,
+                flex: 2,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Gap(5),
-                    const Text(
-                      " MENU.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold),
+                    Center(
+                      child: const Text(
+                        "EMPLOYEE MENU.",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                     const Gap(15),
                     DrawerTitle(
-                      color:
-                          pageNumber == 0 ? Colors.blueGrey[200] : Colors.white,
+                      color: pageNumber == 0 ? myambercolors : Colors.white,
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
@@ -57,8 +58,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     ),
                     const Gap(5),
                     DrawerTitle(
-                      color:
-                          pageNumber == 1 ? Colors.blueGrey[200] : Colors.white,
+                      color: pageNumber == 1 ? myambercolors : Colors.white,
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
@@ -71,8 +71,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     ),
                     const Gap(5),
                     DrawerTitle(
-                      color:
-                          pageNumber == 2 ? Colors.blueGrey[200] : Colors.white,
+                      color: pageNumber == 2 ? myambercolors : Colors.white,
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
@@ -85,8 +84,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     ),
                     const Gap(5),
                     DrawerTitle(
-                      color:
-                          pageNumber == 3 ? Colors.blueGrey[200] : Colors.white,
+                      color: pageNumber == 3 ? myambercolors : Colors.white,
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
@@ -99,8 +97,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     ),
                     const Gap(5),
                     DrawerTitle(
-                      color:
-                          pageNumber == 4 ? Colors.blueGrey[200] : Colors.white,
+                      color: pageNumber == 4 ? myambercolors : Colors.white,
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
@@ -113,8 +110,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     ),
                     const Gap(5),
                     DrawerTitle(
-                      color:
-                          pageNumber == 5 ? Colors.blueGrey[200] : Colors.white,
+                      color: pageNumber == 5 ? myambercolors : Colors.white,
                       textColor: Colors.black,
                       icon: Icons.edit,
                       iconcolor: Colors.black,
@@ -149,7 +145,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                           : SizedBox(
                               width: double.infinity,
                               child: Card(
-                                color: Colors.blueGrey[200],
+                                color: myambercolors,
                                 elevation: 6,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
@@ -163,11 +159,14 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             const Gap(10),
-                                            const Text(
-                                              "Employee Info",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
+                                            Center(
+                                              child: const Text(
+                                                "Employee Info",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
                                             // const Icon(
                                             //   CupertinoIcons.person_alt_circle,
@@ -208,30 +207,30 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                 )),
             if (pageNumber == 0)
               Expanded(
-                  flex: 4,
+                  flex: 10,
                   child: PromoteMenu(employeeData: widget.employeeData))
             else if (pageNumber == 1)
               Expanded(
-                  flex: 4,
+                  flex: 10,
                   child: TransferMenu(employeeData: widget.employeeData))
             else if (pageNumber == 2)
               Expanded(
-                  flex: 4,
+                  flex: 10,
                   child: EndofEmploymentMenu(employeeData: widget.employeeData))
             else if (pageNumber == 3)
               Expanded(
-                  flex: 4,
+                  flex: 10,
                   child: EmployeeOtMenu(employeeData: widget.employeeData))
             else if (pageNumber == 4)
               Expanded(
-                  flex: 4,
+                  flex: 10,
                   child: EmployeeLeaveMenu(employeeData: widget.employeeData))
             else if (pageNumber == 5)
               Expanded(
-                  flex: 4,
+                  flex: 10,
                   child: ManualWorkdateMenu(employeeData: widget.employeeData))
             else
-              Expanded(flex: 4, child: Text("$pageNumber")),
+              Expanded(flex: 10, child: Text("$pageNumber")),
             // Expanded(
             //     flex: 4,
             //     child: Padding(

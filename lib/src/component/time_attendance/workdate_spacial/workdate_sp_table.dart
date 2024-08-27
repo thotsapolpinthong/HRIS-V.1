@@ -58,8 +58,8 @@ class _WorkSPTableState extends State<WorkSPTable> {
         String maxLotMonth = '';
         for (var e in lotNumberData!.lotNumberData) {
           if (e.lotMonth.compareTo(maxLotMonth) > 0) {
-            startDate.text = e.startDate;
-            endDate.text = e.finishDate;
+            startDate.text = e.startDate.substring(0, 10);
+            endDate.text = e.finishDate.substring(0, 10);
             lotNumberId = e.lotNumberId;
           }
         }
@@ -227,8 +227,10 @@ class _WorkSPTableState extends State<WorkSPTable> {
                               lotNumberData!.lotNumberData.where(
                                   (element) => element.lotNumberId == newValue);
                           if (result.isNotEmpty) {
-                            startDate.text = result.first.startDate.toString();
-                            endDate.text = result.first.finishDate.toString();
+                            startDate.text =
+                                result.first.startDate.substring(0, 10);
+                            endDate.text =
+                                result.first.finishDate.substring(0, 10);
                           }
                           if (mainData != []) {
                             // fetchDataTable();
