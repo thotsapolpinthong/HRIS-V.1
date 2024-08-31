@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:hris_app_prototype/src/model/role_permission/roles/roles_model.dart';
+
 GetPositionOrgByOrgIdModel getPositionOrgByOrgIdModelFromJson(String str) =>
     GetPositionOrgByOrgIdModel.fromJson(json.decode(str));
 
@@ -44,6 +46,7 @@ class PositionOrganizationDatum {
   ParentPositionNodeId parentPositionBusinessNodeId;
   ParentPositionNodeId parentPositionNodeId;
   EmployeeData employeeData;
+  RoleDatum roleData;
   String validFromDate;
   String endDate;
   String startingSalary;
@@ -58,6 +61,7 @@ class PositionOrganizationDatum {
     required this.parentPositionBusinessNodeId,
     required this.parentPositionNodeId,
     required this.employeeData,
+    required this.roleData,
     required this.validFromDate,
     required this.endDate,
     required this.startingSalary,
@@ -76,6 +80,7 @@ class PositionOrganizationDatum {
         parentPositionNodeId:
             ParentPositionNodeId.fromJson(json["parentPositionNodeId"]),
         employeeData: EmployeeData.fromJson(json["employeeData"]),
+        roleData: RoleDatum.fromJson(json["roleData"]),
         validFromDate: json["validFromDate"],
         endDate: json["endDate"],
         startingSalary: json["startingSalary"],
@@ -91,6 +96,7 @@ class PositionOrganizationDatum {
         "parentPositionBusinessNodeId": parentPositionBusinessNodeId.toJson(),
         "parentPositionNodeId": parentPositionNodeId.toJson(),
         "employeeData": employeeData.toJson(),
+        "roleData": roleData.toJson(),
         "validFromDate": validFromDate,
         "endDate": endDate,
         "startingSalary": startingSalary,

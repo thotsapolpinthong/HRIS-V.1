@@ -500,7 +500,7 @@ class _SlideBarState extends State<SlideBar> {
                                           iconcolor: state.pageNumber == 10
                                               ? Colors.black87
                                               : mytextcolors,
-                                          title: "PERMISSIONS",
+                                          title: "ROLE PERMISSIONS",
                                           textColor: state.pageNumber == 10
                                               ? Colors.black87
                                               : mytextcolors,

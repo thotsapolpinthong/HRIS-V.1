@@ -9,12 +9,18 @@ import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/
 import 'package:hris_app_prototype/src/component/Organization/position_org/create_edit_position_org.dart';
 import 'package:hris_app_prototype/src/component/Organization/position_org/datatable_position_org.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/permission/role_permission/role_permission_manage.dart';
 import 'package:hris_app_prototype/src/component/personal/datatable_personal.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/delete_position_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
+import 'package:hris_app_prototype/src/model/organization/position_org/update_position_org_model.dart';
+import 'package:hris_app_prototype/src/model/role_permission/roles/roles_model.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
+import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:validatorless/validatorless.dart';
 
 class PositionOrganizationWidget extends StatefulWidget {
   final OrganizationDatum? data;
@@ -32,6 +38,11 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
   bool isLoading = true;
   bool isNodeEmpty = true;
   bool isExpandedPage = false;
+
+//role
+  List<RoleDatum> roleList = [];
+  TextEditingController roleId = TextEditingController();
+
   Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
 
@@ -48,6 +59,9 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
         if (fromNodeId == toNodeId) {
           // print(element.positionOrganizationId);
           //  graph.addNode(Node.Id(toNodeId));
+        } else if (fromNodeId == "") {
+          //ลบ dev หรือ โหนดที่ไม่มีเส้นเชื่อม
+          graph.removeNode(Node.Id(toNodeId));
         } else {
           graph.addEdge(Node.Id(fromNodeId), Node.Id(toNodeId));
           if (!graph.contains(node: Node.Id(toNodeId))) {
@@ -377,6 +391,11 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                                                   var a = node.key!.value;
                                                   var nodes = positionOrgData
                                                       ?.positionOrganizationData;
+                                                  // nodes?.removeWhere((element) =>
+                                                  //     element
+                                                  //         .parentPositionNodeId ==
+                                                  //     "");
+
                                                   var nodeValue = nodes
                                                       ?.firstWhere((element) =>
                                                           element
@@ -456,7 +475,7 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                           padding: const EdgeInsets.fromLTRB(4, 12, 4, 4),
                           child: Tooltip(
                             message:
-                                "ชื่อตำแหน่งงาน : ${data.positionData.positionNameTh}\nแผนก : ${data.organizationData.departMentData.deptNameTh}\nประเภทพนักงาน : ${data.positionTypeData.positionTypeNameTh}\nรายละเอียดงาน : ${data.jobTitleData.jobTitleName}\nวันที่เริ่มตำแหน่งงาน : ${data.validFromDate}\nวันที่ตำแหน่งงานสิ้นสุด : ${data.endDate}",
+                                "ID : ${data.positionOrganizationId}\nชื่อตำแหน่งงาน : ${data.positionData.positionNameTh}\nแผนก : ${data.organizationData.departMentData.deptNameTh}\nประเภทพนักงาน : ${data.positionTypeData.positionTypeNameTh}\nรายละเอียดงาน : ${data.jobTitleData.jobTitleName}\nวันที่เริ่มตำแหน่งงาน : ${data.validFromDate}\nวันที่ตำแหน่งงานสิ้นสุด : ${data.endDate}",
                             child: Column(
                               children: [
                                 Card(
@@ -567,8 +586,139 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
               },
             ),
           ).animate().fade(delay: 200.ms).shake(delay: 500.ms),
+          data.roleData.roleId == ""
+              ? Positioned(
+                  right: 4,
+                  bottom: 6,
+                  child: SizedBox(
+                    width: 40,
+                    height: 38,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: mygreencolors,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.all(1)),
+                        onPressed: () {
+                          fetchRoleData(data.roleData.roleId);
+                          updateDialog(data);
+                        },
+                        child: Transform.flip(
+                            flipX: true, child: const Icon(Icons.key))),
+                  ),
+                ).animate().fade(duration: 1.seconds)
+              : Icon(
+                  Icons.key_rounded,
+                  color: mythemecolor,
+                ),
         ],
       ),
     );
+  }
+
+  fetchRoleData(String roleId) async {
+    RolesModel? dataRole = await ApiRolesService.getRolesData();
+    roleList = dataRole?.roleData ?? [];
+    roleId = roleId;
+    setState(() {});
+  }
+
+  Future onSave(PositionOrganizationDatum data) async {
+    String employeeId = "";
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    employeeId = preferences.getString("employeeId")!;
+
+    UpdatePositionOrgModel updatePositionOrganizationModel =
+        UpdatePositionOrgModel(
+      positionOrganizationId: data.positionOrganizationId,
+      positionId: data.positionData.positionId,
+      organizationCode: data.organizationData.organizationCode,
+      jobTitleId: data.jobTitleData.toString(),
+      positionTypeId: data.positionTypeData.toString(),
+      status: 'Active',
+      parentPositionNodeId: data.parentPositionNodeId.toString(),
+      parentPositionBusinessNodeId:
+          data.parentPositionBusinessNodeId.toString(),
+      roleId: roleId.text,
+      startingSalary: data.startingSalary,
+      validFromDate: data.validFromDate,
+      endDate: data.endDate,
+      modifiedBy: employeeId,
+      comment: comment.text,
+    );
+    setState(() {});
+    bool success =
+        await ApiOrgService.updatedPositionOrg(updatePositionOrganizationModel);
+
+    alertDialog(success);
+  }
+
+  updateDialog(PositionOrganizationDatum data) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              contentPadding: const EdgeInsets.all(8),
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Stack(
+                children: [
+                  Container(
+                    height: 200,
+                    width: 400,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Gap(10),
+                        DropdownMenuGlobal(
+                            label: "Role Permissions",
+                            width: 380,
+                            controller: roleId,
+                            onSelected: (value) {
+                              setState(() {
+                                roleId.text = value.toString();
+                              });
+                            },
+                            dropdownMenuEntries: roleList.map((RoleDatum e) {
+                              return DropdownMenuEntry(
+                                  value: e.roleId,
+                                  label: e.roleName,
+                                  style: MenuItemButton.styleFrom());
+                            }).toList()),
+                        SizedBox(
+                          width: 388,
+                          child: TextFormFieldGlobal(
+                            controller: comment,
+                            labelText: "Comment",
+                            enabled: true,
+                            validatorless: Validatorless.required('required'),
+                          ),
+                        ),
+                        MySaveButtons(
+                          text: "Update",
+                          onPressed: () {
+                            onSave;
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                      right: 0,
+                      top: -5,
+                      child: InkWell(
+                          borderRadius: BorderRadius.circular(50),
+                          onTap: () => Navigator.pop(context),
+                          child: Transform.rotate(
+                              angle: (45 * 22 / 7) / 180,
+                              child: Icon(
+                                Icons.add_rounded,
+                                size: 32,
+                                color: Colors.grey[700],
+                              )))),
+                ],
+              ));
+        });
   }
 }

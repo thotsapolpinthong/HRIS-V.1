@@ -1,26 +1,24 @@
 import 'dart:convert';
 
-import 'package:hris_app_prototype/src/model/role_permission/permission_model.dart';
+RolePermissionsModel rolePermissionsModelFromJson(String str) =>
+    RolePermissionsModel.fromJson(json.decode(str));
 
-RolePermissionModel rolePermissionModelFromJson(String str) =>
-    RolePermissionModel.fromJson(json.decode(str));
-
-String rolePermissionModelToJson(RolePermissionModel data) =>
+String rolePermissionsModelToJson(RolePermissionsModel data) =>
     json.encode(data.toJson());
 
-class RolePermissionModel {
+class RolePermissionsModel {
   List<RolePermissionDatum> rolePermissionData;
   String message;
   bool status;
 
-  RolePermissionModel({
+  RolePermissionsModel({
     required this.rolePermissionData,
     required this.message,
     required this.status,
   });
 
-  factory RolePermissionModel.fromJson(Map<String, dynamic> json) =>
-      RolePermissionModel(
+  factory RolePermissionsModel.fromJson(Map<String, dynamic> json) =>
+      RolePermissionsModel(
         rolePermissionData: List<RolePermissionDatum>.from(
             json["rolePermissionData"]
                 .map((x) => RolePermissionDatum.fromJson(x))),
@@ -38,15 +36,15 @@ class RolePermissionModel {
 
 class RolePermissionDatum {
   String rolePermissionId;
-  String positionOrganizationId;
-  PermissionDatum permissionData;
+  String roleId;
+  PermissionData permissionData;
   bool canRead;
   bool canWrite;
   bool canDelete;
 
   RolePermissionDatum({
     required this.rolePermissionId,
-    required this.positionOrganizationId,
+    required this.roleId,
     required this.permissionData,
     required this.canRead,
     required this.canWrite,
@@ -56,8 +54,8 @@ class RolePermissionDatum {
   factory RolePermissionDatum.fromJson(Map<String, dynamic> json) =>
       RolePermissionDatum(
         rolePermissionId: json["rolePermissionId"],
-        positionOrganizationId: json["positionOrganizationId"],
-        permissionData: PermissionDatum.fromJson(json["permissionData"]),
+        roleId: json["roleId"],
+        permissionData: PermissionData.fromJson(json["permissionData"]),
         canRead: json["canRead"],
         canWrite: json["canWrite"],
         canDelete: json["canDelete"],
@@ -65,10 +63,30 @@ class RolePermissionDatum {
 
   Map<String, dynamic> toJson() => {
         "rolePermissionId": rolePermissionId,
-        "positionOrganizationId": positionOrganizationId,
+        "roleId": roleId,
         "permissionData": permissionData.toJson(),
         "canRead": canRead,
         "canWrite": canWrite,
         "canDelete": canDelete,
+      };
+}
+
+class PermissionData {
+  String permissionId;
+  String permissionName;
+
+  PermissionData({
+    required this.permissionId,
+    required this.permissionName,
+  });
+
+  factory PermissionData.fromJson(Map<String, dynamic> json) => PermissionData(
+        permissionId: json["permissionId"],
+        permissionName: json["permissionName"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "permissionId": permissionId,
+        "permissionName": permissionName,
       };
 }

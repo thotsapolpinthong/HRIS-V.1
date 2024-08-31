@@ -9,7 +9,6 @@ import 'package:hris_app_prototype/src/model/cardinfomation/idcard/add/create_id
 import 'package:hris_app_prototype/src/model/cardinfomation/idcard/update/getidentifycard_model.dart';
 import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 import 'package:intl/intl.dart';
-import 'package:validatorless/validatorless.dart';
 
 class AddIdCard extends StatefulWidget {
   final String personId;

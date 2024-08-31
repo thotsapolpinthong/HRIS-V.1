@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/permission/create_update_permission.dart';
+import 'package:hris_app_prototype/src/component/permission/role_permission/role_permission_manage.dart';
+import 'package:hris_app_prototype/src/component/permission/roles/create_update_roles.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
-import 'package:hris_app_prototype/src/model/role_permission/permission_model.dart';
+import 'package:hris_app_prototype/src/model/role_permission/roles/roles_model.dart';
 import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 
-class PermissionTable extends StatefulWidget {
-  const PermissionTable({super.key});
+class RolesTable extends StatefulWidget {
+  const RolesTable({super.key});
 
   @override
-  State<PermissionTable> createState() => _PermissionTableState();
+  State<RolesTable> createState() => _RolesTableState();
 }
 
-class _PermissionTableState extends State<PermissionTable> {
-//table
+class _RolesTableState extends State<RolesTable> {
+  //table
   bool isDataLoading = true;
   int rowIndex = 10;
   int? sortColumnIndex;
   bool sort = true;
   TextEditingController search = TextEditingController();
   bool onSearch = false;
-  List<PermissionDatum> filterData = [];
-  List<PermissionDatum> mainData = [];
+  List<RoleDatum> filterData = [];
+  List<RoleDatum> mainData = [];
 
   Future fetchData() async {
     setState(() => isDataLoading = true);
-    PermissionModel? data = await ApiRolesService.getPermissionData();
+    RolesModel? data = await ApiRolesService.getRolesData();
     setState(() {
-      mainData = data?.permissionData ?? [];
-      filterData = data?.permissionData ?? [];
+      mainData = data?.roleData ?? [];
+      filterData = data?.roleData ?? [];
       isDataLoading = false;
     });
   }
@@ -47,7 +48,7 @@ class _PermissionTableState extends State<PermissionTable> {
                   Container(
                     height: 300,
                     width: 400,
-                    child: EditPermission(
+                    child: EditRoles(
                       onEdit: false,
                       fetchData: fetchData,
                     ),
@@ -81,7 +82,7 @@ class _PermissionTableState extends State<PermissionTable> {
     return isDataLoading
         ? myLoadingScreen
         : Padding(
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+            padding: const EdgeInsets.fromLTRB(12, 5, 12, 12),
             child: Scaffold(
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endDocked,
@@ -117,7 +118,7 @@ class _PermissionTableState extends State<PermissionTable> {
                                   rowIndex = value!;
                                 });
                               },
-                              header: const Text('Permissions Table.',
+                              header: const Text('Roles Table.',
                                   style:
                                       TextStyle(fontWeight: FontWeight.w800)),
                               actions: [
@@ -131,36 +132,33 @@ class _PermissionTableState extends State<PermissionTable> {
                                         if (value == '') {
                                           setState(() {
                                             onSearch = false;
-                                            // filterData = taxDeductionData;
+                                            filterData = mainData;
                                           });
                                         } else {
                                           setState(() {
-                                            // onSearch = true;
-                                            // filterData = taxDeductionData.where((e) {
-                                            //   final taxId = e.taxNumber
-                                            //       .toString()
-                                            //       .toLowerCase()
-                                            //       .contains(value.toLowerCase());
-                                            //   final empId = e.employeeId
-                                            //       .toLowerCase()
-                                            //       .contains(value.toLowerCase());
-                                            //   final fName = e.firstName
-                                            //       .toLowerCase()
-                                            //       .contains(value.toLowerCase());
-                                            //   final lName = e.lastName
-                                            //       .toLowerCase()
-                                            //       .contains(value.toLowerCase());
-                                            //   return taxId || empId || fName || lName;
-                                            // }).toList();
+                                            onSearch = true;
+                                            filterData = mainData.where((e) {
+                                              final Id = e.roleId
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase());
+                                              final Name = e.roleName
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase());
+                                              return Id || Name;
+                                            }).toList();
                                           });
                                         }
                                       }),
                                 ),
                               ],
                               columns: const [
-                                DataColumn(label: Text("Permission Id")),
-                                DataColumn(label: Text("Permission Name")),
-                                DataColumn(label: Text("Edit")),
+                                DataColumn(label: Text("Roles ID")),
+                                DataColumn(label: Text("Roles Name")),
+                                DataColumn(label: Text("Roles Edit")),
+                                DataColumn(label: Text("Role Permissions")),
                               ],
                               source: SubDataTableSource(
                                   context, filterData, fetchData),
@@ -179,11 +177,11 @@ class _PermissionTableState extends State<PermissionTable> {
 
 class SubDataTableSource extends DataTableSource {
   final BuildContext context;
-  final List<PermissionDatum>? data;
+  final List<RoleDatum>? data;
   final Function()? fetchData;
   SubDataTableSource(this.context, this.data, this.fetchData);
 
-  EditDialog(PermissionDatum data) {
+  EditDialog(RoleDatum data) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -197,10 +195,45 @@ class SubDataTableSource extends DataTableSource {
                   Container(
                     height: 300,
                     width: 400,
-                    child: EditPermission(
+                    child: EditRoles(
                       onEdit: true,
                       fetchData: fetchData!,
+                      roleData: data,
                     ),
+                  ),
+                  Positioned(
+                      right: 0,
+                      top: -5,
+                      child: InkWell(
+                          borderRadius: BorderRadius.circular(50),
+                          onTap: () => Navigator.pop(context),
+                          child: Transform.rotate(
+                              angle: (45 * 22 / 7) / 180,
+                              child: Icon(
+                                Icons.add_rounded,
+                                size: 32,
+                                color: Colors.grey[700],
+                              )))),
+                ],
+              ));
+        });
+  }
+
+  EditRolePermissionsDialog(RoleDatum data) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              contentPadding: const EdgeInsets.all(8),
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              content: Stack(
+                children: [
+                  Container(
+                    height: 600,
+                    width: 900,
+                    child: RolePermissionManage(),
                   ),
                   Positioned(
                       right: 0,
@@ -223,24 +256,43 @@ class SubDataTableSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final d = data![index];
-    return DataRow(cells: [
-      DataCell(Text(d.permissionId)),
-      DataCell(Text(d.permissionName)),
-      DataCell(
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                EditDialog(d);
-              },
-              child: const Icon(Icons.edit)),
-        ),
-      ),
-    ]);
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : Colors.green[50]!;
+        }),
+        cells: [
+          DataCell(Text(d.roleId)),
+          DataCell(Text(d.roleName)),
+          DataCell(
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber[700],
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    EditDialog(d);
+                  },
+                  child: const Icon(Icons.edit)),
+            ),
+          ),
+          DataCell(
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: mythemecolor,
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    EditRolePermissionsDialog(d);
+                  },
+                  child: const Icon(Icons.settings)),
+            ),
+          ),
+        ]);
   }
 
   @override

@@ -11,13 +11,13 @@ import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/to_payroll
 import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/4_tax_deduction/tax_deduction_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/5_payroll/payroll_menu.dart';
-import 'package:hris_app_prototype/src/component/permission/permission_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/half_break/lunch_break_table.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/workdate_spacial/workdate_sp_table.dart';
 import 'package:hris_app_prototype/src/page/dashboard.dart';
 import 'package:hris_app_prototype/src/page/employee_self_sevice/employee_self_service_layout.dart';
 import 'package:hris_app_prototype/src/page/organization/organization_layout.dart';
 import 'package:hris_app_prototype/src/page/personal/personal_page.dart';
+import 'package:hris_app_prototype/src/page/role_permission/role_permission_layout.dart';
 import 'package:hris_app_prototype/src/page/timeattendance/shift_layout.dart';
 import 'package:hris_app_prototype/src/page/timeattendance/time_attendance_layout.dart';
 import 'package:hris_app_prototype/src/page/trip/off-side_layout.dart';
@@ -56,7 +56,7 @@ class _MyHomepageState extends State<MyHomepage> {
       case 9:
         return const OffSideLayout();
       case 10:
-        return PermissionTable();
+        return RolePermissionLayout();
       default:
         throw Container();
     }

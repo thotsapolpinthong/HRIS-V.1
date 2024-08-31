@@ -15,6 +15,7 @@ class UpdatePositionOrgModel {
   String status;
   String parentPositionNodeId;
   String parentPositionBusinessNodeId;
+  String roleId;
   String startingSalary;
   String validFromDate;
   String endDate;
@@ -30,6 +31,7 @@ class UpdatePositionOrgModel {
     required this.status,
     required this.parentPositionNodeId,
     required this.parentPositionBusinessNodeId,
+    required this.roleId,
     required this.startingSalary,
     required this.validFromDate,
     required this.endDate,
@@ -47,6 +49,7 @@ class UpdatePositionOrgModel {
         status: json["status"],
         parentPositionNodeId: json["parentPositionNodeId"],
         parentPositionBusinessNodeId: json["parentPositionBusinessNodeId"],
+        roleId: json["roleId"],
         startingSalary: json["startingSalary"],
         validFromDate: json["validFromDate"],
         endDate: json["endDate"],
@@ -63,6 +66,7 @@ class UpdatePositionOrgModel {
         "status": status,
         "parentPositionNodeId": parentPositionNodeId,
         "parentPositionBusinessNodeId": parentPositionBusinessNodeId,
+        "roleId": roleId,
         "startingSalary": startingSalary,
         "validFromDate": validFromDate,
         "endDate": endDate,

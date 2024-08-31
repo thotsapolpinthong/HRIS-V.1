@@ -69,6 +69,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
 
   Future fetchdata() async {
     positionList = await ApiOrgService.getPositionDropdown();
+
     if (positionList == null) {
       setState(() {
         showDialog(
@@ -91,7 +92,6 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
             });
       });
     }
-
     jobTitleList = await ApiOrgService.getJobtitleDropdown();
     positionTypeList = await ApiOrgService.getPositionTypeDropdown();
     widget.firstNode;
@@ -147,6 +147,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
       bussinessParentMenu.text = widget.positionOrgDataAddNode!
           .parentPositionBusinessNodeId.positionData.positionNameTh;
     }
+
     setState(() {});
   }
 
@@ -242,6 +243,7 @@ class _EditPositionOrganizationState extends State<EditPositionOrganization> {
         status: 'Active',
         parentPositionNodeId: parentPositionOrgData.toString(),
         parentPositionBusinessNodeId: bussinessParentData.toString(),
+        roleId: widget.positionOrgData?.roleData.roleId ?? '',
         startingSalary: salary.text,
         validFromDate: validFrom.text,
         endDate: expFrom.text,

@@ -16,7 +16,6 @@ import 'package:hris_app_prototype/src/model/person/dropdown/religion.model.dart
 import 'package:hris_app_prototype/src/model/person/dropdown/title.dart';
 import 'package:hris_app_prototype/src/services/api_personal_service.dart';
 
-import 'package:form_field_validator/form_field_validator.dart';
 import 'package:validatorless/validatorless.dart';
 
 class Addpersonal extends StatefulWidget {
