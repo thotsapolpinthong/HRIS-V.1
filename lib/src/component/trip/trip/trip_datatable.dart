@@ -163,6 +163,7 @@ class _TripDatatableState extends State<TripDatatable> {
           pageBuilder: (BuildContext buildContext, Animation animation,
               Animation secondaryAnimation) {
             return Card(
+                margin: EdgeInsets.all(20),
                 color: mygreycolors,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -245,7 +246,7 @@ class _TripDatatableState extends State<TripDatatable> {
               if (state.onSearchData == false || dataTripModel == null) {
                 dataTripModel = state.tripAllDataModel?.tripData ?? [];
                 filterData = state.tripAllDataModel?.tripData ?? [];
-              } else {}
+              }
               return state.isAllTripDataLoading == true
                   ? myLoadingScreen
                   : SizedBox(
@@ -319,6 +320,12 @@ class _TripDatatableState extends State<TripDatatable> {
                                                   if (value == '') {
                                                     context.read<TripBloc>().add(
                                                         DissSearchTripEvent());
+                                                    context.read<TripBloc>().add(
+                                                        GetAllTripDataEvents(
+                                                            startDate:
+                                                                startDate.text,
+                                                            endDate:
+                                                                endDate.text));
                                                   } else {
                                                     setState(() {
                                                       context
@@ -357,11 +364,22 @@ class _TripDatatableState extends State<TripDatatable> {
                                                             .toLowerCase()
                                                             .contains(value
                                                                 .toLowerCase());
-
+                                                        final carname = element
+                                                            .carData.carModel
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final descrip = element
+                                                            .tripDescription
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
                                                         return destination ||
                                                             startDate ||
                                                             endDate ||
                                                             carId ||
+                                                            carname ||
+                                                            descrip ||
                                                             description;
                                                       }).toList();
                                                     });
@@ -654,6 +672,7 @@ class DataTable extends DataTableSource {
             Animation secondaryAnimation) {
           return Card(
               color: mygreycolors,
+              margin: EdgeInsets.all(20),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
               child: Padding(

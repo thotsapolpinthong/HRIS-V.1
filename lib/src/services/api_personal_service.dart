@@ -93,7 +93,10 @@ class ApiService {
       // },
     );
     if (response.statusCode == 200) {
-      return loginModelFromJson(response.body);
+      LoginModel? data = loginModelFromJson(response.body);
+      if (data.status == true) {
+        return data;
+      }
     } else {
       return null;
     }

@@ -122,9 +122,9 @@ class _HotelDatatableState extends State<HotelDatatable> {
                                 },
                                 columns: [
                                   DataColumn(label: textThai("ประเภทที่พัก")),
+                                  DataColumn(label: textThai("จังหวัด")),
                                   DataColumn(label: textThai("ชื่อที่พัก")),
                                   DataColumn(label: textThai("ราคาห้องพัก")),
-                                  DataColumn(label: textThai("ที่อยู่")),
                                   DataColumn(label: textThai("รายละเอียด")),
                                   DataColumn(label: textThai("สถานะ")),
                                   DataColumn(label: textThai("การจัดการ")),
@@ -209,53 +209,58 @@ class DataTable extends DataTableSource {
   DataRow getRow(int index) {
     // final row = data[index];
     final datarow = hotelData[index];
-    return DataRow(cells: [
-      DataCell(Text(datarow.hotelType.hotelTypeName)),
-      DataCell(Text(datarow.hotelName)),
-      DataCell(Text(datarow.price)),
-      DataCell(Text(datarow.province.provinceNameTh)),
-      DataCell(Text(datarow.hotelDescription == "No data"
-          ? ""
-          : datarow.hotelDescription)),
-      DataCell(
-        SizedBox(
-          height: 40,
-          width: 80,
-          child: Card(
-              elevation: 2,
-              color: datarow.status == "Active"
-                  ? Colors.greenAccent
-                  : Colors.red[800],
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6)),
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Center(
-                  child: Text(
-                    datarow.status,
-                    style: TextStyle(
-                        color: datarow.status == "Active"
-                            ? Colors.black87
-                            : mygreycolors),
-                  ),
-                ),
-              )),
-        ),
-      ),
-      DataCell(SizedBox(
-        height: 32,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: myambercolors,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
-          child: const Icon(Icons.edit),
-          onPressed: () {
-            showDialogCar(1, hotelData[index]);
-          },
-        ),
-      )),
-    ]);
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Text(datarow.hotelType.hotelTypeName)),
+          DataCell(Text(datarow.province.provinceNameTh)),
+          DataCell(Text(datarow.hotelName)),
+          DataCell(Text(datarow.price)),
+          DataCell(Text(datarow.hotelDescription == "No data"
+              ? ""
+              : datarow.hotelDescription)),
+          DataCell(
+            SizedBox(
+              height: 40,
+              width: 80,
+              child: Card(
+                  elevation: 2,
+                  color: datarow.status == "Active"
+                      ? Colors.greenAccent
+                      : Colors.red[800],
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Center(
+                      child: Text(
+                        datarow.status,
+                        style: TextStyle(
+                            color: datarow.status == "Active"
+                                ? Colors.black87
+                                : mygreycolors),
+                      ),
+                    ),
+                  )),
+            ),
+          ),
+          DataCell(SizedBox(
+            height: 32,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: myambercolors,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8))),
+              child: const Icon(Icons.edit),
+              onPressed: () {
+                showDialogCar(1, hotelData[index]);
+              },
+            ),
+          )),
+        ]);
   }
 
   @override

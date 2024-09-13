@@ -502,42 +502,49 @@ class DataTableRowSource extends DataTableSource {
   DataRow? getRow(int index) {
     final data = leaveDataEmployee?.leaveRequestData[index];
     return leaveDataEmployee != null
-        ? DataRow(cells: [
-            DataCell(Text(data!.leaveDate.toString())),
-            DataCell(Text(data.leaveTypeData.leaveTypeNameTh)),
-            DataCell(Text(data.leaveAmount)),
-            DataCell(Text(data.leaveDecription)),
-            DataCell(
-              Container(
-                decoration: BoxDecoration(
-                    color: leaveDataEmployee?.leaveRequestData[index].status ==
-                            "request"
-                        ? Colors.amberAccent[100]
-                        : leaveDataEmployee?.leaveRequestData[index].status ==
-                                "approve"
-                            ? Colors.greenAccent
-                            : Colors.redAccent[100],
-                    borderRadius: BorderRadius.circular(14)),
-                width: 85,
-                height: 28,
-                child: Center(
-                    child: Text(
-                        "${leaveDataEmployee?.leaveRequestData[index].status}",
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            //fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800]))),
-              ),
-            ),
-            DataCell(
-                leaveDataEmployee?.leaveRequestData[index].status == "reject"
+        ? DataRow(
+            color: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) {
+              return index % 2 == 0 ? Colors.white : myrowscolors;
+            }),
+            cells: [
+                DataCell(Text(data!.leaveDate.toString())),
+                DataCell(Text(data.leaveTypeData.leaveTypeNameTh)),
+                DataCell(Text(data.leaveAmount)),
+                DataCell(Text(data.leaveDecription)),
+                DataCell(
+                  Container(
+                    decoration: BoxDecoration(
+                        color:
+                            leaveDataEmployee?.leaveRequestData[index].status ==
+                                    "request"
+                                ? Colors.amberAccent[100]
+                                : leaveDataEmployee
+                                            ?.leaveRequestData[index].status ==
+                                        "approve"
+                                    ? Colors.greenAccent
+                                    : Colors.redAccent[100],
+                        borderRadius: BorderRadius.circular(14)),
+                    width: 85,
+                    height: 28,
+                    child: Center(
+                        child: Text(
+                            "${leaveDataEmployee?.leaveRequestData[index].status}",
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                //fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800]))),
+                  ),
+                ),
+                DataCell(leaveDataEmployee?.leaveRequestData[index].status ==
+                        "reject"
                     ? const Text("")
                     : RowDeleteBox(onPressed: () {
                         alertDialogInfo(leaveDataEmployee!
                             .leaveRequestData[index].leaveRequestId);
                       })),
-          ])
+              ])
         : const DataRow(cells: [
             DataCell(Text("")),
             DataCell(Text("")),

@@ -8,9 +8,11 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/employee_detials_table.dart';
 import 'package:hris_app_prototype/src/component/payroll/2_to_payroll/pdf_work_hour_employee.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
+import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/to_payroll/time_record_model.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
+import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 import 'package:lottie/lottie.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -53,6 +55,25 @@ class _ToPayrollState extends State<ToPayroll> {
   double foodTotal = 0.00;
 
   bool thLanguage = false;
+  LoginData? _loginData;
+  bool hr = false;
+  fetchDataLogin() async {
+    _loginData = await ApiRolesService.getUserData();
+    setState(() {
+      if (_loginData != null) {
+        if (_loginData?.role.roleId == 'R000000000' ||
+            _loginData?.role.roleId == "R000000003" ||
+            _loginData?.role.roleId == "R000000004") {
+          hr = true;
+        } // dev,acc manager
+        ;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myredcolors,
+            content: const Text("Load Role Permissions Fail")));
+      }
+    });
+  }
 
   Future fetchData() async {
     //lotnumber data-------------
@@ -474,37 +495,42 @@ class _ToPayrollState extends State<ToPayroll> {
                               disabledBackgroundColor: Colors.greenAccent,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12))),
-                          onPressed: isSendData == 2
+                          onPressed: !hr
                               ? null
-                              : () async {
-                                  setState(() {
-                                    isSendData = 1;
-                                  });
-                                  bool success = await ApiPayrollService.hrLock(
-                                      startDate.text, finishDate.text, "df");
-                                  // Future.delayed(const Duration(seconds: 5), () {
-                                  //   setState(() {
-                                  //     isSendData = 2;
-                                  //   });
-                                  // });
-                                  Future.delayed(3.seconds, () {
-                                    setState(() {
-                                      if (success) {
-                                        fetchTimeRecord();
-                                      } else {
-                                        isSendData = 0;
-                                      }
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(SnackBar(
-                                              backgroundColor: success
-                                                  ? mygreencolors
-                                                  : myredcolors,
-                                              content: Text(success
-                                                  ? "HR Locking Lot ${startDate.text} - ${finishDate.text} Success"
-                                                  : "HR Locking Lot ${startDate.text} - ${finishDate.text} Fail")));
-                                    });
-                                  });
-                                },
+                              : isSendData == 2
+                                  ? null
+                                  : () async {
+                                      setState(() {
+                                        isSendData = 1;
+                                      });
+                                      bool success =
+                                          await ApiPayrollService.hrLock(
+                                              startDate.text,
+                                              finishDate.text,
+                                              "df");
+                                      // Future.delayed(const Duration(seconds: 5), () {
+                                      //   setState(() {
+                                      //     isSendData = 2;
+                                      //   });
+                                      // });
+                                      Future.delayed(3.seconds, () {
+                                        setState(() {
+                                          if (success) {
+                                            fetchTimeRecord();
+                                          } else {
+                                            isSendData = 0;
+                                          }
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  backgroundColor: success
+                                                      ? mygreencolors
+                                                      : myredcolors,
+                                                  content: Text(success
+                                                      ? "HR Locking Lot ${startDate.text} - ${finishDate.text} Success"
+                                                      : "HR Locking Lot ${startDate.text} - ${finishDate.text} Fail")));
+                                        });
+                                      });
+                                    },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -906,35 +932,40 @@ class PersonDataTableSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final d = data![index];
-    return DataRow(cells: [
-      DataCell(Center(
-        child: SizedBox(
-            height: 38,
-            width: 38,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(0),
-                    backgroundColor: mygreycolors),
-                onPressed: () {
-                  getDataEmployee(d);
-                },
-                child: Icon(
-                  Icons.assignment,
-                  color: mythemecolor,
-                ))),
-      )),
-      DataCell(Text(d.employeeId)),
-      DataCell(Text(d.departmentName)),
-      DataCell(Text(d.firstName)),
-      DataCell(Text(d.lastName)),
-      DataCell(Text(d.positionName)),
-      DataCell(Text(d.staffType)),
-      DataCell(Text(d.nWorkDate)),
-      DataCell(Text(d.workHoliday ?? "0")),
-      DataCell(Text(d.normalOt ?? "0")),
-      DataCell(Text(d.holidayOt ?? "0")),
-      DataCell(Text(d.foodAllowance)),
-    ]);
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Center(
+            child: SizedBox(
+                height: 38,
+                width: 38,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(0),
+                        backgroundColor: mygreycolors),
+                    onPressed: () {
+                      getDataEmployee(d);
+                    },
+                    child: Icon(
+                      Icons.assignment,
+                      color: mythemecolor,
+                    ))),
+          )),
+          DataCell(Text(d.employeeId)),
+          DataCell(Text(d.departmentName)),
+          DataCell(Text(d.firstName)),
+          DataCell(Text(d.lastName)),
+          DataCell(Text(d.positionName)),
+          DataCell(Text(d.staffType)),
+          DataCell(Text(d.nWorkDate)),
+          DataCell(Text(d.workHoliday ?? "0")),
+          DataCell(Text(d.normalOt ?? "0")),
+          DataCell(Text(d.holidayOt ?? "0")),
+          DataCell(Text(d.foodAllowance)),
+        ]);
   }
 
   @override

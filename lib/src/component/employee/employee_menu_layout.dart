@@ -145,7 +145,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                           : SizedBox(
                               width: double.infinity,
                               child: Card(
-                                color: myambercolors,
+                                color: Colors.amberAccent,
                                 elevation: 6,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12)),
@@ -205,6 +205,7 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     const Gap(8)
                   ],
                 )),
+
             if (pageNumber == 0)
               Expanded(
                   flex: 10,

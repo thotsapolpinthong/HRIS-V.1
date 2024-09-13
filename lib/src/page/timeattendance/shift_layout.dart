@@ -116,13 +116,13 @@ class _ShiftLayoutState extends State<ShiftLayout> {
             body: Center(
               child: Column(
                 children: [
-                  const Text(
-                    'กะการทำงาน (Shift).',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                  const Gap(8),
+                  // const Text(
+                  //   'กะการทำงาน (Shift).',
+                  //   style: TextStyle(
+                  //     fontSize: 20,
+                  //   ),
+                  // ),
+                  // const Gap(8),
                   Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Row(

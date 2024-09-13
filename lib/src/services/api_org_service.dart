@@ -26,6 +26,7 @@ import 'package:hris_app_prototype/src/model/organization/position_org/dropdown_
 import 'package:hris_app_prototype/src/model/organization/position_org/dropdown_position_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_id_model.dart';
+import 'package:hris_app_prototype/src/model/organization/position_org/response_position_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/update_position_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/stucture/org_stucture.dart';
 import 'package:http/http.dart' as http;
@@ -547,8 +548,13 @@ class ApiOrgService {
       body: jsonEncode(updated.toJson()),
     );
     if (response.statusCode == 200) {
-      isUpdate = true;
-      return isUpdate;
+      ResponsePositionOrgModel data =
+          responsePositionOrgModelFromJson(response.body);
+      if (data.status == true) {
+        return isUpdate = true;
+      } else {
+        return isUpdate;
+      }
     } else {
       return isUpdate;
     }

@@ -132,106 +132,112 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                   padding:
                       EdgeInsets.all(widget.isSelected == false ? 12.0 : 0),
                   child: Scaffold(
-                      body: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: SingleChildScrollView(
-                          child: Card(
-                            elevation: 2,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: PaginatedDataTable(
-                                  // onSelectAll: widget.isSelected == false
-                                  //     ? null
-                                  //     : (selected) {
-                                  //         // // selected จะเป็น true ถ้าทุกแถวถูกเลือก, เป็น false ถ้าถูกยกเลิก
-                                  //         // if (selected!) {
-                                  //         //   // เลือกทุกแถว
-                                  //         //   for (int i = 0;
-                                  //         //       i < employeeData!.length;
-                                  //         //       i++) {
-                                  //         //     PersonDataTableSource
-                                  //         //         .toggleRowSelection(i);
-                                  //         //   }
-                                  //         // } else {
-                                  //         //   // ยกเลิกการเลือกทุกแถว
-                                  //         //   PersonDataTableSource.clearSelection();
-                                  //         // }
-                                  //       },
-                                  showCheckboxColumn: true,
-                                  columnSpacing: 20,
-                                  showFirstLastButtons: true,
-                                  rowsPerPage: rowIndex,
-                                  availableRowsPerPage: const [5, 10, 20],
-                                  sortColumnIndex: sortColumnIndex,
-                                  sortAscending: sort,
-                                  onRowsPerPageChanged: (value) {
-                                    setState(() {
-                                      rowIndex = value!;
-                                    });
-                                  },
-                                  header: SizedBox(
+                      body: SizedBox(
+                        height: double.infinity,
+                        child: Card(
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SizedBox(
                                     width: double.infinity,
-                                    height: 50,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        const Expanded(
-                                            flex: 2,
-                                            child: Text('Employee Management.',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w800))),
-                                        orgList == null
-                                            ? const SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 3,
-                                                ))
-                                            : const Gap(3),
-                                        if (widget.isSelected == true)
-                                          const Icon(
-                                              Icons.account_tree_rounded),
-                                        const Gap(3),
-                                        // if (widget.isSelected == true)
-                                        Expanded(
-                                          flex: 1,
-                                          child: DropdownGlobal(
-                                            labeltext: 'Department',
-                                            value: orgData,
-                                            items: orgList?.map((e) {
-                                              return DropdownMenuItem<String>(
-                                                value: e.organizationCode
-                                                    .toString(),
-                                                child: Container(
-                                                    constraints:
-                                                        const BoxConstraints(
-                                                            maxWidth: 190),
-                                                    child: Text(
-                                                        "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
-                                              );
-                                            }).toList(),
-                                            onChanged: (newValue) {
-                                              if (newValue == '') {
-                                                context
-                                                    .read<EmployeeBloc>()
-                                                    .add(DissSearchEmpEvent());
-                                              } else {
-                                                setState(() {
-                                                  orgData = newValue.toString();
-                                                  context
-                                                      .read<EmployeeBloc>()
-                                                      .add(SearchEmpEvent());
-                                                  employeeData = filterData!
-                                                      .where((element) {
-                                                    final organizationId =
-                                                        element
+                                    child: PaginatedDataTable(
+                                      // onSelectAll: widget.isSelected == false
+                                      //     ? null
+                                      //     : (selected) {
+                                      //         // // selected จะเป็น true ถ้าทุกแถวถูกเลือก, เป็น false ถ้าถูกยกเลิก
+                                      //         // if (selected!) {
+                                      //         //   // เลือกทุกแถว
+                                      //         //   for (int i = 0;
+                                      //         //       i < employeeData!.length;
+                                      //         //       i++) {
+                                      //         //     PersonDataTableSource
+                                      //         //         .toggleRowSelection(i);
+                                      //         //   }
+                                      //         // } else {
+                                      //         //   // ยกเลิกการเลือกทุกแถว
+                                      //         //   PersonDataTableSource.clearSelection();
+                                      //         // }
+                                      //       },
+                                      showCheckboxColumn: true,
+                                      columnSpacing: 20,
+                                      showFirstLastButtons: true,
+                                      rowsPerPage: rowIndex,
+                                      availableRowsPerPage: const [5, 10, 20],
+                                      sortColumnIndex: sortColumnIndex,
+                                      sortAscending: sort,
+                                      onRowsPerPageChanged: (value) {
+                                        setState(() {
+                                          rowIndex = value!;
+                                        });
+                                      },
+                                      header: SizedBox(
+                                        width: double.infinity,
+                                        height: 50,
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Expanded(
+                                                flex: 2,
+                                                child: Text(
+                                                    'Employee Management.',
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w800))),
+                                            orgList == null
+                                                ? const SizedBox(
+                                                    width: 20,
+                                                    height: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      strokeWidth: 3,
+                                                    ))
+                                                : const Gap(3),
+                                            if (widget.isSelected == true)
+                                              const Icon(
+                                                  Icons.account_tree_rounded),
+                                            const Gap(3),
+                                            // if (widget.isSelected == true)
+                                            Expanded(
+                                              flex: 1,
+                                              child: DropdownGlobal(
+                                                labeltext: 'Department',
+                                                value: orgData,
+                                                items: orgList?.map((e) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: e.organizationCode
+                                                        .toString(),
+                                                    child: Container(
+                                                        constraints:
+                                                            const BoxConstraints(
+                                                                maxWidth: 190),
+                                                        child: Text(
+                                                            "${e.organizationCode.split('0')[0]} : ${e.organizationName}")),
+                                                  );
+                                                }).toList(),
+                                                onChanged: (newValue) {
+                                                  if (newValue == '') {
+                                                    context
+                                                        .read<EmployeeBloc>()
+                                                        .add(
+                                                            DissSearchEmpEvent());
+                                                  } else {
+                                                    setState(() {
+                                                      orgData =
+                                                          newValue.toString();
+                                                      context
+                                                          .read<EmployeeBloc>()
+                                                          .add(
+                                                              SearchEmpEvent());
+                                                      employeeData = filterData!
+                                                          .where((element) {
+                                                        final organizationId = element
                                                             .positionData
                                                             .organizationData
                                                             .organizationCode
@@ -239,90 +245,91 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                             .contains(newValue
                                                                 .toString()
                                                                 .toLowerCase());
-                                                    return organizationId;
-                                                  }).toList();
-                                                  employeeData;
-                                                });
-                                              }
-                                            },
-                                            suffixIcon: orgData == null
-                                                ? null
-                                                : IconButton(
-                                                    splashRadius: 1,
-                                                    onPressed: () =>
-                                                        setState(() {
-                                                      orgData = null;
-                                                      context
-                                                          .read<EmployeeBloc>()
-                                                          .add(
-                                                              DissSearchEmpEvent());
-                                                    }),
-                                                    icon: const Icon(
-                                                        Icons.cancel_rounded),
-                                                  ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: TextFormFieldSearch(
-                                                  controller: search,
-                                                  enabled: true,
-                                                  onChanged: (value) {
-                                                    if (value == '') {
-                                                      context
-                                                          .read<EmployeeBloc>()
-                                                          .add(
-                                                              DissSearchEmpEvent());
-                                                    } else {
-                                                      setState(() {
-                                                        context
-                                                            .read<
-                                                                EmployeeBloc>()
-                                                            .add(
-                                                                SearchEmpEvent());
-                                                        employeeData =
-                                                            filterData!.where(
-                                                                (element) {
-                                                          final employeeId = element
-                                                              .employeeId
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final personId = element
-                                                              .personData
-                                                              .personId
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final fisrtNameTh = element
-                                                              .personData
-                                                              .fisrtNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final lastNameTh = element
-                                                              .personData
-                                                              .lastNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final description = element
-                                                              .staffTypeData
-                                                              .description
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final positionOrganizationId = element
-                                                              .positionData
-                                                              .positionOrganizationId
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final positionNameTh =
-                                                              element
+                                                        return organizationId;
+                                                      }).toList();
+                                                      employeeData;
+                                                    });
+                                                  }
+                                                },
+                                                suffixIcon: orgData == null
+                                                    ? null
+                                                    : IconButton(
+                                                        splashRadius: 1,
+                                                        onPressed: () =>
+                                                            setState(() {
+                                                          orgData = null;
+                                                          context
+                                                              .read<
+                                                                  EmployeeBloc>()
+                                                              .add(
+                                                                  DissSearchEmpEvent());
+                                                        }),
+                                                        icon: const Icon(Icons
+                                                            .cancel_rounded),
+                                                      ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                                flex: 1,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: TextFormFieldSearch(
+                                                      controller: search,
+                                                      enabled: true,
+                                                      onChanged: (value) {
+                                                        if (value == '') {
+                                                          context
+                                                              .read<
+                                                                  EmployeeBloc>()
+                                                              .add(
+                                                                  DissSearchEmpEvent());
+                                                        } else {
+                                                          setState(() {
+                                                            context
+                                                                .read<
+                                                                    EmployeeBloc>()
+                                                                .add(
+                                                                    SearchEmpEvent());
+                                                            employeeData =
+                                                                filterData!.where(
+                                                                    (element) {
+                                                              final employeeId = element
+                                                                  .employeeId
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final personId = element
+                                                                  .personData
+                                                                  .personId
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final fisrtNameTh = element
+                                                                  .personData
+                                                                  .fisrtNameTh
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final lastNameTh = element
+                                                                  .personData
+                                                                  .lastNameTh
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final description = element
+                                                                  .staffTypeData
+                                                                  .description
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final positionOrganizationId = element
+                                                                  .positionData
+                                                                  .positionOrganizationId
+                                                                  .toLowerCase()
+                                                                  .contains(value
+                                                                      .toLowerCase());
+                                                              final positionNameTh = element
                                                                   .positionData
                                                                   .positionData
                                                                   .positionNameTh
@@ -330,87 +337,90 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                                   .contains(value
                                                                       .toLowerCase());
 
-                                                          return employeeId ||
-                                                              personId ||
-                                                              fisrtNameTh ||
-                                                              lastNameTh ||
-                                                              description ||
-                                                              positionOrganizationId ||
-                                                              positionNameTh;
-                                                        }).toList();
-                                                      });
-                                                    }
-                                                  }),
-                                            )),
+                                                              return employeeId ||
+                                                                  personId ||
+                                                                  fisrtNameTh ||
+                                                                  lastNameTh ||
+                                                                  description ||
+                                                                  positionOrganizationId ||
+                                                                  positionNameTh;
+                                                            }).toList();
+                                                          });
+                                                        }
+                                                      }),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      columns: [
+                                        if (widget.isSelected == false)
+                                          const DataColumn(
+                                              label: Text("  Menu",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold))),
+                                        DataColumn(
+                                            label: const Text("Dept."),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        DataColumn(
+                                            // numeric: true,
+                                            label: const Text("Employee ID"),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        DataColumn(
+                                            label: const Text("Firstname"),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        DataColumn(
+                                            label: const Text("Lastname"),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        DataColumn(
+                                            label: const Text("Type"),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        DataColumn(
+                                            label: const Text("Position"),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        DataColumn(
+                                            label:
+                                                const Text("Work start date"),
+                                            onSort: (columnIndex, ascending) {
+                                              setState(() {});
+                                            }),
+                                        // DataColumn(
+                                        //     label: const Text("Enddate"),
+                                        //     onSort: (columnIndex, ascending) {
+                                        //       setState(() {});
+                                        //     }),
+                                        const DataColumn(
+                                          label: Text('Status'),
+                                        ),
+                                        if (widget.isSelected == true &&
+                                            widget.isSelectedOne == true)
+                                          const DataColumn(label: Text('')),
                                       ],
+                                      source: PersonDataTableSource(
+                                          context,
+                                          employeeData,
+                                          fetchData,
+                                          widget.isSelected,
+                                          widget.isSelectedOne,
+                                          widget.typeSelected,
+                                          widget.fetchDataTemp
+                                          // deleteData,
+                                          ),
                                     ),
                                   ),
-                                  columns: [
-                                    if (widget.isSelected == false)
-                                      const DataColumn(
-                                          label: Text("  Menu",
-                                              style: TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.bold))),
-                                    DataColumn(
-                                        label: const Text("Dept."),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    DataColumn(
-                                        // numeric: true,
-                                        label: const Text("Employee ID"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    DataColumn(
-                                        label: const Text("Firstname"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    DataColumn(
-                                        label: const Text("Lastname"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    DataColumn(
-                                        label: const Text("Type"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    DataColumn(
-                                        label: const Text("Position"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    DataColumn(
-                                        label: const Text("Work start date"),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {});
-                                        }),
-                                    // DataColumn(
-                                    //     label: const Text("Enddate"),
-                                    //     onSort: (columnIndex, ascending) {
-                                    //       setState(() {});
-                                    //     }),
-                                    const DataColumn(
-                                      label: Text('Status'),
-                                    ),
-                                    if (widget.isSelected == true &&
-                                        widget.isSelectedOne == true)
-                                      const DataColumn(label: Text('')),
-                                  ],
-                                  source: PersonDataTableSource(
-                                      context,
-                                      employeeData,
-                                      fetchData,
-                                      widget.isSelected,
-                                      widget.isSelectedOne,
-                                      widget.typeSelected,
-                                      widget.fetchDataTemp
-                                      // deleteData,
-                                      ),
-                                ),
+                                ],
                               ),
                             ),
                           ),
@@ -492,6 +502,10 @@ class PersonDataTableSource extends DataTableSource {
   DataRow getRow(int index) {
     final employeeData = data![index];
     return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
         selected: getRowSelected(index),
         onSelectChanged: isSelected == false && isSelectedOne == false ||
                 isSelected == true && isSelectedOne == true
@@ -518,7 +532,7 @@ class PersonDataTableSource extends DataTableSource {
           if (isSelected == false)
             DataCell(ElevatedButton(
                 onPressed: () {
-                  editPositionOranization(employeeData);
+                  employeeMenu(employeeData);
                 },
                 child: const Icon(CupertinoIcons.square_list))),
           DataCell(Text(employeeData
@@ -610,7 +624,7 @@ class PersonDataTableSource extends DataTableSource {
   @override
   int get selectedRowCount => 0;
 
-  editPositionOranization(EmployeeDatum employeeData) {
+  employeeMenu(EmployeeDatum employeeData) {
     showGeneralDialog(
         context: context,
         barrierDismissible: true,
@@ -621,7 +635,7 @@ class PersonDataTableSource extends DataTableSource {
         pageBuilder: (BuildContext buildContext, Animation animation,
             Animation secondaryAnimation) {
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
             child: Card(
                 color: mygreycolors,
                 shape: RoundedRectangleBorder(
@@ -640,7 +654,7 @@ class PersonDataTableSource extends DataTableSource {
                                 angle: (45 * 22 / 7) / 180,
                                 child: Icon(
                                   Icons.add_rounded,
-                                  size: 32,
+                                  size: 40,
                                   color: Colors.grey[700],
                                 )))),
                   ],

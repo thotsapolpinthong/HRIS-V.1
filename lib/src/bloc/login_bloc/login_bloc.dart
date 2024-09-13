@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -26,10 +28,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       if (data!.status == true) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
+        String userLoginJson = jsonEncode(data.loginData.toJson());
         preferences.setString("token", data.loginData.token);
         preferences.setString("personId", data.loginData.personId);
         preferences.setString("employeeId", data.loginData.employeeId);
-        preferences.setString("departmentCode", data.loginData.departmentCode);
+        preferences.setString('LoginData', userLoginJson);
         emit(state.copyWith(isAutlhened: true, error: null));
         Navigator.pushNamed(navigatorState.currentContext!, AppRoute.homepage);
       } else {

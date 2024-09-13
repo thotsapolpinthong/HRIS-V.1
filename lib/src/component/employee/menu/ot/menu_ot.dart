@@ -304,74 +304,79 @@ class DataTableRowSource extends DataTableSource {
   DataRow? getRow(int index) {
     final data = requestData?[index];
     return requestData != null
-        ? DataRow(cells: [
-            DataCell(Text(data!.otDate)),
-            DataCell(Text(data.otTypeData.otTypeName)),
-            DataCell(Text(data.oTrequestTypeData.oTrequestTypeName)),
-            DataCell(Row(
-              children: [
-                data.workTimeScan.startTimeType == ""
+        ? DataRow(
+            color: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) {
+              return index % 2 == 0 ? Colors.white : myrowscolors;
+            }),
+            cells: [
+                DataCell(Text(data!.otDate)),
+                DataCell(Text(data.otTypeData.otTypeName)),
+                DataCell(Text(data.oTrequestTypeData.oTrequestTypeName)),
+                DataCell(Row(
+                  children: [
+                    data.workTimeScan.startTimeType == ""
+                        ? Container()
+                        : Icon(
+                            data.workTimeScan.startTimeType == "time scan"
+                                ? Icons.fingerprint_rounded
+                                : data.workTimeScan.startTimeType ==
+                                        "manual work date"
+                                    ? Icons.edit_document
+                                    : Icons.abc,
+                            color: Colors.grey,
+                          ),
+                    const Gap(5),
+                    Text(data.workTimeScan.startTime),
+                  ],
+                )),
+                DataCell(Row(
+                  children: [
+                    data.workTimeScan.endTimeType == ""
+                        ? Container()
+                        : Icon(
+                            data.workTimeScan.endTimeType == "time scan"
+                                ? Icons.fingerprint_rounded
+                                : data.workTimeScan.endTimeType ==
+                                        "manual work date"
+                                    ? Icons.edit_document
+                                    : Icons.abc,
+                            color: Colors.grey,
+                          ),
+                    const Gap(5),
+                    Text(data.workTimeScan.endTime),
+                  ],
+                )),
+                DataCell(Text(
+                    "${data.otData[0].otStartTime} - ${data.otData[0].otEndTime}")),
+                DataCell(Text(data.ncountOt)),
+                DataCell(Text(data.otDescription)),
+                DataCell(
+                  Container(
+                    decoration: BoxDecoration(
+                        color: data.status == "request"
+                            ? Colors.amberAccent[100]
+                            : data.status == "approve"
+                                ? Colors.greenAccent
+                                : Colors.redAccent[100],
+                        borderRadius: BorderRadius.circular(14)),
+                    width: 85,
+                    height: 28,
+                    child: Center(
+                        child: Text(data.status,
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                //fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800]))),
+                  ),
+                ),
+                DataCell(data.status != "request" && data.status != "approve"
                     ? Container()
-                    : Icon(
-                        data.workTimeScan.startTimeType == "time scan"
-                            ? Icons.fingerprint_rounded
-                            : data.workTimeScan.startTimeType ==
-                                    "manual work date"
-                                ? Icons.edit_document
-                                : Icons.abc,
-                        color: Colors.grey,
-                      ),
-                const Gap(5),
-                Text(data.workTimeScan.startTime),
-              ],
-            )),
-            DataCell(Row(
-              children: [
-                data.workTimeScan.endTimeType == ""
-                    ? Container()
-                    : Icon(
-                        data.workTimeScan.endTimeType == "time scan"
-                            ? Icons.fingerprint_rounded
-                            : data.workTimeScan.endTimeType ==
-                                    "manual work date"
-                                ? Icons.edit_document
-                                : Icons.abc,
-                        color: Colors.grey,
-                      ),
-                const Gap(5),
-                Text(data.workTimeScan.endTime),
-              ],
-            )),
-            DataCell(Text(
-                "${data.otData[0].otStartTime} - ${data.otData[0].otEndTime}")),
-            DataCell(Text(data.ncountOt)),
-            DataCell(Text(data.otDescription)),
-            DataCell(
-              Container(
-                decoration: BoxDecoration(
-                    color: data.status == "request"
-                        ? Colors.amberAccent[100]
-                        : data.status == "approve"
-                            ? Colors.greenAccent
-                            : Colors.redAccent[100],
-                    borderRadius: BorderRadius.circular(14)),
-                width: 85,
-                height: 28,
-                child: Center(
-                    child: Text(data.status,
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            //fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800]))),
-              ),
-            ),
-            DataCell(data.status != "request" && data.status != "approve"
-                ? Container()
-                : RowDeleteBox(onPressed: () {
-                    alertDialogInfo(data.otRequestId);
-                  })),
-          ])
+                    : RowDeleteBox(onPressed: () {
+                        alertDialogInfo(data.otRequestId);
+                      })),
+              ])
         : const DataRow(cells: [
             DataCell(Text("")),
             DataCell(Text("")),

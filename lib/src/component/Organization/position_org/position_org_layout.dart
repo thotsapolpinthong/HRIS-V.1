@@ -6,21 +6,18 @@ import 'package:gap/gap.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hris_app_prototype/src/bloc/organization_bloc/position_org_bloc/position_org_bloc.dart';
+import 'package:hris_app_prototype/src/component/Organization/position_org/assign_role_position_org.dart';
 import 'package:hris_app_prototype/src/component/Organization/position_org/create_edit_position_org.dart';
 import 'package:hris_app_prototype/src/component/Organization/position_org/datatable_position_org.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
-import 'package:hris_app_prototype/src/component/permission/role_permission/role_permission_manage.dart';
 import 'package:hris_app_prototype/src/component/personal/datatable_personal.dart';
-import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
+import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/get_org_all_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/delete_position_org_model.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
-import 'package:hris_app_prototype/src/model/organization/position_org/update_position_org_model.dart';
-import 'package:hris_app_prototype/src/model/role_permission/roles/roles_model.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:validatorless/validatorless.dart';
 
 class PositionOrganizationWidget extends StatefulWidget {
   final OrganizationDatum? data;
@@ -39,12 +36,22 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
   bool isNodeEmpty = true;
   bool isExpandedPage = false;
 
-//role
-  List<RoleDatum> roleList = [];
-  TextEditingController roleId = TextEditingController();
-
   Graph graph = Graph()..isTree = true;
   BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
+  LoginData? _loginData;
+
+  fetchDataLogin() async {
+    _loginData = await ApiRolesService.getUserData();
+    setState(() {
+      if (_loginData != null) {
+        _loginData;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myredcolors,
+            content: const Text("Load Role Permissions Fail")));
+      }
+    });
+  }
 
   nodedata(List<PositionOrganizationDatum>? data) async {
     // datum = await ApiOrgService.fetchDataTableOrganization();
@@ -224,6 +231,8 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
 
     bool success = await ApiOrgService.deletePositionOrgById(deldata);
     alertDialog(success);
+    context.read<PositionOrgBloc>().add(FetchDataPositionOrgEvent(
+        organizationId: widget.data!.organizationCode));
   }
 
   alertDialog(bool success) {
@@ -257,6 +266,7 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
 
   @override
   void initState() {
+    fetchDataLogin();
     context.read<PositionOrgBloc>().add(FetchDataPositionOrgEvent(
         organizationId: widget.data!.organizationCode));
     super.initState();
@@ -516,7 +526,7 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                   size: 48,
                 )
               : Positioned(
-                  top: -8,
+                  top: -10,
                   child: SizedBox(
                       width: 60,
                       child: CircleAvatar(
@@ -549,14 +559,14 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                             ),
                           )))),
           Positioned(
-            right: 40,
+            right: 38,
             child: PopupMenuButton(
               iconColor: data.positionData.positionId == "259"
                   ? mygreycolors
                   : Colors.black,
               splashRadius: 1,
               elevation: 10,
-              iconSize: 22,
+              iconSize: 24,
               itemBuilder: (BuildContext context) {
                 return <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
@@ -586,71 +596,51 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
               },
             ),
           ).animate().fade(delay: 200.ms).shake(delay: 500.ms),
-          data.roleData.roleId == ""
-              ? Positioned(
-                  right: 4,
-                  bottom: 6,
-                  child: SizedBox(
-                    width: 40,
-                    height: 38,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: mygreencolors,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            padding: const EdgeInsets.all(1)),
-                        onPressed: () {
-                          fetchRoleData(data.roleData.roleId);
-                          updateDialog(data);
-                        },
-                        child: Transform.flip(
-                            flipX: true, child: const Icon(Icons.key))),
-                  ),
-                ).animate().fade(duration: 1.seconds)
-              : Icon(
-                  Icons.key_rounded,
-                  color: mythemecolor,
+          if (_loginData?.role.roleId == "R000000000")
+            Positioned(
+              right: 10,
+              bottom: 6,
+              child: Tooltip(
+                message: "Role Permissions",
+                child: SizedBox(
+                  width: 35,
+                  height: 35,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: mygreencolors,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          padding: const EdgeInsets.symmetric(vertical: 0)),
+                      onPressed: () {
+                        updateDialog(data);
+                      },
+                      child: Transform.flip(
+                          flipX: true, child: const Icon(Icons.key))),
                 ),
+              ),
+            ).animate().fade(duration: 1.seconds),
+          if (data.roleData.roleId != "" &&
+              _loginData?.role.roleId == "R000000000")
+            Positioned(
+              top: 41,
+              child: Center(
+                child: Card(
+                  elevation: 0,
+                  color: mygreencolors,
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+                    child: Text(
+                      data.roleData.roleName,
+                      style: TextStyle(fontSize: 12, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
-  }
-
-  fetchRoleData(String roleId) async {
-    RolesModel? dataRole = await ApiRolesService.getRolesData();
-    roleList = dataRole?.roleData ?? [];
-    roleId = roleId;
-    setState(() {});
-  }
-
-  Future onSave(PositionOrganizationDatum data) async {
-    String employeeId = "";
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    employeeId = preferences.getString("employeeId")!;
-
-    UpdatePositionOrgModel updatePositionOrganizationModel =
-        UpdatePositionOrgModel(
-      positionOrganizationId: data.positionOrganizationId,
-      positionId: data.positionData.positionId,
-      organizationCode: data.organizationData.organizationCode,
-      jobTitleId: data.jobTitleData.toString(),
-      positionTypeId: data.positionTypeData.toString(),
-      status: 'Active',
-      parentPositionNodeId: data.parentPositionNodeId.toString(),
-      parentPositionBusinessNodeId:
-          data.parentPositionBusinessNodeId.toString(),
-      roleId: roleId.text,
-      startingSalary: data.startingSalary,
-      validFromDate: data.validFromDate,
-      endDate: data.endDate,
-      modifiedBy: employeeId,
-      comment: comment.text,
-    );
-    setState(() {});
-    bool success =
-        await ApiOrgService.updatedPositionOrg(updatePositionOrganizationModel);
-
-    alertDialog(success);
   }
 
   updateDialog(PositionOrganizationDatum data) {
@@ -665,45 +655,12 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
               content: Stack(
                 children: [
                   Container(
-                    height: 200,
-                    width: 400,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Gap(10),
-                        DropdownMenuGlobal(
-                            label: "Role Permissions",
-                            width: 380,
-                            controller: roleId,
-                            onSelected: (value) {
-                              setState(() {
-                                roleId.text = value.toString();
-                              });
-                            },
-                            dropdownMenuEntries: roleList.map((RoleDatum e) {
-                              return DropdownMenuEntry(
-                                  value: e.roleId,
-                                  label: e.roleName,
-                                  style: MenuItemButton.styleFrom());
-                            }).toList()),
-                        SizedBox(
-                          width: 388,
-                          child: TextFormFieldGlobal(
-                            controller: comment,
-                            labelText: "Comment",
-                            enabled: true,
-                            validatorless: Validatorless.required('required'),
-                          ),
-                        ),
-                        MySaveButtons(
-                          text: "Update",
-                          onPressed: () {
-                            onSave;
-                          },
-                        )
-                      ],
-                    ),
-                  ),
+                      height: 200,
+                      width: 400,
+                      child: AssignRolePositionOrg(
+                        data: data,
+                        organizationCode: widget.data!.organizationCode,
+                      )),
                   Positioned(
                       right: 0,
                       top: -5,

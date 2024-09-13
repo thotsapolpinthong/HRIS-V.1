@@ -156,7 +156,8 @@ class _PositionDataTableState extends State<PositionDataTable> {
                 positionData == null
             ? myLoadingScreen
             : SafeArea(
-                child: SingleChildScrollView(
+                child: SizedBox(
+                  height: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Card(
@@ -165,126 +166,141 @@ class _PositionDataTableState extends State<PositionDataTable> {
                           borderRadius: BorderRadius.circular(20)),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: PaginatedDataTable(
-                            showFirstLastButtons: true,
-                            rowsPerPage: rowIndex,
-                            availableRowsPerPage: const [5, 10, 20],
-                            sortColumnIndex: sortColumnIndex,
-                            sortAscending: sort,
-                            onRowsPerPageChanged: (value) {
-                              setState(() {
-                                rowIndex = value!;
-                              });
-                            },
-                            header: SizedBox(
-                              width: double.infinity,
-                              height: 50,
-                              child: Row(
-                                children: [
-                                  const Expanded(
-                                      flex: 2,
-                                      child: Text('Positions Table.',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w800))),
-                                  Expanded(
-                                      flex: 1,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: TextFormFieldSearch(
-                                            controller: search,
-                                            enabled: true,
-                                            onChanged: (value) {
-                                              if (value == '') {
-                                                context
-                                                    .read<PositionsBloc>()
-                                                    .add(DissSearchEvent());
-                                              } else {
-                                                setState(() {
-                                                  context
-                                                      .read<PositionsBloc>()
-                                                      .add(SearchEvent());
-                                                  positionData = filterData!
-                                                      .where((element) {
-                                                    final nameId = element
-                                                        .positionId
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final nameTh = element
-                                                        .positionNameTh
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final nameEn = element
-                                                        .positionNameEn
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: PaginatedDataTable(
+                                  showFirstLastButtons: true,
+                                  rowsPerPage: rowIndex,
+                                  availableRowsPerPage: const [5, 10, 20],
+                                  sortColumnIndex: sortColumnIndex,
+                                  sortAscending: sort,
+                                  onRowsPerPageChanged: (value) {
+                                    setState(() {
+                                      rowIndex = value!;
+                                    });
+                                  },
+                                  header: SizedBox(
+                                    width: double.infinity,
+                                    height: 50,
+                                    child: Row(
+                                      children: [
+                                        const Expanded(
+                                            flex: 2,
+                                            child: Text('Positions Table.',
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w800))),
+                                        Expanded(
+                                            flex: 1,
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: TextFormFieldSearch(
+                                                  controller: search,
+                                                  enabled: true,
+                                                  onChanged: (value) {
+                                                    if (value == '') {
+                                                      context
+                                                          .read<PositionsBloc>()
+                                                          .add(
+                                                              DissSearchEvent());
+                                                    } else {
+                                                      setState(() {
+                                                        context
+                                                            .read<
+                                                                PositionsBloc>()
+                                                            .add(SearchEvent());
+                                                        positionData =
+                                                            filterData!.where(
+                                                                (element) {
+                                                          final nameId = element
+                                                              .positionId
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final nameTh = element
+                                                              .positionNameTh
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
+                                                          final nameEn = element
+                                                              .positionNameEn
+                                                              .toLowerCase()
+                                                              .contains(value
+                                                                  .toLowerCase());
 
-                                                    return nameId ||
-                                                        nameEn ||
-                                                        nameTh;
-                                                  }).toList();
-                                                });
-                                              }
-                                            }),
-                                      )),
-                                ],
+                                                          return nameId ||
+                                                              nameEn ||
+                                                              nameTh;
+                                                        }).toList();
+                                                      });
+                                                    }
+                                                  }),
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                  columns: [
+                                    DataColumn(
+                                        numeric: true,
+                                        label: const Text('รหัสตำแหน่ง'),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = 0;
+                                            if (state.onSearchData == true) {
+                                              onSortSearchColumn(
+                                                  columnIndex, ascending);
+                                            } else {
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            }
+                                          });
+                                        }),
+                                    DataColumn(
+                                        label: const Text('Position name (TH)'),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = 1;
+                                            if (state.onSearchData == true) {
+                                              onSortSearchColumn(
+                                                  columnIndex, ascending);
+                                            } else {
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            }
+                                          });
+                                        }),
+                                    DataColumn(
+                                        label: const Text('Position name (EN)'),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = 2;
+                                            if (state.onSearchData == true) {
+                                              onSortSearchColumn(
+                                                  columnIndex, ascending);
+                                            } else {
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            }
+                                          });
+                                        }),
+                                    const DataColumn(
+                                        label: Text('     Status')),
+                                    const DataColumn(
+                                        label: Text('Edit/Remove',
+                                            style: TextStyle(fontSize: 16))),
+                                  ],
+                                  source: PersonDataTableSource(positionData,
+                                      context, fetchData, deleteData),
+                                ),
                               ),
-                            ),
-                            columns: [
-                              DataColumn(
-                                  numeric: true,
-                                  label: const Text('รหัสตำแหน่ง'),
-                                  onSort: (columnIndex, ascending) {
-                                    setState(() {
-                                      sort = !sort;
-                                      sortColumnIndex = 0;
-                                      if (state.onSearchData == true) {
-                                        onSortSearchColumn(
-                                            columnIndex, ascending);
-                                      } else {
-                                        onSortColumn(columnIndex, ascending);
-                                      }
-                                    });
-                                  }),
-                              DataColumn(
-                                  label: const Text('Position name (TH)'),
-                                  onSort: (columnIndex, ascending) {
-                                    setState(() {
-                                      sort = !sort;
-                                      sortColumnIndex = 1;
-                                      if (state.onSearchData == true) {
-                                        onSortSearchColumn(
-                                            columnIndex, ascending);
-                                      } else {
-                                        onSortColumn(columnIndex, ascending);
-                                      }
-                                    });
-                                  }),
-                              DataColumn(
-                                  label: const Text('Position name (EN)'),
-                                  onSort: (columnIndex, ascending) {
-                                    setState(() {
-                                      sort = !sort;
-                                      sortColumnIndex = 2;
-                                      if (state.onSearchData == true) {
-                                        onSortSearchColumn(
-                                            columnIndex, ascending);
-                                      } else {
-                                        onSortColumn(columnIndex, ascending);
-                                      }
-                                    });
-                                  }),
-                              const DataColumn(label: Text('     Status')),
-                              const DataColumn(
-                                  label: Text('Edit/Remove',
-                                      style: TextStyle(fontSize: 16))),
                             ],
-                            source: PersonDataTableSource(
-                                positionData, context, fetchData, deleteData),
                           ),
                         ),
                       ),
@@ -309,81 +325,86 @@ class PersonDataTableSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final positions = data![index];
-    return DataRow(cells: [
-      DataCell(Text(positions.positionId)),
-      DataCell(Text(positions.positionNameTh)),
-      DataCell(Text(positions.positionNameEn == 'No data'
-          ? ' - '
-          : positions.positionNameEn)),
-      DataCell(Container(
-          constraints: const BoxConstraints(
-              minWidth: 92, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
-              ),
-          child: positions.positionStatus == "Inactive"
-              ? const Card(
-                  elevation: 2,
-                  color: Colors.redAccent,
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.cancel,
-                          color: Colors.white,
-                          size: 18,
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Text(positions.positionId)),
+          DataCell(Text(positions.positionNameTh)),
+          DataCell(Text(positions.positionNameEn == 'No data'
+              ? ' - '
+              : positions.positionNameEn)),
+          DataCell(Container(
+              constraints: const BoxConstraints(
+                  minWidth: 92, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
+                  ),
+              child: positions.positionStatus == "Inactive"
+                  ? const Card(
+                      elevation: 2,
+                      color: Colors.redAccent,
+                      child: Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            Text(
+                              ' Inactive',
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
                         ),
-                        Text(
-                          ' Inactive',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    ),
-                  ))
-              : Card(
-                  elevation: 2,
-                  color: Colors.greenAccent,
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                          size: 18,
+                      ))
+                  : Card(
+                      elevation: 2,
+                      color: Colors.greenAccent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            Text(' Active',
+                                style: TextStyle(color: Colors.grey[800]))
+                          ],
                         ),
-                        Text(' Active',
-                            style: TextStyle(color: Colors.grey[800]))
-                      ],
-                    ),
-                  )))),
-      DataCell(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showEditDialog(positions);
-              },
-              child: const Icon(Icons.edit)),
-        ),
-        const Gap(5),
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showdialogDeletePerson(positions.positionId);
-              },
-              child: const Icon(Icons.delete_rounded)),
-        ),
-      ])),
-    ]);
+                      )))),
+          DataCell(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber[700],
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    showEditDialog(positions);
+                  },
+                  child: const Icon(Icons.edit)),
+            ),
+            const Gap(5),
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[700],
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    showdialogDeletePerson(positions.positionId);
+                  },
+                  child: const Icon(Icons.delete_rounded)),
+            ),
+          ])),
+        ]);
   }
 
   @override

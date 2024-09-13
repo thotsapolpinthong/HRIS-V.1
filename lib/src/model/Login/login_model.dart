@@ -2,6 +2,9 @@
 //
 //     final loginModel = loginModelFromJson(jsonString);
 
+import 'package:hris_app_prototype/src/model/role_permission/role_permission/role_permission_model.dart';
+import 'package:hris_app_prototype/src/model/role_permission/roles/roles_model.dart';
+
 import 'dart:convert';
 
 LoginModel loginModelFromJson(String str) =>
@@ -37,12 +40,16 @@ class LoginData {
   String personId;
   String employeeId;
   String departmentCode;
+  RoleDatum role;
+  List<RolePermissionDatum> rolePermission;
   String token;
 
   LoginData({
     required this.personId,
     required this.employeeId,
     required this.departmentCode,
+    required this.role,
+    required this.rolePermission,
     required this.token,
   });
 
@@ -50,6 +57,9 @@ class LoginData {
         personId: json["personId"],
         employeeId: json["employeeId"],
         departmentCode: json["departmentCode"],
+        role: RoleDatum.fromJson(json["role"]),
+        rolePermission: List<RolePermissionDatum>.from(
+            json["rolePermission"].map((x) => RolePermissionDatum.fromJson(x))),
         token: json["token"],
       );
 
@@ -57,6 +67,9 @@ class LoginData {
         "personId": personId,
         "employeeId": employeeId,
         "departmentCode": departmentCode,
+        "role": role.toJson(),
+        "rolePermission":
+            List<dynamic>.from(rolePermission.map((x) => x.toJson())),
         "token": token,
       };
 }

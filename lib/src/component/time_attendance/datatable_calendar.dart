@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/create_update_calendar.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/delete_holiday_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/get_holiday_data_model.dart';
@@ -204,7 +205,10 @@ class _CalendarDataTableState extends State<CalendarDataTable> {
                                 children: [
                                   const Expanded(
                                       flex: 1,
-                                      child: Text('Holiday calendar table.')),
+                                      child: Text('Holiday calendar table.',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold))),
                                   Expanded(
                                       flex: 1,
                                       child: Row(
@@ -283,62 +287,104 @@ class _CalendarDataTableState extends State<CalendarDataTable> {
                                             ),
                                           ),
                                           const Gap(10),
-                                          const Icon(Icons.search_rounded),
                                           Expanded(
                                             flex: 2,
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: TextFormField(
-                                                controller: search,
-                                                onChanged: (value) {
-                                                  if (value == '') {
-                                                    context
-                                                        .read<
-                                                            TimeattendanceBloc>()
-                                                        .add(DissSearchEvent());
-                                                  } else {
-                                                    setState(() {
-                                                      context
-                                                          .read<
-                                                              TimeattendanceBloc>()
-                                                          .add(SearchEvent());
+                                                padding:
+                                                    const EdgeInsets.all(4.0),
+                                                child: TextFormFieldSearch(
+                                                    controller: search,
+                                                    enabled: true,
+                                                    onChanged: (value) {
+                                                      if (value == '') {
+                                                        context
+                                                            .read<
+                                                                TimeattendanceBloc>()
+                                                            .add(
+                                                                DissSearchEvent());
+                                                      } else {
+                                                        setState(() {
+                                                          context
+                                                              .read<
+                                                                  TimeattendanceBloc>()
+                                                              .add(
+                                                                  SearchEvent());
 
-                                                      mainData = filterData!
-                                                          .where((element) {
-                                                        final date = element
-                                                            .date
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final nameTH = element
-                                                            .holidayNameTh
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final nameEN = element
-                                                            .holidayNameEn
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        return date ||
-                                                            nameEN ||
-                                                            nameTH;
-                                                      }).toList();
-                                                    });
-                                                  }
-                                                },
-                                                decoration: InputDecoration(
-                                                    contentPadding:
-                                                        const EdgeInsets.all(
-                                                            10.0),
-                                                    hintText: 'Search (EN/TH)',
-                                                    border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(8))),
-                                              ),
-                                            ),
+                                                          mainData = filterData!
+                                                              .where((element) {
+                                                            final date = element
+                                                                .date
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            final nameTH = element
+                                                                .holidayNameTh
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            final nameEN = element
+                                                                .holidayNameEn
+                                                                .toLowerCase()
+                                                                .contains(value
+                                                                    .toLowerCase());
+                                                            return date ||
+                                                                nameEN ||
+                                                                nameTH;
+                                                          }).toList();
+                                                        });
+                                                      }
+                                                    })
+
+                                                //  TextFormField(
+                                                //   controller: search,
+                                                //   onChanged: (value) {
+                                                //     if (value == '') {
+                                                //       context
+                                                //           .read<
+                                                //               TimeattendanceBloc>()
+                                                //           .add(DissSearchEvent());
+                                                //     } else {
+                                                //       setState(() {
+                                                //         context
+                                                //             .read<
+                                                //                 TimeattendanceBloc>()
+                                                //             .add(SearchEvent());
+
+                                                //         mainData = filterData!
+                                                //             .where((element) {
+                                                //           final date = element
+                                                //               .date
+                                                //               .toLowerCase()
+                                                //               .contains(value
+                                                //                   .toLowerCase());
+                                                //           final nameTH = element
+                                                //               .holidayNameTh
+                                                //               .toLowerCase()
+                                                //               .contains(value
+                                                //                   .toLowerCase());
+                                                //           final nameEN = element
+                                                //               .holidayNameEn
+                                                //               .toLowerCase()
+                                                //               .contains(value
+                                                //                   .toLowerCase());
+                                                //           return date ||
+                                                //               nameEN ||
+                                                //               nameTH;
+                                                //         }).toList();
+                                                //       });
+                                                //     }
+                                                //   },
+                                                //   decoration: InputDecoration(
+                                                //       contentPadding:
+                                                //           const EdgeInsets.all(
+                                                //               10.0),
+                                                //       hintText: 'Search (EN/TH)',
+                                                //       border: OutlineInputBorder(
+                                                //           borderRadius:
+                                                //               BorderRadius
+                                                //                   .circular(8))),
+                                                // ),
+                                                ),
                                           ),
                                         ],
                                       )),
@@ -390,7 +436,7 @@ class _CalendarDataTableState extends State<CalendarDataTable> {
                                   }),
                               const DataColumn(
                                   label: Text('วันหยุดตามประกาศบริษัท')),
-                              const DataColumn(label: Text('Select')),
+                              const DataColumn(label: Text('Edit/Remove')),
                               const DataColumn(label: Text('หมายเหตุ')),
                             ],
                             source: PersonDataTableSource(
@@ -421,63 +467,68 @@ class PersonDataTableSource extends DataTableSource {
     // data!.sort((a, b) => a.date.compareTo(b.date));
     final subData = data![index];
 
-    return DataRow(cells: [
-      DataCell(Text(subData.date)),
-      DataCell(Text(subData.holidayNameTh)),
-      DataCell(Text(subData.holidayNameEn)),
-      DataCell(subData.holidayFlag == true
-          ? Icon(
-              Icons.check_box_rounded,
-              color: mythemecolor,
-            )
-          : const Icon(Icons.check_box_outline_blank_rounded)),
-      DataCell(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showEditDialog(subData);
-              },
-              child: const Icon(Icons.edit)),
-        ),
-        const Gap(5),
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red[700],
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                showdialogDelete(subData.holidayId);
-              },
-              child: const Icon(Icons.delete_rounded)),
-        ),
-        // Card(
-        //     elevation: 4,
-        //     child: IconButton(
-        //         splashRadius: 25,
-        //         hoverColor: Colors.amber[50],
-        //         color: Colors.amber,
-        //         icon: const Icon(Icons.edit),
-        //         onPressed: () {
-        //           showEditDialog(subData);
-        //         })),
-        // Card(
-        //     elevation: 4,
-        //     child: IconButton(
-        //         splashRadius: 25,
-        //         hoverColor: Colors.red[100],
-        //         color: Colors.red,
-        //         icon: const Icon(Icons.delete),
-        //         onPressed: () {}))
-      ])),
-      DataCell(Text(subData.note == "No data" ? " - " : subData.note)),
-    ]);
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Text(subData.date)),
+          DataCell(Text(subData.holidayNameTh)),
+          DataCell(Text(subData.holidayNameEn)),
+          DataCell(subData.holidayFlag == true
+              ? Icon(
+                  Icons.check_box_rounded,
+                  color: mythemecolor,
+                )
+              : const Icon(Icons.check_box_outline_blank_rounded)),
+          DataCell(Row(children: [
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amber[700],
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    showEditDialog(subData);
+                  },
+                  child: const Icon(Icons.edit)),
+            ),
+            const Gap(5),
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[700],
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    showdialogDelete(subData.holidayId);
+                  },
+                  child: const Icon(Icons.delete_rounded)),
+            ),
+            // Card(
+            //     elevation: 4,
+            //     child: IconButton(
+            //         splashRadius: 25,
+            //         hoverColor: Colors.amber[50],
+            //         color: Colors.amber,
+            //         icon: const Icon(Icons.edit),
+            //         onPressed: () {
+            //           showEditDialog(subData);
+            //         })),
+            // Card(
+            //     elevation: 4,
+            //     child: IconButton(
+            //         splashRadius: 25,
+            //         hoverColor: Colors.red[100],
+            //         color: Colors.red,
+            //         icon: const Icon(Icons.delete),
+            //         onPressed: () {}))
+          ])),
+          DataCell(Text(subData.note == "No data" ? " - " : subData.note)),
+        ]);
   }
 
   @override

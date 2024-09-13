@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
@@ -86,6 +85,97 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
     fetchLotData();
   }
 
+  Widget lotMenu() {
+    return SizedBox(
+      height: 60,
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 280,
+              child: DropdownGlobal(
+                  labeltext: 'Lot Number',
+                  value: lotNumberId,
+                  items: lotNumberData?.lotNumberData.map((e) {
+                    return DropdownMenuItem<String>(
+                      value: e.lotNumberId,
+                      child: Container(
+                          width: 58,
+                          constraints: const BoxConstraints(
+                              maxWidth: 150, minWidth: 100),
+                          child: Text("${e.lotYear} / ${e.lotMonth}")),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) async {
+                    setState(() {
+                      // isLoading = true;
+                      lotNumberId = newValue.toString();
+                      Iterable<LotNumberDatum> result = lotNumberData!
+                          .lotNumberData
+                          .where((element) => element.lotNumberId == newValue);
+                      if (result.isNotEmpty) {
+                        startDate.text =
+                            result.first.startDate.substring(0, 10);
+                        endDate.text = result.first.finishDate.substring(0, 10);
+                      }
+                      if (mainData != []) {
+                        // fetchDataTable();
+                        context.read<TimeattendanceBloc>().add(
+                            FetchLunchBreakHalfEvent(
+                                startDate: startDate.text,
+                                endDate: endDate.text));
+                      }
+                    });
+                  },
+                  validator: null),
+            ),
+            SizedBox(
+              width: 240,
+              child: TextFormFieldDatepickGlobal(
+                  controller: startDate,
+                  labelText: "Start Date",
+                  validatorless: null,
+                  enabled: false,
+                  ontap: null),
+            ),
+            SizedBox(
+              width: 240,
+              child: TextFormFieldDatepickGlobal(
+                  controller: endDate,
+                  labelText: "End Date",
+                  validatorless: null,
+                  enabled: false,
+                  ontap: null),
+            ),
+            // const Gap(4),
+            // SizedBox(
+            //   width: 45,
+            //   height: 45,
+            //   child: ElevatedButton(
+            //       style: ElevatedButton.styleFrom(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(8)),
+            //           padding: const EdgeInsets.all(0)),
+            //       onPressed: () {
+            //         context.read<TimeattendanceBloc>().add(
+            //             FetchLunchBreakHalfEvent(
+            //                 startDate: startDate.text, endDate: endDate.text));
+            //       },
+            //       child: Icon(
+            //         Icons.manage_search_rounded,
+            //         size: 30,
+            //         color: mygreycolors,
+            //       )),
+            // ),
+            // const Gap(4),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -105,151 +195,57 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
               },
               child: const Icon(Icons.add_rounded)),
         ),
-        body: Column(
-          children: [
-            const Center(
-              child: Text("Lunch Break Management",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            ),
-            lotMenu(),
-            BlocBuilder<TimeattendanceBloc, TimeattendanceState>(
+        body: SizedBox(
+          height: double.infinity,
+          child: Card(
+            elevation: 2,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: BlocBuilder<TimeattendanceBloc, TimeattendanceState>(
               builder: (context, state) {
                 mainData = state.lunchBreakData?.halfHourLunchBreakData ?? [];
                 return state.isDataLoading
                     ? myLoadingScreen
-                    : SizedBox(
-                        width: double.infinity,
-                        child: Card(
-                          elevation: 2,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: PaginatedDataTable(
-                              columnSpacing: 10,
-                              showFirstLastButtons: true,
-                              rowsPerPage: rowIndex,
-                              availableRowsPerPage: const [5, 10, 20],
-                              sortColumnIndex: sortColumnIndex,
-                              sortAscending: sort,
-                              onRowsPerPageChanged: (value) {
-                                setState(() {
-                                  rowIndex = value!;
-                                });
-                              },
-                              columns: const [
-                                DataColumn(label: Text("Employee Id")),
-                                DataColumn(label: Text("Start Date")),
-                                DataColumn(label: Text("End Date")),
-                                DataColumn(label: Text("Status")),
-                                DataColumn(label: Text("Edit")),
-                              ],
-                              source: MainDataTableSource(context, mainData,
-                                  startDate.text, endDate.text),
-                            ),
+                    : Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: double.infinity,
+                                child: PaginatedDataTable(
+                                  header: Text("Lunch Break Management",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  actions: [lotMenu()],
+                                  columnSpacing: 10,
+                                  showFirstLastButtons: true,
+                                  rowsPerPage: rowIndex,
+                                  availableRowsPerPage: const [5, 10, 20],
+                                  sortColumnIndex: sortColumnIndex,
+                                  sortAscending: sort,
+                                  onRowsPerPageChanged: (value) {
+                                    setState(() {
+                                      rowIndex = value!;
+                                    });
+                                  },
+                                  columns: const [
+                                    DataColumn(label: Text("Employee Id")),
+                                    DataColumn(label: Text("Start Date")),
+                                    DataColumn(label: Text("End Date")),
+                                    DataColumn(label: Text("Status")),
+                                    DataColumn(label: Text("Edit")),
+                                  ],
+                                  source: MainDataTableSource(context, mainData,
+                                      startDate.text, endDate.text),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );
               },
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget lotMenu() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        height: 65,
-        child: Card(
-          elevation: 4,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 280,
-                  child: DropdownGlobal(
-                      labeltext: 'Lot Number',
-                      value: lotNumberId,
-                      items: lotNumberData?.lotNumberData.map((e) {
-                        return DropdownMenuItem<String>(
-                          value: e.lotNumberId,
-                          child: Container(
-                              width: 58,
-                              constraints: const BoxConstraints(
-                                  maxWidth: 150, minWidth: 100),
-                              child: Text("${e.lotYear} / ${e.lotMonth}")),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) async {
-                        setState(() {
-                          // isLoading = true;
-                          lotNumberId = newValue.toString();
-                          Iterable<LotNumberDatum> result =
-                              lotNumberData!.lotNumberData.where(
-                                  (element) => element.lotNumberId == newValue);
-                          if (result.isNotEmpty) {
-                            startDate.text =
-                                result.first.startDate.substring(0, 10);
-                            endDate.text =
-                                result.first.finishDate.substring(0, 10);
-                          }
-                          if (mainData != []) {
-                            // fetchDataTable();
-                            context.read<TimeattendanceBloc>().add(
-                                FetchLunchBreakHalfEvent(
-                                    startDate: startDate.text,
-                                    endDate: endDate.text));
-                          }
-                        });
-                      },
-                      validator: null),
-                ),
-                SizedBox(
-                  width: 240,
-                  child: TextFormFieldDatepickGlobal(
-                      controller: startDate,
-                      labelText: "Start Date",
-                      validatorless: null,
-                      ontap: () {}),
-                ),
-                SizedBox(
-                  width: 240,
-                  child: TextFormFieldDatepickGlobal(
-                      controller: endDate,
-                      labelText: "Finish Date",
-                      validatorless: null,
-                      ontap: () {}),
-                ),
-                const Gap(4),
-                SizedBox(
-                  width: 45,
-                  height: 45,
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
-                          padding: const EdgeInsets.all(0)),
-                      onPressed: () {
-                        context.read<TimeattendanceBloc>().add(
-                            FetchLunchBreakHalfEvent(
-                                startDate: startDate.text,
-                                endDate: endDate.text));
-                      },
-                      child: Icon(
-                        Icons.manage_search_rounded,
-                        size: 30,
-                        color: mygreycolors,
-                      )),
-                ),
-                const Gap(4),
-              ],
             ),
           ),
         ),
@@ -306,7 +302,7 @@ class MainDataTableSource extends DataTableSource {
     return DataRow(
         color:
             WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-          return index % 2 == 0 ? Colors.white : Colors.grey[50]!;
+          return index % 2 == 0 ? Colors.white : myrowscolors;
         }),
         cells: [
           DataCell(Text(d.employeeId)),

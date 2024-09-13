@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/create_employee.dart';
-import 'package:hris_app_prototype/src/component/personal/0_add_person_layout.dart';
+import 'package:hris_app_prototype/src/component/personal/0_create_person_stepper.dart.dart';
 import 'package:hris_app_prototype/src/component/personal/0_update_layout.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/model/organization/position_org/get_position_org_by_org_id_model.dart';
@@ -77,9 +77,21 @@ class _DataTablePersonState extends State<DataTablePerson> {
             transitionDuration: const Duration(milliseconds: 200),
             pageBuilder: (BuildContext buildContext, Animation animation,
                 Animation secondaryAnimation) {
-              return MyAddPersonbyIDLayout(
-                personId: dataId.personId.toString(),
+              return Center(
+                child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    width: MediaQuery.of(context).size.width - 40,
+                    height: MediaQuery.of(context).size.height - 40,
+                    padding: const EdgeInsets.all(20),
+                    child: MyStepper(personId: dataId.personId.toString())),
               );
+
+              // MyAddPersonbyIDLayout(
+              //   personId: dataId.personId.toString(),
+              // );
             });
       });
     } else {
@@ -208,291 +220,248 @@ class _DataTablePersonState extends State<DataTablePerson> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PersonalBloc, PersonalState>(
-      builder: (context, state) {
-        if (state.onSearchData == false) {
-          personData = state.personData;
-          filterData = state.personData;
-        } else {}
-        return state.isDataloading == true || personData == null
-            ? myLoadingScreen
-            : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      if (widget.employee == false)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "PERSONAL PAGE.",
-                                style: TextStyle(
-                                    fontSize: 24, fontWeight: FontWeight.bold),
-                              ),
-                              if (widget.employee == false)
-                                Tooltip(
-                                  message: "Create a new person",
-                                  child: SizedBox(
-                                      width: 55,
-                                      height: 42,
-                                      child: ElevatedButton(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: mythemecolor,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          8))),
-                                          onPressed: () {
-                                            setState(() {
-                                              isloading = !isloading;
-                                              addPerson();
-                                              isloading = !isloading;
-                                            });
-                                          },
-                                          child: isloading == true
-                                              ? const Center(
-                                                  child:
-                                                      CircularProgressIndicator(
-                                                    strokeWidth: 3,
-                                                    color: Colors.white,
-                                                  ),
-                                                )
-                                              : const Icon(
-                                                  Icons.person_add_alt_1,
-                                                  size: 28,
-                                                  color: Colors.white,
-                                                ))),
-                                ),
-                            ],
-                          ),
-                        ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: SingleChildScrollView(
-                                child: SizedBox(
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: Tooltip(
+        message: "Create a new person",
+        child: widget.employee == true
+            ? null
+            : MyFloatingButton(
+                onPressed: () {
+                  setState(() {
+                    isloading = !isloading;
+                    addPerson();
+                    isloading = !isloading;
+                  });
+                },
+                icon: const Icon(
+                  Icons.person_add_alt_1,
+                  size: 28,
+                  color: Colors.white,
+                )),
+      ),
+      body: BlocBuilder<PersonalBloc, PersonalState>(
+        builder: (context, state) {
+          if (state.onSearchData == false) {
+            personData = state.personData;
+            filterData = state.personData;
+          } else {}
+          return state.isDataloading == true || personData == null
+              ? myLoadingScreen
+              : SizedBox(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Card(
+                    elevation: 4,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            SizedBox(
                               width: double.infinity,
-                              child: SingleChildScrollView(
-                                child: PaginatedDataTable(
-                                  showFirstLastButtons: true,
-                                  source: PersonDataTableSource(
-                                      personData,
-                                      context,
-                                      fetchUser,
-                                      deletePerson,
-                                      widget.employee,
-                                      widget.positionOrgData),
-                                  header: SizedBox(
-                                    width: double.infinity,
-                                    height: 50,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          flex: widget.employee == true ? 2 : 3,
-                                          child: RichText(
-                                            text: TextSpan(
-                                                style:
-                                                    DefaultTextStyle.of(context)
-                                                        .style,
-                                                children: [
-                                                  TextSpan(
-                                                    text: widget.employee ==
-                                                            true
-                                                        ? "เลือกบุคคลเข้ารายงานตัว"
-                                                        : 'บันทึกข้อมูลส่วนบุคคล',
-                                                    style: GoogleFonts.kanit(
-                                                        textStyle:
-                                                            const TextStyle(
-                                                                fontSize: 19)),
+                              child: PaginatedDataTable(
+                                showFirstLastButtons: true,
+                                source: PersonDataTableSource(
+                                    personData,
+                                    context,
+                                    fetchUser,
+                                    deletePerson,
+                                    widget.employee,
+                                    widget.positionOrgData),
+                                header: SizedBox(
+                                  width: double.infinity,
+                                  height: 50,
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        flex: widget.employee == true ? 2 : 3,
+                                        child: RichText(
+                                          text: TextSpan(
+                                              style:
+                                                  DefaultTextStyle.of(context)
+                                                      .style,
+                                              children: [
+                                                TextSpan(
+                                                  text: widget.employee == true
+                                                      ? "เลือกบุคคลเข้ารายงานตัว"
+                                                      : 'บันทึกข้อมูลส่วนบุคคล',
+                                                  style: GoogleFonts.kanit(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              fontSize: 19)),
+                                                ),
+                                                TextSpan(
+                                                  text: widget.employee == true
+                                                      ? "  (Select Your Person)"
+                                                      : '  (Personel Profile)',
+                                                  style: const TextStyle(
+                                                    fontSize: 20,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  TextSpan(
-                                                    text: widget.employee ==
-                                                            true
-                                                        ? "  (Select Your Person)"
-                                                        : '  (Personel Profile)',
-                                                    style: const TextStyle(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ]),
-                                          ),
-
-                                          //  Text(widget.employee == true
-                                          //     ? "เลือกบุคคลเข้ารายงานตัว (Select Your Person)"
-                                          //     : 'บันทึกข้อมูลส่วนบุคคล (Personel Profile)')
+                                                ),
+                                              ]),
                                         ),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: TextFormFieldSearch(
-                                                  controller: nameEn,
-                                                  enabled: true,
-                                                  onChanged: (value) {
-                                                    if (value == '') {
+                                      ),
+                                      Expanded(
+                                          flex: 1,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: TextFormFieldSearch(
+                                                controller: nameEn,
+                                                enabled: true,
+                                                onChanged: (value) {
+                                                  if (value == '') {
+                                                    context
+                                                        .read<PersonalBloc>()
+                                                        .add(DissSearchEvent());
+                                                  } else {
+                                                    setState(() {
                                                       context
                                                           .read<PersonalBloc>()
-                                                          .add(
-                                                              DissSearchEvent());
-                                                    } else {
-                                                      setState(() {
-                                                        context
-                                                            .read<
-                                                                PersonalBloc>()
-                                                            .add(SearchEvent());
-                                                        personData = filterData!
-                                                            .where((element) {
-                                                          final nameId = element
-                                                              .personId
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameEn = element
-                                                              .firstNameEn
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameTh = element
-                                                              .fisrtNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final lastnameTh = element
-                                                              .lastNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final lastNameEn = element
-                                                              .lastNameEn
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          return nameId ||
-                                                              nameEn ||
-                                                              nameTh ||
-                                                              lastnameTh ||
-                                                              lastNameEn;
-                                                        }).toList();
-                                                      });
-                                                    }
-                                                  }),
-                                            )),
-                                      ],
-                                    ),
+                                                          .add(SearchEvent());
+                                                      personData = filterData!
+                                                          .where((element) {
+                                                        final nameId = element
+                                                            .personId
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final nameEn = element
+                                                            .firstNameEn
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final nameTh = element
+                                                            .fisrtNameTh
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final lastnameTh = element
+                                                            .lastNameTh
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final lastNameEn = element
+                                                            .lastNameEn
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        return nameId ||
+                                                            nameEn ||
+                                                            nameTh ||
+                                                            lastnameTh ||
+                                                            lastNameEn;
+                                                      }).toList();
+                                                    });
+                                                  }
+                                                }),
+                                          )),
+                                    ],
                                   ),
-                                  availableRowsPerPage: const [5, 10, 20],
-                                  onRowsPerPageChanged: (value) {
-                                    setState(() {
-                                      rowIndex = value!;
-                                    });
-                                  },
-                                  rowsPerPage: rowIndex,
-                                  columnSpacing: 40,
-                                  sortColumnIndex: sortColumnIndex,
-                                  sortAscending: sort,
-                                  columns: [
-                                    if (widget.employee == false)
-                                      const DataColumn(
-                                          label: Icon(
-                                              Icons.photo_camera_front_sharp)),
-                                    DataColumn(
-                                        label: const TextThai(
-                                          text: 'รหัสประจำตัว',
-                                        ),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            sort = !sort;
-                                            sortColumnIndex = 1;
-
-                                            if (state.onSearchData == true) {
-                                              onSortSearchColumn(
-                                                  columnIndex, ascending);
-                                            } else {
-                                              onSortColumn(
-                                                  columnIndex, ascending);
-                                            }
-                                          });
-                                        }),
-
-                                    const DataColumn(
-                                        label: TextThai(text: '  คำนำหน้า')),
-                                    DataColumn(
-                                        label: const TextThai(text: 'ชื่อ'),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            sort = !sort;
-                                            sortColumnIndex = 3;
-
-                                            if (state.onSearchData == true) {
-                                              onSortSearchColumn(
-                                                  columnIndex, ascending);
-                                            } else {
-                                              onSortColumn(
-                                                  columnIndex, ascending);
-                                            }
-                                          });
-                                        }),
-                                    const DataColumn(
-                                        label: TextThai(text: 'นามสกุล')),
-                                    DataColumn(
-                                        label: const Text('Name',
-                                            style: TextStyle(fontSize: 15)),
-                                        onSort: (columnIndex, ascending) {
-                                          setState(() {
-                                            sort = !sort;
-                                            sortColumnIndex = 5;
-
-                                            if (state.onSearchData == true) {
-                                              onSortSearchColumn(
-                                                  columnIndex, ascending);
-                                            } else {
-                                              onSortColumn(
-                                                  columnIndex, ascending);
-                                            }
-                                          });
-                                        }),
-                                    const DataColumn(
-                                      label: Text('Lastname',
-                                          style: TextStyle(fontSize: 15)),
-                                    ),
-                                    // const DataColumn(
-                                    //     label: Text('ประเภท',
-                                    //         style: TextStyle(fontSize: 16))),
-                                    if (widget.employee == false)
-                                      const DataColumn(
-                                          label: Text('    Status',
-                                              style: TextStyle(fontSize: 15))),
-
-                                    if (widget.employee == false)
-                                      const DataColumn(
-                                          label: Text('     Details/Remove',
-                                              style: TextStyle(fontSize: 15))),
-                                    if (widget.employee == true)
-                                      const DataColumn(
-                                          label: Text("   Select")),
-                                  ],
                                 ),
+                                availableRowsPerPage: const [5, 10, 20],
+                                onRowsPerPageChanged: (value) {
+                                  setState(() {
+                                    rowIndex = value!;
+                                  });
+                                },
+                                rowsPerPage: rowIndex,
+                                columnSpacing: 40,
+                                sortColumnIndex: sortColumnIndex,
+                                sortAscending: sort,
+                                columns: [
+                                  if (widget.employee == false)
+                                    const DataColumn(
+                                        label: Icon(
+                                            Icons.photo_camera_front_sharp)),
+                                  DataColumn(
+                                      label: const TextThai(
+                                        text: 'รหัสประจำตัว',
+                                      ),
+                                      onSort: (columnIndex, ascending) {
+                                        setState(() {
+                                          sort = !sort;
+                                          sortColumnIndex = 1;
+
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
+                                        });
+                                      }),
+
+                                  const DataColumn(
+                                      label: TextThai(text: '  คำนำหน้า')),
+                                  DataColumn(
+                                      label: const TextThai(text: 'ชื่อ'),
+                                      onSort: (columnIndex, ascending) {
+                                        setState(() {
+                                          sort = !sort;
+                                          sortColumnIndex = 3;
+
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
+                                        });
+                                      }),
+                                  const DataColumn(
+                                      label: TextThai(text: 'นามสกุล')),
+                                  DataColumn(
+                                      label: const Text('Name',
+                                          style: TextStyle(fontSize: 15)),
+                                      onSort: (columnIndex, ascending) {
+                                        setState(() {
+                                          sort = !sort;
+                                          sortColumnIndex = 5;
+
+                                          if (state.onSearchData == true) {
+                                            onSortSearchColumn(
+                                                columnIndex, ascending);
+                                          } else {
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          }
+                                        });
+                                      }),
+                                  const DataColumn(
+                                    label: Text('Lastname',
+                                        style: TextStyle(fontSize: 15)),
+                                  ),
+                                  // const DataColumn(
+                                  //     label: Text('ประเภท',
+                                  //         style: TextStyle(fontSize: 16))),
+                                  if (widget.employee == false)
+                                    const DataColumn(
+                                        label: Text('    Status',
+                                            style: TextStyle(fontSize: 15))),
+
+                                  if (widget.employee == false)
+                                    const DataColumn(
+                                        label: Text('     Details/Remove',
+                                            style: TextStyle(fontSize: 15))),
+                                  if (widget.employee == true)
+                                    const DataColumn(label: Text("   Select")),
+                                ],
                               ),
-                            )),
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              );
-      },
+                );
+        },
+      ),
     );
   }
 }
@@ -511,101 +480,107 @@ class PersonDataTableSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final person = data![index];
-    return DataRow(cells: [
-      if (employee == false)
-        DataCell(CircleAvatar(
-          backgroundColor: mythemecolor,
-          child: Icon(
-            Icons.person,
-            color: mygreycolors,
-          ),
-        )),
-      DataCell(Text(person.personId)),
-      DataCell(Text(
-          '${person.titleName.titleNameEn} / ${person.titleName.titleNameTh}')),
-      DataCell(Text(person.fisrtNameTh)),
-      DataCell(Text(person.lastNameTh)),
-      DataCell(Text(person.firstNameEn)),
-      DataCell(Text(person.lastNameEn)),
-
-      if (employee == false)
-        DataCell(Container(
-          constraints: const BoxConstraints(
-              minWidth: 90, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          if (employee == false)
+            DataCell(CircleAvatar(
+              backgroundColor: mythemecolor,
+              child: Icon(
+                Icons.person,
+                color: mygreycolors,
               ),
-          child: person.personStatus == false
-              ? const Card(
-                  elevation: 2,
-                  color: Colors.redAccent,
-                  child: Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.cancel,
-                          color: Colors.white,
-                          size: 18,
+            )),
+          DataCell(Text(person.personId)),
+          DataCell(Text(
+              '${person.titleName.titleNameEn} / ${person.titleName.titleNameTh}')),
+          DataCell(Text(person.fisrtNameTh)),
+          DataCell(Text(person.lastNameTh)),
+          DataCell(Text(person.firstNameEn)),
+          DataCell(Text(person.lastNameEn)),
+
+          if (employee == false)
+            DataCell(Container(
+              constraints: const BoxConstraints(
+                  minWidth: 90, maxWidth: 92 // ความสูงขั้นต่ำที่ต้องการ
+                  ),
+              child: person.personStatus == false
+                  ? const Card(
+                      elevation: 2,
+                      color: Colors.redAccent,
+                      child: Padding(
+                        padding: EdgeInsets.all(2.0),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.cancel,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            Text(
+                              ' Inactive',
+                              style: TextStyle(color: Colors.white),
+                            )
+                          ],
                         ),
-                        Text(
-                          ' Inactive',
-                          style: TextStyle(color: Colors.white),
-                        )
-                      ],
-                    ),
-                  ))
-              : Card(
-                  elevation: 2,
-                  color: Colors.greenAccent,
-                  child: Padding(
-                    padding: const EdgeInsets.all(2.0),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                          size: 18,
+                      ))
+                  : Card(
+                      elevation: 2,
+                      color: Colors.greenAccent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                            Text(' Active',
+                                style: TextStyle(color: Colors.grey[800]))
+                          ],
                         ),
-                        Text(' Active',
-                            style: TextStyle(color: Colors.grey[800]))
-                      ],
-                    ),
-                  )),
-        )),
-      // const DataCell(Text('ตำแแหน่ง')),
-      if (employee == false)
-        DataCell(Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          SizedBox(
-            width: 40,
-            height: 38,
-            child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(padding: const EdgeInsets.all(1)),
+                      )),
+            )),
+          // const DataCell(Text('ตำแแหน่ง')),
+          if (employee == false)
+            DataCell(
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              SizedBox(
+                width: 40,
+                height: 38,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(1)),
+                    onPressed: () {
+                      showEditDialog(person.personId);
+                    },
+                    child: const Icon(Icons.edit_document)),
+              ),
+              const Gap(5),
+              SizedBox(
+                width: 40,
+                height: 38,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: myredcolors,
+                        padding: const EdgeInsets.all(1)),
+                    onPressed: () {
+                      showdialogDeletePerson(person.personId);
+                    },
+                    child: const Icon(Icons.delete_rounded)),
+              ),
+            ])),
+          if (employee == true)
+            DataCell(ElevatedButton(
                 onPressed: () {
-                  showEditDialog(person.personId);
+                  showDialogSelectd(person, positionOrg);
                 },
-                child: const Icon(Icons.edit_document)),
-          ),
-          const Gap(5),
-          SizedBox(
-            width: 40,
-            height: 38,
-            child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: myredcolors,
-                    padding: const EdgeInsets.all(1)),
-                onPressed: () {
-                  showdialogDeletePerson(person.personId);
-                },
-                child: const Icon(Icons.delete_rounded)),
-          ),
-        ])),
-      if (employee == true)
-        DataCell(ElevatedButton(
-            onPressed: () {
-              showDialogSelectd(person, positionOrg);
-            },
-            child: const Text('Select')))
-    ]);
+                child: const Text('Select')))
+        ]);
   }
 
   @override

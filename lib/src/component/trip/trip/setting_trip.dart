@@ -21,6 +21,7 @@ import 'package:hris_app_prototype/src/model/trip/hotels/hotel_data_all_model.da
 import 'package:hris_app_prototype/src/model/trip/update_trip_model.dart';
 import 'package:hris_app_prototype/src/services/api_trip_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:validatorless/validatorless.dart';
 
 class SettingTrip extends StatefulWidget {
   final int type; //type 0 = create, type 1 = edit
@@ -56,18 +57,6 @@ enum IconLabel {
 }
 // DropdownMenuEntry labels and values for the first dropdown menu.
 
-enum ColorLabel {
-  blue('Blue', Colors.blue),
-  pink('Pink', Colors.pink),
-  green('Green', Colors.green),
-  yellow('Orange', Colors.orange),
-  grey('Grey', Colors.grey);
-
-  const ColorLabel(this.label, this.color);
-  final String label;
-  final Color color;
-}
-
 class _SettingTripState extends State<SettingTrip> {
   bool isExpandedTriper = false;
   //trip details.
@@ -86,7 +75,7 @@ class _SettingTripState extends State<SettingTrip> {
   String? employeeId;
 
 //ค่าใช้จ่าย
-  bool isCheckedAllowance = false;
+  bool isCheckedAllowance = true;
   bool isCheckedHotel = false;
   bool isCheckedOther = false;
   bool isCheckedGasoline = false;
@@ -141,19 +130,24 @@ class _SettingTripState extends State<SettingTrip> {
 //model test
   final TextEditingController colorController = TextEditingController();
   final TextEditingController iconController = TextEditingController();
-  ColorLabel? selectedColor;
-  IconLabel? selectedIcon;
 
+  IconLabel? selectedIcon;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 //Function ----------------------------------------------------
 
 // Select date
   Future<void> selectvalidFromDate(int type) async {
+    DateTime? convertDate;
 //0 = start , 1 = end
+    if (type == 1 && startDate.text != '') {
+      convertDate = DateTime.parse(startDate.text);
+    }
     DateTime? picker = await showDatePicker(
       // selectableDayPredicate: (DateTime val) => val.weekday == 7 ? false : true,
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now().subtract(const Duration(days: 2)),
+      initialDate: convertDate ?? DateTime.now(),
+      firstDate:
+          convertDate ?? DateTime.now().subtract(const Duration(days: 2)),
       lastDate: DateTime(9999),
     );
     if (picker != null) {
@@ -412,7 +406,7 @@ class _SettingTripState extends State<SettingTrip> {
     position.text = "";
     memberStartDate.text = "";
     memberEndDate.text = "";
-    isCheckedAllowance = false;
+    isCheckedAllowance = true;
     isCheckedGasoline = false;
     isCheckedHotel = false;
     isCheckedOther = false;
@@ -448,7 +442,7 @@ class _SettingTripState extends State<SettingTrip> {
     name.text = "";
     department.text = "";
     position.text = "";
-    isCheckedAllowance = false;
+    isCheckedAllowance = true;
     isCheckedHotel = false;
     isCheckedOther = false;
     isCheckedGasoline = false;
@@ -743,7 +737,7 @@ class _SettingTripState extends State<SettingTrip> {
                         child: Container(
                             width: 58,
                             constraints: const BoxConstraints(
-                                maxWidth: 250, minWidth: 200),
+                                maxWidth: 250, minWidth: 190),
                             child: Text("${e.carRegistation} ${e.carModel}")),
                         onTap: () {
                           setState(() {
@@ -873,418 +867,388 @@ class _SettingTripState extends State<SettingTrip> {
                                                     .positionData
                                                     .positionNameTh;
                                               }
-                                              return Column(
-                                                // รายละเอียด triper details.
-                                                children: [
-                                                  SizedBox(
-                                                      width: double.infinity,
-                                                      child: Card(
-                                                          elevation: 2,
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12)),
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        16,
-                                                                    vertical:
-                                                                        8),
-                                                            child: Column(
-                                                              crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                //รายละเอียดเดินทาง
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child: Row(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .end,
+                                              return Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  // รายละเอียด triper details.
+                                                  children: [
+                                                    SizedBox(
+                                                        width: double.infinity,
+                                                        child: Card(
+                                                            elevation: 2,
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            12)),
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          16,
+                                                                      vertical:
+                                                                          8),
+                                                              child: Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  //รายละเอียดเดินทาง
+                                                                  Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                            .all(
+                                                                            8.0),
+                                                                    child: Row(
+                                                                      crossAxisAlignment:
+                                                                          CrossAxisAlignment
+                                                                              .end,
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .spaceBetween,
+                                                                      children: [
+                                                                        const TextThai(
+                                                                            text:
+                                                                                "รายละเอียดผู้เดินทาง :"),
+                                                                        SizedBox(
+                                                                          height:
+                                                                              35,
+                                                                          child: ElevatedButton(
+                                                                              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
+                                                                              onPressed: widget.statusType == "on-trip"
+                                                                                  ? null
+                                                                                  : () {
+                                                                                      getEmployeeData();
+                                                                                    },
+                                                                              child: const TextThai(
+                                                                                text: "เลือกพนักงาน",
+                                                                              )),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: double
+                                                                        .infinity,
+                                                                    child: Card(
+                                                                      color:
+                                                                          mygreycolors,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10)),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                                20,
+                                                                            vertical:
+                                                                                12),
+                                                                        child:
+                                                                            Column(
+                                                                          children: [
+                                                                            Row(
+                                                                              children: [
+                                                                                Expanded(
+                                                                                  child: TextFormFieldGlobalWithOutLine(controller: name, labelText: "ชื่อ - นามสกุล", hintText: "", validatorless: null, enabled: false),
+                                                                                ),
+                                                                                const Gap(12),
+                                                                                Expanded(
+                                                                                  child: TextFormFieldGlobalWithOutLine(controller: department, labelText: "แผนก", hintText: "", validatorless: null, enabled: false),
+                                                                                ),
+                                                                                const Gap(12),
+                                                                                Expanded(
+                                                                                  child: TextFormFieldGlobalWithOutLine(controller: position, labelText: "ตำแหน่ง", hintText: "", validatorless: null, enabled: false),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                            const Gap(10),
+                                                                            Row(
+                                                                              children: [
+                                                                                Expanded(
+                                                                                  child: DropdownGlobalOutline(
+                                                                                      labeltext: 'ประเภทผู้เดินทาง',
+                                                                                      value: triperTypeId,
+                                                                                      items: triperTypeList.map((e) {
+                                                                                        return DropdownMenuItem<String>(
+                                                                                          value: e.triperTypeId.toString(),
+                                                                                          child: Container(width: 58, constraints: const BoxConstraints(maxWidth: 150, minWidth: 100), child: Text(e.triperTypeName)),
+                                                                                          onTap: () {
+                                                                                            setState(() {
+                                                                                              triperTypeName = e.triperTypeName.toString();
+                                                                                            });
+                                                                                          },
+                                                                                        );
+                                                                                      }).toList(),
+                                                                                      onChanged: (newValue) {
+                                                                                        setState(() {
+                                                                                          triperTypeId = newValue.toString();
+                                                                                        });
+                                                                                      },
+                                                                                      outlineColor: triperTypeId == null ? myredcolors : null,
+                                                                                      validator: null),
+                                                                                ),
+                                                                                const Gap(12),
+                                                                                Expanded(
+                                                                                  child: TextFormFieldDatepickGlobalWithoutLine(
+                                                                                      controller: memberStartDate,
+                                                                                      labelText: "วันเริ่มต้น",
+                                                                                      validatorless: null,
+                                                                                      outlineColor: memberStartDate.text == '' ? myredcolors : null,
+                                                                                      ontap: () {
+                                                                                        if (widget.type == 1) {
+                                                                                          setState(() {
+                                                                                            selectvalidFromMemberDate(0);
+                                                                                          });
+                                                                                        }
+                                                                                      }),
+                                                                                ),
+                                                                                const Gap(12),
+                                                                                Expanded(
+                                                                                  child: TextFormFieldDatepickGlobalWithoutLine(
+                                                                                      controller: memberEndDate,
+                                                                                      labelText: "วันสิ้นสุด",
+                                                                                      validatorless: null,
+                                                                                      outlineColor: memberEndDate.text == '' ? myredcolors : null,
+                                                                                      ontap: () {
+                                                                                        if (widget.type == 1) {
+                                                                                          setState(() {
+                                                                                            selectvalidFromMemberDate(1);
+                                                                                          });
+                                                                                        }
+                                                                                      }),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  const Gap(5),
+                                                                  const Padding(
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            8.0),
+                                                                    child: TextThai(
+                                                                        text:
+                                                                            "ค่าใช้จ่าย :"),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: double
+                                                                        .infinity,
+                                                                    child: Card(
+                                                                      color:
+                                                                          mygreycolors,
+                                                                      shape: RoundedRectangleBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10)),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                            horizontal:
+                                                                                20,
+                                                                            vertical:
+                                                                                12),
+                                                                        child:
+                                                                            Row(
+                                                                          children: [
+                                                                            Checkbox(
+                                                                              activeColor: mythemecolor,
+                                                                              value: isCheckedAllowance,
+                                                                              onChanged: (bool? value) {
+                                                                                // setState(() {
+                                                                                //   isCheckedAllowance = value!;
+                                                                                //   if (isCheckedAllowance == false) {
+                                                                                //     // //allowance
+                                                                                //     // membercost.add(Expenditure(expenditureTypeId: "00", cost: "300", description: "ค่าเบี้ยเลี้ยง"));
+
+                                                                                //     membercost.removeWhere((element) => element.expenditureTypeId == "00");
+                                                                                //   }
+                                                                                // });
+                                                                              },
+                                                                            ),
+                                                                            const TextThai(text: "ค่าเบี้ยเลี้ยง"),
+                                                                            const Gap(5),
+                                                                            Expanded(
+                                                                              flex: 2,
+                                                                              child: TextFormFieldGlobalWithOutLine(
+                                                                                  controller: costAllowance,
+                                                                                  inputFormatters: [
+                                                                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                                                  ],
+                                                                                  labelText: "ค่าเบี้ยเลี้ยง",
+                                                                                  hintText: "",
+                                                                                  onChanged: (p0) => setState(() {}),
+                                                                                  validatorless: Validatorless.required('required'),
+                                                                                  enabled: isCheckedAllowance),
+                                                                            ),
+                                                                            const Gap(5),
+                                                                            Checkbox(
+                                                                              activeColor: mythemecolor,
+                                                                              value: isCheckedGasoline,
+                                                                              onChanged: (bool? value) {
+                                                                                setState(() {
+                                                                                  isCheckedGasoline = value!;
+                                                                                  if (isCheckedGasoline == false) {
+                                                                                    //remove
+                                                                                    membercost.removeWhere((element) => element.expenditureTypeId == "02");
+                                                                                    descGasoline.text = "";
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                            const TextThai(text: "ค่าน้ำมัน"),
+                                                                            const Gap(5),
+                                                                            Expanded(
+                                                                              flex: 2,
+                                                                              child: TextFormFieldGlobalWithOutLine(
+                                                                                  controller: descGasoline,
+                                                                                  inputFormatters: [
+                                                                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                                                  ],
+                                                                                  labelText: "ค่าน้ำมัน",
+                                                                                  hintText: "",
+                                                                                  validatorless: null,
+                                                                                  enabled: isCheckedGasoline),
+                                                                            ),
+                                                                            const Gap(5),
+                                                                            Checkbox(
+                                                                              activeColor: mythemecolor,
+                                                                              value: isCheckedHotel,
+                                                                              onChanged: (bool? value) {
+                                                                                setState(() {
+                                                                                  isCheckedHotel = value!;
+                                                                                  if (isCheckedHotel == false) {
+                                                                                    //remove
+                                                                                    membercost.removeWhere((element) => element.expenditureTypeId == "01");
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                            const TextThai(text: "ค่าที่พัก"),
+                                                                            const Gap(5),
+                                                                            Expanded(
+                                                                              flex: 3,
+                                                                              child: DropdownGlobalOutline(
+                                                                                  labeltext: 'เลือกที่พัก',
+                                                                                  value: hostelName,
+                                                                                  items: isCheckedHotel
+                                                                                      ? hostelList.map((e) {
+                                                                                          return DropdownMenuItem<String>(
+                                                                                            value: e.hotelName.toString(),
+                                                                                            child: Container(constraints: const BoxConstraints(maxWidth: 130, minWidth: 80), child: Text(e.hotelName)),
+                                                                                            onTap: () {
+                                                                                              setState(() {
+                                                                                                hostelName = e.hotelName;
+                                                                                                hotelCost = e.price;
+                                                                                                hostelId = e.hotelId;
+                                                                                              });
+                                                                                            },
+                                                                                          );
+                                                                                        }).toList()
+                                                                                      : null,
+                                                                                  onChanged: (newValue) async {
+                                                                                    setState(() {
+                                                                                      hostelName = newValue.toString();
+                                                                                    });
+                                                                                  },
+                                                                                  validator: null),
+                                                                            ),
+                                                                            const Gap(5),
+                                                                            Checkbox(
+                                                                              activeColor: mythemecolor,
+                                                                              value: isCheckedOther,
+                                                                              onChanged: (bool? value) {
+                                                                                setState(() {
+                                                                                  isCheckedOther = value!;
+                                                                                  if (isCheckedOther == false) {
+                                                                                    //remove
+                                                                                    membercost.removeWhere((element) => element.expenditureTypeId == "03");
+                                                                                    descOther.text == "";
+                                                                                  }
+                                                                                });
+                                                                              },
+                                                                            ),
+                                                                            const TextThai(text: "อื่น ๆ"),
+                                                                            const Gap(5),
+                                                                            Expanded(
+                                                                              flex: 2,
+                                                                              child: TextFormFieldGlobalWithOutLine(
+                                                                                  controller: costOther,
+                                                                                  inputFormatters: [
+                                                                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                                                                                  ],
+                                                                                  labelText: "จำนวนเงิน",
+                                                                                  hintText: "",
+                                                                                  validatorless: null,
+                                                                                  enabled: isCheckedOther),
+                                                                            ),
+                                                                            Expanded(
+                                                                              flex: 3,
+                                                                              child: TextFormFieldGlobalWithOutLine(controller: descOther, labelText: "รายละเอียด", hintText: "", validatorless: null, enabled: isCheckedOther),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                  Row(
                                                                     mainAxisAlignment:
                                                                         MainAxisAlignment
                                                                             .spaceBetween,
                                                                     children: [
-                                                                      const TextThai(
-                                                                          text:
-                                                                              "รายละเอียดผู้เดินทาง :"),
-                                                                      SizedBox(
-                                                                        height:
-                                                                            35,
-                                                                        child: ElevatedButton(
-                                                                            style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
-                                                                            onPressed: widget.statusType == "on-trip"
-                                                                                ? null
-                                                                                : () {
-                                                                                    getEmployeeData();
-                                                                                  },
-                                                                            child: const TextThai(
-                                                                              text: "เลือกพนักงาน",
-                                                                            )),
-                                                                      )
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  child: Card(
-                                                                    color:
-                                                                        mygreycolors,
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10)),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          horizontal:
-                                                                              20,
-                                                                          vertical:
-                                                                              12),
-                                                                      child:
-                                                                          Column(
-                                                                        children: [
-                                                                          Row(
-                                                                            children: [
-                                                                              Expanded(
-                                                                                child: TextFormFieldGlobalWithOutLine(controller: name, labelText: "ชื่อ - นามสกุล", hintText: "", validatorless: null, enabled: false),
+                                                                      Container(),
+                                                                      widget.type ==
+                                                                              1
+                                                                          ? Padding(
+                                                                              padding: const EdgeInsets.all(4.0),
+                                                                              child: SizedBox(
+                                                                                width: 160,
+                                                                                height: 32,
+                                                                                child: ElevatedButton(
+                                                                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
+                                                                                  onPressed: widget.statusType == "on-trip"
+                                                                                      ? null
+                                                                                      : memberStartDate.text == '' || memberEndDate.text == '' || triperTypeId == null
+                                                                                          ? null
+                                                                                          : _formKey.currentState?.validate() != true
+                                                                                              ? null
+                                                                                              : () {
+                                                                                                  setState(() {
+                                                                                                    editCostMembertrip();
+                                                                                                  });
+                                                                                                },
+                                                                                  child: const TextThai(text: "เพิ่ม / แก้ไข", textStyle: TextStyle(color: Colors.black)),
+                                                                                ),
                                                                               ),
-                                                                              const Gap(12),
-                                                                              Expanded(
-                                                                                child: TextFormFieldGlobalWithOutLine(controller: department, labelText: "แผนก", hintText: "", validatorless: null, enabled: false),
-                                                                              ),
-                                                                              const Gap(12),
-                                                                              Expanded(
-                                                                                child: TextFormFieldGlobalWithOutLine(controller: position, labelText: "ตำแหน่ง", hintText: "", validatorless: null, enabled: false),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                          const Gap(
-                                                                              10),
-                                                                          Row(
-                                                                            children: [
-                                                                              Expanded(
-                                                                                child: DropdownGlobalOutline(
-                                                                                    labeltext: 'ประเภทผู้เดินทาง',
-                                                                                    value: triperTypeId,
-                                                                                    items: triperTypeList.map((e) {
-                                                                                      return DropdownMenuItem<String>(
-                                                                                        value: e.triperTypeId.toString(),
-                                                                                        child: Container(width: 58, constraints: const BoxConstraints(maxWidth: 150, minWidth: 100), child: Text(e.triperTypeName)),
-                                                                                        onTap: () {
+                                                                            )
+                                                                          : MySaveButtons(
+                                                                              text: "+ Add",
+                                                                              onPressed: _formKey.currentState?.validate() != true
+                                                                                  ? null
+                                                                                  : name.text == "" ||
+                                                                                          // tripTypesId == "" ||
+                                                                                          startDate.text == "" ||
+                                                                                          endDate.text == ""
+                                                                                      ? null
+                                                                                      : () {
                                                                                           setState(() {
-                                                                                            triperTypeName = e.triperTypeName.toString();
+                                                                                            //add member
+                                                                                            addCostMembertrip();
+                                                                                            addTriper();
                                                                                           });
                                                                                         },
-                                                                                      );
-                                                                                    }).toList(),
-                                                                                    onChanged: (newValue) {
-                                                                                      setState(() {
-                                                                                        triperTypeId = newValue.toString();
-                                                                                      });
-                                                                                    },
-                                                                                    outlineColor: triperTypeId == null ? myredcolors : null,
-                                                                                    validator: null),
-                                                                              ),
-                                                                              const Gap(12),
-                                                                              Expanded(
-                                                                                child: TextFormFieldDatepickGlobalWithoutLine(
-                                                                                    controller: memberStartDate,
-                                                                                    labelText: "วันเริ่มต้น",
-                                                                                    validatorless: null,
-                                                                                    outlineColor: memberStartDate.text == '' ? myredcolors : null,
-                                                                                    ontap: () {
-                                                                                      if (widget.type == 1) {
-                                                                                        setState(() {
-                                                                                          selectvalidFromMemberDate(0);
-                                                                                        });
-                                                                                      }
-                                                                                    }),
-                                                                              ),
-                                                                              const Gap(12),
-                                                                              Expanded(
-                                                                                child: TextFormFieldDatepickGlobalWithoutLine(
-                                                                                    controller: memberEndDate,
-                                                                                    labelText: "วันสิ้นสุด",
-                                                                                    validatorless: null,
-                                                                                    outlineColor: memberEndDate.text == '' ? myredcolors : null,
-                                                                                    ontap: () {
-                                                                                      if (widget.type == 1) {
-                                                                                        setState(() {
-                                                                                          selectvalidFromMemberDate(1);
-                                                                                        });
-                                                                                      }
-                                                                                    }),
-                                                                              ),
-                                                                            ],
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                const Gap(5),
-                                                                const Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              8.0),
-                                                                  child: TextThai(
-                                                                      text:
-                                                                          "ค่าใช้จ่าย :"),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  child: Card(
-                                                                    color:
-                                                                        mygreycolors,
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(10)),
-                                                                    child:
-                                                                        Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .symmetric(
-                                                                          horizontal:
-                                                                              20,
-                                                                          vertical:
-                                                                              12),
-                                                                      child:
-                                                                          Row(
-                                                                        children: [
-                                                                          Checkbox(
-                                                                            activeColor:
-                                                                                mythemecolor,
-                                                                            value:
-                                                                                isCheckedAllowance,
-                                                                            onChanged:
-                                                                                (bool? value) {
-                                                                              setState(() {
-                                                                                isCheckedAllowance = value!;
-                                                                                if (isCheckedAllowance == false) {
-                                                                                  // //allowance
-                                                                                  // membercost.add(Expenditure(expenditureTypeId: "00", cost: "300", description: "ค่าเบี้ยเลี้ยง"));
-
-                                                                                  membercost.removeWhere((element) => element.expenditureTypeId == "00");
-                                                                                }
-                                                                              });
-                                                                            },
-                                                                          ),
-                                                                          const TextThai(
-                                                                              text: "ค่าเบี้ยเลี้ยง"),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                2,
-                                                                            child: TextFormFieldGlobalWithOutLine(
-                                                                                controller: costAllowance,
-                                                                                inputFormatters: [
-                                                                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                                                ],
-                                                                                labelText: "ค่าเบี้ยเลี้ยง",
-                                                                                hintText: "",
-                                                                                validatorless: null,
-                                                                                enabled: isCheckedAllowance),
-                                                                          ),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Checkbox(
-                                                                            activeColor:
-                                                                                mythemecolor,
-                                                                            value:
-                                                                                isCheckedGasoline,
-                                                                            onChanged:
-                                                                                (bool? value) {
-                                                                              setState(() {
-                                                                                isCheckedGasoline = value!;
-                                                                                if (isCheckedGasoline == false) {
-                                                                                  //remove
-                                                                                  membercost.removeWhere((element) => element.expenditureTypeId == "02");
-                                                                                  descGasoline.text = "";
-                                                                                }
-                                                                              });
-                                                                            },
-                                                                          ),
-                                                                          const TextThai(
-                                                                              text: "ค่าน้ำมัน"),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                2,
-                                                                            child: TextFormFieldGlobalWithOutLine(
-                                                                                controller: descGasoline,
-                                                                                inputFormatters: [
-                                                                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                                                ],
-                                                                                labelText: "ค่าน้ำมัน",
-                                                                                hintText: "",
-                                                                                validatorless: null,
-                                                                                enabled: isCheckedGasoline),
-                                                                          ),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Checkbox(
-                                                                            activeColor:
-                                                                                mythemecolor,
-                                                                            value:
-                                                                                isCheckedHotel,
-                                                                            onChanged:
-                                                                                (bool? value) {
-                                                                              setState(() {
-                                                                                isCheckedHotel = value!;
-                                                                                if (isCheckedHotel == false) {
-                                                                                  //remove
-                                                                                  membercost.removeWhere((element) => element.expenditureTypeId == "01");
-                                                                                }
-                                                                              });
-                                                                            },
-                                                                          ),
-                                                                          const TextThai(
-                                                                              text: "ค่าที่พัก"),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                3,
-                                                                            child: DropdownGlobalOutline(
-                                                                                labeltext: 'เลือกที่พัก',
-                                                                                value: hostelName,
-                                                                                items: isCheckedHotel
-                                                                                    ? hostelList.map((e) {
-                                                                                        return DropdownMenuItem<String>(
-                                                                                          value: e.hotelName.toString(),
-                                                                                          child: Container(constraints: const BoxConstraints(maxWidth: 130, minWidth: 80), child: Text(e.hotelName)),
-                                                                                          onTap: () {
-                                                                                            setState(() {
-                                                                                              hostelName = e.hotelName;
-                                                                                              hotelCost = e.price;
-                                                                                              hostelId = e.hotelId;
-                                                                                            });
-                                                                                          },
-                                                                                        );
-                                                                                      }).toList()
-                                                                                    : null,
-                                                                                onChanged: (newValue) async {
-                                                                                  setState(() {
-                                                                                    hostelName = newValue.toString();
-                                                                                  });
-                                                                                },
-                                                                                validator: null),
-                                                                          ),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Checkbox(
-                                                                            activeColor:
-                                                                                mythemecolor,
-                                                                            value:
-                                                                                isCheckedOther,
-                                                                            onChanged:
-                                                                                (bool? value) {
-                                                                              setState(() {
-                                                                                isCheckedOther = value!;
-                                                                                if (isCheckedOther == false) {
-                                                                                  //remove
-                                                                                  membercost.removeWhere((element) => element.expenditureTypeId == "03");
-                                                                                  descOther.text == "";
-                                                                                }
-                                                                              });
-                                                                            },
-                                                                          ),
-                                                                          const TextThai(
-                                                                              text: "อื่น ๆ"),
-                                                                          const Gap(
-                                                                              5),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                2,
-                                                                            child: TextFormFieldGlobalWithOutLine(
-                                                                                controller: costOther,
-                                                                                inputFormatters: [
-                                                                                  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                                                                ],
-                                                                                labelText: "จำนวนเงิน",
-                                                                                hintText: "",
-                                                                                validatorless: null,
-                                                                                enabled: isCheckedOther),
-                                                                          ),
-                                                                          Expanded(
-                                                                            flex:
-                                                                                3,
-                                                                            child: TextFormFieldGlobalWithOutLine(
-                                                                                controller: descOther,
-                                                                                labelText: "รายละเอียด",
-                                                                                hintText: "",
-                                                                                validatorless: null,
-                                                                                enabled: isCheckedOther),
-                                                                          ),
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .spaceBetween,
-                                                                  children: [
-                                                                    Container(),
-                                                                    widget.type ==
-                                                                            1
-                                                                        ? Padding(
-                                                                            padding:
-                                                                                const EdgeInsets.all(4.0),
-                                                                            child:
-                                                                                SizedBox(
-                                                                              width: 160,
-                                                                              height: 32,
-                                                                              child: ElevatedButton(
-                                                                                style: ElevatedButton.styleFrom(backgroundColor: Colors.greenAccent, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6))),
-                                                                                onPressed: widget.statusType == "on-trip"
-                                                                                    ? null
-                                                                                    : memberStartDate.text == '' || memberEndDate.text == '' || triperTypeId == null
-                                                                                        ? null
-                                                                                        : () {
-                                                                                            setState(() {
-                                                                                              editCostMembertrip();
-                                                                                            });
-                                                                                          },
-                                                                                child: const TextThai(text: "เพิ่ม / แก้ไข", textStyle: TextStyle(color: Colors.black)),
-                                                                              ),
                                                                             ),
-                                                                          )
-                                                                        : MySaveButtons(
-                                                                            text:
-                                                                                "+ Add",
-                                                                            onPressed: name.text == "" ||
-                                                                                    // tripTypesId == "" ||
-                                                                                    startDate.text == "" ||
-                                                                                    endDate.text == ""
-                                                                                ? null
-                                                                                : () {
-                                                                                    setState(() {
-                                                                                      //add member
-                                                                                      addCostMembertrip();
-                                                                                      addTriper();
-                                                                                    });
-                                                                                  },
-                                                                          ),
-                                                                  ],
-                                                                )
-                                                              ],
-                                                            ),
-                                                          ))),
-                                                ],
+                                                                    ],
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ))),
+                                                  ],
+                                                ),
                                               );
                                             },
                                           ),

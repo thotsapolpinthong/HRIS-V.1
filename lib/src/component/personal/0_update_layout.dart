@@ -27,7 +27,7 @@ class _MyUpdateLayoutState extends State<MyUpdateLayout> {
           color: mygreycolors,
         ),
         width: MediaQuery.of(context).size.width - 40,
-        height: MediaQuery.of(context).size.height - 20,
+        height: MediaQuery.of(context).size.height - 40,
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [

@@ -423,13 +423,14 @@ class _RolePermissionManageState extends State<RolePermissionManage> {
                         //           borderRadius: BorderRadius.circular(12)),
                         //       child: summarize(),
                         //     )),
-
+                        const Gap(5),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             if (onEdit)
-                              Expanded(
+                              SizedBox(
+                                width: 300,
                                 child: TextFormFieldGlobal(
                                     controller: _comment,
                                     labelText: "Comment",

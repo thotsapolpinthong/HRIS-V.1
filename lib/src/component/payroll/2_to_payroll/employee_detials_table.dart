@@ -219,7 +219,7 @@ class PersonDataTableSource extends DataTableSource {
     return DataRow(
         color:
             WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-          return index % 2 == 0 ? Colors.white : Colors.grey[50]!;
+          return index % 2 == 0 ? Colors.white : Colors.grey[100]!;
         }),
         cells: [
           DataCell(Text(d.date)),

@@ -4,8 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/1_lot/create_edit_lot.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
+import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
+import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 import 'package:intl/intl.dart';
 
 class LotManagement extends StatefulWidget {
@@ -40,6 +42,24 @@ class _LotManagementState extends State<LotManagement> {
   double ssoMinSalary = 0;
   double ssoMaxSalary = 0;
   ////////////////////////////////
+  LoginData? _loginData;
+  bool Acc = false;
+  fetchDataLogin() async {
+    _loginData = await ApiRolesService.getUserData();
+    setState(() {
+      if (_loginData != null) {
+        if (_loginData?.role.roleId == 'R000000000' ||
+            _loginData?.role.roleId == "R000000005") {
+          Acc = true;
+        } // dev,acc manager
+        ;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myredcolors,
+            content: const Text("Load Role Permissions Fail")));
+      }
+    });
+  }
 
   fetchData() async {
     //lotnumber data-------------
@@ -550,6 +570,7 @@ class _LotManagementState extends State<LotManagement> {
 
     yearList = [for (int i = currentYear - 5; i <= currentYear + 5; i++) i];
     fetchData();
+    fetchDataLogin();
   }
 
   @override
@@ -558,12 +579,15 @@ class _LotManagementState extends State<LotManagement> {
         child: Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
-        floatingActionButton: MyFloatingButton(
-          icon: const Icon(Icons.add),
-          onPressed: () {
-            createAndEditLotNumber(false, null);
-          },
-        ),
+        floatingActionButton: Acc
+            ? //dev,acc
+            MyFloatingButton(
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  createAndEditLotNumber(false, null);
+                },
+              )
+            : null,
         body: isLoading == true
             ? myLoadingScreen
             : Column(
@@ -600,11 +624,12 @@ class _LotManagementState extends State<LotManagement> {
                                 ),
                               ),
                               const Gap(5),
-                              SizedBox(
-                                  height: 34,
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.54,
-                                  child: editButton()),
+                              if (Acc)
+                                SizedBox(
+                                    height: 34,
+                                    width: MediaQuery.of(context).size.width /
+                                        2.54,
+                                    child: editButton()),
                               const Gap(44)
                             ],
                           ),

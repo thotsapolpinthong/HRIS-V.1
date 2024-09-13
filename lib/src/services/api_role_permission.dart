@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/model/response_modeld.dart';
 import 'package:hris_app_prototype/src/model/role_permission/permission/create_permission_model.dart';
 import 'package:hris_app_prototype/src/model/role_permission/permission/permission_model.dart';
@@ -16,6 +17,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiRolesService {
   static String baseUrl = "http://192.168.0.205/StecApi/Hr";
   static String sharedToken = "";
+
+  // ฟังก์ชั่นดึงข้อมูล
+  static Future<LoginData?> getUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // ดึง JSON String จาก SharedPreferences
+    String? userJson = prefs.getString('LoginData');
+    if (userJson != null) {
+      // แปลง JSON String กลับมาเป็นโมเดล User
+      Map<String, dynamic> userMap = jsonDecode(userJson);
+      return LoginData.fromJson(userMap);
+    }
+    return null; // ถ้าไม่มีข้อมูล
+  }
 
 //permission
   static Future<PermissionModel?> getPermissionData() async {
@@ -42,12 +56,13 @@ class ApiRolesService {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
     final response = await http.post(
-      Uri.parse("$baseUrl/NewPermission"),
+      Uri.parse(
+          "http://192.168.0.205/StecApi/Hr/NewPermission?permissionName=${createModel?.permissionName ?? ''}&createBy=${createModel?.createBy ?? ''}"),
       headers: <String, String>{
         'Content-Type': 'application/json',
         "Authorization": "Bearer $sharedToken"
       },
-      body: jsonEncode(createModel!.toJson()),
+      // body: jsonEncode(createModel!.toJson()),
     );
     if (response.statusCode == 200) {
       ResponsePermissionModel data =

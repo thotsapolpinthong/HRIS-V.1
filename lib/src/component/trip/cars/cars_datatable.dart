@@ -250,68 +250,74 @@ class DataTable extends DataTableSource {
   DataRow getRow(int index) {
     // final datarow = data[index];
     final datacar = carsData![index];
-    return DataRow(cells: [
-      DataCell(Text(datacar.carRegistation)),
-      DataCell(Text("${datacar.carBrand} / ${datacar.carModel}")),
-      DataCell(Text(datacar.carTypeData.carName)),
-      DataCell(Text(datacar.mileageNumber)),
-      DataCell(Text(datacar.carColor)),
-      DataCell(
-        SizedBox(
-          height: 40,
-          width: 80,
-          child: Card(
-              elevation: 2,
-              color: datacar.carStatus == "1"
-                  ? mythemecolor
-                  : datacar.carStatus == "0"
-                      ? null
-                      : datacar.carStatus == "2"
-                          ? Colors.amberAccent
-                          : Colors.red[800],
-              shape: datacar.carStatus == "0"
-                  ? OutlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: mygreencolors),
-                      borderRadius: BorderRadius.circular(6))
-                  : RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6)),
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Center(
-                  child: Text(
-                    datacar.carStatus == "0"
-                        ? "ว่าง"
-                        : datacar.carStatus == "1"
-                            ? "ร่วมทริป"
-                            : datacar.carStatus == "2"
-                                ? "ซ่อมบำรุง"
-                                : "เพิกถอน",
-                    style: TextStyle(
-                        color:
-                            datacar.carStatus == "3" || datacar.carStatus == "1"
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Text(datacar.carRegistation)),
+          DataCell(Text("${datacar.carBrand} / ${datacar.carModel}")),
+          DataCell(Text(datacar.carTypeData.carName)),
+          DataCell(Text(datacar.mileageNumber)),
+          DataCell(Text(datacar.carColor)),
+          DataCell(
+            SizedBox(
+              height: 40,
+              width: 80,
+              child: Card(
+                  elevation: 2,
+                  color: datacar.carStatus == "1"
+                      ? mythemecolor
+                      : datacar.carStatus == "0"
+                          ? null
+                          : datacar.carStatus == "2"
+                              ? Colors.amberAccent
+                              : Colors.red[800],
+                  shape: datacar.carStatus == "0"
+                      ? OutlineInputBorder(
+                          borderSide:
+                              BorderSide(width: 1, color: mygreencolors),
+                          borderRadius: BorderRadius.circular(6))
+                      : RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Center(
+                      child: Text(
+                        datacar.carStatus == "0"
+                            ? "ว่าง"
+                            : datacar.carStatus == "1"
+                                ? "ร่วมทริป"
+                                : datacar.carStatus == "2"
+                                    ? "ซ่อมบำรุง"
+                                    : "เพิกถอน",
+                        style: TextStyle(
+                            color: datacar.carStatus == "3" ||
+                                    datacar.carStatus == "1"
                                 ? Colors.white
                                 : Colors.grey[800]),
+                      ),
+                    ),
+                  )),
+            ),
+          ),
+          DataCell(datacar.carStatus == "" //
+              ? Container()
+              : SizedBox(
+                  height: 32,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: myambercolors,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
+                    child: const Icon(Icons.edit_rounded),
+                    onPressed: () {
+                      showDialogCar(1, datacar);
+                    },
                   ),
-                ),
-              )),
-        ),
-      ),
-      DataCell(datacar.carStatus == "" //
-          ? Container()
-          : SizedBox(
-              height: 32,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: myambercolors,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
-                child: const Icon(Icons.edit_rounded),
-                onPressed: () {
-                  showDialogCar(1, datacar);
-                },
-              ),
-            )),
-    ]);
+                )),
+        ]);
   }
 
   @override

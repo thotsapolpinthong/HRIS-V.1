@@ -171,180 +171,193 @@ class _PositionOrganizationTableState extends State<PositionOrganizationTable> {
         } else {}
         return SafeArea(
           child: Scaffold(
-            body: Center(
-              child: SingleChildScrollView(
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: 1200,
-                      child: PaginatedDataTable(
-                        columnSpacing: 10,
-                        showFirstLastButtons: true,
-                        rowsPerPage: rowIndex,
-                        availableRowsPerPage: const [5, 10, 20],
-                        sortColumnIndex: sortColumnIndex,
-                        sortAscending: sort,
-                        onRowsPerPageChanged: (value) {
-                          setState(() {
-                            rowIndex = value!;
-                          });
-                        },
-                        header: SizedBox(
+            body: SizedBox(
+              height: double.infinity,
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
                           width: double.infinity,
-                          height: 50,
-                          child: Row(
-                            children: [
-                              const Expanded(
-                                  flex: 1,
-                                  child: Text('Position Organizations Table.')),
-                              Expanded(
-                                  flex: 1,
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.search_rounded),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: TextFormField(
-                                            controller: search,
-                                            onChanged: (value) {
-                                              if (value == '') {
-                                                context
-                                                    .read<PositionOrgBloc>()
-                                                    .add(DissSearchEvent());
-                                              } else {
-                                                setState(() {
-                                                  context
-                                                      .read<PositionOrgBloc>()
-                                                      .add(SearchEvent());
-                                                  mainData = filterData!
-                                                      .where((element) {
-                                                    final id = element
-                                                        .positionOrganizationId
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final name = element
-                                                        .positionData
-                                                        .positionNameTh
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final parent = element
-                                                        .parentPositionNodeId
-                                                        .positionData
-                                                        .positionNameTh
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
-                                                    final job = element
-                                                        .jobTitleData
-                                                        .jobTitleName
-                                                        .toLowerCase()
-                                                        .contains(value
-                                                            .toLowerCase());
+                          child: PaginatedDataTable(
+                            columnSpacing: 10,
+                            showFirstLastButtons: true,
+                            rowsPerPage: rowIndex,
+                            availableRowsPerPage: const [5, 10, 20],
+                            sortColumnIndex: sortColumnIndex,
+                            sortAscending: sort,
+                            onRowsPerPageChanged: (value) {
+                              setState(() {
+                                rowIndex = value!;
+                              });
+                            },
+                            header: SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: Row(
+                                children: [
+                                  const Expanded(
+                                      flex: 1,
+                                      child: Text(
+                                          'Position Organizations Table.')),
+                                  Expanded(
+                                      flex: 1,
+                                      child: Row(
+                                        children: [
+                                          const Icon(Icons.search_rounded),
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: TextFormField(
+                                                controller: search,
+                                                onChanged: (value) {
+                                                  if (value == '') {
+                                                    context
+                                                        .read<PositionOrgBloc>()
+                                                        .add(DissSearchEvent());
+                                                  } else {
+                                                    setState(() {
+                                                      context
+                                                          .read<
+                                                              PositionOrgBloc>()
+                                                          .add(SearchEvent());
+                                                      mainData = filterData!
+                                                          .where((element) {
+                                                        final id = element
+                                                            .positionOrganizationId
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final name = element
+                                                            .positionData
+                                                            .positionNameTh
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final parent = element
+                                                            .parentPositionNodeId
+                                                            .positionData
+                                                            .positionNameTh
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final job = element
+                                                            .jobTitleData
+                                                            .jobTitleName
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
 
-                                                    return id ||
-                                                        job ||
-                                                        name ||
-                                                        parent;
-                                                  }).toList();
-                                                });
-                                              }
-                                            },
-                                            decoration: InputDecoration(
-                                                contentPadding:
-                                                    const EdgeInsets.all(10.0),
-                                                hintText: 'Search (EN/TH)',
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8))),
+                                                        return id ||
+                                                            job ||
+                                                            name ||
+                                                            parent;
+                                                      }).toList();
+                                                    });
+                                                  }
+                                                },
+                                                decoration: InputDecoration(
+                                                    contentPadding:
+                                                        const EdgeInsets.all(
+                                                            10.0),
+                                                    hintText: 'Search (EN/TH)',
+                                                    border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8))),
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  )),
+                                        ],
+                                      )),
+                                ],
+                              ),
+                            ),
+                            columns: [
+                              const DataColumn(
+                                  label: Text('ตัวเลือก',
+                                      style: TextStyle(fontSize: 16))),
+                              DataColumn(
+                                  numeric: true,
+                                  label: const Text('เลขที่โต๊ะ'),
+                                  onSort: (columnIndex, ascending) {
+                                    setState(() {
+                                      sort = !sort;
+                                      sortColumnIndex = 1;
+                                      if (state.onSearchData == true) {
+                                        onSortSearchColumn(
+                                            columnIndex, ascending);
+                                      } else {
+                                        onSortColumn(columnIndex, ascending);
+                                      }
+                                    });
+                                  }),
+                              DataColumn(
+                                  label: const Text('ชื่อตำแหน่งงาน'),
+                                  onSort: (columnIndex, ascending) {
+                                    setState(() {
+                                      sort = !sort;
+                                      sortColumnIndex = 2;
+                                      if (state.onSearchData == true) {
+                                        onSortSearchColumn(
+                                            columnIndex, ascending);
+                                      } else {
+                                        onSortColumn(columnIndex, ascending);
+                                      }
+                                    });
+                                  }),
+                              DataColumn(
+                                  label: const Text('ผู้บังคับบัญชา'),
+                                  onSort: (columnIndex, ascending) {
+                                    setState(() {
+                                      sort = !sort;
+                                      sortColumnIndex = 3;
+                                      if (state.onSearchData == true) {
+                                        onSortSearchColumn(
+                                            columnIndex, ascending);
+                                      } else {
+                                        onSortColumn(columnIndex, ascending);
+                                      }
+                                    });
+                                  }),
+                              const DataColumn(
+                                label: Text('สถานะ'),
+                              ),
+                              DataColumn(
+                                  label: const Text('รายละเอียดงาน'),
+                                  onSort: (columnIndex, ascending) {
+                                    setState(() {
+                                      sort = !sort;
+                                      sortColumnIndex = 5;
+                                      if (state.onSearchData == true) {
+                                        onSortSearchColumn(
+                                            columnIndex, ascending);
+                                      } else {
+                                        onSortColumn(columnIndex, ascending);
+                                      }
+                                    });
+                                  }),
                             ],
+                            source: PersonDataTableSource(
+                                widget.orgdata,
+                                widget.positionOrgData,
+                                mainData,
+                                context,
+                                deleteData,
+                                widget.orgdata!.organizationCode),
                           ),
                         ),
-                        columns: [
-                          const DataColumn(
-                              label: Text('ตัวเลือก',
-                                  style: TextStyle(fontSize: 16))),
-                          DataColumn(
-                              numeric: true,
-                              label: const Text('เลขที่โต๊ะ'),
-                              onSort: (columnIndex, ascending) {
-                                setState(() {
-                                  sort = !sort;
-                                  sortColumnIndex = 1;
-                                  if (state.onSearchData == true) {
-                                    onSortSearchColumn(columnIndex, ascending);
-                                  } else {
-                                    onSortColumn(columnIndex, ascending);
-                                  }
-                                });
-                              }),
-                          DataColumn(
-                              label: const Text('ชื่อตำแหน่งงาน'),
-                              onSort: (columnIndex, ascending) {
-                                setState(() {
-                                  sort = !sort;
-                                  sortColumnIndex = 2;
-                                  if (state.onSearchData == true) {
-                                    onSortSearchColumn(columnIndex, ascending);
-                                  } else {
-                                    onSortColumn(columnIndex, ascending);
-                                  }
-                                });
-                              }),
-                          DataColumn(
-                              label: const Text('ผู้บังคับบัญชา'),
-                              onSort: (columnIndex, ascending) {
-                                setState(() {
-                                  sort = !sort;
-                                  sortColumnIndex = 3;
-                                  if (state.onSearchData == true) {
-                                    onSortSearchColumn(columnIndex, ascending);
-                                  } else {
-                                    onSortColumn(columnIndex, ascending);
-                                  }
-                                });
-                              }),
-                          const DataColumn(
-                            label: Text('สถานะ'),
-                          ),
-                          DataColumn(
-                              label: const Text('รายละเอียดงาน'),
-                              onSort: (columnIndex, ascending) {
-                                setState(() {
-                                  sort = !sort;
-                                  sortColumnIndex = 5;
-                                  if (state.onSearchData == true) {
-                                    onSortSearchColumn(columnIndex, ascending);
-                                  } else {
-                                    onSortColumn(columnIndex, ascending);
-                                  }
-                                });
-                              }),
-                        ],
-                        source: PersonDataTableSource(
-                            widget.orgdata,
-                            widget.positionOrgData,
-                            mainData,
-                            context,
-                            deleteData,
-                            widget.orgdata!.organizationCode),
-                      ),
+                      ],
                     ),
                   ),
-                ).animate().fadeIn(),
-              ),
+                ),
+              ).animate().fadeIn(),
             ),
           ),
         );

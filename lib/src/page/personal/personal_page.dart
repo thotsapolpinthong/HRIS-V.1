@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:hris_app_prototype/src/component/personal/datatable_personal.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -17,7 +16,7 @@ class _PersonalPageState extends State<PersonalPage> {
       padding: const EdgeInsets.all(12.0),
       child: const DataTablePerson(
         employee: false,
-      ).animate().fadeIn(duration: 600.milliseconds),
+      ),
     ));
   }
 }

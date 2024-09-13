@@ -158,7 +158,7 @@ class _RolesTableState extends State<RolesTable> {
                                 DataColumn(label: Text("Roles ID")),
                                 DataColumn(label: Text("Roles Name")),
                                 DataColumn(label: Text("Roles Edit")),
-                                DataColumn(label: Text("Role Permissions")),
+                                // DataColumn(label: Text("Role Permissions")),
                               ],
                               source: SubDataTableSource(
                                   context, filterData, fetchData),
@@ -278,20 +278,20 @@ class SubDataTableSource extends DataTableSource {
                   child: const Icon(Icons.edit)),
             ),
           ),
-          DataCell(
-            SizedBox(
-              width: 40,
-              height: 38,
-              child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: mythemecolor,
-                      padding: const EdgeInsets.all(1)),
-                  onPressed: () {
-                    EditRolePermissionsDialog(d);
-                  },
-                  child: const Icon(Icons.settings)),
-            ),
-          ),
+          // DataCell(
+          //   SizedBox(
+          //     width: 40,
+          //     height: 38,
+          //     child: ElevatedButton(
+          //         style: ElevatedButton.styleFrom(
+          //             backgroundColor: mythemecolor,
+          //             padding: const EdgeInsets.all(1)),
+          //         onPressed: () {
+          //           EditRolePermissionsDialog(d);
+          //         },
+          //         child: const Icon(Icons.settings)),
+          //   ),
+          // ),
         ]);
   }
 

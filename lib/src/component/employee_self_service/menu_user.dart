@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/gestures.dart';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
@@ -11,7 +11,6 @@ import 'package:hris_app_prototype/src/model/employee/menu/leave_menu_model/leav
 import 'package:hris_app_prototype/src/model/self_service/ot/ot_time_count_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_self_service.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
-import 'package:lottie/lottie.dart';
 
 class UserMenuService extends StatefulWidget {
   final EmployeeDatum? employeeData;

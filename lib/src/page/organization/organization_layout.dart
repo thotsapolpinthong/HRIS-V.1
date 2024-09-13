@@ -103,11 +103,11 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
         body: Center(
             child: Column(
           children: [
-            const Text(
-              'Organization Management.',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const Gap(4),
+            // const Text(
+            //   'Organization Management.',
+            //   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            // ),
+            // const Gap(4),
             Expanded(
                 flex: 1,
                 child: Padding(

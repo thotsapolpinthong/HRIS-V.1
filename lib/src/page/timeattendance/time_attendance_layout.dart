@@ -174,14 +174,14 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
             body: Center(
               child: Column(
                 children: [
-                  if (widget.dashboard == false)
-                    const Text(
-                      'บันทึกข้อมูลวันหยุดประจำปี',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  const Gap(10),
+                  // if (widget.dashboard == false)
+                  //   const Text(
+                  //     'บันทึกข้อมูลวันหยุดประจำปี',
+                  //     style: TextStyle(
+                  //       fontSize: 20,
+                  //     ),
+                  //   ),
+                  // const Gap(10),
                   if (widget.dashboard == false)
                     Container(
                       constraints: const BoxConstraints(maxWidth: 600),
@@ -272,6 +272,7 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                         ],
                       ),
                     ),
+                  const Gap(2),
                   if (isExpandedPage == 0)
                     state.isDataLoading == true
                         ? myLoadingScreen
@@ -335,7 +336,7 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                     formatButtonTextStyle:
                                         const TextStyle(color: Colors.white),
                                     formatButtonDecoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white),
+                                      border: Border.all(color: myambercolors!),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     leftChevronIcon: const Icon(
@@ -367,7 +368,7 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                           borderRadius:
                                               BorderRadius.circular(8.0)),
                                       selectedDecoration: BoxDecoration(
-                                          color: Colors.amber[400],
+                                          color: myambercolors,
                                           shape: BoxShape.rectangle,
                                           borderRadius:
                                               BorderRadius.circular(8.0)),
@@ -415,7 +416,7 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                       constraints: const BoxConstraints(
                                           maxHeight: 200, maxWidth: 440),
                                       child: Card(
-                                        color: Colors.amberAccent,
+                                        color: myambercolors,
                                         elevation: 3,
                                         clipBehavior: Clip.antiAlias,
                                         shape: RoundedRectangleBorder(
@@ -447,18 +448,20 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
                                                                 .start,
                                                         crossAxisAlignment:
                                                             CrossAxisAlignment
-                                                                .start,
+                                                                .center,
                                                         children: [
                                                           TextThai(
                                                             text:
                                                                 e.holidayNameTh,
+                                                            textAlign: TextAlign
+                                                                .center,
                                                             textStyle:
                                                                 const TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .w500,
                                                                     fontSize:
-                                                                        17),
+                                                                        18),
                                                           ),
                                                           Text(
                                                             e.holidayNameEn,

@@ -5,7 +5,7 @@ class HomepageState extends Equatable {
   final double pageNumber;
   final bool expandMenu;
   const HomepageState({
-    this.pageNumber = 8,
+    this.pageNumber = 3,
     this.expandMenu = true,
   });
 

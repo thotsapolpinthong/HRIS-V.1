@@ -103,63 +103,6 @@ class _SalaryManagementState extends State<SalaryManagement> {
         });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return isDataLoading
-        ? myLoadingScreen
-        : Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Scaffold(
-              floatingActionButton: floating(),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endDocked,
-              body: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        elevation: 2,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: PaginatedDataTable(
-                            columnSpacing: 10,
-                            showFirstLastButtons: true,
-                            rowsPerPage: rowIndex,
-                            availableRowsPerPage: const [5, 10, 20],
-                            sortColumnIndex: sortColumnIndex,
-                            sortAscending: sort,
-                            onRowsPerPageChanged: (value) {
-                              setState(() {
-                                rowIndex = value!;
-                              });
-                            },
-                            header: header(),
-                            columns: const [
-                              DataColumn(label: Text("Employee ID")),
-                              DataColumn(label: Text("Type")),
-                              DataColumn(label: Text("FirstName")),
-                              DataColumn(label: Text("LastName")),
-                              DataColumn(label: Text("Salary (THB)")),
-                              DataColumn(label: Text("wage (THB)")),
-                              DataColumn(label: Text("Status")),
-                              DataColumn(label: Text("Edit")),
-                            ],
-                            source: SubDataTableSource(
-                                context, filterData, fetchData),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-  }
-
   Widget header() {
     return SizedBox(
       width: double.infinity,
@@ -286,6 +229,66 @@ class _SalaryManagementState extends State<SalaryManagement> {
       ],
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return isDataLoading
+        ? myLoadingScreen
+        : Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Scaffold(
+              floatingActionButton: floating(),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endDocked,
+              body: SizedBox(
+                height: double.infinity,
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: PaginatedDataTable(
+                              columnSpacing: 10,
+                              showFirstLastButtons: true,
+                              rowsPerPage: rowIndex,
+                              availableRowsPerPage: const [5, 10, 20],
+                              sortColumnIndex: sortColumnIndex,
+                              sortAscending: sort,
+                              onRowsPerPageChanged: (value) {
+                                setState(() {
+                                  rowIndex = value!;
+                                });
+                              },
+                              header: header(),
+                              columns: const [
+                                DataColumn(label: Text("Employee ID")),
+                                DataColumn(label: Text("Type")),
+                                DataColumn(label: Text("FirstName")),
+                                DataColumn(label: Text("LastName")),
+                                DataColumn(label: Text("Salary (THB)")),
+                                DataColumn(label: Text("wage (THB)")),
+                                DataColumn(label: Text("Status")),
+                                DataColumn(label: Text("Edit")),
+                              ],
+                              source: SubDataTableSource(
+                                  context, filterData, fetchData),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+  }
 }
 
 class SubDataTableSource extends DataTableSource {
@@ -330,54 +333,62 @@ class SubDataTableSource extends DataTableSource {
   @override
   DataRow getRow(int index) {
     final d = data![index];
-    return DataRow(cells: [
-      DataCell(Text(d.employeeId)),
-      DataCell(Text(d.employeeTypeName)),
-      DataCell(Text(d.firstName)),
-      DataCell(Text(d.lastName)),
-      DataCell(Text(d.salary.toString())),
-      DataCell(Text(d.wage.toString())),
-      DataCell(SizedBox(
-          width: 92,
-          child: Card(
-              elevation: 2,
-              color:
-                  d.status != "active" ? Colors.redAccent : Colors.greenAccent,
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Icon(
-                      d.status != "active" ? Icons.cancel : Icons.check_circle,
-                      color: Colors.white,
-                      size: 18,
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Text(d.employeeId)),
+          DataCell(Text(d.employeeTypeName)),
+          DataCell(Text(d.firstName)),
+          DataCell(Text(d.lastName)),
+          DataCell(Text(d.salary.toString())),
+          DataCell(Text(d.wage.toString())),
+          DataCell(SizedBox(
+              width: 92,
+              child: Card(
+                  elevation: 2,
+                  color: d.status != "active"
+                      ? Colors.redAccent
+                      : Colors.greenAccent,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Icon(
+                          d.status != "active"
+                              ? Icons.cancel
+                              : Icons.check_circle,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                        Text(
+                          d.status != "active" ? 'Inactive' : 'Active',
+                          style: TextStyle(
+                              color: d.status != "active"
+                                  ? Colors.white
+                                  : Colors.grey[800]),
+                        )
+                      ],
                     ),
-                    Text(
-                      d.status != "active" ? 'Inactive' : 'Active',
-                      style: TextStyle(
-                          color: d.status != "active"
-                              ? Colors.white
-                              : Colors.grey[800]),
-                    )
-                  ],
-                ),
-              )))),
-      DataCell(
-        SizedBox(
-          width: 40,
-          height: 38,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: myambercolors,
-                  padding: const EdgeInsets.all(1)),
-              onPressed: () {
-                functionUpdate(d);
-              },
-              child: const Icon(Icons.edit)),
-        ),
-      ),
-    ]);
+                  )))),
+          DataCell(
+            SizedBox(
+              width: 40,
+              height: 38,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: myambercolors,
+                      padding: const EdgeInsets.all(1)),
+                  onPressed: () {
+                    functionUpdate(d);
+                  },
+                  child: const Icon(Icons.edit)),
+            ),
+          ),
+        ]);
   }
 
   @override

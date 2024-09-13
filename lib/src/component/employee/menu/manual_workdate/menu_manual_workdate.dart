@@ -31,6 +31,7 @@ class ManualWorkdateMenu extends StatefulWidget {
 
 class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
   int isExpandedPage = 0;
+  bool isDataLoading = false;
   //lot
   TextEditingController startDate = TextEditingController();
   TextEditingController endDate = TextEditingController();
@@ -94,6 +95,7 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
   }
 
   fetchData() async {
+    setState(() => isDataLoading = true);
     //request data-------------
     context.read<SelfServiceBloc>().add(FetchDataManualWorkDateEvent(
         employeeId: widget.employeeData.employeeId));
@@ -121,6 +123,7 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
         widget.employeeData.fingerScanId, startTime, finishTime);
     setState(() {
       userInfoData;
+      isDataLoading = false;
     });
   }
 
@@ -172,7 +175,7 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
             backgroundColor: Colors.white,
             body: BlocBuilder<SelfServiceBloc, SelfServiceState>(
               builder: (context, state) {
-                return userInfoData == null
+                return isDataLoading
                     ? myLoadingScreen
                     : state.isManualDataLoading == true
                         ? myLoadingScreen
@@ -308,42 +311,31 @@ class _ManualWorkdateMenuState extends State<ManualWorkdateMenu> {
                                                               "${e.lotYear} / ${e.lotMonth}")),
                                                     );
                                                   }).toList(),
-                                                  onChanged: isExpandedPage == 1
-                                                      ? null
-                                                      : (newValue) async {
-                                                          setState(() {
-                                                            lotNumberId =
-                                                                newValue
-                                                                    .toString();
-                                                            Iterable<
-                                                                    LotNumberDatum>
-                                                                result =
-                                                                lotNumberData!
-                                                                    .lotNumberData
-                                                                    .where((element) =>
-                                                                        element
-                                                                            .lotMonth ==
-                                                                        newValue);
-                                                            if (result
-                                                                .isNotEmpty) {
-                                                              startDate.text =
-                                                                  result.first
-                                                                      .startDate
-                                                                      .substring(
-                                                                          0,
-                                                                          10);
-                                                              endDate.text =
-                                                                  result.first
-                                                                      .finishDate
-                                                                      .substring(
-                                                                          0,
-                                                                          10);
-                                                            }
-                                                            fetchDataTimeStamp(
-                                                                startDate.text,
-                                                                endDate.text);
-                                                          });
-                                                        },
+                                                  onChanged: (newValue) async {
+                                                    setState(() {
+                                                      lotNumberId =
+                                                          newValue.toString();
+                                                      Iterable<LotNumberDatum>
+                                                          result =
+                                                          lotNumberData!
+                                                              .lotNumberData
+                                                              .where((element) =>
+                                                                  element
+                                                                      .lotMonth ==
+                                                                  newValue);
+                                                      if (result.isNotEmpty) {
+                                                        startDate.text = result
+                                                            .first.startDate
+                                                            .substring(0, 10);
+                                                        endDate.text = result
+                                                            .first.finishDate
+                                                            .substring(0, 10);
+                                                      }
+                                                      fetchDataTimeStamp(
+                                                          startDate.text,
+                                                          endDate.text);
+                                                    });
+                                                  },
                                                   validator: null),
                                             ),
                                           ),
@@ -448,11 +440,16 @@ class DataTableRowSource extends DataTableSource {
   DataRow? getRow(int index) {
     final data = workTimeData![index];
 
-    return DataRow(cells: [
-      DataCell(Text(data.date)),
-      DataCell(Text(data.checkInTime == "" ? "-" : data.checkInTime)),
-      DataCell(Text(data.checkOutTime == "" ? "-" : data.checkOutTime)),
-    ]);
+    return DataRow(
+        color:
+            WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+          return index % 2 == 0 ? Colors.white : myrowscolors;
+        }),
+        cells: [
+          DataCell(Text(data.date)),
+          DataCell(Text(data.checkInTime == "" ? "-" : data.checkInTime)),
+          DataCell(Text(data.checkOutTime == "" ? "-" : data.checkOutTime)),
+        ]);
   }
 
   @override
@@ -480,47 +477,60 @@ class DataTableRowRequestSource extends DataTableSource {
     final data = manualWorkDateRequestData?[index];
 
     return manualWorkDateRequestData != null
-        ? DataRow(cells: [
-            DataCell(Text(data!.date)),
-            DataCell(
-                Text(data.manualWorkDateTypeData.manualWorkDateTypeNameTh)),
-            DataCell(Text(data.startTime == "No data" ? "-" : data.startTime)),
-            DataCell(Text(data.endTime == "No data" ? "-" : data.endTime)),
-            DataCell(Text(data.decription)),
-            DataCell(
-              Container(
-                decoration: BoxDecoration(
-                    color: manualWorkDateRequestData![index].status == "request"
-                        ? Colors.amberAccent[100]
-                        : manualWorkDateRequestData![index].status == "approve"
-                            ? Colors.greenAccent
-                            : Colors.redAccent[100],
-                    borderRadius: BorderRadius.circular(14)),
-                width: 85,
-                height: 28,
-                child: Center(
-                    child: Text(manualWorkDateRequestData![index].status,
-                        style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            //fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[800]))),
-              ),
-            ),
-            DataCell(data.status != "request" && data.status != "approve"
-                ? Container()
-                : RowDeleteBox(onPressed: () {
-                    alertDialogInfo(data.manualWorkDateRequestId);
-                  })),
-          ])
-        : const DataRow(cells: [
-            DataCell(Text("")),
-            DataCell(Text("")),
-            DataCell(Text("")),
-            DataCell(Text("")),
-            DataCell(Text("")),
-            DataCell(Text("")),
-          ]);
+        ? DataRow(
+            color: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) {
+              return index % 2 == 0 ? Colors.white : myrowscolors;
+            }),
+            cells: [
+                DataCell(Text(data!.date)),
+                DataCell(
+                    Text(data.manualWorkDateTypeData.manualWorkDateTypeNameTh)),
+                DataCell(
+                    Text(data.startTime == "No data" ? "-" : data.startTime)),
+                DataCell(Text(data.endTime == "No data" ? "-" : data.endTime)),
+                DataCell(Text(data.decription)),
+                DataCell(
+                  Container(
+                    decoration: BoxDecoration(
+                        color: manualWorkDateRequestData![index].status ==
+                                "request"
+                            ? Colors.amberAccent[100]
+                            : manualWorkDateRequestData![index].status ==
+                                    "approve"
+                                ? Colors.greenAccent
+                                : Colors.redAccent[100],
+                        borderRadius: BorderRadius.circular(14)),
+                    width: 85,
+                    height: 28,
+                    child: Center(
+                        child: Text(manualWorkDateRequestData![index].status,
+                            style: TextStyle(
+                                fontStyle: FontStyle.italic,
+                                //fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800]))),
+                  ),
+                ),
+                DataCell(data.status != "request" && data.status != "approve"
+                    ? Container()
+                    : RowDeleteBox(onPressed: () {
+                        alertDialogInfo(data.manualWorkDateRequestId);
+                      })),
+              ])
+        : DataRow(
+            color: WidgetStateProperty.resolveWith<Color>(
+                (Set<WidgetState> states) {
+              return index % 2 == 0 ? Colors.white : myrowscolors;
+            }),
+            cells: [
+                DataCell(Text("")),
+                DataCell(Text("")),
+                DataCell(Text("")),
+                DataCell(Text("")),
+                DataCell(Text("")),
+                DataCell(Text("")),
+              ]);
   }
 
   @override

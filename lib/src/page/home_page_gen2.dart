@@ -1,7 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
@@ -97,6 +100,11 @@ class _MyHomepageState extends State<MyHomepage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const SizedBox(width: 260, child: SlideBar()),
@@ -118,6 +126,7 @@ class _MyHomepageState extends State<MyHomepage> {
                       flex: state.expandMenu == false ? 19 : 5,
                       child: Column(
                         children: [
+                          Gap(10),
                           WindowTitleBarBox(
                             child: Row(
                               children: [

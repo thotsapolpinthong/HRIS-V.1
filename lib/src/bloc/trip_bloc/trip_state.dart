@@ -42,7 +42,7 @@ class TripState extends Equatable {
   }) {
     return TripState(
       employeeData: employeeData,
-      tripAllDataModel: tripAllDataModel,
+      tripAllDataModel: tripAllDataModel ?? null,
       isAllTripDataLoading: isAllTripDataLoading ?? this.isAllTripDataLoading,
       onSearchData: onSearchData ?? this.onSearchData,
       carsDataModel: carsDataModel ?? this.carsDataModel,

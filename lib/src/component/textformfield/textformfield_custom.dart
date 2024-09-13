@@ -641,6 +641,7 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
   final Widget? suffixIcon;
   final bool readOnly;
   final List<TextInputFormatter>? inputFormatters;
+  final Function(String)? onChanged;
   const TextFormFieldGlobalWithOutLine({
     Key? key,
     required this.controller,
@@ -649,6 +650,7 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
     this.validatorless,
     required this.enabled,
     this.suffixIcon,
+    this.onChanged,
     this.readOnly = false,
     this.inputFormatters,
   }) : super(key: key);
@@ -666,6 +668,7 @@ class TextFormFieldGlobalWithOutLine extends StatelessWidget {
         maxLines: 4,
         enabled: enabled,
         readOnly: readOnly,
+        onChanged: onChanged,
         decoration: InputDecoration(
             contentPadding: const EdgeInsets.all(10.0),
             errorStyle: const TextStyle(height: 0.5),
@@ -778,9 +781,11 @@ class TextFormFieldDatepickGlobalWithoutLine extends StatelessWidget {
           labelStyle: const TextStyle(color: Colors.black),
           filled: true,
           fillColor: Colors.white,
-          suffixIcon: const Icon(
-            Icons.calendar_today_rounded,
-          ),
+          suffixIcon: IconTheme(
+              data: IconThemeData(color: mythemecolor),
+              child: Icon(
+                Icons.calendar_today_rounded,
+              )),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),

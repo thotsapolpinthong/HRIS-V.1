@@ -28,10 +28,13 @@ var headerbluecolors = const Color.fromARGB(255, 0, 57, 143);
 var mygreenxls = const Color.fromARGB(255, 13, 114, 57);
 var mygreencolors = const Color.fromARGB(255, 50, 163, 99);
 var mybluecolors = Colors.lightBlue[600];
+var myrowscolors = Color.fromARGB(132, 230, 242, 248);
 
 var myLoadingScreen = Center(
-    child: Lottie.asset('assets/loading.json',
-        width: 500, height: 250, frameRate: FrameRate(60)));
+        child: Lottie.asset('assets/loading.json',
+            width: 500, height: 250, frameRate: FrameRate(60)))
+    .animate()
+    .fadeIn(duration: 600.milliseconds);
 
 //floatingButtons
 class MyFloatingButton extends StatefulWidget {

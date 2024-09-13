@@ -10,11 +10,13 @@ import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/payroll/3_salary/salary_management_menu.dart';
 import 'package:hris_app_prototype/src/component/payroll/5_payroll/payroll_details.dart';
 import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
+import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/model/organization/organization/dropdown/parent_org_dd_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/lot_management/get_lotnumber_dropdown_model.dart';
 import 'package:hris_app_prototype/src/model/payroll/payroll/payroll_data_model.dart';
 import 'package:hris_app_prototype/src/services/api_org_service.dart';
 import 'package:hris_app_prototype/src/services/api_payroll_service.dart';
+import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
@@ -72,6 +74,29 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
   double ssoMax = 0;
   double ssoMinSalary = 0;
   double ssoMaxSalary = 0;
+
+  LoginData? _loginData;
+  bool hrManager = false;
+  fetchDataLogin() async {
+    _loginData = await ApiRolesService.getUserData();
+    setState(() {
+      if (_loginData != null) {
+        if (_loginData?.role.roleId == 'R000000000' ||
+            _loginData?.role.roleId == "R000000005") {
+          hrManager = true;
+          positionTypeId = "1";
+        } // dev,acc manager
+        else {
+          positionTypeId = "2";
+        }
+        ;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myredcolors,
+            content: const Text("Load Role Permissions Fail")));
+      }
+    });
+  }
 
   Future<void> _pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -200,8 +225,9 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
   @override
   void initState() {
     super.initState();
+
+    fetchDataLogin();
     fetchData();
-    positionTypeId = "0";
   }
 
   @override
@@ -299,7 +325,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                   controller: startDate,
                   labelText: "Start Date",
                   validatorless: null,
-                  enabled: true,
+                  enabled: false,
                   ontap: null),
             ),
             Expanded(
@@ -308,7 +334,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                   controller: finishDate,
                   labelText: "Finish Date",
                   validatorless: null,
-                  enabled: true,
+                  enabled: false,
                   ontap: null),
             ),
             Expanded(
@@ -326,12 +352,14 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                           child: Text(e.name)),
                     );
                   }).toList(),
-                  onChanged: (newValue) async {
-                    setState(() {
-                      positionTypeId = newValue.toString();
-                      fetchPayrollData();
-                    });
-                  },
+                  onChanged: !hrManager
+                      ? null
+                      : (newValue) async {
+                          setState(() {
+                            positionTypeId = newValue.toString();
+                            fetchPayrollData();
+                          });
+                        },
                   validator: null),
             ),
             Expanded(
@@ -827,7 +855,10 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
     return TextFormFieldGlobal(
       controller: data,
       labelText: label,
-      enabled: false,
+      enabled: true,
+      onTap: null,
+      onChanged: null,
+      readOnly: true,
       suffixText: suffix ?? "บาท",
     );
   }

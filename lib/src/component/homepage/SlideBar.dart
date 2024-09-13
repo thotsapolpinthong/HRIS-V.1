@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/homepage_bloc/homepage_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/model/Login/login_model.dart';
 import 'package:hris_app_prototype/src/model/employee/get_employee_all_model.dart';
 import 'package:hris_app_prototype/src/services/api_employee_service.dart';
+import 'package:hris_app_prototype/src/services/api_role_permission.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SlideBar extends StatefulWidget {
@@ -24,6 +26,21 @@ class _SlideBarState extends State<SlideBar> {
   String? position;
   String? employeeId;
   EmployeeDatum? data;
+
+  LoginData? _loginData;
+
+  fetchDataLogin() async {
+    _loginData = await ApiRolesService.getUserData();
+    setState(() {
+      if (_loginData != null) {
+        _loginData;
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            backgroundColor: myredcolors,
+            content: const Text("Load Role Permissions Fail")));
+      }
+    });
+  }
 
   String truncateString(String text, int maxLength) {
     if (text.length <= maxLength) {
@@ -63,7 +80,7 @@ class _SlideBarState extends State<SlideBar> {
         builder: (context, state) {
           return Container(
             width: 250,
-            height: MediaQuery.of(context).size.height - 500,
+            height: MediaQuery.of(context).size.height - 400,
             decoration: const BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
@@ -145,9 +162,187 @@ class _SlideBarState extends State<SlideBar> {
     );
   }
 
+  Widget payrollSubmenu() {
+    return MouseRegion(
+      onHover: (event) {
+        setState(() {
+          expandMenuPayroll = true;
+        });
+      },
+      onExit: (event) {
+        setState(() {
+          expandMenuPayroll = false;
+        });
+      },
+      child: Card(
+        margin: const EdgeInsets.all(0),
+        elevation: 6,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.horizontal(right: Radius.circular(12))),
+        child: Container(
+          width: 260,
+          height: MediaQuery.of(context).size.height - 400,
+          // height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: BlocBuilder<HomepageBloc, HomepageState>(
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Gap(5),
+                      const Text(
+                        "Payroll Menu.",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16),
+                      ).animate().fadeIn(),
+                      const Gap(10),
+                      if (_loginData?.role.roleId == 'R000000000' ||
+                          _loginData?.role.roleId == "R000000003" ||
+                          _loginData?.role.roleId == "R000000004" ||
+                          _loginData?.role.roleId == "R000000005" ||
+                          _loginData?.role.roleId == "R000000006") //dev,hr ,acc
+                        DrawerTitleSubmenu(
+                            color: state.pageNumber == 5.1
+                                ? mythemecolor
+                                : Colors.white,
+                            textColor: state.pageNumber == 5.1
+                                ? Colors.white
+                                : Colors.black87,
+                            title: "-  LOT MANAGEMENT",
+                            onTap: () {
+                              context
+                                  .read<HomepageBloc>()
+                                  .add(SubPayroll1PageEvent());
+                            }),
+                      if (_loginData?.role.roleId == 'R000000000' ||
+                          _loginData?.role.roleId == "R000000003" ||
+                          _loginData?.role.roleId == "R000000004" ||
+                          _loginData?.role.roleId == "R000000005" ||
+                          _loginData?.role.roleId == "R000000006") //dev,hr ,acc
+                        DrawerTitleSubmenu(
+                            color: state.pageNumber == 5.2
+                                ? mythemecolor
+                                : Colors.white,
+                            textColor: state.pageNumber == 5.2
+                                ? Colors.white
+                                : Colors.black87,
+                            title: "-  SEND TO PAYROLL",
+                            onTap: () => context
+                                .read<HomepageBloc>()
+                                .add(SubPayrollPage2Event())),
+                      if (_loginData?.role.roleId == 'R000000000' ||
+                          _loginData?.role.roleId == "R000000005" ||
+                          _loginData?.role.roleId == "R000000006") //dev,acc
+                        DrawerTitleSubmenu(
+                            color: state.pageNumber == 5.3
+                                ? mythemecolor
+                                : Colors.white,
+                            textColor: state.pageNumber == 5.3
+                                ? Colors.white
+                                : Colors.black87,
+                            title: "-  บันทึกข้อมูลปรับอัตราเงินเดือน",
+                            onTap: () => context
+                                .read<HomepageBloc>()
+                                .add(SubPayrollPage3Event())),
+                      if (_loginData?.role.roleId == 'R000000000' ||
+                          _loginData?.role.roleId == "R000000005" ||
+                          _loginData?.role.roleId == "R000000006") //dev,acc
+                        DrawerTitleSubmenu(
+                            color: state.pageNumber == 5.4
+                                ? mythemecolor
+                                : Colors.white,
+                            textColor: state.pageNumber == 5.4
+                                ? Colors.white
+                                : Colors.black87,
+                            title: "-  บันทึกข้อมูลลดหย่อนภาษีประจำปี",
+                            onTap: () => context
+                                .read<HomepageBloc>()
+                                .add(SubPayrollPage4Event())),
+                      if (_loginData?.role.roleId == 'R000000000' ||
+                          _loginData?.role.roleId == "R000000005" ||
+                          _loginData?.role.roleId == "R000000006") //dev,acc
+                        DrawerTitleSubmenu(
+                            color: state.pageNumber == 5.5
+                                ? mythemecolor
+                                : Colors.white,
+                            textColor: state.pageNumber == 5.5
+                                ? Colors.white
+                                : Colors.black87,
+                            title:
+                                "-  ประมวลผลข้อมูลการจ่ายเงินเดือน ( PAYROLL )",
+                            onTap: () => context
+                                .read<HomepageBloc>()
+                                .add(SubPayrollPage5Event())),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- พิมพ์สลิปเงินเดือน",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- บันทึกข้อมูลการชำระเงินกู้ กยศ.",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- สรุปการจ่ายเงินพนักงานรายบุคคล",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- สรุปการจ่ายเงินพนักงานรายแผนก",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- รายงานข้อมูลเงินเดือนพนักงาน",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- สรุปการจ่ายเงินเดือนพนักงาน",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- พิมพ์เอกสารทวิ 50",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- ออกใบกำกับภาษี/หนังสือรับรองเงินเดือน",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- Export ข้อมูล ภงด.1/ ภงด.1ก. (ส่งสรรพากร)",
+                      //     onTap: () {}),
+                      // DrawerTitleSubmenu(
+                      //     color: Colors.white,
+                      //     textColor: Colors.black87,
+                      //     title: "- Export ข้อมูลประกันสังคม SSO",
+                      //     onTap: () {}),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    fetchDataLogin();
     fetchData();
   }
 
@@ -221,6 +416,7 @@ class _SlideBarState extends State<SlideBar> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 10),
+
                                   DrawerTitle(
                                           color: state.pageNumber == 8
                                               ? mygreycolors
@@ -241,66 +437,77 @@ class _SlideBarState extends State<SlideBar> {
                                       .animate()
                                       .fadeIn(delay: 300.ms)
                                       .slideY(begin: 1, duration: 200.ms),
-                                  DrawerTitle(
-                                          color: state.pageNumber == 0
-                                              ? mygreycolors
-                                              : mythemecolor,
-                                          icon: Icons.person,
-                                          iconcolor: state.pageNumber == 0
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          title: "PERSONAL",
-                                          textColor: state.pageNumber == 0
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          onTap: () {
-                                            context
-                                                .read<HomepageBloc>()
-                                                .add(PersonPageEvent());
-                                          })
-                                      .animate()
-                                      .fadeIn(delay: 400.ms)
-                                      .slideY(begin: 1, duration: 200.ms),
-                                  DrawerTitle(
-                                          color: state.pageNumber == 1
-                                              ? mygreycolors
-                                              : mythemecolor,
-                                          icon: Icons.bar_chart_rounded,
-                                          iconcolor: state.pageNumber == 1
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          title: "ORGANIZATION",
-                                          textColor: state.pageNumber == 1
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          onTap: () {
-                                            context
-                                                .read<HomepageBloc>()
-                                                .add(OrgPageEvent());
-                                          })
-                                      .animate()
-                                      .fadeIn(delay: 500.ms)
-                                      .slideY(begin: 1, duration: 200.ms),
-                                  DrawerTitle(
-                                          color: state.pageNumber == 2
-                                              ? mygreycolors
-                                              : mythemecolor,
-                                          icon: Icons.supervisor_account_rounded,
-                                          iconcolor: state.pageNumber == 2
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          title: "EMPLOYEE",
-                                          textColor: state.pageNumber == 2
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          onTap: () {
-                                            context
-                                                .read<HomepageBloc>()
-                                                .add(EmployeePageEvent());
-                                          })
-                                      .animate()
-                                      .fadeIn(delay: 600.ms)
-                                      .slideY(begin: 1, duration: 200.ms),
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId == "R000000003" ||
+                                      _loginData?.role.roleId ==
+                                          "R000000004") //dev,hr manager ,hr general
+                                    DrawerTitle(
+                                            color: state.pageNumber == 0
+                                                ? mygreycolors
+                                                : mythemecolor,
+                                            icon: Icons.person,
+                                            iconcolor: state.pageNumber == 0
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            title: "PERSONAL",
+                                            textColor: state.pageNumber == 0
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            onTap: () {
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(PersonPageEvent());
+                                            })
+                                        .animate()
+                                        .fadeIn(delay: 400.ms)
+                                        .slideY(begin: 1, duration: 200.ms),
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId ==
+                                          "R000000003") //dev,hr manager
+                                    DrawerTitle(
+                                            color: state.pageNumber == 1
+                                                ? mygreycolors
+                                                : mythemecolor,
+                                            icon: Icons.bar_chart_rounded,
+                                            iconcolor: state.pageNumber == 1
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            title: "ORGANIZATION",
+                                            textColor: state.pageNumber == 1
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            onTap: () {
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(OrgPageEvent());
+                                            })
+                                        .animate()
+                                        .fadeIn(delay: 500.ms)
+                                        .slideY(begin: 1, duration: 200.ms),
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId == "R000000003" ||
+                                      _loginData?.role.roleId ==
+                                          "R000000004") //dev,hr manager ,hr general
+                                    DrawerTitle(
+                                            color: state.pageNumber == 2
+                                                ? mygreycolors
+                                                : mythemecolor,
+                                            icon: Icons.supervisor_account_rounded,
+                                            iconcolor: state.pageNumber == 2
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            title: "EMPLOYEE",
+                                            textColor: state.pageNumber == 2
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            onTap: () {
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(EmployeePageEvent());
+                                            })
+                                        .animate()
+                                        .fadeIn(delay: 600.ms)
+                                        .slideY(begin: 1, duration: 200.ms),
                                   DrawerTitle(
                                           color: state.pageNumber == 3
                                               ? mygreycolors
@@ -341,177 +548,194 @@ class _SlideBarState extends State<SlideBar> {
                                   //     .animate()
                                   //     .fadeIn(delay: 800.ms)
                                   //     .slideY(begin: 1, duration: 200.ms),
-                                  MouseRegion(
-                                    onEnter: (event) {
-                                      setState(() {
-                                        isHovered = true;
-                                      });
-                                    },
-                                    onExit: (event) {
-                                      setState(() {
-                                        isHovered = false;
-                                      });
-                                    },
-                                    child: DrawerTitle(
-                                            color:
-                                                state.pageNumber > 5 &&
-                                                        state.pageNumber < 6
-                                                    ? mygreycolors
-                                                    : isHovered ==
-                                                                true ||
-                                                            expandMenuPayroll ==
-                                                                true
-                                                        ? Colors.white
-                                                        : mythemecolor,
-                                            icon: Icons.attach_money_rounded,
-                                            iconcolor:
-                                                state
-                                                                .pageNumber >
-                                                            5 &&
-                                                        state.pageNumber < 6
-                                                    ? Colors.black87
-                                                    : isHovered ==
-                                                                true ||
-                                                            expandMenuPayroll ==
-                                                                true
-                                                        ? Colors.black87
-                                                        : mytextcolors,
-                                            title: "PAYROLL",
-                                            textColor:
-                                                state
-                                                                .pageNumber >
-                                                            5 &&
-                                                        state.pageNumber < 6
-                                                    ? Colors.black87
-                                                    : isHovered ==
-                                                                true ||
-                                                            expandMenuPayroll ==
-                                                                true
-                                                        ? Colors.black87
-                                                        : mytextcolors,
-                                            onTap: () {
-                                              setState(() {
-                                                isHovered = true;
-                                              });
-                                            })
-                                        .animate()
-                                        .fadeIn(delay: 900.ms)
-                                        .slideY(begin: 1, duration: 200.ms),
-                                  ),
-                                  DrawerTitle(
-                                          color: state.pageNumber == 9
-                                              ? mygreycolors
-                                              : mythemecolor,
-                                          icon: Icons.time_to_leave_sharp,
-                                          iconcolor: state.pageNumber == 9
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          title: "OFF-Site WORKING",
-                                          textColor: state.pageNumber == 9
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          onTap: () {
-                                            context
-                                                .read<HomepageBloc>()
-                                                .add(TripPageEvent());
-                                          })
-                                      .animate()
-                                      .fadeIn(delay: 1000.ms)
-                                      .slideY(begin: 1, duration: 200.ms),
-                                  MouseRegion(
-                                    onEnter: (event) {
-                                      setState(() {
-                                        isHoveredTimeattendance = true;
-                                      });
-                                    },
-                                    onExit: (event) {
-                                      setState(() {
-                                        isHoveredTimeattendance = false;
-                                      });
-                                    },
-                                    child: DrawerTitle(
-                                            color: state.pageNumber > 6 &&
-                                                    state.pageNumber < 7
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId == "R000000003" ||
+                                      _loginData?.role.roleId == "R000000004" ||
+                                      _loginData?.role.roleId == "R000000005" ||
+                                      _loginData?.role.roleId ==
+                                          "R000000006") //dev,acc manager ,acc labor
+                                    MouseRegion(
+                                      onEnter: (event) {
+                                        setState(() {
+                                          isHovered = true;
+                                        });
+                                      },
+                                      onExit: (event) {
+                                        setState(() {
+                                          isHovered = false;
+                                        });
+                                      },
+                                      child: DrawerTitle(
+                                              color:
+                                                  state.pageNumber > 5 &&
+                                                          state.pageNumber < 6
+                                                      ? mygreycolors
+                                                      : isHovered ==
+                                                                  true ||
+                                                              expandMenuPayroll ==
+                                                                  true
+                                                          ? Colors.white
+                                                          : mythemecolor,
+                                              icon: Icons.attach_money_rounded,
+                                              iconcolor:
+                                                  state
+                                                                  .pageNumber >
+                                                              5 &&
+                                                          state.pageNumber < 6
+                                                      ? Colors.black87
+                                                      : isHovered ==
+                                                                  true ||
+                                                              expandMenuPayroll ==
+                                                                  true
+                                                          ? Colors.black87
+                                                          : mytextcolors,
+                                              title: "PAYROLL",
+                                              textColor:
+                                                  state
+                                                                  .pageNumber >
+                                                              5 &&
+                                                          state.pageNumber < 6
+                                                      ? Colors.black87
+                                                      : isHovered ==
+                                                                  true ||
+                                                              expandMenuPayroll ==
+                                                                  true
+                                                          ? Colors.black87
+                                                          : mytextcolors,
+                                              onTap: () {
+                                                setState(() {
+                                                  isHovered = true;
+                                                });
+                                              })
+                                          .animate()
+                                          .fadeIn(delay: 900.ms)
+                                          .slideY(begin: 1, duration: 200.ms),
+                                    ),
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId ==
+                                          "R000000007") //dev,operator
+                                    DrawerTitle(
+                                            color: state.pageNumber == 9
                                                 ? mygreycolors
-                                                : isHoveredTimeattendance ==
-                                                            true ||
-                                                        expandMenuTimeattendance ==
-                                                            true
-                                                    ? Colors.white
-                                                    : mythemecolor,
-                                            icon: Icons.calendar_month_rounded,
-                                            iconcolor: state
-                                                            .pageNumber >
-                                                        6 &&
-                                                    state.pageNumber < 7
+                                                : mythemecolor,
+                                            icon: Icons.time_to_leave_sharp,
+                                            iconcolor: state.pageNumber == 9
                                                 ? Colors.black87
-                                                : isHoveredTimeattendance ==
-                                                            true ||
-                                                        expandMenuTimeattendance ==
-                                                            true
-                                                    ? Colors.black87
-                                                    : mytextcolors,
-                                            title: "TIME ATTENDANCE",
-                                            textColor: state
-                                                            .pageNumber >
-                                                        6 &&
-                                                    state.pageNumber < 7
+                                                : mytextcolors,
+                                            title: "OFF-Site WORKING",
+                                            textColor: state.pageNumber == 9
                                                 ? Colors.black87
-                                                : isHoveredTimeattendance ==
-                                                            true ||
-                                                        expandMenuTimeattendance ==
-                                                            true
-                                                    ? Colors.black87
-                                                    : mytextcolors,
+                                                : mytextcolors,
                                             onTap: () {
-                                              setState(() {
-                                                isHoveredTimeattendance = true;
-                                              });
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(TripPageEvent());
                                             })
                                         .animate()
-                                        .fadeIn(delay: 900.ms)
+                                        .fadeIn(delay: 1000.ms)
                                         .slideY(begin: 1, duration: 200.ms),
-                                  ),
-                                  DrawerTitle(
-                                          color: state.pageNumber == 7
-                                              ? mygreycolors
-                                              : mythemecolor,
-                                          icon: Icons.picture_as_pdf_rounded,
-                                          iconcolor: state.pageNumber == 7
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          title: "REPORT",
-                                          textColor: state.pageNumber == 7
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          onTap: () {
-                                            context
-                                                .read<HomepageBloc>()
-                                                .add(ReportPageEvent());
-                                          })
-                                      .animate()
-                                      .fadeIn(delay: 1100.ms)
-                                      .slideY(begin: 1, duration: 200.ms),
-                                  DrawerTitle(
-                                          color: state.pageNumber == 10
-                                              ? mygreycolors
-                                              : mythemecolor,
-                                          icon: Icons.key_rounded,
-                                          iconcolor: state.pageNumber == 10
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          title: "ROLE PERMISSIONS",
-                                          textColor: state.pageNumber == 10
-                                              ? Colors.black87
-                                              : mytextcolors,
-                                          onTap: () {
-                                            context
-                                                .read<HomepageBloc>()
-                                                .add(RolePageEvent());
-                                          })
-                                      .animate()
-                                      .fadeIn(delay: 1100.ms)
-                                      .slideY(begin: 1, duration: 200.ms),
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId == "R000000003" ||
+                                      _loginData?.role.roleId ==
+                                          "R000000004") //dev,hr manager ,hr general
+                                    MouseRegion(
+                                      onEnter: (event) {
+                                        setState(() {
+                                          isHoveredTimeattendance = true;
+                                        });
+                                      },
+                                      onExit: (event) {
+                                        setState(() {
+                                          isHoveredTimeattendance = false;
+                                        });
+                                      },
+                                      child: DrawerTitle(
+                                              color: state.pageNumber > 6 &&
+                                                      state.pageNumber < 7
+                                                  ? mygreycolors
+                                                  : isHoveredTimeattendance ==
+                                                              true ||
+                                                          expandMenuTimeattendance ==
+                                                              true
+                                                      ? Colors.white
+                                                      : mythemecolor,
+                                              icon: Icons.calendar_month_rounded,
+                                              iconcolor: state.pageNumber > 6 &&
+                                                      state.pageNumber < 7
+                                                  ? Colors.black87
+                                                  : isHoveredTimeattendance ==
+                                                              true ||
+                                                          expandMenuTimeattendance ==
+                                                              true
+                                                      ? Colors.black87
+                                                      : mytextcolors,
+                                              title: "TIME ATTENDANCE",
+                                              textColor: state.pageNumber > 6 &&
+                                                      state.pageNumber < 7
+                                                  ? Colors.black87
+                                                  : isHoveredTimeattendance ==
+                                                              true ||
+                                                          expandMenuTimeattendance ==
+                                                              true
+                                                      ? Colors.black87
+                                                      : mytextcolors,
+                                              onTap: () {
+                                                setState(() {
+                                                  isHoveredTimeattendance =
+                                                      true;
+                                                });
+                                              })
+                                          .animate()
+                                          .fadeIn(delay: 900.ms)
+                                          .slideY(begin: 1, duration: 200.ms),
+                                    ),
+                                  if (_loginData?.role.roleId == 'R000000000' ||
+                                      _loginData?.role.roleId == "R000000003" ||
+                                      _loginData?.role.roleId == "R000000004" ||
+                                      _loginData?.role.roleId == "R000000005" ||
+                                      _loginData?.role.roleId ==
+                                          "R000000006") //dev,hr ,acc
+                                    DrawerTitle(
+                                            color: state.pageNumber == 7
+                                                ? mygreycolors
+                                                : mythemecolor,
+                                            icon: Icons.picture_as_pdf_rounded,
+                                            iconcolor: state.pageNumber == 7
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            title: "REPORT",
+                                            textColor: state.pageNumber == 7
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            onTap: () {
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(ReportPageEvent());
+                                            })
+                                        .animate()
+                                        .fadeIn(delay: 1100.ms)
+                                        .slideY(begin: 1, duration: 200.ms),
+                                  if (_loginData?.role.roleId == 'R000000000')
+                                    DrawerTitle(
+                                            color: state.pageNumber == 10
+                                                ? mygreycolors
+                                                : mythemecolor,
+                                            icon: Icons.key_rounded,
+                                            iconcolor: state.pageNumber == 10
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            title: "ROLE PERMISSIONS",
+                                            textColor: state.pageNumber == 10
+                                                ? Colors.black87
+                                                : mytextcolors,
+                                            onTap: () {
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(RolePageEvent());
+                                            })
+                                        .animate()
+                                        .fadeIn(delay: 1100.ms)
+                                        .slideY(begin: 1, duration: 200.ms),
                                 ],
                               ),
                             ),
@@ -567,8 +791,12 @@ class _SlideBarState extends State<SlideBar> {
                                       child: Tooltip(
                                         message: "LOGOUT",
                                         child: IconButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(EssPageEvent());
+                                            },
                                             icon: Icon(
                                               Icons.exit_to_app_rounded,
                                               color: myambercolors,
@@ -581,12 +809,20 @@ class _SlideBarState extends State<SlideBar> {
                                     alignment: Alignment.bottomLeft,
                                     child: state.expandMenu == false
                                         ? null
-                                        : Text(
-                                            "LOGOUT",
-                                            style: TextStyle(
-                                                color: mytextcolors,
-                                                fontSize: 20),
-                                          ).animate().fadeIn(delay: 200.ms))
+                                        : InkWell(
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                              context
+                                                  .read<HomepageBloc>()
+                                                  .add(EssPageEvent());
+                                            },
+                                            child: Text(
+                                              "LOGOUT",
+                                              style: TextStyle(
+                                                  color: mytextcolors,
+                                                  fontSize: 20),
+                                            ).animate().fadeIn(delay: 200.ms),
+                                          ))
                               ],
                             ),
                           )
@@ -603,163 +839,6 @@ class _SlideBarState extends State<SlideBar> {
         if (isHoveredTimeattendance == true || expandMenuTimeattendance == true)
           timeattendanceSubMenu()
       ],
-    );
-  }
-
-  Widget payrollSubmenu() {
-    return MouseRegion(
-      onHover: (event) {
-        setState(() {
-          expandMenuPayroll = true;
-        });
-      },
-      onExit: (event) {
-        setState(() {
-          expandMenuPayroll = false;
-        });
-      },
-      child: Card(
-        margin: const EdgeInsets.all(0),
-        elevation: 6,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(12))),
-        child: Container(
-          width: 300,
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.horizontal(right: Radius.circular(12)),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: BlocBuilder<HomepageBloc, HomepageState>(
-              builder: (context, state) {
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const Gap(5),
-                      const Text(
-                        "Payroll Menu.",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ).animate().fadeIn(),
-                      const Gap(10),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 5.1
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 5.1
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "1. LOT MANAGEMENT",
-                          onTap: () {
-                            context
-                                .read<HomepageBloc>()
-                                .add(SubPayroll1PageEvent());
-                          }),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 5.2
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 5.2
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "2. SEND TO PAYROLL",
-                          onTap: () => context
-                              .read<HomepageBloc>()
-                              .add(SubPayrollPage2Event())),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 5.3
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 5.3
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "3. บันทึกข้อมูลปรับอัตราเงินเดือน",
-                          onTap: () => context
-                              .read<HomepageBloc>()
-                              .add(SubPayrollPage3Event())),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 5.4
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 5.4
-                              ? Colors.white
-                              : Colors.black87,
-                          title: "4. บันทึกข้อมูลลดหย่อนภาษีประจำปี",
-                          onTap: () => context
-                              .read<HomepageBloc>()
-                              .add(SubPayrollPage4Event())),
-                      DrawerTitleSubmenu(
-                          color: state.pageNumber == 5.5
-                              ? mythemecolor
-                              : Colors.white,
-                          textColor: state.pageNumber == 5.5
-                              ? Colors.white
-                              : Colors.black87,
-                          title:
-                              "5. ประมวลผลข้อมูลการจ่ายเงินเดือน ( PAYROLL )",
-                          onTap: () => context
-                              .read<HomepageBloc>()
-                              .add(SubPayrollPage5Event())),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- พิมพ์สลิปเงินเดือน",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- บันทึกข้อมูลการชำระเงินกู้ กยศ.",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- สรุปการจ่ายเงินพนักงานรายบุคคล",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- สรุปการจ่ายเงินพนักงานรายแผนก",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- รายงานข้อมูลเงินเดือนพนักงาน",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- สรุปการจ่ายเงินเดือนพนักงาน",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- พิมพ์เอกสารทวิ 50",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- ออกใบกำกับภาษี/หนังสือรับรองเงินเดือน",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- Export ข้อมูล ภงด.1/ ภงด.1ก. (ส่งสรรพากร)",
-                          onTap: () {}),
-                      DrawerTitleSubmenu(
-                          color: Colors.white,
-                          textColor: Colors.black87,
-                          title: "- Export ข้อมูลประกันสังคม SSO",
-                          onTap: () {}),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ),
-        ),
-      ),
     );
   }
 }
