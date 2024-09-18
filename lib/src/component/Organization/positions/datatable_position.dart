@@ -144,6 +144,61 @@ class _PositionDataTableState extends State<PositionDataTable> {
     }
   }
 
+  void showDialogCreate() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มตำแหน่งพนักงาน',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' (Create Position.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              content: const SizedBox(
+                width: 420,
+                height: 480,
+                child: EditPositions(
+                  onEdit: false,
+                ),
+              ));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PositionsBloc, PositionsState>(
@@ -173,6 +228,7 @@ class _PositionDataTableState extends State<PositionDataTable> {
                                 width: double.infinity,
                                 child: PaginatedDataTable(
                                   showFirstLastButtons: true,
+                                  headingRowHeight: 40,
                                   rowsPerPage: rowIndex,
                                   availableRowsPerPage: const [5, 10, 20],
                                   sortColumnIndex: sortColumnIndex,
@@ -182,67 +238,64 @@ class _PositionDataTableState extends State<PositionDataTable> {
                                       rowIndex = value!;
                                     });
                                   },
-                                  header: SizedBox(
-                                    width: double.infinity,
-                                    height: 50,
-                                    child: Row(
-                                      children: [
-                                        const Expanded(
-                                            flex: 2,
-                                            child: Text('Positions Table.',
-                                                style: TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.w800))),
-                                        Expanded(
-                                            flex: 1,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(4.0),
-                                              child: TextFormFieldSearch(
-                                                  controller: search,
-                                                  enabled: true,
-                                                  onChanged: (value) {
-                                                    if (value == '') {
-                                                      context
-                                                          .read<PositionsBloc>()
-                                                          .add(
-                                                              DissSearchEvent());
-                                                    } else {
-                                                      setState(() {
-                                                        context
-                                                            .read<
-                                                                PositionsBloc>()
-                                                            .add(SearchEvent());
-                                                        positionData =
-                                                            filterData!.where(
-                                                                (element) {
-                                                          final nameId = element
-                                                              .positionId
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameTh = element
-                                                              .positionNameTh
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
-                                                          final nameEn = element
-                                                              .positionNameEn
-                                                              .toLowerCase()
-                                                              .contains(value
-                                                                  .toLowerCase());
+                                  header: Text('Positions Table.',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800)),
+                                  actions: [
+                                    SizedBox(
+                                        width: 300,
+                                        height: 46,
+                                        child: TextFormFieldSearch(
+                                            controller: search,
+                                            enabled: true,
+                                            onChanged: (value) {
+                                              if (value == '') {
+                                                context
+                                                    .read<PositionsBloc>()
+                                                    .add(DissSearchEvent());
+                                              } else {
+                                                setState(() {
+                                                  context
+                                                      .read<PositionsBloc>()
+                                                      .add(SearchEvent());
+                                                  positionData = filterData!
+                                                      .where((element) {
+                                                    final nameId = element
+                                                        .positionId
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase());
+                                                    final nameTh = element
+                                                        .positionNameTh
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase());
+                                                    final nameEn = element
+                                                        .positionNameEn
+                                                        .toLowerCase()
+                                                        .contains(value
+                                                            .toLowerCase());
 
-                                                          return nameId ||
-                                                              nameEn ||
-                                                              nameTh;
-                                                        }).toList();
-                                                      });
-                                                    }
-                                                  }),
-                                            )),
-                                      ],
+                                                    return nameId ||
+                                                        nameEn ||
+                                                        nameTh;
+                                                  }).toList();
+                                                });
+                                              }
+                                            })),
+                                    Tooltip(
+                                      message: 'Create position.',
+                                      child: MyFloatingButton(
+                                              onPressed: () {
+                                                showDialogCreate();
+                                              },
+                                              icon: const Icon(
+                                                  Icons.add_rounded,
+                                                  size: 30))
+                                          .animate()
+                                          .shake(),
                                     ),
-                                  ),
+                                  ],
                                   columns: [
                                     DataColumn(
                                         numeric: true,

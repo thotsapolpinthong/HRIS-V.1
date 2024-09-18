@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
           Locale('en', 'gb'),
           Locale('th', 'TH'),
         ],
-        title: 'HRIS Demo',
+        title: 'HRIS STEC.',
         theme: ThemeData(
           scaffoldBackgroundColor: mygreycolors,
           textTheme: GoogleFonts.poppinsTextTheme(

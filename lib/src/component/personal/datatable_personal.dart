@@ -221,25 +221,25 @@ class _DataTablePersonState extends State<DataTablePerson> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Tooltip(
-        message: "Create a new person",
-        child: widget.employee == true
-            ? null
-            : MyFloatingButton(
-                onPressed: () {
-                  setState(() {
-                    isloading = !isloading;
-                    addPerson();
-                    isloading = !isloading;
-                  });
-                },
-                icon: const Icon(
-                  Icons.person_add_alt_1,
-                  size: 28,
-                  color: Colors.white,
-                )),
-      ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      // floatingActionButton: Tooltip(
+      //   message: "Create a new person",
+      //   child: widget.employee == true
+      //       ? null
+      //       : MyFloatingButton(
+      //           onPressed: () {
+      //             setState(() {
+      //               isloading = !isloading;
+      //               addPerson();
+      //               isloading = !isloading;
+      //             });
+      //           },
+      //           icon: const Icon(
+      //             Icons.person_add_alt_1,
+      //             size: 28,
+      //             color: Colors.white,
+      //           )),
+      // ),
       body: BlocBuilder<PersonalBloc, PersonalState>(
         builder: (context, state) {
           if (state.onSearchData == false) {
@@ -271,97 +271,101 @@ class _DataTablePersonState extends State<DataTablePerson> {
                                     deletePerson,
                                     widget.employee,
                                     widget.positionOrgData),
-                                header: SizedBox(
-                                  width: double.infinity,
-                                  height: 50,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: widget.employee == true ? 2 : 3,
-                                        child: RichText(
-                                          text: TextSpan(
-                                              style:
-                                                  DefaultTextStyle.of(context)
-                                                      .style,
-                                              children: [
-                                                TextSpan(
-                                                  text: widget.employee == true
-                                                      ? "เลือกบุคคลเข้ารายงานตัว"
-                                                      : 'บันทึกข้อมูลส่วนบุคคล',
-                                                  style: GoogleFonts.kanit(
-                                                      textStyle:
-                                                          const TextStyle(
-                                                              fontSize: 19)),
-                                                ),
-                                                TextSpan(
-                                                  text: widget.employee == true
-                                                      ? "  (Select Your Person)"
-                                                      : '  (Personel Profile)',
-                                                  style: const TextStyle(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ]),
+                                header: RichText(
+                                  text: TextSpan(
+                                      style: DefaultTextStyle.of(context).style,
+                                      children: [
+                                        TextSpan(
+                                          text: widget.employee == true
+                                              ? "เลือกบุคคลเข้ารายงานตัว"
+                                              : 'บันทึกข้อมูลส่วนบุคคล',
+                                          style: GoogleFonts.kanit(
+                                              textStyle: const TextStyle(
+                                                  fontSize: 19)),
                                         ),
-                                      ),
-                                      Expanded(
-                                          flex: 1,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: TextFormFieldSearch(
-                                                controller: nameEn,
-                                                enabled: true,
-                                                onChanged: (value) {
-                                                  if (value == '') {
-                                                    context
-                                                        .read<PersonalBloc>()
-                                                        .add(DissSearchEvent());
-                                                  } else {
-                                                    setState(() {
-                                                      context
-                                                          .read<PersonalBloc>()
-                                                          .add(SearchEvent());
-                                                      personData = filterData!
-                                                          .where((element) {
-                                                        final nameId = element
-                                                            .personId
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final nameEn = element
-                                                            .firstNameEn
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final nameTh = element
-                                                            .fisrtNameTh
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final lastnameTh = element
-                                                            .lastNameTh
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        final lastNameEn = element
-                                                            .lastNameEn
-                                                            .toLowerCase()
-                                                            .contains(value
-                                                                .toLowerCase());
-                                                        return nameId ||
-                                                            nameEn ||
-                                                            nameTh ||
-                                                            lastnameTh ||
-                                                            lastNameEn;
-                                                      }).toList();
-                                                    });
-                                                  }
-                                                }),
-                                          )),
-                                    ],
-                                  ),
+                                        TextSpan(
+                                          text: widget.employee == true
+                                              ? "  (Select Your Person)"
+                                              : '  (Personel Profile)',
+                                          style: const TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ]),
                                 ),
+                                actions: [
+                                  SizedBox(
+                                    width: 300,
+                                    height: 46,
+                                    child: TextFormFieldSearch(
+                                        controller: nameEn,
+                                        enabled: true,
+                                        onChanged: (value) {
+                                          if (value == '') {
+                                            context
+                                                .read<PersonalBloc>()
+                                                .add(DissSearchEvent());
+                                          } else {
+                                            setState(() {
+                                              context
+                                                  .read<PersonalBloc>()
+                                                  .add(SearchEvent());
+                                              personData =
+                                                  filterData!.where((element) {
+                                                final nameId = element.personId
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final nameEn = element
+                                                    .firstNameEn
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final nameTh = element
+                                                    .fisrtNameTh
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final lastnameTh = element
+                                                    .lastNameTh
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                final lastNameEn = element
+                                                    .lastNameEn
+                                                    .toLowerCase()
+                                                    .contains(
+                                                        value.toLowerCase());
+                                                return nameId ||
+                                                    nameEn ||
+                                                    nameTh ||
+                                                    lastnameTh ||
+                                                    lastNameEn;
+                                              }).toList();
+                                            });
+                                          }
+                                        }),
+                                  ),
+                                  Tooltip(
+                                    message: "Create a new person",
+                                    child: widget.employee == true
+                                        ? null
+                                        : MyFloatingButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                isloading = !isloading;
+                                                addPerson();
+                                                isloading = !isloading;
+                                              });
+                                            },
+                                            icon: const Icon(
+                                              Icons.person_add_alt_1,
+                                              size: 28,
+                                              color: Colors.white,
+                                            )),
+                                  ),
+                                ],
                                 availableRowsPerPage: const [5, 10, 20],
                                 onRowsPerPageChanged: (value) {
                                   setState(() {

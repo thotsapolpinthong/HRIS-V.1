@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hris_app_prototype/src/component/Organization/department/datatable_department.dart';
-import 'package:hris_app_prototype/src/component/Organization/organization/create_edit_org.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/datatable_organization.dart';
 import 'package:hris_app_prototype/src/component/Organization/organization/graphtree_org.dart';
-import 'package:hris_app_prototype/src/component/Organization/positions/position_layout.dart';
+import 'package:hris_app_prototype/src/component/Organization/positions/datatable_position.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 
 class OrganizationLayout extends StatefulWidget {
@@ -17,66 +14,6 @@ class OrganizationLayout extends StatefulWidget {
 
 class _OrganizationLayoutState extends State<OrganizationLayout> {
   int isExpandedPage = 0;
-  void showDialogCreate() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              backgroundColor: mygreycolors,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              title: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                          style: DefaultTextStyle.of(context).style,
-                          children: [
-                            TextSpan(
-                              text: 'เพิ่มโครงสร้างองค์กร',
-                              style: GoogleFonts.kanit(
-                                  textStyle: const TextStyle(fontSize: 18)),
-                            ),
-                            const TextSpan(
-                              text: ' (Create Organization.)',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ]),
-                    ),
-                    ElevatedButton(
-                      style:
-                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                      child: const Text(
-                        'X',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              content: const SizedBox(
-                width: 450,
-                height: 500,
-                child: Column(
-                  children: [
-                    Expanded(
-                        child: EditOrganization(
-                      onEdit: false,
-                      ongraph: false,
-                    )),
-                  ],
-                ),
-              ));
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,22 +21,6 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
         child: Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: isExpandedPage == 1
-            ? SizedBox(
-                height: 50,
-                width: 50,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.all(1),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12))),
-                    onPressed: () {
-                      showDialogCreate();
-                    },
-                    child: const Icon(Icons.add, size: 30)),
-              )
-            : null,
         body: Center(
             child: Column(
           children: [
@@ -232,7 +153,7 @@ class _OrganizationLayoutState extends State<OrganizationLayout> {
             else if (isExpandedPage == 2)
               const Expanded(flex: 19, child: DepartmentDataTable())
             else
-              const Expanded(flex: 19, child: MyPositionsLayout())
+              const Expanded(flex: 19, child: PositionDataTable())
           ],
         )),
       ),

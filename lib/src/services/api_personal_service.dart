@@ -60,6 +60,7 @@ import '../model/person/update_person_model.dart';
 
 class ApiService {
   static String baseUrl = "http://192.168.0.205/StecApi/Hr";
+  static String baseUrlLogin = "http://192.168.0.205/StecApi/Login";
   static String sharedToken = "";
 
   //login----------------------------------------------------------------
@@ -84,8 +85,7 @@ class ApiService {
   static Future<LoginModel?> postApiLoginn(
       String username, String password) async {
     final response = await http.post(
-      Uri.parse(
-          "http://192.168.0.205/StecApi/Login?userName=$username&password=$password"),
+      Uri.parse("$baseUrlLogin?userName=$username&password=$password"),
       headers: {"accept": "text/plain"},
       // body: {
       //   'userName': username,
@@ -100,6 +100,7 @@ class ApiService {
     } else {
       return null;
     }
+    return null;
   }
   //end login----------------------------------------------------------------
 

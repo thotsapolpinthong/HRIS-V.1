@@ -1,5 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +20,8 @@ import 'package:hris_app_prototype/src/page/employee_self_sevice/employee_self_s
 import 'package:hris_app_prototype/src/page/organization/organization_layout.dart';
 import 'package:hris_app_prototype/src/page/personal/personal_page.dart';
 import 'package:hris_app_prototype/src/page/role_permission/role_permission_layout.dart';
-import 'package:hris_app_prototype/src/page/timeattendance/shift_layout.dart';
-import 'package:hris_app_prototype/src/page/timeattendance/time_attendance_layout.dart';
+import 'package:hris_app_prototype/src/component/time_attendance/shift/shift_layout.dart';
+import 'package:hris_app_prototype/src/component/time_attendance/time_attendance_layout.dart';
 import 'package:hris_app_prototype/src/page/trip/off-side_layout.dart';
 
 class MyHomepage extends StatefulWidget {

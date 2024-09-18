@@ -86,7 +86,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
                         fetchDataTemp: fetchData,
                       )),
                   Positioned(
-                      right: 0,
+                      right: -5,
                       top: -5,
                       child: InkWell(
                           borderRadius: BorderRadius.circular(50),
@@ -95,8 +95,8 @@ class _SalaryManagementState extends State<SalaryManagement> {
                               angle: (45 * 22 / 7) / 180,
                               child: Icon(
                                 Icons.add_rounded,
-                                size: 32,
-                                color: Colors.grey[700],
+                                size: 40,
+                                color: myredcolors,
                               )))),
                 ],
               ));
@@ -106,7 +106,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
   Widget header() {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 54,
       child: Row(
         children: [
           const Expanded(
@@ -128,81 +128,78 @@ class _SalaryManagementState extends State<SalaryManagement> {
           const Gap(10),
           Expanded(
               flex: 1,
-              child: SizedBox(
-                // height: 45,
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: DropdownGlobal(
-                          labeltext: 'Employee Type',
-                          value: staffId,
-                          items: staffType.map((e) {
-                            return DropdownMenuItem<String>(
-                              value: e.id.toString(),
-                              child: SizedBox(width: 100, child: Text(e.name)),
-                            );
-                          }).toList(),
-                          onChanged: (newValue) {
-                            setState(() {
-                              staffId = newValue.toString();
-                              fetchData();
-                            });
-                          },
-                          validator: null,
-                          outlineColor: staffId == null ? myredcolors : null),
-                    ),
-                    Expanded(
-                      flex: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: TextFormFieldSearch(
-                            controller: search,
-                            enabled: true,
-                            onChanged: (value) {
-                              if (value == '') {
-                                setState(() {
-                                  onSearch = true;
-                                  filterData = salaryData;
-                                });
-                              } else {
-                                setState(() {
-                                  filterData = salaryData.where((e) {
-                                    final eId = e.employeeId
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final type = e.employeeTypeName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final fname = e.firstName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final lname = e.lastName
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final salary = e.salary
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
-                                    final wage = e.wage
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase());
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: DropdownGlobal(
+                        labeltext: 'Employee Type',
+                        value: staffId,
+                        items: staffType.map((e) {
+                          return DropdownMenuItem<String>(
+                            value: e.id.toString(),
+                            child: SizedBox(width: 100, child: Text(e.name)),
+                          );
+                        }).toList(),
+                        onChanged: (newValue) {
+                          setState(() {
+                            staffId = newValue.toString();
+                            fetchData();
+                          });
+                        },
+                        validator: null,
+                        outlineColor: staffId == null ? myredcolors : null),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: TextFormFieldSearch(
+                          controller: search,
+                          enabled: true,
+                          onChanged: (value) {
+                            if (value == '') {
+                              setState(() {
+                                onSearch = true;
+                                filterData = salaryData;
+                              });
+                            } else {
+                              setState(() {
+                                filterData = salaryData.where((e) {
+                                  final eId = e.employeeId
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final type = e.employeeTypeName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final fname = e.firstName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final lname = e.lastName
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final salary = e.salary
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
+                                  final wage = e.wage
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase());
 
-                                    return eId ||
-                                        salary ||
-                                        fname ||
-                                        lname ||
-                                        wage ||
-                                        type;
-                                  }).toList();
-                                });
-                              }
-                            }),
-                      ),
+                                  return eId ||
+                                      salary ||
+                                      fname ||
+                                      lname ||
+                                      wage ||
+                                      type;
+                                }).toList();
+                              });
+                            }
+                          }),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               )),
         ],
       ),
@@ -237,9 +234,6 @@ class _SalaryManagementState extends State<SalaryManagement> {
         : Padding(
             padding: const EdgeInsets.all(12.0),
             child: Scaffold(
-              floatingActionButton: floating(),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endDocked,
               body: SizedBox(
                 height: double.infinity,
                 child: Card(
@@ -266,6 +260,7 @@ class _SalaryManagementState extends State<SalaryManagement> {
                                 });
                               },
                               header: header(),
+                              actions: [floating()],
                               columns: const [
                                 DataColumn(label: Text("Employee ID")),
                                 DataColumn(label: Text("Type")),

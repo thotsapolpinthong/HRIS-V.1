@@ -1,4 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -139,6 +140,49 @@ class _CalendarDataTableState extends State<CalendarDataTable> {
         filterData!.sort((a, b) => b.holidayNameEn.compareTo(a.holidayNameEn));
       }
     }
+  }
+
+  void showDialogCreate() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('เพิ่มข้อมูลวันหยุด (Create Holiday.)'),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              content: const SizedBox(
+                width: 560,
+                height: 600,
+                child: Column(
+                  children: [
+                    Expanded(
+                        child: CreateUpdateCalendar(
+                      onEdit: false,
+                    )),
+                  ],
+                ),
+              ));
+        });
   }
 
   @override
@@ -391,6 +435,14 @@ class _CalendarDataTableState extends State<CalendarDataTable> {
                                 ],
                               ),
                             ),
+                            actions: [
+                              MyFloatingButton(
+                                  onPressed: () {
+                                    showDialogCreate();
+                                  },
+                                  icon: const Icon(
+                                      CupertinoIcons.calendar_badge_plus))
+                            ],
                             columns: [
                               DataColumn(
                                   label: const Text('Date'),
@@ -532,7 +584,7 @@ class PersonDataTableSource extends DataTableSource {
   }
 
   @override
-  int get rowCount => data!.length;
+  int get rowCount => data?.length ?? 0;
 
   @override
   bool get isRowCountApproximate => false;

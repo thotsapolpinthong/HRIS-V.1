@@ -208,21 +208,6 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                   ? myLoadingScreen
                   : SafeArea(
                       child: Scaffold(
-                      floatingActionButtonLocation:
-                          FloatingActionButtonLocation.endDocked,
-                      floatingActionButton: SizedBox(
-                        height: 50,
-                        width: 50,
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(1),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12))),
-                            onPressed: () {
-                              showDialogCreate();
-                            },
-                            child: const Icon(Icons.add, size: 30)),
-                      ).animate().shake(),
                       body: SizedBox(
                         height: double.infinity,
                         child: Padding(
@@ -239,6 +224,7 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                                     SizedBox(
                                       width: double.infinity,
                                       child: PaginatedDataTable(
+                                        headingRowHeight: 40,
                                         showFirstLastButtons: true,
                                         rowsPerPage: rowIndex,
                                         availableRowsPerPage: const [5, 10, 20],
@@ -251,69 +237,69 @@ class _DepartmentDataTableState extends State<DepartmentDataTable> {
                                         },
                                         header: SizedBox(
                                           width: double.infinity,
-                                          height: 50,
-                                          child: Row(
-                                            children: [
-                                              const Expanded(
-                                                  flex: 2,
-                                                  child: Text(
-                                                      'Department Table.',
-                                                      style: TextStyle(
-                                                          fontWeight: FontWeight
-                                                              .w800))),
-                                              Expanded(
-                                                  flex: 1,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            4.0),
-                                                    child: TextFormFieldSearch(
-                                                        controller: search,
-                                                        enabled: true,
-                                                        onChanged: (value) {
-                                                          if (value == '') {
-                                                            context
-                                                                .read<
-                                                                    DepartmentBloc>()
-                                                                .add(
-                                                                    DissSearchEvent());
-                                                          } else {
-                                                            setState(() {
-                                                              context
-                                                                  .read<
-                                                                      DepartmentBloc>()
-                                                                  .add(
-                                                                      SearchEvent());
-                                                              departmentData =
-                                                                  filterData!.where(
-                                                                      (element) {
-                                                                final nameId = element
-                                                                    .deptCode
-                                                                    .toLowerCase()
-                                                                    .contains(value
-                                                                        .toLowerCase());
-                                                                final nameTH = element
-                                                                    .deptNameTh
-                                                                    .toLowerCase()
-                                                                    .contains(value
-                                                                        .toLowerCase());
-                                                                final nameEN = element
-                                                                    .deptNameEn
-                                                                    .toLowerCase()
-                                                                    .contains(value
-                                                                        .toLowerCase());
-
-                                                                return nameId ||
-                                                                    nameTH ||
-                                                                    nameEN;
-                                                              }).toList();
-                                                            });
-                                                          }
-                                                        }),
-                                                  )),
-                                            ],
-                                          ),
+                                          height: 42,
+                                          child: Text('Department Table.',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w800)),
                                         ),
+                                        actions: [
+                                          SizedBox(
+                                            width: 300,
+                                            height: 46,
+                                            child: TextFormFieldSearch(
+                                                controller: search,
+                                                enabled: true,
+                                                onChanged: (value) {
+                                                  if (value == '') {
+                                                    context
+                                                        .read<DepartmentBloc>()
+                                                        .add(DissSearchEvent());
+                                                  } else {
+                                                    setState(() {
+                                                      context
+                                                          .read<
+                                                              DepartmentBloc>()
+                                                          .add(SearchEvent());
+                                                      departmentData =
+                                                          filterData!
+                                                              .where((element) {
+                                                        final nameId = element
+                                                            .deptCode
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final nameTH = element
+                                                            .deptNameTh
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+                                                        final nameEN = element
+                                                            .deptNameEn
+                                                            .toLowerCase()
+                                                            .contains(value
+                                                                .toLowerCase());
+
+                                                        return nameId ||
+                                                            nameTH ||
+                                                            nameEN;
+                                                      }).toList();
+                                                    });
+                                                  }
+                                                }),
+                                          ),
+                                          Tooltip(
+                                            message: 'Create department.',
+                                            child: MyFloatingButton(
+                                                    onPressed: () {
+                                                      showDialogCreate();
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons.add_rounded,
+                                                        size: 30))
+                                                .animate()
+                                                .shake(),
+                                          ),
+                                        ],
                                         columns: [
                                           DataColumn(
                                               numeric: true,

@@ -156,32 +156,23 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
             child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Scaffold(
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.endDocked,
             floatingActionButton: widget.dashboard == true
                 ? null
-                : SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.all(1),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12))),
-                        onPressed: () {
-                          showDialogCreate();
-                        },
-                        child: const Icon(CupertinoIcons.calendar_badge_plus)),
-                  ).animate().shake(),
+                : isExpandedPage == 0
+                    ? MyFloatingButton(
+                            onPressed: () {
+                              showDialogCreate();
+                            },
+                            icon:
+                                const Icon(CupertinoIcons.calendar_badge_plus))
+                        .animate()
+                        .shake()
+                    : null,
             body: Center(
               child: Column(
                 children: [
-                  // if (widget.dashboard == false)
-                  //   const Text(
-                  //     'บันทึกข้อมูลวันหยุดประจำปี',
-                  //     style: TextStyle(
-                  //       fontSize: 20,
-                  //     ),
-                  //   ),
-                  // const Gap(10),
                   if (widget.dashboard == false)
                     Container(
                       constraints: const BoxConstraints(maxWidth: 600),

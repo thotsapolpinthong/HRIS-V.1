@@ -164,6 +164,67 @@ class _OrganizationDataTableState extends State<OrganizationDataTable> {
     }
   }
 
+  void showDialogCreate() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    RichText(
+                      text: TextSpan(
+                          style: DefaultTextStyle.of(context).style,
+                          children: [
+                            TextSpan(
+                              text: 'เพิ่มโครงสร้างองค์กร',
+                              style: GoogleFonts.kanit(
+                                  textStyle: const TextStyle(fontSize: 18)),
+                            ),
+                            const TextSpan(
+                              text: ' (Create Organization.)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ]),
+                    ),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              content: const SizedBox(
+                width: 450,
+                height: 500,
+                child: Column(
+                  children: [
+                    Expanded(
+                        child: EditOrganization(
+                      onEdit: false,
+                      ongraph: false,
+                    )),
+                  ],
+                ),
+              ));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<OrganizationBloc, OrganizationState>(
@@ -188,6 +249,7 @@ class _OrganizationDataTableState extends State<OrganizationDataTable> {
                           SizedBox(
                             width: double.infinity,
                             child: PaginatedDataTable(
+                              headingRowHeight: 40,
                               columnSpacing: 30,
                               showFirstLastButtons: true,
                               rowsPerPage: rowIndex,
@@ -199,72 +261,69 @@ class _OrganizationDataTableState extends State<OrganizationDataTable> {
                                   rowIndex = value!;
                                 });
                               },
-                              header: SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: Row(
-                                  children: [
-                                    const Expanded(
-                                        flex: 2,
-                                        child: Text('Organizations Table.',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w800))),
-                                    Expanded(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: TextFormFieldSearch(
-                                              controller: search,
-                                              enabled: true,
-                                              onChanged: (value) {
-                                                if (value == '') {
-                                                  context
-                                                      .read<OrganizationBloc>()
-                                                      .add(DissSearchEvent());
-                                                } else {
-                                                  setState(() {
-                                                    context
-                                                        .read<
-                                                            OrganizationBloc>()
-                                                        .add(SearchEvent());
-                                                    orgData = filterData!
-                                                        .where((element) {
-                                                      final nameId = element
-                                                          .organizationCode
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final type = element
-                                                          .organizationTypeData
-                                                          .organizationTypeName
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final nameTH = element
-                                                          .departMentData
-                                                          .deptNameTh
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final nameEn = element
-                                                          .departMentData
-                                                          .deptNameEn
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
+                              header: Text('Organizations Table.',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.w800)),
+                              actions: [
+                                SizedBox(
+                                  width: 300,
+                                  height: 45,
+                                  child: TextFormFieldSearch(
+                                      controller: search,
+                                      enabled: true,
+                                      onChanged: (value) {
+                                        if (value == '') {
+                                          context
+                                              .read<OrganizationBloc>()
+                                              .add(DissSearchEvent());
+                                        } else {
+                                          setState(() {
+                                            context
+                                                .read<OrganizationBloc>()
+                                                .add(SearchEvent());
+                                            orgData =
+                                                filterData!.where((element) {
+                                              final nameId = element
+                                                  .organizationCode
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase());
+                                              final type = element
+                                                  .organizationTypeData
+                                                  .organizationTypeName
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase());
+                                              final nameTH = element
+                                                  .departMentData.deptNameTh
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase());
+                                              final nameEn = element
+                                                  .departMentData.deptNameEn
+                                                  .toLowerCase()
+                                                  .contains(
+                                                      value.toLowerCase());
 
-                                                      return nameId ||
-                                                          nameEn ||
-                                                          type ||
-                                                          nameTH;
-                                                    }).toList();
-                                                  });
-                                                }
-                                              }),
-                                        )),
-                                  ],
+                                              return nameId ||
+                                                  nameEn ||
+                                                  type ||
+                                                  nameTH;
+                                            }).toList();
+                                          });
+                                        }
+                                      }),
                                 ),
-                              ),
+                                Tooltip(
+                                  message: 'Create organization.',
+                                  child: MyFloatingButton(
+                                      onPressed: () {
+                                        showDialogCreate();
+                                      },
+                                      icon: const Icon(Icons.add_rounded,
+                                          size: 30)),
+                                ),
+                              ],
                               columns: [
                                 DataColumn(
                                     // numeric: true,

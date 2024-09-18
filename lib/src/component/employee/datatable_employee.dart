@@ -93,12 +93,11 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                   height: MediaQuery.of(context).size.height - 20,
                   child: Stack(
                     children: [
-                      Expanded(
-                          child: DataTablePerson(
+                      DataTablePerson(
                         employee: true,
-                      )),
+                      ),
                       Positioned(
-                          right: 0,
+                          right: -5,
                           top: -5,
                           child: InkWell(
                               borderRadius: BorderRadius.circular(50),
@@ -107,8 +106,8 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                   angle: (45 * 22 / 7) / 180,
                                   child: Icon(
                                     Icons.add_rounded,
-                                    size: 32,
-                                    color: Colors.grey[700],
+                                    size: 40,
+                                    color: myredcolors,
                                   )))),
                     ],
                   ),
@@ -177,7 +176,7 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                       },
                                       header: SizedBox(
                                         width: double.infinity,
-                                        height: 50,
+                                        height: 54,
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -352,6 +351,20 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                           ],
                                         ),
                                       ),
+                                      actions: [
+                                        widget.isSelected == false
+                                            ? Tooltip(
+                                                message: "Create Employee",
+                                                child: MyFloatingButton(
+                                                    onPressed: () {
+                                                      showDialogSearch(null);
+                                                    },
+                                                    icon: const Icon(
+                                                        Icons
+                                                            .person_add_alt_1_rounded,
+                                                        size: 30)))
+                                            : Container()
+                                      ],
                                       columns: [
                                         if (widget.isSelected == false)
                                           const DataColumn(
@@ -426,29 +439,10 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                           ),
                         ),
                       ),
-                      floatingActionButtonLocation: widget.isSelected == false
-                          ? FloatingActionButtonLocation.endDocked
-                          : FloatingActionButtonLocation.centerDocked,
+                      floatingActionButtonLocation:
+                          FloatingActionButtonLocation.centerDocked,
                       floatingActionButton: widget.isSelected == false
-                          ? Tooltip(
-                              message: "Create Employee",
-                              child: SizedBox(
-                                height: 50,
-                                width: 50,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.all(1),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12))),
-                                    onPressed: () {
-                                      showDialogSearch(null);
-                                    },
-                                    child: const Icon(
-                                        Icons.person_add_alt_1_rounded,
-                                        size: 30)),
-                              ).animate().shake(),
-                            )
+                          ? null
                           : widget.isSelected == true &&
                                   widget.isSelectedOne == true
                               ? null
@@ -530,11 +524,14 @@ class PersonDataTableSource extends DataTableSource {
               },
         cells: [
           if (isSelected == false)
-            DataCell(ElevatedButton(
-                onPressed: () {
-                  employeeMenu(employeeData);
-                },
-                child: const Icon(CupertinoIcons.square_list))),
+            DataCell(employeeData.positionData.positionData.positionNameTh ==
+                    "นักพัฒนาซอฟต์แวร์"
+                ? Container()
+                : ElevatedButton(
+                    onPressed: () {
+                      employeeMenu(employeeData);
+                    },
+                    child: const Icon(CupertinoIcons.square_list))),
           DataCell(Text(employeeData
               .positionData.organizationData.departMentData.deptCode)),
           DataCell(Text(employeeData.employeeId)),

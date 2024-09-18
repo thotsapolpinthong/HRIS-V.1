@@ -1,9 +1,12 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
+import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
+import 'package:hris_app_prototype/src/component/textformfield/textformfield_custom.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/shift/create_update_shift.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/delete_shift_model.dart';
 import 'package:hris_app_prototype/src/model/time_attendance/shift/get_shift_all_model.dart';
@@ -125,6 +128,41 @@ class _ShiftDataTableState extends State<ShiftDataTable> {
     }
   }
 
+  void showDialogCreate() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              backgroundColor: mygreycolors,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextThai(text: 'เพิ่มกะการทำงาน (Create Shift.)'),
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: const Text(
+                        'X',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              content: const SizedBox(
+                  width: 560,
+                  height: 360,
+                  child: CreateUpdateShift(onEdit: false)));
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TimeattendanceBloc, TimeattendanceState>(
@@ -166,79 +204,53 @@ class _ShiftDataTableState extends State<ShiftDataTable> {
                               rowIndex = value!;
                             });
                           },
-                          header: SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: Row(
-                              children: [
-                                const Expanded(
-                                    flex: 2,
-                                    child: Text('Shift setting table.')),
-                                Expanded(
-                                    flex: 1,
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.search_rounded),
-                                        Expanded(
-                                          flex: 2,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: TextFormField(
-                                              controller: search,
-                                              onChanged: (value) {
-                                                if (value == '') {
-                                                  context
-                                                      .read<
-                                                          TimeattendanceBloc>()
-                                                      .add(DissSearchEvent());
-                                                } else {
-                                                  setState(() {
-                                                    context
-                                                        .read<
-                                                            TimeattendanceBloc>()
-                                                        .add(SearchEvent());
-                                                    mainData = filterData!
-                                                        .where((element) {
-                                                      final nameId = element
-                                                          .shiftName
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final type = element
-                                                          .startTime
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
-                                                      final nameTH = element
-                                                          .endTime
-                                                          .toLowerCase()
-                                                          .contains(value
-                                                              .toLowerCase());
+                          header: Text('Shift setting table.',
+                              style: TextStyle(fontWeight: FontWeight.w800)),
+                          actions: [
+                            SizedBox(
+                              width: 300,
+                              height: 46,
+                              child: TextFormFieldSearch(
+                                  controller: search,
+                                  onChanged: (value) {
+                                    if (value == '') {
+                                      context
+                                          .read<TimeattendanceBloc>()
+                                          .add(DissSearchEvent());
+                                    } else {
+                                      setState(() {
+                                        context
+                                            .read<TimeattendanceBloc>()
+                                            .add(SearchEvent());
+                                        mainData = filterData!.where((element) {
+                                          final nameId = element.shiftName
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase());
+                                          final type = element.startTime
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase());
+                                          final nameTH = element.endTime
+                                              .toLowerCase()
+                                              .contains(value.toLowerCase());
 
-                                                      return nameId ||
-                                                          type ||
-                                                          nameTH;
-                                                    }).toList();
-                                                  });
-                                                }
-                                              },
-                                              decoration: InputDecoration(
-                                                  contentPadding:
-                                                      const EdgeInsets.all(
-                                                          10.0),
-                                                  hintText: 'Search (EN/TH)',
-                                                  border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8))),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              ],
+                                          return nameId || type || nameTH;
+                                        }).toList();
+                                      });
+                                    }
+                                  },
+                                  enabled: true),
                             ),
-                          ),
+                            Tooltip(
+                              message: 'Create Shift.',
+                              child: MyFloatingButton(
+                                      onPressed: () {
+                                        showDialogCreate();
+                                      },
+                                      icon: const Icon(Icons.more_time_rounded))
+                                  .animate()
+                                  .shake(),
+                            )
+                          ],
                           columns: [
                             DataColumn(
                                 label: const Text('Shift Name'),

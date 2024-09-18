@@ -201,20 +201,6 @@ class _WorkSPTableState extends State<WorkSPTable> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: SizedBox(
-          height: 50,
-          width: 50,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(1),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12))),
-              onPressed: () {
-                createSp();
-              },
-              child: const Icon(Icons.add_rounded)),
-        ),
         body: SizedBox(
           height: double.infinity,
           child: Card(
@@ -240,6 +226,15 @@ class _WorkSPTableState extends State<WorkSPTable> {
                                             fontWeight: FontWeight.bold)),
                                     actions: [
                                       lotMenu(),
+                                      Tooltip(
+                                        message: "Create workdate.",
+                                        child: MyFloatingButton(
+                                            onPressed: () {
+                                              createSp();
+                                            },
+                                            icon: const Icon(Icons.add_rounded,
+                                                size: 30)),
+                                      ),
                                     ],
                                     columnSpacing: 10,
                                     showFirstLastButtons: true,

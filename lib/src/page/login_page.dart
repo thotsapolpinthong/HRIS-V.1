@@ -22,8 +22,8 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _usernameController.text = 'dev';
-    _passwordController.text = '@dev123';
+    // _usernameController.text = 'dev';
+    // _passwordController.text = '@dev123';
   }
 
   @override
@@ -31,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+        padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Column(
           children: [
             WindowTitleBarBox(
@@ -213,42 +213,48 @@ class _LoginPageState extends State<LoginPage> {
                                                     _usernameController.text,
                                                 password:
                                                     _passwordController.text));
+                                        Future.delayed(3.minutes, () {
+                                          setState(() {
+                                            _usernameController.text = '';
+                                            _passwordController.text = '';
+                                          });
+                                        });
                                       });
                                     },
                                   ),
                                 );
                               },
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _usernameController.text = 'dev';
-                                        _passwordController.text = '@dev123';
-                                      });
-                                    },
-                                    icon: Icon(
-                                      Icons.admin_panel_settings_rounded,
-                                      color: mygreycolors,
-                                      size: 40,
-                                    )),
-                                IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _usernameController.text = 'thotsapol';
-                                        _passwordController.text =
-                                            '!Vcxz321654987';
-                                      });
-                                    },
-                                    icon: Icon(
-                                      Icons.person_search_rounded,
-                                      color: mygreycolors,
-                                      size: 40,
-                                    ))
-                              ],
-                            )
+                            // Row(
+                            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //   children: [
+                            //     IconButton(
+                            //         onPressed: () {
+                            //           setState(() {
+                            //             _usernameController.text = 'dev';
+                            //             _passwordController.text = '@dev123';
+                            //           });
+                            //         },
+                            //         icon: Icon(
+                            //           Icons.admin_panel_settings_rounded,
+                            //           color: mygreycolors,
+                            //           size: 40,
+                            //         )),
+                            //     IconButton(
+                            //         onPressed: () {
+                            //           setState(() {
+                            //             _usernameController.text = 'thotsapol';
+                            //             _passwordController.text =
+                            //                 '!Vcxz321654987';
+                            //           });
+                            //         },
+                            //         icon: Icon(
+                            //           Icons.person_search_rounded,
+                            //           color: mygreycolors,
+                            //           size: 40,
+                            //         ))
+                            //   ],
+                            // )
                           ],
                         ),
                       ),

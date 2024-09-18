@@ -28,6 +28,7 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
   TextEditingController search = TextEditingController();
   bool onSearch = false;
   List<HalfHourLunchBreakDatum> mainData = [];
+
   createHb() {
     showDialog(
         context: context,
@@ -181,20 +182,7 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Scaffold(
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: SizedBox(
-          height: 50,
-          width: 50,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.all(1),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12))),
-              onPressed: () {
-                createHb();
-              },
-              child: const Icon(Icons.add_rounded)),
-        ),
+        // ),
         body: SizedBox(
           height: double.infinity,
           child: Card(
@@ -218,7 +206,15 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold)),
-                                  actions: [lotMenu()],
+                                  actions: [
+                                    lotMenu(),
+                                    MyFloatingButton(
+                                        onPressed: () {
+                                          createHb();
+                                        },
+                                        icon: const Icon(Icons.add_rounded,
+                                            size: 30)),
+                                  ],
                                   columnSpacing: 10,
                                   showFirstLastButtons: true,
                                   rowsPerPage: rowIndex,

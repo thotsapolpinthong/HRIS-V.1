@@ -39,13 +39,15 @@ var myLoadingScreen = Center(
 //floatingButtons
 class MyFloatingButton extends StatefulWidget {
   final void Function()? onPressed;
-  final Widget? icon;
+  final Widget icon;
   final Color? backgroundColor;
+  final Color? iconColor;
   const MyFloatingButton({
     Key? key,
     this.onPressed,
-    this.icon,
+    required this.icon,
     this.backgroundColor,
+    this.iconColor,
   }) : super(key: key);
 
   @override
@@ -67,17 +69,21 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
             isHovered = false;
           });
         },
-        child: SizedBox(
-          width: isHovered ? 55 : 50,
-          height: isHovered ? 55 : 50,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 100),
+          width: isHovered ? 56 : 45,
+          height: isHovered ? 56 : 45,
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: widget.backgroundColor,
-                  padding: const EdgeInsets.all(1),
+                  padding: const EdgeInsets.all(0),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12))),
+                      borderRadius:
+                          BorderRadius.circular(isHovered ? 14 : 10))),
               onPressed: widget.onPressed,
-              child: widget.icon),
+              child: IconTheme(
+                  data: IconThemeData(color: widget.iconColor ?? Colors.white),
+                  child: widget.icon)),
         ).animate().fade());
   }
 }
@@ -380,7 +386,7 @@ class TitleDialog extends StatelessWidget {
                   child: Icon(
                     Icons.add_rounded,
                     size: 32,
-                    color: Colors.grey[700],
+                    color: myredcolors,
                   )))
         ],
       ),

@@ -73,8 +73,8 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                     EditTaxDeduction(
                         onEdit: false, fetchData: fetchData, yearId: yearId!),
                     Positioned(
-                        top: 5,
-                        right: 5,
+                        top: 2,
+                        right: 2,
                         child: InkWell(
                             borderRadius: BorderRadius.circular(50),
                             onTap: () => Navigator.pop(context),
@@ -82,8 +82,8 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                                 angle: (45 * 22 / 7) / 180,
                                 child: Icon(
                                   Icons.add_rounded,
-                                  size: 32,
-                                  color: Colors.grey[700],
+                                  size: 40,
+                                  color: myredcolors,
                                 )))),
                   ],
                 )),
@@ -190,7 +190,7 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                                 child: Icon(
                                   Icons.add_rounded,
                                   size: 32,
-                                  color: Colors.grey[700],
+                                  color: myredcolors,
                                 )))),
                     const Positioned(
                         left: 15, top: 0, child: Text('Transfer Data')),
@@ -245,7 +245,7 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
   Widget header() {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 54,
       child: Row(
         children: [
           const Text('Tax Deduction Management.',
@@ -300,7 +300,6 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                         validator: null,
                         outlineColor: mythemecolor),
                   ),
-                  const Gap(5),
                   Expanded(
                     flex: 3,
                     child: Padding(
@@ -353,9 +352,6 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
         : Padding(
             padding: const EdgeInsets.all(12.0),
             child: Scaffold(
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endDocked,
-              floatingActionButton: floating(),
               body: SizedBox(
                 width: double.infinity,
                 height: double.infinity,
@@ -385,6 +381,7 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                                 });
                               },
                               header: header(),
+                              actions: [floating()],
                               columns: const [
                                 DataColumn(label: Text("Year")),
                                 DataColumn(label: Text("Tax identification")),

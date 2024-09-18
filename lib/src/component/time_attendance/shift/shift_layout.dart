@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:hris_app_prototype/src/bloc/timeattendance_bloc/timeattendance_bloc.dart';
 import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/component/employee/datatable_employee.dart';
-import 'package:hris_app_prototype/src/component/time_attendance/shift/create_update_shift.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/shift/shift_control/datatable_shift_control.dart';
 import 'package:hris_app_prototype/src/component/time_attendance/shift/shift_table.dart';
 
@@ -32,33 +31,8 @@ class _ShiftLayoutState extends State<ShiftLayout> {
               backgroundColor: mygreycolors,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)),
-              title: isExpandedPage == 1
-                  ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('เพิ่มกะการทำงาน (Create Shift.)'),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red),
-                            child: const Text(
-                              'X',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
-                        ],
-                      ),
-                    )
-                  : null,
               content: isExpandedPage == 1
-                  ? const SizedBox(
-                      width: 560,
-                      height: 360,
-                      child: CreateUpdateShift(onEdit: false))
+                  ? null
                   : SafeArea(
                       child: SizedBox(
                           width: 1200,
@@ -81,48 +55,26 @@ class _ShiftLayoutState extends State<ShiftLayout> {
           padding: const EdgeInsets.all(12.0),
           child: Scaffold(
             floatingActionButton: isExpandedPage == 0
-                ? null
-                // Tooltip(
-                //     message: 'เลือกพนักงาน',
-                //     child: SizedBox(
-                //       width: 50,
-                //       height: 50,
-                //       child: ElevatedButton(
-                //           style: ElevatedButton.styleFrom(
-                //               padding: const EdgeInsets.all(1),
-                //               shape: RoundedRectangleBorder(
-                //                   borderRadius: BorderRadius.circular(12))),
-                //           onPressed: () {
-                //             showDialogCreate();
-                //           },
-                //           child: const Icon(Icons.add_rounded)),
-                //     ).animate().shake(),
-                //   )
-                : SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.all(1),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12))),
-                            onPressed: () {
-                              showDialogCreate();
-                            },
-                            child: const Icon(Icons.more_time_rounded))
-                        .animate()
-                        .shake(),
-                  ),
+                ? Tooltip(
+                    message: 'เลือกพนักงาน',
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.all(1),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12))),
+                          onPressed: () {
+                            showDialogCreate();
+                          },
+                          child: const Icon(Icons.add_rounded)),
+                    ).animate().shake(),
+                  )
+                : null,
             body: Center(
               child: Column(
                 children: [
-                  // const Text(
-                  //   'กะการทำงาน (Shift).',
-                  //   style: TextStyle(
-                  //     fontSize: 20,
-                  //   ),
-                  // ),
-                  // const Gap(8),
                   Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Row(
