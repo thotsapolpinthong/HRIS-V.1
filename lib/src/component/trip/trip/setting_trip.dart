@@ -551,7 +551,7 @@ class _SettingTripState extends State<SettingTrip> {
       tripTypeList = tripType.tripTypeData;
       triperTypeList = triperType.triperTypeData;
       provinceList = province.provinceData;
-      hostelList = hotel!.hotelData;
+      hostelList = hotel?.hotelData ?? [];
       if (widget.type == 0) {
         isDropdownLoading = false;
       }

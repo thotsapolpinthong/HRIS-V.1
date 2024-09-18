@@ -67,7 +67,8 @@ class _EditOrganizationState extends State<EditOrganization> {
 
   Future<void> selectexpDate() async {
     DateFormat format = DateFormat('yyyy-MM-dd');
-    DateTime dateTime = format.parse(validFrom.text);
+    DateTime dateTime =
+        validFrom.text == '' ? DateTime(1950) : format.parse(validFrom.text);
     DateTime? picker = await showDatePicker(
       context: context,
       initialDate: DateTime(9999, 12, 31),

@@ -15,7 +15,7 @@ class TimeattendanceBloc
     on<FetchDataTimeAttendanceEvent>((event, emit) async {
       emit(state.copyWith(isDataLoading: true));
       emit(state.copyWith(
-          holidayData: await ApiTimeAtendanceService.fetchDataTableEmployee(),
+          holidayData: await ApiTimeAtendanceService.fetchHolidayDataTable(),
           isDataLoading: false));
     });
 

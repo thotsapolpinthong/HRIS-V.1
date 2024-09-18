@@ -27,7 +27,7 @@ class ApiTimeAtendanceService {
   static String baseUrl = "http://192.168.0.205/StecApi/Hr";
   static String sharedToken = "";
 
-  static Future<HolidayDataModel?> fetchDataTableEmployee() async {
+  static Future<HolidayDataModel?> fetchHolidayDataTable() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     sharedToken = preferences.getString("token")!;
     var response = await http.get(
@@ -38,11 +38,9 @@ class ApiTimeAtendanceService {
     );
     if (response.statusCode == 200) {
       HolidayDataModel data = holidayDataModelFromJson(response.body);
-      if (data.status == true) {
-        return data;
-      }
+      return data;
     }
-    return null;
+    return holidayDataModelFromJson(response.body);
   }
 
 //Create

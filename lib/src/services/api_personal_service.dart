@@ -705,7 +705,7 @@ class ApiService {
         List<EducationLevelDatum> dataList = data.educationLevelData;
         return dataList;
       }
-      return data;
+      return data.educationLevelData;
     }
   }
 
@@ -724,7 +724,7 @@ class ApiService {
             data.educationQualificationData;
         return dataList;
       }
-      return data;
+      return data.educationQualificationData;
     }
   }
 
@@ -767,7 +767,7 @@ class ApiService {
         List<InstituteDatum> dataList = data.instituteData;
         return dataList;
       }
-      return data;
+      return data.instituteData;
     }
   }
 
@@ -811,7 +811,7 @@ class ApiService {
         List<MajorDatum> dataList = data.majorData;
         return dataList;
       }
-      return data;
+      return data.majorData;
     }
   }
 
@@ -942,7 +942,7 @@ class ApiService {
         List<FamilyMembersTypeDatum> dataList = data.familyMembersTypeData;
         return dataList;
       }
-      return data;
+      return data.familyMembersTypeData;
     }
   }
 
@@ -959,7 +959,7 @@ class ApiService {
         List<VitalStatusDatum> dataList = data.vitalStatusData;
         return dataList;
       }
-      return data;
+      return data.vitalStatusData;
     }
   }
 

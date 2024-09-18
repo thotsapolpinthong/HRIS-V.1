@@ -71,16 +71,6 @@ class _CarDatatableState extends State<CarDatatable> {
     return Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         child: Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-          floatingActionButton: MyFloatingButton(
-            icon: const Icon(
-              Icons.add,
-              size: 30,
-            ),
-            onPressed: () {
-              showDialogCar(0);
-            },
-          ),
           body: BlocBuilder<TripBloc, TripState>(
             builder: (context, state) {
               if (state.onSearchCarData == false || carsData == null) {
@@ -164,6 +154,17 @@ class _CarDatatableState extends State<CarDatatable> {
                                     )
                                   ],
                                 ),
+                                actions: [
+                                  MyFloatingButton(
+                                    icon: const Icon(
+                                      Icons.add,
+                                      size: 30,
+                                    ),
+                                    onPressed: () {
+                                      showDialogCar(0);
+                                    },
+                                  ),
+                                ],
                                 columnSpacing: 30,
                                 showFirstLastButtons: true,
                                 rowsPerPage: rowIndex,

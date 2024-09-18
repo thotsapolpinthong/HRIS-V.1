@@ -265,10 +265,10 @@ class _PromoteMenuState extends State<PromoteMenu> {
                                             text:
                                                 "แผนก : ${widget.employeeData.positionData.organizationData.departMentData.deptNameTh}"),
                                         const Gap(10),
-                                        const Text(
-                                          "***สอบถาม เรื่องรหัสพนักงาน***",
-                                          style: TextStyle(color: Colors.red),
-                                        ),
+                                        // const Text(
+                                        //   "***สอบถาม เรื่องรหัสพนักงาน***",
+                                        //   style: TextStyle(color: Colors.red),
+                                        // ),
                                         DropdownGlobal(
                                             labeltext: 'ประเภทการปรับตำแหน่ง',
                                             value: promoteTypeId,

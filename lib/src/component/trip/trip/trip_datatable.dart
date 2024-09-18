@@ -228,19 +228,17 @@ class _TripDatatableState extends State<TripDatatable> {
     return Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         child: Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-          floatingActionButton: Tooltip(
-            message: 'Create Trip',
-            child: MyFloatingButton(
-              icon: const Icon(
-                Icons.add_rounded,
-                size: 30,
-              ),
-              onPressed: () {
-                showCreateTrip(0);
-              },
-            ),
-          ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+          // floatingActionButton: Tooltip(
+          //     message: 'Create Trip',
+          //     child: MyFloatingButton(
+          //         icon: const Icon(
+          //           Icons.add_rounded,
+          //           size: 30,
+          //         ),
+          //         onPressed: () {
+          //           showCreateTrip(0);
+          //         })),
           body: BlocBuilder<TripBloc, TripState>(
             builder: (context, state) {
               if (state.onSearchData == false || dataTripModel == null) {
@@ -394,6 +392,18 @@ class _TripDatatableState extends State<TripDatatable> {
                                     )
                                   ],
                                 ),
+                                actions: [
+                                  Tooltip(
+                                      message: 'Create Trip',
+                                      child: MyFloatingButton(
+                                          icon: const Icon(
+                                            Icons.add_rounded,
+                                            size: 30,
+                                          ),
+                                          onPressed: () {
+                                            showCreateTrip(0);
+                                          })),
+                                ],
                                 columnSpacing: 18,
                                 showFirstLastButtons: true,
                                 rowsPerPage: rowIndex,

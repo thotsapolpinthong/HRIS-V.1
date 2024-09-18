@@ -145,23 +145,6 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                   SizedBox(
                                     width: double.infinity,
                                     child: PaginatedDataTable(
-                                      // onSelectAll: widget.isSelected == false
-                                      //     ? null
-                                      //     : (selected) {
-                                      //         // // selected จะเป็น true ถ้าทุกแถวถูกเลือก, เป็น false ถ้าถูกยกเลิก
-                                      //         // if (selected!) {
-                                      //         //   // เลือกทุกแถว
-                                      //         //   for (int i = 0;
-                                      //         //       i < employeeData!.length;
-                                      //         //       i++) {
-                                      //         //     PersonDataTableSource
-                                      //         //         .toggleRowSelection(i);
-                                      //         //   }
-                                      //         // } else {
-                                      //         //   // ยกเลิกการเลือกทุกแถว
-                                      //         //   PersonDataTableSource.clearSelection();
-                                      //         // }
-                                      //       },
                                       showCheckboxColumn: true,
                                       columnSpacing: 20,
                                       showFirstLastButtons: true,

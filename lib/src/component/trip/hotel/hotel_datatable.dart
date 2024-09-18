@@ -60,16 +60,6 @@ class _HotelDatatableState extends State<HotelDatatable> {
     return Padding(
         padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
         child: Scaffold(
-          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-          floatingActionButton: MyFloatingButton(
-            icon: const Icon(
-              Icons.add,
-              size: 30,
-            ),
-            onPressed: () {
-              showDialogCar(0);
-            },
-          ),
           body: BlocBuilder<TripBloc, TripState>(
             builder: (context, state) {
               if (state.onSearchHotelData == false || hotelData == []) {
@@ -109,6 +99,20 @@ class _HotelDatatableState extends State<HotelDatatable> {
                                     )
                                   ],
                                 ),
+                                actions: [
+                                  Tooltip(
+                                    message: 'Create Hotel',
+                                    child: MyFloatingButton(
+                                      icon: const Icon(
+                                        Icons.add,
+                                        size: 30,
+                                      ),
+                                      onPressed: () {
+                                        showDialogCar(0);
+                                      },
+                                    ),
+                                  ),
+                                ],
                                 columnSpacing: 30,
                                 showFirstLastButtons: true,
                                 rowsPerPage: rowIndex,

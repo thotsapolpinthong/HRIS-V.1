@@ -146,7 +146,7 @@ class JobTitleData {
 
   factory JobTitleData.fromJson(Map<String, dynamic> json) => JobTitleData(
         jobTitleId: json["jobTitleId"],
-        jobTitleName: json["jobTitleName"],
+        jobTitleName: json["jobTitleName"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -335,7 +335,7 @@ class PositionTypeData {
   factory PositionTypeData.fromJson(Map<String, dynamic> json) =>
       PositionTypeData(
         positionTypeId: json["positionTypeId"],
-        positionTypeNameTh: json["positionTypeNameTH"],
+        positionTypeNameTh: json["positionTypeNameTH"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

@@ -195,10 +195,15 @@ class _CreateManualWorkdateState extends State<CreateManualWorkdate> {
     manualWorkDateTypeList =
         await ApiEmployeeService.getManualWorkdateTypeDropdown();
     shiftList = await ApiTimeAtendanceService.getShiftDropdown();
-    approveList = [
-      await ApiEmployeeService.getEmployeeApprove(widget.employeeData
-          .positionData.parentPositionBusinessNodeId.positionOrganizationId)
-    ];
+    try {
+      approveList = [
+        await ApiEmployeeService.getEmployeeApprove(widget.employeeData
+            .positionData.parentPositionBusinessNodeId.positionOrganizationId)
+      ];
+    } catch (e) {
+      approveList = [];
+    }
+
     setState(() {
       manualWorkDateTypeList;
       shiftList;

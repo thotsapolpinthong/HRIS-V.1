@@ -58,6 +58,7 @@ class _CreateOtState extends State<CreateOt> {
   TextEditingController checkOut = TextEditingController();
   int checkOutIcon =
       0; // 0 = no check , 1 = fingerprint , 2 = manual time , 3 = , 4 = empty
+  bool isCheckloading = false;
   //manual work date time
   ManualWorkDateTimeModel? manualTime;
 
@@ -92,6 +93,7 @@ class _CreateOtState extends State<CreateOt> {
 
   //ข้อมูลสแกนนิ้ว
   fetchDataUserInfo(String date) async {
+    setState(() => isCheckloading = true);
     userInfoData = await ApiEmployeeSelfService.getUserInfoByDate(
         widget.employeeData.fingerScanId, date);
     manualTime = await ApiEmployeeSelfService.getManualWorkDateTime(
@@ -165,6 +167,7 @@ class _CreateOtState extends State<CreateOt> {
       } else {
         //ถ้าไม่มีเวลาเข้าออก
       }
+      isCheckloading = false;
     });
   }
 // end date and Time scan check in / out--------------------------------------------
@@ -579,10 +582,14 @@ class _CreateOtState extends State<CreateOt> {
   fetchDropdown() async {
     otTypeData = await ApiEmployeeService.getOtTypeDropdown();
     otRequestTypeData = await ApiEmployeeService.getOtRequestTypeDropdown();
-    approveList = [
-      await ApiEmployeeService.getEmployeeApprove(widget.employeeData
-          .positionData.parentPositionBusinessNodeId.positionOrganizationId)
-    ];
+    try {
+      approveList = [
+        await ApiEmployeeService.getEmployeeApprove(widget.employeeData
+            .positionData.parentPositionBusinessNodeId.positionOrganizationId)
+      ];
+    } catch (e) {
+      approveList = [];
+    }
 
     setState(() {
       otTypeData;
@@ -595,16 +602,6 @@ class _CreateOtState extends State<CreateOt> {
   void initState() {
     fetchDropdown();
     super.initState();
-  }
-
-  @override
-  void deactivate() {
-    super.deactivate();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
@@ -693,24 +690,36 @@ class _CreateOtState extends State<CreateOt> {
                           validatorless: null,
                           ontap: null,
                           enabled: false,
-                          suffixIcon: checkInIcon == 0
-                              ? null
-                              : SizedBox(
-                                  width: 40,
-                                  child: Icon(
-                                    checkInIcon == 1
-                                        ? Icons.fingerprint_rounded
-                                        : checkInIcon == 4
-                                            ? Icons.cancel
-                                            : Icons.edit_document,
-                                    size: 30,
-                                    color: checkInIcon == 1
-                                        ? mygreencolors
-                                        : checkInIcon == 4
-                                            ? myredcolors
-                                            : mythemecolor,
+                          suffixIcon: isCheckloading
+                              ? SizedBox(
+                                  width: 10,
+                                  height: 10,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                      color: mythemecolor,
+                                    ),
                                   ),
-                                ),
+                                )
+                              : checkInIcon == 0
+                                  ? null
+                                  : SizedBox(
+                                      width: 40,
+                                      child: Icon(
+                                        checkInIcon == 1
+                                            ? Icons.fingerprint_rounded
+                                            : checkInIcon == 4
+                                                ? Icons.cancel
+                                                : Icons.edit_document,
+                                        size: 30,
+                                        color: checkInIcon == 1
+                                            ? mygreencolors
+                                            : checkInIcon == 4
+                                                ? myredcolors
+                                                : mythemecolor,
+                                      ),
+                                    ),
                         ),
                       ),
                       Expanded(
@@ -720,24 +729,36 @@ class _CreateOtState extends State<CreateOt> {
                           validatorless: null,
                           ontap: null,
                           enabled: false,
-                          suffixIcon: checkInIcon == 0
-                              ? null
-                              : SizedBox(
-                                  width: 40,
-                                  child: Icon(
-                                    checkOutIcon == 1
-                                        ? Icons.fingerprint_rounded
-                                        : checkOutIcon == 4
-                                            ? Icons.cancel
-                                            : Icons.edit_document,
-                                    size: 30,
-                                    color: checkOutIcon == 1
-                                        ? mygreencolors
-                                        : checkOutIcon == 4
-                                            ? myredcolors
-                                            : mythemecolor,
+                          suffixIcon: isCheckloading
+                              ? SizedBox(
+                                  width: 10,
+                                  height: 10,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                      color: mythemecolor,
+                                    ),
                                   ),
-                                ),
+                                )
+                              : checkInIcon == 0
+                                  ? null
+                                  : SizedBox(
+                                      width: 40,
+                                      child: Icon(
+                                        checkOutIcon == 1
+                                            ? Icons.fingerprint_rounded
+                                            : checkOutIcon == 4
+                                                ? Icons.cancel
+                                                : Icons.edit_document,
+                                        size: 30,
+                                        color: checkOutIcon == 1
+                                            ? mygreencolors
+                                            : checkOutIcon == 4
+                                                ? myredcolors
+                                                : mythemecolor,
+                                      ),
+                                    ),
                         ),
                       ),
                     ],

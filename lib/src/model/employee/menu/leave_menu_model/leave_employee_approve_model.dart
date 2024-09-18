@@ -19,9 +19,9 @@ class EmployeeApproveModel {
 
   factory EmployeeApproveModel.fromJson(Map<String, dynamic> json) =>
       EmployeeApproveModel(
-        employeeId: json["employeeId"],
-        firstName: json["firstName"],
-        lastName: json["lastName"],
+        employeeId: json["employeeId"] ?? '',
+        firstName: json["firstName"] ?? '',
+        lastName: json["lastName"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

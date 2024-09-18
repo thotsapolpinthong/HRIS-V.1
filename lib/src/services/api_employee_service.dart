@@ -189,7 +189,9 @@ class ApiEmployeeService {
     if (response.statusCode == 200) {
       EmployeeApproveModel data = employeeApproveModelFromJson(response.body);
       return data;
-    } else {}
+    } else {
+      return null;
+    }
   }
 
 //create leave request

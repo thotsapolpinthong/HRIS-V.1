@@ -97,6 +97,19 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
     //     for (var event in data) DateTime.parse(event.date): [event]
     //   };
     // } else {}
+    if (data?.status == false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              data?.message ?? "ไม่มีข้อความแสดงข้อผิดพลาด",
+              style: TextStyle(color: Colors.black),
+            ),
+            backgroundColor: myambercolors,
+          ),
+        );
+      });
+    }
     if (data != null) {
       for (var e in data.holidayData) {
         String formattedDate = DateFormat("yyyy-MM-dd")
@@ -151,7 +164,6 @@ class _TimeAttendancePageLayoutState extends State<TimeAttendancePageLayout> {
             fetchData(maindata);
           }
         }
-
         return SafeArea(
             child: Padding(
           padding: const EdgeInsets.all(12.0),

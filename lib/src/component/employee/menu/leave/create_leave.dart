@@ -212,10 +212,15 @@ class _CreateLeaveState extends State<CreateLeave> {
   }
 
   fetchApproveDropdown() async {
-    approveList = [
-      await ApiEmployeeService.getEmployeeApprove(widget.employeeData
-          .positionData.parentPositionBusinessNodeId.positionOrganizationId)
-    ];
+    try {
+      approveList = [
+        await ApiEmployeeService.getEmployeeApprove(widget.employeeData
+            .positionData.parentPositionBusinessNodeId.positionOrganizationId)
+      ];
+    } catch (e) {
+      approveList = [];
+    }
+
     setState(() {
       approveList;
     });
@@ -336,21 +341,22 @@ class _CreateLeaveState extends State<CreateLeave> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    ElevatedButton(
-                        onPressed: selectLeaveType != "L003" ? null : () {},
-                        child: const SizedBox(
-                          width: 78,
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.upload_file_rounded,
-                                size: 20,
-                              ),
-                              Gap(5),
-                              Text("Upload"),
-                            ],
-                          ),
-                        )),
+                    // ElevatedButton(
+                    //     onPressed: selectLeaveType != "L003" ? null : () {},
+                    //     child: const SizedBox(
+                    //       width: 78,
+                    //       child: Row(
+                    //         children: [
+                    //           Icon(
+                    //             Icons.upload_file_rounded,
+                    //             size: 20,
+                    //           ),
+                    //           Gap(5),
+                    //           Text("Upload"),
+                    //         ],
+                    //       ),
+                    //     )),
+                    Container(),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.greenAccent,

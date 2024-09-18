@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hris_app_prototype/src/bloc/personal_bloc/personal_bloc.dart';
+import 'package:hris_app_prototype/src/component/constants.dart';
 import 'package:hris_app_prototype/src/model/address/addAddress/add_address_model.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/addresstype_model.dart';
 import 'package:hris_app_prototype/src/model/address/dropdown/country_model.dart';
@@ -81,7 +82,8 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
         await ApiService.getsubdistrict(districtId!);
     setState(() {
       subDistrictList = _subdistictData.subDistrictData;
-      subDistrictList.sort((a, b) => a.subDistrictNameTh.compareTo(b.subDistrictNameTh));
+      subDistrictList
+          .sort((a, b) => a.subDistrictNameTh.compareTo(b.subDistrictNameTh));
     });
   }
 
@@ -326,8 +328,7 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 4),
+                              padding: const EdgeInsets.symmetric(vertical: 4),
                               child: Column(
                                 children: [
                                   Padding(
@@ -339,8 +340,7 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                       children: [
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: TextFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
@@ -359,31 +359,23 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                 onNewvalue();
                                                 onValidate();
                                               },
-                                              decoration:
-                                                  const InputDecoration(
-                                                      hintText: 'บ้านเลขที่*',
-                                                      hintStyle: TextStyle(
-                                                          color: Colors.red),
-                                                      labelText:
-                                                          'Home Number.',
-                                                      labelStyle: TextStyle(
-                                                          color:
-                                                              Colors.black87),
-                                                      border: OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .white)),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white),
-                                                      ),
-                                                      filled: true,
-                                                      fillColor:
-                                                          Colors.white),
+                                              decoration: const InputDecoration(
+                                                  hintText: 'บ้านเลขที่*',
+                                                  hintStyle: TextStyle(
+                                                      color: Colors.red),
+                                                  labelText: 'Home Number.',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.white)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
                                             ),
                                           ),
                                         ),
@@ -410,9 +402,10 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                                       .white)),
                                                           enabledBorder:
                                                               OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white),
                                                           ),
                                                           filled: true,
                                                           fillColor:
@@ -443,9 +436,10 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                                       .white)),
                                                           enabledBorder:
                                                               OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white),
                                                           ),
                                                           filled: true,
                                                           fillColor:
@@ -464,8 +458,7 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                   decoration:
                                                       const InputDecoration(
                                                           hintText: 'ถนน',
-                                                          labelText:
-                                                              'Street.',
+                                                          labelText: 'Street.',
                                                           labelStyle: TextStyle(
                                                               color: Colors
                                                                   .black87),
@@ -475,9 +468,10 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                                       .white)),
                                                           enabledBorder:
                                                               OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white),
                                                           ),
                                                           filled: true,
                                                           fillColor:
@@ -506,9 +500,10 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                                       .white)),
                                                           enabledBorder:
                                                               OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white),
                                                           ),
                                                           filled: true,
                                                           fillColor:
@@ -527,53 +522,40 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                       children: [
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: DropdownButtonFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
-                                              validator:
-                                                  Validatorless.required(
-                                                      'เลือกข้อมูล'),
+                                              validator: Validatorless.required(
+                                                  'เลือกข้อมูล'),
                                               borderRadius:
                                                   BorderRadius.circular(8),
-                                              decoration:
-                                                  const InputDecoration(
-                                                      labelText: 'Çountry.',
-                                                      labelStyle: TextStyle(
-                                                          color:
-                                                              Colors.black87),
-                                                      border: OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .white)),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white),
-                                                      ),
-                                                      filled: true,
-                                                      fillColor:
-                                                          Colors.white),
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Çountry.',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.white)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
                                               hint: const Text("Country.*",
                                                   style: TextStyle(
                                                       color: Colors.red)),
                                               value: countryId,
                                               items: countryList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
-                                                  value:
-                                                      e.countryId.toString(),
-                                                  child:
-                                                      Text(e.countryNameTh),
+                                                return DropdownMenuItem<String>(
+                                                  value: e.countryId.toString(),
+                                                  child: Text(e.countryNameTh),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
-                                                countryId =
-                                                    newValue.toString();
+                                                countryId = newValue.toString();
                                                 onNewvalue();
                                                 onValidate();
                                                 setState(() {
@@ -585,35 +567,26 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: DropdownButtonFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
-                                              validator:
-                                                  Validatorless.required(
-                                                      'เลือกข้อมูล'),
-                                              decoration:
-                                                  const InputDecoration(
-                                                      labelText: 'Province.',
-                                                      labelStyle: TextStyle(
-                                                          color:
-                                                              Colors.black87),
-                                                      border: OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .white)),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white),
-                                                      ),
-                                                      filled: true,
-                                                      fillColor:
-                                                          Colors.white),
+                                              validator: Validatorless.required(
+                                                  'เลือกข้อมูล'),
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Province.',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.white)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               hint: const Text("Province.*",
@@ -621,12 +594,10 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                       color: Colors.red)),
                                               value: provinceId,
                                               items: provinceList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                                return DropdownMenuItem<String>(
                                                   value:
                                                       e.provinceId.toString(),
-                                                  child:
-                                                      Text(e.provinceNameTh),
+                                                  child: Text(e.provinceNameTh),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -654,35 +625,26 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: DropdownButtonFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
-                                              validator:
-                                                  Validatorless.required(
-                                                      'เลือกข้อมูล'),
-                                              decoration:
-                                                  const InputDecoration(
-                                                      labelText: 'District.',
-                                                      labelStyle: TextStyle(
-                                                          color:
-                                                              Colors.black87),
-                                                      border: OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .white)),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white),
-                                                      ),
-                                                      filled: true,
-                                                      fillColor:
-                                                          Colors.white),
+                                              validator: Validatorless.required(
+                                                  'เลือกข้อมูล'),
+                                              decoration: const InputDecoration(
+                                                  labelText: 'District.',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.white)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               hint: const Text("District.*",
@@ -690,12 +652,10 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                       color: Colors.red)),
                                               value: districtId,
                                               items: districtList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                                return DropdownMenuItem<String>(
                                                   value:
                                                       e.districtId.toString(),
-                                                  child:
-                                                      Text(e.districtNameTh),
+                                                  child: Text(e.districtNameTh),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -721,50 +681,38 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                         ),
                                         Expanded(
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.all(2.0),
+                                            padding: const EdgeInsets.all(2.0),
                                             child: DropdownButtonFormField(
                                               autovalidateMode:
                                                   AutovalidateMode.always,
-                                              validator:
-                                                  Validatorless.required(
-                                                      'เลือกข้อมูล'),
-                                              decoration:
-                                                  const InputDecoration(
-                                                      labelText:
-                                                          'Sub-district.',
-                                                      labelStyle: TextStyle(
-                                                          color:
-                                                              Colors.black87),
-                                                      border: OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .white)),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            BorderSide(
-                                                                color: Colors
-                                                                    .white),
-                                                      ),
-                                                      filled: true,
-                                                      fillColor:
-                                                          Colors.white),
+                                              validator: Validatorless.required(
+                                                  'เลือกข้อมูล'),
+                                              decoration: const InputDecoration(
+                                                  labelText: 'Sub-district.',
+                                                  labelStyle: TextStyle(
+                                                      color: Colors.black87),
+                                                  border: OutlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.white)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.white),
+                                                  ),
+                                                  filled: true,
+                                                  fillColor: Colors.white),
                                               borderRadius:
                                                   BorderRadius.circular(8),
-                                              hint: const Text(
-                                                  "Sub-district.*",
+                                              hint: const Text("Sub-district.*",
                                                   style: TextStyle(
                                                       color: Colors.red)),
                                               value: subDistrictId,
                                               items: subDistrictList.map((e) {
-                                                return DropdownMenuItem<
-                                                    String>(
+                                                return DropdownMenuItem<String>(
                                                   value: e.subDistrictId
                                                       .toString(),
-                                                  child: Text(
-                                                      e.subDistrictNameTh),
+                                                  child:
+                                                      Text(e.subDistrictNameTh),
                                                 );
                                               }).toList(),
                                               onChanged: (newValue) {
@@ -801,8 +749,8 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                     Validatorless.multiple([
                                                   Validatorless.number(
                                                       'Only number.'),
-                                                  Validatorless.min(5,
-                                                      'กรุณากรอกให้ถูกต้อง'),
+                                                  Validatorless.min(
+                                                      5, 'กรุณากรอกให้ถูกต้อง'),
                                                   Validatorless.required(
                                                       'กรุณากรอกข้อมูล')
                                                 ]),
@@ -821,17 +769,16 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                         hintText:
                                                             'รหัสไปรษณีย์*',
                                                         hintStyle: TextStyle(
-                                                            color:
-                                                                Colors.red),
-                                                        labelText:
-                                                            'Postcode.',
+                                                            color: Colors.red),
+                                                        labelText: 'Postcode.',
                                                         labelStyle: TextStyle(
-                                                            color: Colors
-                                                                .black87),
+                                                            color:
+                                                                Colors.black87),
                                                         border: OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white)),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white)),
                                                         enabledBorder:
                                                             OutlineInputBorder(
                                                           borderSide:
@@ -862,12 +809,13 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                                         labelText:
                                                             'Home Phone Number.',
                                                         labelStyle: TextStyle(
-                                                            color: Colors
-                                                                .black87),
+                                                            color:
+                                                                Colors.black87),
                                                         border: OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                                color: Colors
-                                                                    .white)),
+                                                            borderSide:
+                                                                BorderSide(
+                                                                    color: Colors
+                                                                        .white)),
                                                         enabledBorder:
                                                             OutlineInputBorder(
                                                           borderSide:
@@ -903,7 +851,7 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                 ),
                                 const Text(" ที่อยู่ตามบัตรประชาชน"),
                                 Checkbox(
-                                    activeColor: Colors.deepPurple,
+                                    activeColor: mythemecolor,
                                     value: isCheckedIdCard,
                                     onChanged: (bool? value) {
                                       setState(() {
@@ -913,7 +861,7 @@ class _AddPermanentAddressState extends State<AddPermanentAddress> {
                                     }),
                                 const Text("ที่อยู่ปัจจุบัน"),
                                 Checkbox(
-                                    activeColor: Colors.deepPurple,
+                                    activeColor: mythemecolor,
                                     value: isCheckedPresent,
                                     onChanged: (bool? value) {
                                       setState(() {
