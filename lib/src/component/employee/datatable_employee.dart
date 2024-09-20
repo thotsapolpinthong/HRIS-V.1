@@ -42,7 +42,6 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
   int rowIndex = 10;
   int? sortColumnIndex;
   bool sort = true;
-
   List<OrganizationDataam>? orgList;
   String? orgData;
 
@@ -114,6 +113,82 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                 ),
               ));
         });
+  }
+
+  onSortColumn(int columnIndex, bool ascending) {
+    setState(() {
+      sort = !sort;
+      sortColumnIndex = columnIndex;
+      switch (columnIndex) {
+        case 1:
+          if (sort) {
+            employeeData!.sort((a, b) =>
+                a.departmentData.deptCode.compareTo(b.departmentData.deptCode));
+          } else {
+            employeeData!.sort((a, b) =>
+                b.departmentData.deptCode.compareTo(a.departmentData.deptCode));
+          }
+          break;
+        case 2:
+          if (sort) {
+            employeeData!.sort((a, b) => a.employeeId.compareTo(b.employeeId));
+          } else {
+            employeeData!.sort((a, b) => b.employeeId.compareTo(a.employeeId));
+          }
+          break;
+        case 3:
+          if (sort) {
+            employeeData!.sort((a, b) =>
+                a.personData.fisrtNameTh.compareTo(b.personData.fisrtNameTh));
+          } else {
+            employeeData!.sort((a, b) =>
+                b.personData.fisrtNameTh.compareTo(a.personData.fisrtNameTh));
+          }
+          break;
+        case 4:
+          if (sort) {
+            employeeData!.sort((a, b) =>
+                a.personData.lastNameTh.compareTo(b.personData.lastNameTh));
+          } else {
+            employeeData!.sort((a, b) =>
+                b.personData.lastNameTh.compareTo(a.personData.lastNameTh));
+          }
+          break;
+        case 5:
+          if (sort) {
+            employeeData!.sort((a, b) =>
+                a.positionData.positionTypeData.positionTypeNameTh?.compareTo(
+                    b.positionData.positionTypeData.positionTypeNameTh ?? '') ??
+                a.positionData.positionData.positionNameTh
+                    .compareTo(b.positionData.positionData.positionNameTh));
+          } else {
+            employeeData!.sort((a, b) =>
+                b.positionData.positionTypeData.positionTypeNameTh?.compareTo(
+                    a.positionData.positionTypeData.positionTypeNameTh ?? '') ??
+                b.positionData.positionData.positionNameTh
+                    .compareTo(a.positionData.positionData.positionNameTh));
+          }
+          break;
+        case 6:
+          if (sort) {
+            employeeData!.sort((a, b) => a
+                .positionData.positionData.positionNameTh
+                .compareTo(b.positionData.positionData.positionNameTh));
+          } else {
+            employeeData!.sort((a, b) => b
+                .positionData.positionData.positionNameTh
+                .compareTo(a.positionData.positionData.positionNameTh));
+          }
+          break;
+        case 7:
+          if (sort) {
+            employeeData!.sort((a, b) => a.startDate.compareTo(b.startDate));
+          } else {
+            employeeData!.sort((a, b) => b.startDate.compareTo(a.startDate));
+          }
+          break;
+      }
+    });
   }
 
   @override
@@ -357,46 +432,41 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                                           FontWeight.bold))),
                                         DataColumn(
                                             label: const Text("Dept."),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         DataColumn(
                                             // numeric: true,
                                             label: const Text("Employee ID"),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         DataColumn(
                                             label: const Text("Firstname"),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         DataColumn(
                                             label: const Text("Lastname"),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         DataColumn(
                                             label: const Text("Type"),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         DataColumn(
                                             label: const Text("Position"),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         DataColumn(
                                             label:
                                                 const Text("Work start date"),
-                                            onSort: (columnIndex, ascending) {
-                                              setState(() {});
-                                            }),
-                                        // DataColumn(
-                                        //     label: const Text("Enddate"),
-                                        //     onSort: (columnIndex, ascending) {
-                                        //       setState(() {});
-                                        //     }),
+                                            onSort: (columnIndex, ascending) =>
+                                                onSortColumn(
+                                                    columnIndex, ascending)),
                                         const DataColumn(
                                           label: Text('Status'),
                                         ),
@@ -635,7 +705,7 @@ class PersonDataTableSource extends DataTableSource {
                                 child: Icon(
                                   Icons.add_rounded,
                                   size: 40,
-                                  color: Colors.grey[700],
+                                  color: myredcolors,
                                 )))),
                   ],
                 )),

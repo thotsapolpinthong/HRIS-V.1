@@ -111,8 +111,8 @@ class _PositionOrganizationTableState extends State<PositionOrganizationTable> {
     }
     if (sortColumnIndex == 5) {
       if (sort) {
-        mainData!.sort((a, b) => a.jobTitleData.jobTitleName!
-            .compareTo(b.jobTitleData.jobTitleName));
+        mainData!.sort((a, b) =>
+            a.jobTitleData.jobTitleName.compareTo(b.jobTitleData.jobTitleName));
       } else {
         mainData!.sort((a, b) =>
             b.jobTitleData.jobTitleName.compareTo(a.jobTitleData.jobTitleName));

@@ -363,7 +363,7 @@ class _PositionOrganizationWidgetState extends State<PositionOrganizationWidget>
                 ),
                 state.isDataLoading == true
                     ? myLoadingScreen
-                    : positionOrgData == null
+                    : isNodeEmpty
                         ? ElevatedButton(
                             onPressed: () {
                               showDialogCreate(null, false);

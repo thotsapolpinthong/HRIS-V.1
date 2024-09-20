@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:hris_app_prototype/src/page/home_page_gen2.dart';
 import 'package:hris_app_prototype/src/page/login_page.dart';
-import 'package:hris_app_prototype/src/page/personal/personal_page.dart';
 
 class AppRoute {
   static const loginpage = 'loginpage';
@@ -13,6 +12,6 @@ class AppRoute {
   static get all => <String, WidgetBuilder>{
         loginpage: (context) => const LoginPage(),
         homepage: (context) => const MyHomepage(),
-        personal: (context) => const PersonalPage(),
+        // personal: (context) => const PersonalPage(),
       };
 }

@@ -227,6 +227,52 @@ class _SalaryManagementState extends State<SalaryManagement> {
     );
   }
 
+  onSortColumn(int columnIndex, bool ascending) {
+    setState(() {
+      sort = !sort;
+      sortColumnIndex = columnIndex;
+      switch (columnIndex) {
+        case 0:
+          if (sort) {
+            filterData.sort((a, b) => a.employeeId.compareTo(b.employeeId));
+          } else {
+            filterData.sort((a, b) => b.employeeId.compareTo(a.employeeId));
+          }
+          break;
+        case 1:
+          if (sort) {
+            filterData.sort(
+                (a, b) => a.employeeTypeName.compareTo(b.employeeTypeName));
+          } else {
+            filterData.sort(
+                (a, b) => b.employeeTypeName.compareTo(a.employeeTypeName));
+          }
+          break;
+        case 2:
+          if (sort) {
+            filterData.sort((a, b) => a.firstName.compareTo(b.firstName));
+          } else {
+            filterData.sort((a, b) => b.firstName.compareTo(a.firstName));
+          }
+          break;
+        case 3:
+          if (sort) {
+            filterData.sort((a, b) => a.salary.compareTo(b.salary));
+          } else {
+            filterData.sort((a, b) => b.salary.compareTo(a.salary));
+          }
+          break;
+        case 4:
+          if (sort) {
+            filterData.sort((a, b) => a.wage.compareTo(b.wage));
+          } else {
+            filterData.sort((a, b) => b.wage.compareTo(a.wage));
+          }
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return isDataLoading
@@ -261,13 +307,27 @@ class _SalaryManagementState extends State<SalaryManagement> {
                               },
                               header: header(),
                               actions: [floating()],
-                              columns: const [
-                                DataColumn(label: Text("Employee ID")),
-                                DataColumn(label: Text("Type")),
-                                DataColumn(label: Text("FirstName")),
-                                DataColumn(label: Text("LastName")),
-                                DataColumn(label: Text("Salary (THB)")),
-                                DataColumn(label: Text("wage (THB)")),
+                              columns: [
+                                DataColumn(
+                                    label: Text("Employee ID"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
+                                DataColumn(
+                                    label: Text("Type"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
+                                DataColumn(
+                                    label: Text("Name"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
+                                DataColumn(
+                                    label: Text("Salary (THB)"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
+                                DataColumn(
+                                    label: Text("wage (THB)"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
                                 DataColumn(label: Text("Status")),
                                 DataColumn(label: Text("Edit")),
                               ],
@@ -336,8 +396,7 @@ class SubDataTableSource extends DataTableSource {
         cells: [
           DataCell(Text(d.employeeId)),
           DataCell(Text(d.employeeTypeName)),
-          DataCell(Text(d.firstName)),
-          DataCell(Text(d.lastName)),
+          DataCell(Text('${d.firstName} ${d.lastName}')),
           DataCell(Text(d.salary.toString())),
           DataCell(Text(d.wage.toString())),
           DataCell(SizedBox(

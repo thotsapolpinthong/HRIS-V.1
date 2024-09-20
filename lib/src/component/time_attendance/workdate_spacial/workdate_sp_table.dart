@@ -190,6 +190,38 @@ class _WorkSPTableState extends State<WorkSPTable> {
     );
   }
 
+  onSortColumn(int columnIndex, bool ascending) {
+    switch (columnIndex) {
+      case 0:
+        if (sort) {
+          mainData.sort((a, b) => a.date
+              .toIso8601String()
+              .split('T')[0]
+              .compareTo(b.date.toIso8601String().split('T')[0]));
+        } else {
+          mainData.sort((a, b) => b.date
+              .toIso8601String()
+              .split('T')[0]
+              .compareTo(a.date.toIso8601String().split('T')[0]));
+        }
+        break;
+      case 1:
+        if (sort) {
+          mainData.sort((a, b) => a.shiftId.compareTo(b.shiftId));
+        } else {
+          mainData.sort((a, b) => b.shiftId.compareTo(a.shiftId));
+        }
+        break;
+      case 2:
+        if (sort) {
+          mainData.sort((a, b) => a.endTime.compareTo(b.endTime));
+        } else {
+          mainData.sort((a, b) => b.endTime.compareTo(a.endTime));
+        }
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -247,11 +279,37 @@ class _WorkSPTableState extends State<WorkSPTable> {
                                         rowIndex = value!;
                                       });
                                     },
-                                    columns: const [
-                                      DataColumn(label: Text("Date")),
-                                      DataColumn(label: Text("Shift")),
+                                    columns: [
                                       DataColumn(
-                                          label: Text("Time Out Spacial")),
+                                          label: Text("Date"),
+                                          onSort: (columnIndex, ascending) {
+                                            setState(() {
+                                              sort = !sort;
+                                              sortColumnIndex = columnIndex;
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            });
+                                          }),
+                                      DataColumn(
+                                          label: Text("Shift"),
+                                          onSort: (columnIndex, ascending) {
+                                            setState(() {
+                                              sort = !sort;
+                                              sortColumnIndex = columnIndex;
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            });
+                                          }),
+                                      DataColumn(
+                                          label: Text("Time Out Spacial"),
+                                          onSort: (columnIndex, ascending) {
+                                            setState(() {
+                                              sort = !sort;
+                                              sortColumnIndex = columnIndex;
+                                              onSortColumn(
+                                                  columnIndex, ascending);
+                                            });
+                                          }),
                                       DataColumn(label: Text("Status")),
                                       DataColumn(label: Text("Edit")),
                                     ],

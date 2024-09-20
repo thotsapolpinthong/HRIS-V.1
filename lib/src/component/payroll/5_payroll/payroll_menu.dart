@@ -77,6 +77,7 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
 
   LoginData? _loginData;
   bool hrManager = false;
+
   fetchDataLogin() async {
     _loginData = await ApiRolesService.getUserData();
     setState(() {
@@ -924,6 +925,156 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
     });
   }
 
+  onSortColumn(int columnIndex, bool ascending) {
+    setState(() {
+      sort = !sort;
+      sortColumnIndex = columnIndex;
+      switch (columnIndex) {
+        case 1:
+          if (sort) {
+            filterData.sort((a, b) => a.employeeId.compareTo(b.employeeId));
+          } else {
+            filterData.sort((a, b) => b.employeeId.compareTo(a.employeeId));
+          }
+          break;
+        case 2:
+          if (sort) {
+            filterData.sort((a, b) => a.staffType.compareTo(b.staffType));
+          } else {
+            filterData.sort((a, b) => b.staffType.compareTo(a.staffType));
+          }
+          break;
+        case 3:
+          if (sort) {
+            filterData.sort((a, b) => a.firstName.compareTo(b.firstName));
+          } else {
+            filterData.sort((a, b) => b.firstName.compareTo(a.firstName));
+          }
+          break;
+        case 4:
+          if (sort) {
+            filterData.sort((a, b) => a.staffType == "พนักงานประจำ"
+                ? a.salary.compareTo(b.salary)
+                : a.wage.compareTo(b.wage));
+          } else {
+            filterData.sort((a, b) => b.staffType == "พนักงานประจำ"
+                ? b.salary.compareTo(a.salary)
+                : b.wage.compareTo(a.wage));
+          }
+          break;
+        case 5:
+          if (sort) {
+            filterData.sort((a, b) => a.workAmount.compareTo(b.workAmount));
+          } else {
+            filterData.sort((a, b) => b.workAmount.compareTo(a.workAmount));
+          }
+          break;
+        case 6:
+          if (sort) {
+            filterData.sort((a, b) => a.normalOtWage.compareTo(b.normalOtWage));
+          } else {
+            filterData.sort((a, b) => b.normalOtWage.compareTo(a.normalOtWage));
+          }
+          break;
+        case 7:
+          if (sort) {
+            filterData
+                .sort((a, b) => a.holidayOtWage.compareTo(b.holidayOtWage));
+          } else {
+            filterData
+                .sort((a, b) => b.holidayOtWage.compareTo(a.holidayOtWage));
+          }
+          break;
+        case 8:
+          if (sort) {
+            filterData
+                .sort((a, b) => a.workHolidayWage.compareTo(b.workHolidayWage));
+          } else {
+            filterData
+                .sort((a, b) => b.workHolidayWage.compareTo(a.workHolidayWage));
+          }
+          break;
+        case 9:
+          if (sort) {
+            filterData.sort((a, b) => a.extraWage.compareTo(b.extraWage));
+          } else {
+            filterData.sort((a, b) => b.extraWage.compareTo(a.extraWage));
+          }
+          break;
+        case 10:
+          if (sort) {
+            filterData.sort((a, b) => a.bonus.compareTo(b.bonus));
+          } else {
+            filterData.sort((a, b) => b.bonus.compareTo(a.bonus));
+          }
+          break;
+        case 11:
+          if (sort) {
+            filterData.sort((a, b) => a.shiftFee.compareTo(b.shiftFee));
+          } else {
+            filterData.sort((a, b) => b.shiftFee.compareTo(a.shiftFee));
+          }
+          break;
+        case 12:
+          if (sort) {
+            filterData.sort((a, b) => a.allowance.compareTo(b.allowance));
+          } else {
+            filterData.sort((a, b) => b.allowance.compareTo(a.allowance));
+          }
+          break;
+        case 13:
+          if (sort) {
+            filterData.sort((a, b) => a.totalSalary.compareTo(b.totalSalary));
+          } else {
+            filterData.sort((a, b) => b.totalSalary.compareTo(a.totalSalary));
+          }
+          break;
+        case 14:
+          if (sort) {
+            filterData.sort((a, b) => a.leaveExceeds.compareTo(b.leaveExceeds));
+          } else {
+            filterData.sort((a, b) => b.leaveExceeds.compareTo(a.leaveExceeds));
+          }
+          break;
+        case 15:
+          if (sort) {
+            filterData.sort((a, b) => a.sso.compareTo(b.sso));
+          } else {
+            filterData.sort((a, b) => b.sso.compareTo(a.sso));
+          }
+          break;
+        case 16:
+          if (sort) {
+            filterData.sort((a, b) => a.tax.compareTo(b.tax));
+          } else {
+            filterData.sort((a, b) => b.tax.compareTo(a.tax));
+          }
+          break;
+        case 17:
+          if (sort) {
+            filterData.sort((a, b) => a.deductWage.compareTo(b.deductWage));
+          } else {
+            filterData.sort((a, b) => b.deductWage.compareTo(a.deductWage));
+          }
+          break;
+        case 18:
+          if (sort) {
+            filterData.sort((a, b) => a.studentLoans.compareTo(b.studentLoans));
+          } else {
+            filterData.sort((a, b) => b.studentLoans.compareTo(a.studentLoans));
+          }
+          break;
+        case 19:
+          if (sort) {
+            filterData.sort((a, b) => a.netSalary.compareTo(b.netSalary));
+          } else {
+            filterData.sort((a, b) => b.netSalary.compareTo(a.netSalary));
+          }
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return isDataLoading
@@ -976,37 +1127,101 @@ class _PayrollmanagementState extends State<Payrollmanagement> {
                                 rowIndex = value!;
                               });
                             },
-                            columns: const [
+                            columns: [
                               DataColumn(label: Text("Details")),
-                              DataColumn(numeric: true, label: Text("Emp. ID")),
-                              DataColumn(label: Text("Type")),
-                              DataColumn(label: Text("Name")),
                               DataColumn(
-                                  numeric: true, label: Text("Salary/Wage")),
+                                  numeric: true,
+                                  label: Text("Emp. ID"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Workdate")),
+                                  label: Text("Type"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Ot-normal")),
+                                  label: Text("Name"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Ot-holiday")),
-                              DataColumn(numeric: true, label: Text("Holiday")),
-                              DataColumn(numeric: true, label: Text("Extra")),
-                              DataColumn(numeric: true, label: Text("Bonus")),
+                                  numeric: true,
+                                  label: Text("Salary/Wage"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Motivation")),
+                                  numeric: true,
+                                  label: Text("Workdate"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Allowance")),
+                                  numeric: true,
+                                  label: Text("Ot-normal"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Total Salary")),
+                                  numeric: true,
+                                  label: Text("Ot-holiday"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Leave Exceeds")),
-                              DataColumn(numeric: true, label: Text("SSO")),
-                              DataColumn(numeric: true, label: Text("Tax")),
+                                  numeric: true,
+                                  label: Text("Holiday"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Deduction")),
-                              DataColumn(numeric: true, label: Text("DSL")),
+                                  numeric: true,
+                                  label: Text("Extra"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                               DataColumn(
-                                  numeric: true, label: Text("Net Salary")),
+                                  numeric: true,
+                                  label: Text("Bonus"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Motivation"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Allowance"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Total Salary"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Leave Exceeds"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("SSO"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Tax"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Deduction"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("DSL"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
+                              DataColumn(
+                                  numeric: true,
+                                  label: Text("Net Salary"),
+                                  onSort: (columnIndex, ascending) =>
+                                      onSortColumn(columnIndex, ascending)),
                             ],
                             source: SubDataTableSource(
                                 context,

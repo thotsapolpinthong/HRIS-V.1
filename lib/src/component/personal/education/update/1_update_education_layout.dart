@@ -258,6 +258,7 @@ class _UpdateEducationbypersonState extends State<UpdateEducationbyperson> {
                   builder: (BuildContext context, StateSetter setState) {
                 return SizedBox(
                   height: 440,
+                  width: 920,
                   child: Column(
                     children: [
                       Expanded(

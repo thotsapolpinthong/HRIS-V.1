@@ -80,6 +80,32 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
         startDate: startDate.text, endDate: endDate.text));
   }
 
+  onSortColumn(int columnIndex, bool ascending) {
+    switch (columnIndex) {
+      case 0:
+        if (sort) {
+          mainData.sort((a, b) => a.employeeId.compareTo(b.employeeId));
+        } else {
+          mainData.sort((a, b) => b.employeeId.compareTo(a.employeeId));
+        }
+        break;
+      case 1:
+        if (sort) {
+          mainData.sort((a, b) => a.startDate.compareTo(b.startDate));
+        } else {
+          mainData.sort((a, b) => b.startDate.compareTo(a.startDate));
+        }
+        break;
+      case 2:
+        if (sort) {
+          mainData.sort((a, b) => a.endDate.compareTo(b.endDate));
+        } else {
+          mainData.sort((a, b) => b.endDate.compareTo(a.endDate));
+        }
+        break;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -226,10 +252,37 @@ class _LunchBreakTableState extends State<LunchBreakTable> {
                                       rowIndex = value!;
                                     });
                                   },
-                                  columns: const [
-                                    DataColumn(label: Text("Employee Id")),
-                                    DataColumn(label: Text("Start Date")),
-                                    DataColumn(label: Text("End Date")),
+                                  columns: [
+                                    DataColumn(
+                                        label: Text("Employee Id"),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = columnIndex;
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          });
+                                        }),
+                                    DataColumn(
+                                        label: Text("Start Date"),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = columnIndex;
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          });
+                                        }),
+                                    DataColumn(
+                                        label: Text("End Date"),
+                                        onSort: (columnIndex, ascending) {
+                                          setState(() {
+                                            sort = !sort;
+                                            sortColumnIndex = columnIndex;
+                                            onSortColumn(
+                                                columnIndex, ascending);
+                                          });
+                                        }),
                                     DataColumn(label: Text("Status")),
                                     DataColumn(label: Text("Edit")),
                                   ],

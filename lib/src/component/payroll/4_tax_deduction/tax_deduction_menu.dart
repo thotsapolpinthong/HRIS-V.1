@@ -215,13 +215,6 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
         .add(SelectTaxDeductionListEvent(taxDeductionList: const []));
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-
-    // _timer?.cancel();
-  }
-
   Widget floating() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -344,6 +337,36 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
     );
   }
 
+  onSortColumn(int columnIndex, bool ascending) {
+    setState(() {
+      sort = !sort;
+      sortColumnIndex = columnIndex;
+      switch (columnIndex) {
+        case 1:
+          if (sort) {
+            filterData.sort((a, b) => a.taxNumber.compareTo(b.taxNumber));
+          } else {
+            filterData.sort((a, b) => b.taxNumber.compareTo(a.taxNumber));
+          }
+          break;
+        case 2:
+          if (sort) {
+            filterData.sort((a, b) => a.employeeId.compareTo(b.employeeId));
+          } else {
+            filterData.sort((a, b) => b.employeeId.compareTo(a.employeeId));
+          }
+          break;
+        case 3:
+          if (sort) {
+            filterData.sort((a, b) => a.firstName.compareTo(b.firstName));
+          } else {
+            filterData.sort((a, b) => b.firstName.compareTo(a.firstName));
+          }
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     yearList;
@@ -382,12 +405,20 @@ class _TaxDeductionManagementState extends State<TaxDeductionManagement> {
                               },
                               header: header(),
                               actions: [floating()],
-                              columns: const [
+                              columns: [
                                 DataColumn(label: Text("Year")),
-                                DataColumn(label: Text("Tax identification")),
-                                DataColumn(label: Text("Employee ID")),
-                                DataColumn(label: Text("FirstName")),
-                                DataColumn(label: Text("LastName")),
+                                DataColumn(
+                                    label: Text("Tax identification"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
+                                DataColumn(
+                                    label: Text("Employee ID"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
+                                DataColumn(
+                                    label: Text("Name"),
+                                    onSort: (columnIndex, ascending) =>
+                                        onSortColumn(columnIndex, ascending)),
                                 DataColumn(label: Text("Edit")),
                               ],
                               source: SubDataTableSource(
@@ -495,8 +526,7 @@ class SubDataTableSource extends DataTableSource {
           DataCell(Text(d.year)),
           DataCell(Text(d.taxNumber)),
           DataCell(Text(d.employeeId)),
-          DataCell(Text(d.firstName)),
-          DataCell(Text(d.lastName)),
+          DataCell(Text('${d.firstName} ${d.lastName}')),
           DataCell(
             SizedBox(
               width: 40,
