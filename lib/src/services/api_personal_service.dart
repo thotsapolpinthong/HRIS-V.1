@@ -84,6 +84,7 @@ class ApiService {
 
   static Future<LoginModel?> postApiLoginn(
       String username, String password) async {
+    LoginModel? data;
     final response = await http.post(
       Uri.parse("$baseUrlLogin?userName=$username&password=$password"),
       headers: {"accept": "text/plain"},
@@ -93,14 +94,12 @@ class ApiService {
       // },
     );
     if (response.statusCode == 200) {
-      LoginModel? data = loginModelFromJson(response.body);
-      if (data.status == true) {
-        return data;
-      }
+      data = loginModelFromJson(response.body);
+
+      return data;
     } else {
-      return null;
+      return data;
     }
-    return null;
   }
   //end login----------------------------------------------------------------
 

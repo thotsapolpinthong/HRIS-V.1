@@ -426,10 +426,7 @@ class _DatatableEmployeeState extends State<DatatableEmployee> {
                                       columns: [
                                         if (widget.isSelected == false)
                                           const DataColumn(
-                                              label: Text("  Menu",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold))),
+                                              label: Text("  Menu")),
                                         DataColumn(
                                             label: const Text("Dept."),
                                             onSort: (columnIndex, ascending) =>

@@ -707,7 +707,7 @@ class _TreeViewPageFromJsonState extends State<TreeViewOrganization>
               )).animate().fade(delay: 200.ms).shake(delay: 500.ms)
         ],
       );
-    } else if (name == "Factory manager") {
+    } else if (name == "Factory Manager") {
       return Stack(
         alignment: Alignment.center,
         children: [

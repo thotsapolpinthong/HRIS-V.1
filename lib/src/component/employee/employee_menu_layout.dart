@@ -138,69 +138,70 @@ class _EmployeeMenuLayoutState extends State<EmployeeMenuLayout> {
                     Expanded(
                         child: Padding(
                       padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                      child: pageNumber == 0 ||
-                              pageNumber == 1 ||
-                              pageNumber == 2
-                          ? Container()
-                          : SizedBox(
-                              width: double.infinity,
-                              child: Card(
-                                color: Colors.amberAccent,
-                                elevation: 6,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)),
-                                child: SingleChildScrollView(
-                                  child: Stack(
+                      child:
+                          // pageNumber == 0 ||
+                          //         pageNumber == 1 ||
+                          //         pageNumber == 2
+                          //     ? Container()
+                          //     :
+                          SizedBox(
+                        width: double.infinity,
+                        child: Card(
+                          color: Colors.amberAccent,
+                          elevation: 6,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          child: SingleChildScrollView(
+                            child: Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Gap(10),
-                                            Center(
-                                              child: const Text(
-                                                "Employee Info",
-                                                style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            ),
-                                            // const Icon(
-                                            //   CupertinoIcons.person_alt_circle,
-                                            //   size: 60,
-                                            // ),
-                                            const Gap(6),
-                                            Text(
-                                                "รหัสพนักงาน :  ${widget.employeeData.employeeId}"),
-                                            Text(
-                                                "ชื่อ : ${widget.employeeData.personData.titleName.titleNameTh} ${widget.employeeData.personData.fisrtNameTh} ${widget.employeeData.personData.lastNameTh}"),
-                                            Text(
-                                                "ประเภท : ${widget.employeeData.staffTypeData.description}"),
-                                            Text(
-                                                "แผนก : ${widget.employeeData.positionData.organizationData.departMentData.deptNameEn}"),
-                                            Text(
-                                                "ตำแหน่ง : ${widget.employeeData.positionData.positionData.positionNameTh}"),
-                                            Text(
-                                                "กะการทำงาน : ${widget.employeeData.shiftData.shiftName} \n${widget.employeeData.shiftData.startTime} - ${widget.employeeData.shiftData.endTime}"), //
-                                          ],
+                                      const Gap(10),
+                                      Center(
+                                        child: const Text(
+                                          "Employee Info",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      // const Positioned(
-                                      //   left: 145,
-                                      //   child: Icon(
-                                      //     CupertinoIcons.person_alt_circle,
-                                      //     size: 120,
-                                      //     color: Colors.black87,
-                                      //   ),
+                                      // const Icon(
+                                      //   CupertinoIcons.person_alt_circle,
+                                      //   size: 60,
                                       // ),
+                                      const Gap(6),
+                                      Text(
+                                          "รหัสพนักงาน :  ${widget.employeeData.employeeId}"),
+                                      Text(
+                                          "ชื่อ : ${widget.employeeData.personData.titleName.titleNameTh} ${widget.employeeData.personData.fisrtNameTh} ${widget.employeeData.personData.lastNameTh}"),
+                                      Text(
+                                          "ประเภท : ${widget.employeeData.staffTypeData.description}"),
+                                      Text(
+                                          "แผนก : ${widget.employeeData.positionData.organizationData.departMentData.deptNameEn}"),
+                                      Text(
+                                          "ตำแหน่ง : ${widget.employeeData.positionData.positionData.positionNameTh}"),
+                                      Text(
+                                          "กะการทำงาน : ${widget.employeeData.shiftData.shiftName} \n${widget.employeeData.shiftData.startTime} - ${widget.employeeData.shiftData.endTime}"), //
                                     ],
                                   ),
                                 ),
-                              ),
+                                // const Positioned(
+                                //   left: 145,
+                                //   child: Icon(
+                                //     CupertinoIcons.person_alt_circle,
+                                //     size: 120,
+                                //     color: Colors.black87,
+                                //   ),
+                                // ),
+                              ],
                             ),
+                          ),
+                        ),
+                      ),
                     )),
                     const Gap(8)
                   ],

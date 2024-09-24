@@ -2,22 +2,22 @@ part of 'login_bloc.dart';
 
 class LoginState extends Equatable {
   final bool isAutlhened;
-  final String error;
+  final bool error;
   final int pageNumber;
   const LoginState({
     this.pageNumber = 1,
     this.isAutlhened = true,
-    this.error = "null",
+    this.error = false,
   });
 
   LoginState copyWith({
     bool? isAutlhened,
-    String? error,
+    required bool error,
     int? pageNumber,
   }) {
     return LoginState(
       isAutlhened: isAutlhened ?? this.isAutlhened,
-      error: error ?? this.error,
+      error: error,
       pageNumber: pageNumber ?? this.pageNumber,
     );
   }

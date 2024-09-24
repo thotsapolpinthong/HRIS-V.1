@@ -487,7 +487,7 @@ class PersonDataTableSource extends DataTableSource {
                       "Alliance One International" ||
                   orgData.departMentData.deptNameTh == "THAPAWONG" ||
                   orgData.departMentData.deptNameTh == "Factory manager" ||
-                  orgData.departMentData.deptNameTh == "STEC."
+                  orgData.departMentData.deptNameTh == "STEC"
               ? Container()
               : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   SizedBox(

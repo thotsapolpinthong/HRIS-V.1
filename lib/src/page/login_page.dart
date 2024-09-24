@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,18 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     // _usernameController.text = 'dev';
     // _passwordController.text = '@dev123';
+  }
+
+  @override
+  void dispose() {
+    isloading = false;
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    isloading = false;
+    super.deactivate();
   }
 
   @override
@@ -165,66 +178,126 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 20),
                             BlocBuilder<LoginBloc, LoginState>(
                               builder: (context, state) {
-                                return SizedBox(
-                                  width: 280,
-                                  height: 40,
-                                  child: ElevatedButton(
-                                    // style: const ButtonStyle(
-                                    //     backgroundColor: MaterialStatePropertyAll(
-                                    //   Color.fromRGBO(69, 93, 219, 1),
-                                    // )),
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.amber[700]),
-                                    child: state.isAutlhened == false
-                                        ? Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                width: 20,
-                                                height: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 3,
-                                                  color: mythemecolor,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text('Please Wait...',
-                                                  style: TextStyle(
-                                                      color: mythemecolor))
-                                            ],
-                                          )
-                                        : Text(
-                                            "LOGIN",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: mythemecolor),
-                                          ),
-                                    onPressed: () {
-                                      setState(() {
-                                        isloading = !isloading;
+                                if (state.error) {
+                                  isloading = false;
+                                }
+                                if (state.isAutlhened && !state.error) {
+                                  isloading = false;
+                                }
+                                ;
 
-                                        context.read<LoginBloc>().add(
-                                            LoginEventLogin(
-                                                username:
-                                                    _usernameController.text,
-                                                password:
-                                                    _passwordController.text));
-                                        Future.delayed(3.minutes, () {
+                                // ignore: deprecated_member_use
+                                return Column(
+                                  children: [
+                                    RawKeyboardListener(
+                                      autofocus: true,
+                                      focusNode: FocusNode(),
+                                      onKey: (event) {
+                                        // ignore: deprecated_member_use
+                                        if (event.isKeyPressed(
+                                            LogicalKeyboardKey.enter)) {
                                           setState(() {
-                                            _usernameController.text = '';
-                                            _passwordController.text = '';
+                                            print('Entering');
+                                            isloading = true;
+                                            context.read<LoginBloc>().add(
+                                                LoginEventLogin(
+                                                    username:
+                                                        _usernameController
+                                                            .text,
+                                                    password:
+                                                        _passwordController
+                                                            .text));
+                                            Future.delayed(3.minutes, () {
+                                              setState(() {
+                                                _usernameController.text = '';
+                                                _passwordController.text = '';
+                                              });
+                                            });
                                           });
-                                        });
-                                      });
-                                    },
-                                  ),
+                                        }
+                                      },
+                                      child: SizedBox(
+                                        width: 280,
+                                        height: 40,
+                                        child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.amber[700]),
+                                          child: isloading
+                                              ? Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        strokeWidth: 3,
+                                                        color: mythemecolor,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 10,
+                                                    ),
+                                                    Text('Please Wait...',
+                                                        style: TextStyle(
+                                                            color:
+                                                                mythemecolor))
+                                                  ],
+                                                )
+                                              : Text(
+                                                  "LOGIN",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: mythemecolor),
+                                                ),
+                                          onPressed: () {
+                                            setState(() {
+                                              isloading = true;
+
+                                              context.read<LoginBloc>().add(
+                                                  LoginEventLogin(
+                                                      username:
+                                                          _usernameController
+                                                              .text,
+                                                      password:
+                                                          _passwordController
+                                                              .text));
+
+                                              Future.delayed(3.minutes, () {
+                                                setState(() {
+                                                  _usernameController.text = '';
+                                                  _passwordController.text = '';
+                                                });
+                                              });
+                                              // isloading = false;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    const Gap(3),
+                                    if (state.error)
+                                      Card(
+                                        elevation: 6,
+                                        color: myredcolors,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            "Login failed! Please try again.",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12),
+                                          ),
+                                        ),
+                                      )
+                                  ],
                                 );
                               },
                             ),
+
                             // Row(
                             //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //   children: [

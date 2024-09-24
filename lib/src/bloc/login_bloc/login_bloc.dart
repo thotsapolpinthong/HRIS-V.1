@@ -17,14 +17,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginEvent>((event, emit) {});
 
     on<LoginEventLogin>((event, emit) async {
-      emit(state.copyWith(isAutlhened: false));
+      emit(state.copyWith(isAutlhened: false, error: false));
       LoginModel? data;
-      try {
-        data = await ApiService.postApiLoginn(event.username, event.password);
-      } catch (e) {
-        print("login error $e");
-        return;
-      }
+
+      data = await ApiService.postApiLoginn(event.username, event.password);
 
       if (data!.status == true) {
         SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -33,12 +29,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         preferences.setString("personId", data.loginData.personId);
         preferences.setString("employeeId", data.loginData.employeeId);
         preferences.setString('LoginData', userLoginJson);
-        emit(state.copyWith(isAutlhened: true, error: null));
+        emit(state.copyWith(isAutlhened: true, error: false));
         Navigator.pushNamed(navigatorState.currentContext!, AppRoute.homepage);
       } else {
-        emit(state.copyWith(isAutlhened: false, error: 'Login failed.'));
+        emit(state.copyWith(isAutlhened: false, error: true));
       }
-      emit(state.copyWith(isAutlhened: true, error: null));
+      // emit(state.copyWith(isAutlhened: true, error: null));
     });
   }
 }
